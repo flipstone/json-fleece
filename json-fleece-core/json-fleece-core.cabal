@@ -1,0 +1,42 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.35.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           json-fleece-core
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/json-fleece-core#readme>
+homepage:       https://github.com/githubuser/json-fleece-core#readme
+bug-reports:    https://github.com/githubuser/json-fleece-core/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2023 Author name here
+license:        BSD3
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/json-fleece-core
+
+flag strict
+  description: More strict ghc options used for development and ci, not intended for end-use.
+  manual: True
+  default: False
+
+library
+  exposed-modules:
+      Fleece.Core
+  other-modules:
+      Paths_json_fleece_core
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , scientific >=0.3.7 && <0.4
+    , text ==1.2.*
+  default-language: Haskell2010
+  if flag(strict)
+    ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-import-lists -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies
+  else
+    ghc-options: -Wall

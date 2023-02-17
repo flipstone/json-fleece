@@ -1,0 +1,69 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.35.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           json-fleece-aeson
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/json-fleece-aeson#readme>
+homepage:       https://github.com/githubuser/json-fleece-aeson#readme
+bug-reports:    https://github.com/githubuser/json-fleece-aeson/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2023 Author name here
+license:        BSD3
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/json-fleece-aeson
+
+flag strict
+  description: More strict ghc options used for development and ci, not intended for end-use.
+  manual: True
+  default: False
+
+library
+  exposed-modules:
+      Fleece.Aeson
+      Fleece.Aeson.Decoder
+      Fleece.Aeson.Encoder
+  other-modules:
+      Paths_json_fleece_aeson
+  hs-source-dirs:
+      src
+  build-depends:
+      aeson ==2.0.*
+    , base >=4.7 && <5
+    , bytestring ==0.11.*
+    , json-fleece-core ==0.1.*
+  default-language: Haskell2010
+  if flag(strict)
+    ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-import-lists -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies
+  else
+    ghc-options: -Wall
+
+test-suite json-fleece-aeson-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_json_fleece_aeson
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson ==2.0.*
+    , base >=4.7 && <5
+    , bytestring ==0.11.*
+    , hedgehog
+    , json-fleece-aeson
+    , json-fleece-core ==0.1.*
+    , json-fleece-examples
+    , scientific >=0.3.7 && <0.4
+    , text ==1.2.*
+  default-language: Haskell2010
+  if flag(strict)
+    ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-import-lists -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies
+  else
+    ghc-options: -Wall

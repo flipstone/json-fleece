@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ -f .env ]; then
+  echo "Skipping creation of .env because it already exists. Remove it if you want to this script to recreate it"
+else
+  echo "PROJECT_DIR=$PWD" >> .env
+fi

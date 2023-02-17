@@ -1,0 +1,15 @@
+version: "3"
+services:
+  dev:
+    image: flipstone/haskell-tools:debian-unstable-ghc-9.2.5-2023-02-10-2c9dfe0
+
+    volumes:
+      - .:${PROJECT_DIR}
+      - stack_root:/stack-root
+    working_dir: ${PROJECT_DIR}
+    environment:
+      STACK_ROOT: /stack-root
+
+
+volumes:
+  stack_root:

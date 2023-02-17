@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -e
+
+docker-compose run --rm dev \
+  stack \
+  build \
+  --test \
+  --fast \
+  "$@"
