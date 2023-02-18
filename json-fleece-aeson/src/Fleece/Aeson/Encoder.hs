@@ -65,5 +65,5 @@ instance FC.Fleece Encoder where
     Object $ \object ->
       mkStart object <> mkNext object
 
-  object (Object toSeries) =
+  objectNamed _name (Object toSeries) =
     Encoder (Aeson.pairs . toSeries)

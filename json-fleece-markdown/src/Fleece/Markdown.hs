@@ -7,7 +7,6 @@ module Fleece.Markdown
 
 import qualified Data.Text.Lazy as LT
 import qualified Data.Text.Lazy.Builder as LTB
-import Data.Typeable (tyConName, typeRep, typeRepTyCon)
 
 import qualified Fleece.Core as FC
 
@@ -60,16 +59,11 @@ instance FC.Fleece Markdown where
   field (Object fieldsMarkdown) (Field moreMarkdown) =
     Object (fieldsMarkdown <> moreMarkdown)
 
-  object (Object fieldsMarkdown) =
+  objectNamed name (Object fieldsMarkdown) =
     let
-      typeConstructor =
-        typeRepTyCon
-          . typeRep
-          $ markdown
-
       markdown =
         mkMarkdown $
-          h1 (tyConName typeConstructor)
+          h1 name
             <> newline
             <> newline
             <> fieldsHeader

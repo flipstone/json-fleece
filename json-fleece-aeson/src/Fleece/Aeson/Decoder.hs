@@ -68,6 +68,6 @@ instance FC.Fleece Decoder where
   field (Object parseF) (Field parseField) =
     Object (\object -> parseF object <*> parseField object)
 
-  object (Object f) =
-    Decoder $ Aeson.withObject "object" $ \object ->
+  objectNamed name (Object f) =
+    Decoder $ Aeson.withObject name $ \object ->
       f object

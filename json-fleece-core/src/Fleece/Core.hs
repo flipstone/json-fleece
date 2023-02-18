@@ -1,7 +1,8 @@
 {-# LANGUAGE TypeFamilies #-}
 
 module Fleece.Core
-  ( Fleece (Field, Object, number, required, optionalField, text, object, constructor, nullable, field)
+  ( Fleece (Field, Object, number, required, optionalField, text, objectNamed, constructor, nullable, field)
+  , object
   , optional
   , (#+)
   , NullBehavior (..)
@@ -10,7 +11,7 @@ module Fleece.Core
 import Data.Kind (Type)
 import Data.Scientific (Scientific)
 import qualified Data.Text as T
-import Data.Typeable (Typeable)
+import Data.Typeable (Typeable, tyConName, typeRep, typeRepTyCon)
 
 class Fleece schema where
   data Object schema :: Type -> Type -> Type
@@ -23,22 +24,20 @@ class Fleece schema where
   nullable :: schema a -> schema (Maybe a)
 
   required ::
-    Typeable a =>
     String ->
     (object -> a) ->
     schema a ->
     Field schema object a
 
   optionalField ::
-    Typeable a =>
     NullBehavior ->
     String ->
     (object -> Maybe a) ->
     schema a ->
     Field schema object (Maybe a)
 
-  object ::
-    Typeable a =>
+  objectNamed ::
+    String ->
     Object schema a a ->
     schema a
 
@@ -47,13 +46,12 @@ class Fleece schema where
     Object schema object constructor
 
   field ::
-    Typeable a =>
     Object schema object (a -> b) ->
     Field schema object a ->
     Object schema object b
 
 (#+) ::
-  (Fleece schema, Typeable a) =>
+  Fleece schema =>
   Object schema object (a -> b) ->
   Field schema object a ->
   Object schema object b
@@ -67,8 +65,25 @@ data NullBehavior
   | OmitKey_AcceptNull
   | OmitKey_DelegateNull
 
-optional ::
+object ::
   (Fleece schema, Typeable a) =>
+  Object schema a a ->
+  schema a
+object o =
+  let
+    name =
+      tyConName
+        . typeRepTyCon
+        . typeRep
+        $ schema
+
+    schema =
+      objectNamed name o
+  in
+    schema
+
+optional ::
+  Fleece schema =>
   String ->
   (object -> Maybe a) ->
   schema a ->
