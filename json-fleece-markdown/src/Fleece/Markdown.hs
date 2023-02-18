@@ -11,36 +11,48 @@ import Data.Typeable (tyConName, typeRep, typeRepTyCon)
 
 import qualified Fleece.Core as FC
 
-newtype Markdown a
-  = Markdown LTB.Builder
+data Markdown a = Markdown
+  { schemaNullability :: SchemaNullability
+  , schemaDocs :: LTB.Builder
+  }
+
+mkMarkdown :: LTB.Builder -> Markdown a
+mkMarkdown builder =
+  Markdown
+    { schemaNullability = NotNull
+    , schemaDocs = builder
+    }
+
+markNullable :: Markdown a -> Markdown (Maybe a)
+markNullable markdown =
+  markdown
+    { schemaNullability = Nullable
+    }
+
+data SchemaNullability
+  = NotNull
+  | Nullable
 
 renderMarkdown :: Markdown a -> LT.Text
-renderMarkdown (Markdown builder) = LTB.toLazyText builder
+renderMarkdown (Markdown _ builder) = LTB.toLazyText builder
 
 instance FC.Fleece Markdown where
   newtype Object Markdown _object _a = Object LTB.Builder
   newtype Field Markdown _object _a = Field LTB.Builder
   number =
-    Markdown (LTB.fromString "number")
+    mkMarkdown (LTB.fromString "number")
 
   text =
-    Markdown (LTB.fromString "string")
+    mkMarkdown (LTB.fromString "string")
 
-  required name _accessor (Markdown builder) =
-    Field $
-      pipe
-        <> LTB.fromString name
-        <> pipe
-        <> LTB.fromString "yes"
-        <> pipe
-        <> LTB.fromString "no"
-        <> pipe
-        <> builder
-        <> pipe
-        <> newline
+  nullable =
+    markNullable
 
-  optionalField _nullBehavior _name _accessor (Markdown _builder) =
-    Field mempty
+  required name _accessor fieldSchema =
+    Field (fieldRow name Nothing fieldSchema)
+
+  optionalField nullBehavior name _accessor fieldSchema =
+    Field (fieldRow name (Just nullBehavior) fieldSchema)
 
   constructor _f =
     Object mempty
@@ -56,7 +68,7 @@ instance FC.Fleece Markdown where
           $ markdown
 
       markdown =
-        Markdown $
+        mkMarkdown $
           h1 (tyConName typeConstructor)
             <> newline
             <> newline
@@ -76,6 +88,37 @@ fieldsHeader =
     <> LTB.fromString "|---|---|---|---|"
     <> newline
 
+fieldRow :: String -> Maybe FC.NullBehavior -> Markdown a -> LTB.Builder
+fieldRow name mbNullBehavior fieldSchema =
+  let
+    doesSchemaAllowNull =
+      case schemaNullability fieldSchema of
+        NotNull -> no
+        Nullable -> yes
+
+    required =
+      case mbNullBehavior of
+        Nothing -> yes
+        Just _ -> no
+
+    nullAllowed =
+      case mbNullBehavior of
+        Nothing -> doesSchemaAllowNull
+        Just FC.EmitNull_AcceptNull -> yes
+        Just FC.OmitKey_AcceptNull -> yes
+        Just FC.OmitKey_DelegateNull -> doesSchemaAllowNull
+  in
+    pipe
+      <> LTB.fromString name
+      <> pipe
+      <> required
+      <> pipe
+      <> nullAllowed
+      <> pipe
+      <> schemaDocs fieldSchema
+      <> pipe
+      <> newline
+
 pipe :: LTB.Builder
 pipe =
   LTB.fromString "|"
@@ -83,3 +126,11 @@ pipe =
 newline :: LTB.Builder
 newline =
   LTB.fromString "\n"
+
+yes :: LTB.Builder
+yes =
+  LTB.fromString "yes"
+
+no :: LTB.Builder
+no =
+  LTB.fromString "no"

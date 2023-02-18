@@ -1,7 +1,7 @@
 {-# LANGUAGE TypeFamilies #-}
 
 module Fleece.Core
-  ( Fleece (Field, Object, number, required, optionalField, text, object, constructor, field)
+  ( Fleece (Field, Object, number, required, optionalField, text, object, constructor, nullable, field)
   , optional
   , (#+)
   , NullBehavior (..)
@@ -19,6 +19,8 @@ class Fleece schema where
   number :: schema Scientific
 
   text :: schema T.Text
+
+  nullable :: schema a -> schema (Maybe a)
 
   required ::
     Typeable a =>

@@ -18,9 +18,8 @@ import qualified Hedgehog.Main as HHM
 import qualified Hedgehog.Range as Range
 
 import qualified Fleece.Aeson as FA
-import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
-import Fleece.Examples (FooBar (FooBar, bar, foo), fooBarSchema)
+import qualified Fleece.Examples as Examples
 
 main :: IO ()
 main =
@@ -34,6 +33,9 @@ tests =
   , ("prop_encodeText", prop_encodeText)
   , ("prop_decode_ObjectSuccess", prop_decode_ObjectSuccess)
   , ("prop_encodeObject", prop_encodeObject)
+  , ("prop_encode_nullableField", prop_encode_nullableField)
+  , ("prop_decode_nullableField", prop_decode_nullableField)
+  , ("prop_decode_nullableField_Failure", prop_decode_nullableField_Failure)
   , ("prop_decode_optionalField_EmitNull_AcceptNull", prop_decode_optionalField_EmitNull_AcceptNull)
   , ("prop_encode_optionalField_EmitNull_AcceptNull", prop_encode_optionalField_EmitNull_AcceptNull)
   , ("prop_decode_optionalField_OmitKey_AcceptNull", prop_decode_optionalField_OmitKey_AcceptNull)
@@ -41,6 +43,8 @@ tests =
   , ("prop_decode_optionalField_OmitKey_DelegateNull", prop_decode_optionalField_OmitKey_DelegateNull)
   , ("prop_encode_optionalField_OmitKey_DelegateNull", prop_encode_optionalField_OmitKey_DelegateNull)
   , ("prop_decode_optionalField_OmitKey_DelegateNull_Failure", prop_decode_optionalField_OmitKey_DelegateNull_Failure)
+  , ("prop_encode_optionalField_OmitKey_DelegateNull_Nullable", prop_encode_optionalField_OmitKey_DelegateNull_Nullable)
+  , ("prop_decode_optionalField_OmitKey_DelegateNull_Nullable", prop_decode_optionalField_OmitKey_DelegateNull_Nullable)
   ]
 
 prop_decode_NumberSuccess :: HH.Property
@@ -81,12 +85,12 @@ prop_decode_ObjectSuccess =
           ]
 
       expected =
-        FooBar
-          { foo = fooValue
-          , bar = barValue
+        Examples.FooBar
+          { Examples.foo = fooValue
+          , Examples.bar = barValue
           }
 
-    FA.decode fooBarSchema jsonObject === Right expected
+    FA.decode Examples.fooBarSchema jsonObject === Right expected
 
 prop_encodeObject :: HH.Property
 prop_encodeObject =
@@ -102,148 +106,259 @@ prop_encodeObject =
           ]
 
       fooBar =
-        FooBar
-          { foo = fooValue
-          , bar = barValue
+        Examples.FooBar
+          { Examples.foo = fooValue
+          , Examples.bar = barValue
           }
 
-    FA.encode fooBarSchema fooBar === expected
+    FA.encode Examples.fooBarSchema fooBar === expected
+
+prop_encode_nullableField :: HH.Property
+prop_encode_nullableField =
+  HH.property $ do
+    mbText <- HH.forAll (Gen.maybe genText)
+
+    let
+      encoded =
+        FA.encode
+          Examples.nullableFieldExampleSchema
+          (Examples.NullableFieldExample mbText)
+
+      expected =
+        encodeTestObject
+          ["nullableField" .= mbText]
+
+    encoded === expected
+
+prop_decode_nullableField :: HH.Property
+prop_decode_nullableField =
+  HH.property $ do
+    mbText <- HH.forAll (Gen.maybe genText)
+
+    let
+      testInput =
+        encodeTestObject
+          ["nullableField" .= mbText]
+
+      decoded =
+        FA.decode
+          Examples.nullableFieldExampleSchema
+          testInput
+
+      expected =
+        Right
+          . Examples.NullableFieldExample
+          $ mbText
+
+    decoded === expected
+
+prop_decode_nullableField_Failure :: HH.Property
+prop_decode_nullableField_Failure =
+  HH.withTests 1 . HH.property $ do
+    let
+      testInput =
+        encodeTestObject []
+
+      decoded =
+        FA.decode
+          Examples.nullableFieldExampleSchema
+          testInput
+
+      expected =
+        Left "Error in $: key \"nullableField\" not found"
+
+    decoded === expected
 
 prop_encode_optionalField_EmitNull_AcceptNull :: HH.Property
 prop_encode_optionalField_EmitNull_AcceptNull =
   HH.property $ do
-    let
-      schema :: FC.Fleece schema => schema (Maybe T.Text)
-      schema =
-        FC.object $
-          FC.constructor id
-            #+ FC.optionalField FC.EmitNull_AcceptNull "value" id FC.text
-
     mbText <- HH.forAll (Gen.maybe genText)
-    FA.encode schema mbText === encodeTestObject ["value" .= mbText]
+
+    let
+      encoded =
+        FA.encode
+          Examples.optionalField_EmitNull_AcceptNull_ExampleSchema
+          (Examples.OptionalField_EmitNull_AcceptNull_Example mbText)
+
+      expected =
+        encodeTestObject
+          ["optional_EmitNull_AcceptNull_Field" .= mbText]
+
+    encoded === expected
 
 prop_decode_optionalField_EmitNull_AcceptNull :: HH.Property
 prop_decode_optionalField_EmitNull_AcceptNull =
   HH.property $ do
-    let
-      schema :: FC.Fleece schema => schema (Maybe T.Text)
-      schema =
-        FC.object $
-          FC.constructor id
-            #+ FC.optionalField FC.EmitNull_AcceptNull "value" id FC.text
-
     mbMbText <- HH.forAll (Gen.maybe (Gen.maybe genText))
 
     let
       testInput =
         encodeTestObject $
           case mbMbText of
-            Just mbText -> ["value" .= mbText]
+            Just mbText -> ["optional_EmitNull_AcceptNull_Field" .= mbText]
             Nothing -> []
 
-    FA.decode schema testInput === Right (join mbMbText)
+      decoded =
+        FA.decode
+          Examples.optionalField_EmitNull_AcceptNull_ExampleSchema
+          testInput
+
+      expected =
+        Right
+          . Examples.OptionalField_EmitNull_AcceptNull_Example
+          . join
+          $ mbMbText
+
+    decoded === expected
 
 prop_encode_optionalField_OmitKey_AcceptNull :: HH.Property
 prop_encode_optionalField_OmitKey_AcceptNull =
   HH.property $ do
-    let
-      schema :: FC.Fleece schema => schema (Maybe T.Text)
-      schema =
-        FC.object $
-          FC.constructor id
-            #+ FC.optionalField FC.OmitKey_AcceptNull "value" id FC.text
-
     mbText <- HH.forAll (Gen.maybe genText)
 
     let
+      encoded =
+        FA.encode
+          Examples.optionalField_OmitKey_AcceptNull_ExampleSchema
+          (Examples.OptionalField_OmitKey_AcceptNull_Example mbText)
+
       expected =
         encodeTestObject $
           case mbText of
-            Just text -> ["value" .= text]
+            Just text -> ["optional_OmitKey_AcceptNull_Field" .= text]
             Nothing -> []
 
-    FA.encode schema mbText === expected
+    encoded === expected
 
 prop_decode_optionalField_OmitKey_AcceptNull :: HH.Property
 prop_decode_optionalField_OmitKey_AcceptNull =
   HH.property $ do
-    let
-      schema :: FC.Fleece schema => schema (Maybe T.Text)
-      schema =
-        FC.object $
-          FC.constructor id
-            #+ FC.optionalField FC.OmitKey_AcceptNull "value" id FC.text
-
     mbMbText <- HH.forAll (Gen.maybe (Gen.maybe genText))
 
     let
       testInput =
         encodeTestObject $
           case mbMbText of
-            Just mbText -> ["value" .= mbText]
+            Just mbText -> ["optional_OmitKey_AcceptNull_Field" .= mbText]
             Nothing -> []
 
-    FA.decode schema testInput === Right (join mbMbText)
+      decoded =
+        FA.decode
+          Examples.optionalField_OmitKey_AcceptNull_ExampleSchema
+          testInput
+
+      expected =
+        Right
+          . Examples.OptionalField_OmitKey_AcceptNull_Example
+          . join
+          $ mbMbText
+
+    decoded === expected
 
 prop_encode_optionalField_OmitKey_DelegateNull :: HH.Property
 prop_encode_optionalField_OmitKey_DelegateNull =
   HH.property $ do
-    let
-      schema :: FC.Fleece schema => schema (Maybe T.Text)
-      schema =
-        FC.object $
-          FC.constructor id
-            #+ FC.optionalField FC.OmitKey_DelegateNull "value" id FC.text
-
     mbText <- HH.forAll (Gen.maybe genText)
 
     let
+      encoded =
+        FA.encode
+          Examples.optionalField_OmitKey_DelegateNull_ExampleSchema
+          (Examples.OptionalField_OmitKey_DelegateNull_Example mbText)
+
       expected =
         encodeTestObject $
           case mbText of
-            Just text -> ["value" .= text]
+            Just text -> ["optional_OmitKey_DelegateNull_Field" .= text]
             Nothing -> []
 
-    FA.encode schema mbText === expected
+    encoded === expected
 
 prop_decode_optionalField_OmitKey_DelegateNull :: HH.Property
 prop_decode_optionalField_OmitKey_DelegateNull =
   HH.property $ do
-    let
-      schema :: FC.Fleece schema => schema (Maybe T.Text)
-      schema =
-        FC.object $
-          FC.constructor id
-            #+ FC.optionalField FC.OmitKey_DelegateNull "value" id FC.text
-
     mbText <- HH.forAll (Gen.maybe genText)
 
     let
       testInput =
         encodeTestObject $
           case mbText of
-            Just text -> ["value" .= text]
+            Just text -> ["optional_OmitKey_DelegateNull_Field" .= text]
             Nothing -> []
 
-    FA.decode schema testInput === Right mbText
+      decoded =
+        FA.decode
+          Examples.optionalField_OmitKey_DelegateNull_ExampleSchema
+          testInput
+
+      expected =
+        Right
+          . Examples.OptionalField_OmitKey_DelegateNull_Example
+          $ mbText
+
+    decoded === expected
 
 prop_decode_optionalField_OmitKey_DelegateNull_Failure :: HH.Property
 prop_decode_optionalField_OmitKey_DelegateNull_Failure =
   HH.withTests 1 . HH.property $ do
     let
-      schema :: FC.Fleece schema => schema (Maybe T.Text)
-      schema =
-        FC.object $
-          FC.constructor id
-            #+ FC.optionalField FC.OmitKey_DelegateNull "value" id FC.text
-
       testInput =
         encodeTestObject
-          [ "value" .= (Nothing :: Maybe T.Text)
+          [ "optional_OmitKey_DelegateNull_Field" .= (Nothing :: Maybe T.Text)
           ]
 
-    FA.decode schema testInput
-      === Left "Error in $.value: parsing text failed, expected String, but encountered Null"
+      decoded =
+        FA.decode
+          Examples.optionalField_OmitKey_DelegateNull_ExampleSchema
+          testInput
+
+      expected =
+        Left "Error in $['optional_OmitKey_DelegateNull_Field']: parsing text failed, expected String, but encountered Null"
+
+    decoded === expected
+
+prop_encode_optionalField_OmitKey_DelegateNull_Nullable :: HH.Property
+prop_encode_optionalField_OmitKey_DelegateNull_Nullable =
+  HH.property $ do
+    mbMbText <- HH.forAll (Gen.maybe (Gen.maybe genText))
+
+    let
+      encoded =
+        FA.encode
+          Examples.optionalField_OmitKey_DelegateNull_NullableExampleSchema
+          (Examples.OptionalField_OmitKey_DelegateNull_NullableExample mbMbText)
+
+      expected =
+        encodeTestObject $
+          case mbMbText of
+            Just mbText -> ["optional_OmitKey_DelegateNull_Nullable_Field" .= mbText]
+            Nothing -> []
+
+    encoded === expected
+
+prop_decode_optionalField_OmitKey_DelegateNull_Nullable :: HH.Property
+prop_decode_optionalField_OmitKey_DelegateNull_Nullable =
+  HH.property $ do
+    mbMbText <- HH.forAll (Gen.maybe (Gen.maybe genText))
+
+    let
+      testInput =
+        encodeTestObject $
+          case mbMbText of
+            Just mbText -> ["optional_OmitKey_DelegateNull_Nullable_Field" .= mbText]
+            Nothing -> []
+
+      decoded =
+        FA.decode
+          Examples.optionalField_OmitKey_DelegateNull_NullableExampleSchema
+          testInput
+
+      expected =
+        Right
+          . Examples.OptionalField_OmitKey_DelegateNull_NullableExample
+          $ mbMbText
+
+    decoded === expected
 
 encodeTestObject :: [AesonEncoding.Series] -> LBS.ByteString
 encodeTestObject =

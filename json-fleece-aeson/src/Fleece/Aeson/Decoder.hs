@@ -36,25 +36,31 @@ instance FC.Fleece Decoder where
   text =
     Decoder $ Aeson.withText "text" pure
 
-  required name _accessor (Decoder fieldFromValue) =
+  nullable (Decoder parseValue) =
+    Decoder $ \value ->
+      case value of
+        Aeson.Null -> pure Nothing
+        _ -> fmap Just (parseValue value)
+
+  required name _accessor (Decoder parseValue) =
     Field $ \object ->
       AesonTypes.explicitParseField
-        fieldFromValue
+        parseValue
         object
         (AesonKey.fromString name)
 
-  optionalField nullBehavior name _accessor (Decoder fieldFromValue) =
+  optionalField nullBehavior name _accessor (Decoder parseValue) =
     let
       key = AesonKey.fromString name
     in
       Field $ \object ->
         case nullBehavior of
           FC.EmitNull_AcceptNull ->
-            AesonTypes.explicitParseFieldMaybe fieldFromValue object key
+            AesonTypes.explicitParseFieldMaybe parseValue object key
           FC.OmitKey_AcceptNull ->
-            AesonTypes.explicitParseFieldMaybe fieldFromValue object key
+            AesonTypes.explicitParseFieldMaybe parseValue object key
           FC.OmitKey_DelegateNull ->
-            AesonTypes.explicitParseFieldMaybe' fieldFromValue object key
+            AesonTypes.explicitParseFieldMaybe' parseValue object key
 
   constructor f =
     Object (\_object -> pure f)

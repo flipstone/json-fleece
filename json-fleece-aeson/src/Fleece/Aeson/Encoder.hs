@@ -31,6 +31,12 @@ instance FC.Fleece Encoder where
   text =
     Encoder Aeson.toEncoding
 
+  nullable (Encoder toEncoding) =
+    Encoder $ \mbValue ->
+      case mbValue of
+        Nothing -> Aeson.toEncoding Aeson.Null
+        Just value -> toEncoding value
+
   required name accessor (Encoder toEncoding) =
     Field $ \object ->
       AesonEncoding.pair
