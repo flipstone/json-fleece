@@ -1,18 +1,18 @@
 module Fleece.Examples
-  ( FooBar(..)
+  ( FooBar (..)
   , fooBarSchema
   ) where
 
 import Data.Scientific (Scientific)
 import qualified Data.Text as T
 
-import Fleece.Core (Fleece, required, object, constructor, text, number, (#+))
+import Fleece.Core (Fleece, constructor, number, object, required, text, (#+))
 
-data FooBar =
-  FooBar
-    { foo :: T.Text
-    , bar :: Scientific
-    } deriving (Eq, Show)
+data FooBar = FooBar
+  { foo :: T.Text
+  , bar :: Scientific
+  }
+  deriving (Eq, Show)
 
 fooBarSchema :: Fleece schema => schema FooBar
 fooBarSchema =

@@ -3,4 +3,6 @@
 set -e
 
 source scripts/lib/run-in-container.sh
-exec bash "$@"
+
+./scripts/test
+./scripts/format-repo

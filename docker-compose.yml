@@ -9,7 +9,7 @@ services:
     working_dir: ${PROJECT_DIR}
     environment:
       STACK_ROOT: /stack-root
-
+      IN_DEV_CONTAINER: "true"
 
 volumes:
   stack_root:

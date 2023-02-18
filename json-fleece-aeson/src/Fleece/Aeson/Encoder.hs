@@ -1,4 +1,5 @@
 {-# LANGUAGE TypeFamilies #-}
+
 module Fleece.Aeson.Encoder
   ( Encoder
   , encode
@@ -10,19 +11,19 @@ import qualified Data.Aeson.Key as AesonKey
 import qualified Data.ByteString.Lazy as LBS
 import qualified Fleece.Core as FC
 
-newtype Encoder a =
-  Encoder (a -> Aeson.Encoding)
+newtype Encoder a
+  = Encoder (a -> Aeson.Encoding)
 
 encode :: Encoder a -> a -> LBS.ByteString
 encode (Encoder toEncoding) =
   AesonEncoding.encodingToLazyByteString . toEncoding
 
 instance FC.Fleece Encoder where
-  data Object Encoder object _constructor =
-    Object (object -> Aeson.Series)
+  data Object Encoder object _constructor
+    = Object (object -> Aeson.Series)
 
-  data Field Encoder object _a =
-    Field (object -> Aeson.Series)
+  data Field Encoder object _a
+    = Field (object -> Aeson.Series)
 
   number =
     Encoder Aeson.toEncoding
@@ -44,16 +45,12 @@ instance FC.Fleece Encoder where
         case (accessor object, nullBehavior) of
           (Just value, _) ->
             AesonEncoding.pair key (toEncoding value)
-
           (Nothing, FC.EmitNull_AcceptNull) ->
             AesonEncoding.pair key (Aeson.toEncoding Aeson.Null)
-
           (Nothing, FC.OmitKey_AcceptNull) ->
             mempty
-
           (Nothing, FC.OmitKey_DelegateNull) ->
             mempty
-
 
   constructor _f =
     Object (\_ -> mempty)

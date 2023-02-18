@@ -1,4 +1,5 @@
 {-# LANGUAGE TypeFamilies #-}
+
 module Fleece.Aeson.Decoder
   ( Decoder
   , decode
@@ -12,8 +13,8 @@ import qualified Data.Aeson.Types as AesonTypes
 import qualified Data.ByteString.Lazy as LBS
 import qualified Fleece.Core as FC
 
-newtype Decoder a =
-  Decoder (Aeson.Value -> AesonTypes.Parser a)
+newtype Decoder a
+  = Decoder (Aeson.Value -> AesonTypes.Parser a)
 
 fromValue :: Decoder a -> Aeson.Value -> Either String a
 fromValue (Decoder f) = AesonTypes.parseEither f
@@ -23,11 +24,11 @@ decode decoder =
   fromValue decoder <=< Aeson.eitherDecode
 
 instance FC.Fleece Decoder where
-  data Object Decoder _object a =
-    Object (Aeson.Object -> AesonTypes.Parser a)
+  data Object Decoder _object a
+    = Object (Aeson.Object -> AesonTypes.Parser a)
 
-  data Field Decoder _object a =
-    Field (Aeson.Object -> AesonTypes.Parser a)
+  data Field Decoder _object a
+    = Field (Aeson.Object -> AesonTypes.Parser a)
 
   number =
     Decoder $ Aeson.withScientific "number" pure

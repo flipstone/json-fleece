@@ -1,4 +1,5 @@
 {-# LANGUAGE TypeFamilies #-}
+
 module Fleece.Markdown
   ( Markdown
   , renderMarkdown
@@ -6,12 +7,12 @@ module Fleece.Markdown
 
 import qualified Data.Text.Lazy as LT
 import qualified Data.Text.Lazy.Builder as LTB
-import Data.Typeable (tyConName, typeRepTyCon, typeRep)
+import Data.Typeable (tyConName, typeRep, typeRepTyCon)
 
 import qualified Fleece.Core as FC
 
-newtype Markdown a =
-  Markdown LTB.Builder
+newtype Markdown a
+  = Markdown LTB.Builder
 
 renderMarkdown :: Markdown a -> LT.Text
 renderMarkdown (Markdown builder) = LTB.toLazyText builder
@@ -28,10 +29,14 @@ instance FC.Fleece Markdown where
   required name _accessor (Markdown builder) =
     Field $
       pipe
-        <> LTB.fromString name <> pipe
-        <> LTB.fromString "yes" <> pipe
-        <> LTB.fromString "no" <> pipe
-        <> builder <> pipe
+        <> LTB.fromString name
+        <> pipe
+        <> LTB.fromString "yes"
+        <> pipe
+        <> LTB.fromString "no"
+        <> pipe
+        <> builder
+        <> pipe
         <> newline
 
   optionalField _nullBehavior _name _accessor (Markdown _builder) =
@@ -47,16 +52,16 @@ instance FC.Fleece Markdown where
     let
       typeConstructor =
         typeRepTyCon
-        . typeRep
-        $ markdown
+          . typeRep
+          $ markdown
 
       markdown =
         Markdown $
-          h1 (tyConName typeConstructor) <> newline
-          <> newline
-          <> fieldsHeader
-          <> fieldsMarkdown
-
+          h1 (tyConName typeConstructor)
+            <> newline
+            <> newline
+            <> fieldsHeader
+            <> fieldsMarkdown
     in
       markdown
 
@@ -67,9 +72,9 @@ h1 str =
 fieldsHeader :: LTB.Builder
 fieldsHeader =
   LTB.fromString "|Field|Key Required|Null Allowed|Type|"
-  <> newline
-  <> LTB.fromString "|---|---|---|---|"
-  <> newline
+    <> newline
+    <> LTB.fromString "|---|---|---|---|"
+    <> newline
 
 pipe :: LTB.Builder
 pipe =

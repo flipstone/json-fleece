@@ -1,15 +1,16 @@
 {-# LANGUAGE TypeFamilies #-}
+
 module Fleece.Core
-  ( Fleece(Field, Object, number, required, optionalField, text, object, constructor, field)
+  ( Fleece (Field, Object, number, required, optionalField, text, object, constructor, field)
   , optional
   , (#+)
-  , NullBehavior(..)
+  , NullBehavior (..)
   ) where
 
 import Data.Kind (Type)
 import Data.Scientific (Scientific)
-import Data.Typeable (Typeable)
 import qualified Data.Text as T
+import Data.Typeable (Typeable)
 
 class Fleece schema where
   data Object schema :: Type -> Type -> Type
@@ -57,7 +58,7 @@ class Fleece schema where
 (#+) =
   field
 
-infixl #+
+infixl 9 #+
 
 data NullBehavior
   = EmitNull_AcceptNull

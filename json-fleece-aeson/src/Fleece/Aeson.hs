@@ -1,4 +1,5 @@
 {-# LANGUAGE TypeFamilies #-}
+
 module Fleece.Aeson
   ( module Export
   ) where
