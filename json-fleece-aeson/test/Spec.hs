@@ -35,6 +35,8 @@ tests =
   , ("prop_encodeObject", prop_encodeObject)
   , ("prop_encode_nullableField", prop_encode_nullableField)
   , ("prop_decode_nullableField", prop_decode_nullableField)
+  , ("prop_encode_validate", prop_encode_validate)
+  , ("prop_decode_validate", prop_decode_validate)
   , ("prop_decode_nullableField_Failure", prop_decode_nullableField_Failure)
   , ("prop_decode_optionalField_EmitNull_AcceptNull", prop_decode_optionalField_EmitNull_AcceptNull)
   , ("prop_encode_optionalField_EmitNull_AcceptNull", prop_encode_optionalField_EmitNull_AcceptNull)
@@ -149,6 +151,43 @@ prop_decode_nullableField =
         Right
           . Examples.NullableFieldExample
           $ mbText
+
+    decoded === expected
+
+prop_encode_validate :: HH.Property
+prop_encode_validate =
+  HH.property $ do
+    text <- HH.forAll genText
+
+    let
+      encoded =
+        FA.encode
+          Examples.validationExampleSchema
+          (Examples.ValidationExample text)
+
+      expected =
+        Aeson.encode text
+
+    encoded === expected
+
+prop_decode_validate :: HH.Property
+prop_decode_validate =
+  HH.property $ do
+    text <- HH.forAll genText
+
+    let
+      testInput =
+        Aeson.encode text
+
+      decoded =
+        FA.decode
+          Examples.validationExampleSchema
+          testInput
+
+      expected =
+        if T.length text > 12
+          then Left "Error in $: Error validating ValidationExample: At most 12 characters allowed"
+          else Right (Examples.ValidationExample text)
 
     decoded === expected
 

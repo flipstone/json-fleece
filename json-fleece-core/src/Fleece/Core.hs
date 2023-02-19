@@ -1,13 +1,31 @@
 {-# LANGUAGE TypeFamilies #-}
 
 module Fleece.Core
-  ( Fleece (Field, Object, number, required, optionalField, text, objectNamed, constructor, nullable, field)
-  , object
+  ( Fleece
+      ( Field
+      , Object
+      , number
+      , required
+      , optionalField
+      , text
+      , objectNamed
+      , constructor
+      , nullable
+      , field
+      , validateNamed
+      )
   , optional
+  , object
+  , validate
+  , transform
+  , transformNamed
+  , coerceSchema
+  , coerceSchemaNamed
   , (#+)
   , NullBehavior (..)
   ) where
 
+import Data.Coerce (Coercible, coerce)
 import Data.Kind (Type)
 import Data.Scientific (Scientific)
 import qualified Data.Text as T
@@ -50,6 +68,13 @@ class Fleece schema where
     Field schema object a ->
     Object schema object b
 
+  validateNamed ::
+    String ->
+    (a -> b) ->
+    (b -> Either String a) ->
+    (schema b) ->
+    (schema a)
+
 (#+) ::
   Fleece schema =>
   Object schema object (a -> b) ->
@@ -72,15 +97,76 @@ object ::
 object o =
   let
     name =
-      tyConName
-        . typeRepTyCon
-        . typeRep
-        $ schema
+      defaultSchemaName schema
 
     schema =
       objectNamed name o
   in
     schema
+
+validate ::
+  (Fleece schema, Typeable a) =>
+  (a -> b) ->
+  (b -> Either String a) ->
+  schema b ->
+  schema a
+validate uncheck check schemaB =
+  let
+    name =
+      defaultSchemaName schemaA
+
+    schemaA =
+      validateNamed name uncheck check schemaB
+  in
+    schemaA
+
+transform ::
+  (Fleece schema, Typeable a) =>
+  (a -> b) ->
+  (b -> a) ->
+  schema b ->
+  schema a
+transform aToB bToA schemaB =
+  let
+    name =
+      defaultSchemaName schemaA
+
+    schemaA =
+      transformNamed name aToB bToA schemaB
+  in
+    schemaA
+
+transformNamed ::
+  Fleece schema =>
+  String ->
+  (a -> b) ->
+  (b -> a) ->
+  schema b ->
+  schema a
+transformNamed name aToB bToA =
+  validateNamed name aToB (Right . bToA)
+
+coerceSchema ::
+  (Fleece schema, Typeable a, Coercible a b) =>
+  schema b ->
+  schema a
+coerceSchema schemaB =
+  let
+    name =
+      defaultSchemaName schemaA
+
+    schemaA =
+      coerceSchemaNamed name schemaB
+  in
+    schemaA
+
+coerceSchemaNamed ::
+  (Fleece schema, Coercible a b) =>
+  String ->
+  schema b ->
+  schema a
+coerceSchemaNamed name schemaB =
+  transformNamed name coerce coerce schemaB
 
 optional ::
   Fleece schema =>
@@ -89,3 +175,14 @@ optional ::
   schema a ->
   Field schema object (Maybe a)
 optional = optionalField OmitKey_AcceptNull
+
+-- Internal Helpers
+
+defaultSchemaName ::
+  Typeable a =>
+  schema a ->
+  String
+defaultSchemaName =
+  tyConName
+    . typeRepTyCon
+    . typeRep

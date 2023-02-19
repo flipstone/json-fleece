@@ -67,3 +67,6 @@ instance FC.Fleece Encoder where
 
   objectNamed _name (Object toSeries) =
     Encoder (Aeson.pairs . toSeries)
+
+  validateNamed _name uncheck _check (Encoder toEncoding) =
+    Encoder (toEncoding . uncheck)

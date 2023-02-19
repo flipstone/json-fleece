@@ -20,6 +20,7 @@ tests :: [(HH.PropertyName, HH.Property)]
 tests =
   [ ("prop_object", prop_object)
   , ("prop_nullableField", prop_nullableField)
+  , ("prop_validate", prop_validate)
   , ("prop_optionalField_EmitNull_AcceptNull", prop_optionalField_EmitNull_AcceptNull)
   , ("prop_optionalField_OmitKey_AcceptNull", prop_optionalField_OmitKey_AcceptNull)
   , ("prop_optionalField_OmitKey_DelegateNull", prop_optionalField_OmitKey_DelegateNull)
@@ -52,6 +53,18 @@ prop_nullableField =
         , "|Field|Key Required|Null Allowed|Type|"
         , "|---|---|---|---|"
         , "|nullableField|yes|yes|string|"
+        , ""
+        ]
+
+prop_validate :: HH.Property
+prop_validate =
+  HH.withTests 1 . HH.property $
+    FM.renderMarkdown Examples.validationExampleSchema
+      === LT.intercalate
+        "\n"
+        [ "# ValidationExample"
+        , ""
+        , "string (with validation restrictions)"
         , ""
         ]
 

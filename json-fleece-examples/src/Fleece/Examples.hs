@@ -3,6 +3,8 @@ module Fleece.Examples
   , fooBarSchema
   , NullableFieldExample (..)
   , nullableFieldExampleSchema
+  , ValidationExample (..)
+  , validationExampleSchema
   , OptionalFieldExample (..)
   , optionalFieldExampleSchema
   , OptionalField_EmitNull_AcceptNull_Example (..)
@@ -29,6 +31,7 @@ import Fleece.Core
   , optionalField
   , required
   , text
+  , validate
   , (#+)
   )
 
@@ -55,6 +58,16 @@ nullableFieldExampleSchema =
   object $
     constructor NullableFieldExample
       #+ required "nullableField" exampleNullableField (nullable text)
+
+newtype ValidationExample = ValidationExample T.Text
+  deriving (Eq, Show)
+
+validationExampleSchema :: Fleece schema => schema ValidationExample
+validationExampleSchema =
+  validate
+    (\(ValidationExample t) -> t)
+    (\t -> if T.length t > 12 then Left "At most 12 characters allowed" else Right (ValidationExample t))
+    text
 
 data OptionalFieldExample = OptionalFieldExample
   { exampleOptionalField :: Maybe T.Text

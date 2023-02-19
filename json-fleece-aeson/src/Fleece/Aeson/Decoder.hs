@@ -71,3 +71,10 @@ instance FC.Fleece Decoder where
   objectNamed name (Object f) =
     Decoder $ Aeson.withObject name $ \object ->
       f object
+
+  validateNamed name _uncheck check (Decoder parseValue) =
+    Decoder $ \jsonValue -> do
+      uncheckedValue <- parseValue jsonValue
+      case check uncheckedValue of
+        Right checkedValue -> pure checkedValue
+        Left err -> fail $ "Error validating " <> name <> ": " <> err

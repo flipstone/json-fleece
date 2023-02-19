@@ -5,6 +5,7 @@ module Fleece.Markdown
   , renderMarkdown
   ) where
 
+-- import Data.Coerce (coerce)
 import qualified Data.Text.Lazy as LT
 import qualified Data.Text.Lazy.Builder as LTB
 
@@ -70,6 +71,17 @@ instance FC.Fleece Markdown where
             <> fieldsMarkdown
     in
       markdown
+
+  validateNamed name _check _unvalidate markdown =
+    markdown
+      { schemaDocs =
+          h1 name
+            <> newline
+            <> newline
+            <> schemaDocs markdown
+            <> LTB.fromString " (with validation restrictions)"
+            <> newline
+      }
 
 h1 :: String -> LTB.Builder
 h1 str =
