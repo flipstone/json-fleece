@@ -19,6 +19,7 @@ main =
 tests :: [(HH.PropertyName, HH.Property)]
 tests =
   [ ("prop_object", prop_object)
+  , ("prop_boundedEnum", prop_boundedEnum)
   , ("prop_nullableField", prop_nullableField)
   , ("prop_validate", prop_validate)
   , ("prop_optionalField_EmitNull_AcceptNull", prop_optionalField_EmitNull_AcceptNull)
@@ -39,6 +40,22 @@ prop_object =
         , "|---|---|---|---|"
         , "|foo|yes|no|string|"
         , "|bar|yes|no|number|"
+        , ""
+        ]
+
+prop_boundedEnum :: HH.Property
+prop_boundedEnum =
+  HH.withTests 1 . HH.property $
+    FM.renderMarkdown Examples.boundedEnumExampleSchema
+      === LT.intercalate
+        "\n"
+        [ "# BoundedEnumExample"
+        , ""
+        , "Enum values:"
+        , ""
+        , "- apple"
+        , "- orange"
+        , "- kumquat"
         , ""
         ]
 

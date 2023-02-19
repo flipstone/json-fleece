@@ -11,6 +11,7 @@ import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Key as AesonKey
 import qualified Data.Aeson.Types as AesonTypes
 import qualified Data.ByteString.Lazy as LBS
+import qualified Data.Map.Strict as Map
 import qualified Fleece.Core as FC
 
 newtype Decoder a
@@ -71,6 +72,18 @@ instance FC.Fleece Decoder where
   objectNamed name (Object f) =
     Decoder $ Aeson.withObject name $ \object ->
       f object
+
+  boundedEnumNamed name toText =
+    let
+      decodingMap =
+        Map.fromList
+          . map (\e -> (toText e, e))
+          $ [minBound .. maxBound]
+    in
+      Decoder . Aeson.withText name $ \textValue ->
+        case Map.lookup textValue decodingMap of
+          Just enumValue -> pure enumValue
+          Nothing -> fail $ "Unrecognized value for " <> name <> " enum: " <> show textValue
 
   validateNamed name _uncheck check (Decoder parseValue) =
     Decoder $ \jsonValue -> do

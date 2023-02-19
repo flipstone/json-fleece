@@ -27,12 +27,14 @@ main =
 
 tests :: [(HH.PropertyName, HH.Property)]
 tests =
-  [ ("prop_decode_NumberSuccess", prop_decode_NumberSuccess)
-  , ("prop_encodeNumber", prop_encodeNumber)
-  , ("prop_decode_TextSuccess", prop_decode_TextSuccess)
-  , ("prop_encodeText", prop_encodeText)
-  , ("prop_decode_ObjectSuccess", prop_decode_ObjectSuccess)
-  , ("prop_encodeObject", prop_encodeObject)
+  [ ("prop_decode_number", prop_decode_number)
+  , ("prop_encode_number", prop_encode_number)
+  , ("prop_decode_text", prop_decode_text)
+  , ("prop_encode_text", prop_encode_text)
+  , ("prop_decode_object", prop_decode_object)
+  , ("prop_encode_object", prop_encode_object)
+  , ("prop_decode_boundedEnum", prop_decode_boundedEnum)
+  , ("prop_encode_boundedEnum", prop_encode_boundedEnum)
   , ("prop_encode_nullableField", prop_encode_nullableField)
   , ("prop_decode_nullableField", prop_decode_nullableField)
   , ("prop_encode_validate", prop_encode_validate)
@@ -49,32 +51,32 @@ tests =
   , ("prop_decode_optionalField_OmitKey_DelegateNull_Nullable", prop_decode_optionalField_OmitKey_DelegateNull_Nullable)
   ]
 
-prop_decode_NumberSuccess :: HH.Property
-prop_decode_NumberSuccess =
+prop_decode_number :: HH.Property
+prop_decode_number =
   HH.property $ do
     num <- HH.forAll genScientific
     FA.decode FC.number (Aeson.encode (Aeson.Number num)) === Right num
 
-prop_encodeNumber :: HH.Property
-prop_encodeNumber =
+prop_encode_number :: HH.Property
+prop_encode_number =
   HH.property $ do
     num <- HH.forAll genScientific
     FA.encode FC.number num === Aeson.encode (Aeson.Number num)
 
-prop_decode_TextSuccess :: HH.Property
-prop_decode_TextSuccess =
+prop_decode_text :: HH.Property
+prop_decode_text =
   HH.property $ do
     text <- HH.forAll genText
     FA.decode FC.text (Aeson.encode (Aeson.String text)) === Right text
 
-prop_encodeText :: HH.Property
-prop_encodeText =
+prop_encode_text :: HH.Property
+prop_encode_text =
   HH.property $ do
     text <- HH.forAll genText
     FA.encode FC.text text === Aeson.encode (Aeson.String text)
 
-prop_decode_ObjectSuccess :: HH.Property
-prop_decode_ObjectSuccess =
+prop_decode_object :: HH.Property
+prop_decode_object =
   HH.property $ do
     fooValue <- HH.forAll genText
     barValue <- HH.forAll genScientific
@@ -94,8 +96,8 @@ prop_decode_ObjectSuccess =
 
     FA.decode Examples.fooBarSchema jsonObject === Right expected
 
-prop_encodeObject :: HH.Property
-prop_encodeObject =
+prop_encode_object :: HH.Property
+prop_encode_object =
   HH.property $ do
     fooValue <- HH.forAll genText
     barValue <- HH.forAll genScientific
@@ -114,6 +116,54 @@ prop_encodeObject =
           }
 
     FA.encode Examples.fooBarSchema fooBar === expected
+
+prop_decode_boundedEnum :: HH.Property
+prop_decode_boundedEnum =
+  HH.property $ do
+    textValue <-
+      HH.forAll $
+        Gen.choice
+          [ pure "apple"
+          , pure "orange"
+          , pure "kumquat"
+          , genText
+          ]
+
+    let
+      testInput =
+        Aeson.encode textValue
+
+      expected =
+        case textValue of
+          "apple" -> Right Examples.Apple
+          "orange" -> Right Examples.Orange
+          "kumquat" -> Right Examples.Kumquat
+          _ -> Left $ "Error in $: Unrecognized value for BoundedEnumExample enum: " <> show textValue
+
+      decoded =
+        FA.decode
+          Examples.boundedEnumExampleSchema
+          testInput
+
+    decoded === expected
+
+prop_encode_boundedEnum :: HH.Property
+prop_encode_boundedEnum =
+  HH.property $ do
+    enumValue <- HH.forAll Gen.enumBounded
+
+    let
+      expected =
+        Aeson.encode
+          . Examples.boundedEnumExampleToText
+          $ enumValue
+
+      encoded =
+        FA.encode
+          Examples.boundedEnumExampleSchema
+          enumValue
+
+    encoded === expected
 
 prop_encode_nullableField :: HH.Property
 prop_encode_nullableField =

@@ -52,6 +52,8 @@ library:
     - Fleece.Aeson
     - Fleece.Aeson.Decoder
     - Fleece.Aeson.Encoder
+  dependencies:
+    - containers >= 0.6 && < 0.7
 
 tests:
   json-fleece-aeson-test:

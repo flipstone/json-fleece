@@ -13,9 +13,11 @@ module Fleece.Core
       , nullable
       , field
       , validateNamed
+      , boundedEnumNamed
       )
   , optional
   , object
+  , boundedEnum
   , validate
   , transform
   , transformNamed
@@ -75,6 +77,12 @@ class Fleece schema where
     (schema b) ->
     (schema a)
 
+  boundedEnumNamed ::
+    (Bounded a, Enum a) =>
+    String ->
+    (a -> T.Text) ->
+    schema a
+
 (#+) ::
   Fleece schema =>
   Object schema object (a -> b) ->
@@ -101,6 +109,20 @@ object o =
 
     schema =
       objectNamed name o
+  in
+    schema
+
+boundedEnum ::
+  (Fleece schema, Typeable a, Enum a, Bounded a) =>
+  (a -> T.Text) ->
+  schema a
+boundedEnum toText =
+  let
+    name =
+      defaultSchemaName schema
+
+    schema =
+      boundedEnumNamed name toText
   in
     schema
 

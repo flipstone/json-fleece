@@ -15,6 +15,9 @@ module Fleece.Examples
   , optionalField_OmitKey_DelegateNull_ExampleSchema
   , OptionalField_OmitKey_DelegateNull_NullableExample (..)
   , optionalField_OmitKey_DelegateNull_NullableExampleSchema
+  , BoundedEnumExample (..)
+  , boundedEnumExampleSchema
+  , boundedEnumExampleToText
   ) where
 
 import Data.Scientific (Scientific)
@@ -23,6 +26,7 @@ import qualified Data.Text as T
 import Fleece.Core
   ( Fleece
   , NullBehavior (EmitNull_AcceptNull, OmitKey_AcceptNull, OmitKey_DelegateNull)
+  , boundedEnum
   , constructor
   , nullable
   , number
@@ -135,3 +139,20 @@ optionalField_OmitKey_DelegateNull_NullableExampleSchema =
         "optional_OmitKey_DelegateNull_Nullable_Field"
         exampleOptional_OmitKey_DelegateNull_NullableField
         (nullable text)
+
+data BoundedEnumExample
+  = Apple
+  | Orange
+  | Kumquat
+  deriving (Eq, Show, Enum, Bounded)
+
+boundedEnumExampleSchema :: Fleece schema => schema BoundedEnumExample
+boundedEnumExampleSchema =
+  boundedEnum boundedEnumExampleToText
+
+boundedEnumExampleToText :: BoundedEnumExample -> T.Text
+boundedEnumExampleToText e =
+  case e of
+    Apple -> T.pack "apple"
+    Orange -> T.pack "orange"
+    Kumquat -> T.pack "kumquat"

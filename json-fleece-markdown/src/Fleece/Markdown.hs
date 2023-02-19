@@ -83,6 +83,22 @@ instance FC.Fleece Markdown where
             <> newline
       }
 
+  boundedEnumNamed name toText =
+    let
+      enumValues =
+        foldMap
+          (listItem . LTB.fromText . toText)
+          [minBound .. maxBound]
+    in
+      mkMarkdown $
+        h1 name
+          <> newline
+          <> newline
+          <> LTB.fromString "Enum values:"
+          <> newline
+          <> newline
+          <> enumValues
+
 h1 :: String -> LTB.Builder
 h1 str =
   LTB.fromString "# " <> LTB.fromString str
@@ -140,3 +156,7 @@ yes =
 no :: LTB.Builder
 no =
   LTB.fromString "no"
+
+listItem :: LTB.Builder -> LTB.Builder
+listItem item =
+  LTB.fromString "- " <> item <> newline
