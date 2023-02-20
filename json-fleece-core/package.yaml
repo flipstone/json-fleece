@@ -52,4 +52,5 @@ library:
     - Fleece.Core
   dependencies:
     - vector >= 0.12 && < 0.13
+    - time >= 1.11 && < 1.12
 

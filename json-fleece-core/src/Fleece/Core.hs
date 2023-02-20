@@ -33,6 +33,11 @@ module Fleece.Core
   , word16
   , word32
   , word64
+  , utcTime
+  , localTime
+  , zonedTime
+  , day
+  , iso8601Formatted
   , boundedIntegralNumber
   , boundedIntegralNumberNamed
   , transform
@@ -53,6 +58,8 @@ import qualified Data.Int as I
 import Data.Kind (Type)
 import Data.Scientific (Scientific, toBoundedInteger)
 import qualified Data.Text as T
+import qualified Data.Time as Time
+import qualified Data.Time.Format.ISO8601 as ISO8601
 import Data.Typeable (Typeable, tyConName, typeRep, typeRepTyCon)
 import qualified Data.Vector as V
 import qualified Data.Word as W
@@ -304,6 +311,46 @@ word32 = boundedIntegralNumber
 
 word64 :: Fleece schema => schema W.Word64
 word64 = boundedIntegralNumber
+
+utcTime :: Fleece schema => schema Time.UTCTime
+utcTime =
+  iso8601Formatted ISO8601.iso8601Format
+
+localTime :: Fleece schema => schema Time.LocalTime
+localTime =
+  iso8601Formatted ISO8601.iso8601Format
+
+zonedTime :: Fleece schema => schema Time.ZonedTime
+zonedTime =
+  iso8601Formatted ISO8601.iso8601Format
+
+day :: Fleece schema => schema Time.Day
+day =
+  iso8601Formatted ISO8601.iso8601Format
+
+iso8601Formatted ::
+  (Fleece schema, Typeable t) =>
+  ISO8601.Format t ->
+  schema t
+iso8601Formatted format =
+  let
+    name =
+      defaultSchemaName format
+
+    parseTime text =
+      case ISO8601.formatParseM format (T.unpack text) of
+        Just time -> pure time
+        Nothing ->
+          Left $
+            "Invalid time format for "
+              <> name
+              <> ": "
+              <> T.unpack text
+  in
+    validate
+      (T.pack . ISO8601.formatShow format)
+      parseTime
+      string
 
 -- Internal Helpers
 
