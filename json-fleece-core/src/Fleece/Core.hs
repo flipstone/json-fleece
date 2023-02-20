@@ -23,6 +23,18 @@ module Fleece.Core
   , boundedEnum
   , validate
   , list
+  , int
+  , int8
+  , int16
+  , int32
+  , int64
+  , word
+  , word8
+  , word16
+  , word32
+  , word64
+  , boundedIntegralNumber
+  , boundedIntegralNumberNamed
   , transform
   , transformNamed
   , coerceSchema
@@ -37,11 +49,13 @@ module Fleece.Core
   ) where
 
 import Data.Coerce (Coercible, coerce)
+import qualified Data.Int as I
 import Data.Kind (Type)
-import Data.Scientific (Scientific)
+import Data.Scientific (Scientific, toBoundedInteger)
 import qualified Data.Text as T
 import Data.Typeable (Typeable, tyConName, typeRep, typeRepTyCon)
 import qualified Data.Vector as V
+import qualified Data.Word as W
 
 data Null
   = Null
@@ -225,6 +239,71 @@ list itemSchema =
     V.fromList
     V.toList
     (array itemSchema)
+
+boundedIntegralNumberNamed ::
+  (Fleece schema, Integral n, Bounded n) =>
+  String ->
+  schema n
+boundedIntegralNumberNamed name =
+  let
+    validateInteger s =
+      case toBoundedInteger s of
+        Just n -> pure n
+        Nothing ->
+          Left $
+            "Error parsing bounded integer value for "
+              <> name
+              <> ". Value not integral, or exceeds the bounds of the expected type: "
+              <> show s
+  in
+    validateNamed
+      name
+      fromIntegral
+      validateInteger
+      number
+
+boundedIntegralNumber ::
+  (Fleece schema, Integral n, Bounded n, Typeable n) =>
+  schema n
+boundedIntegralNumber =
+  let
+    name =
+      defaultSchemaName schema
+
+    schema =
+      boundedIntegralNumberNamed name
+  in
+    schema
+
+int :: Fleece schema => schema Int
+int = boundedIntegralNumber
+
+int8 :: Fleece schema => schema I.Int8
+int8 = boundedIntegralNumber
+
+int16 :: Fleece schema => schema I.Int16
+int16 = boundedIntegralNumber
+
+int32 :: Fleece schema => schema I.Int32
+int32 = boundedIntegralNumber
+
+int64 :: Fleece schema => schema I.Int64
+int64 = boundedIntegralNumber
+
+word :: Fleece schema => schema Word
+word = boundedIntegralNumber
+
+word8 :: Fleece schema => schema W.Word8
+word8 = boundedIntegralNumber
+
+word16 :: Fleece schema => schema W.Word16
+word16 = boundedIntegralNumber
+
+word32 :: Fleece schema => schema W.Word32
+word32 = boundedIntegralNumber
+
+word64 :: Fleece schema => schema W.Word64
+word64 = boundedIntegralNumber
 
 -- Internal Helpers
 
