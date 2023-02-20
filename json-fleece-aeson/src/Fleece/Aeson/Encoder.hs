@@ -30,7 +30,7 @@ instance FC.Fleece Encoder where
   number =
     Encoder Aeson.toEncoding
 
-  string =
+  text =
     Encoder Aeson.toEncoding
 
   boolean =

@@ -34,7 +34,7 @@ import Fleece.Core
   , optional
   , optionalField
   , required
-  , string
+  , text
   , validate
   , (#+)
   )
@@ -49,7 +49,7 @@ fooBarSchema :: Fleece schema => schema FooBar
 fooBarSchema =
   object $
     constructor FooBar
-      #+ required "foo" foo string
+      #+ required "foo" foo text
       #+ required "bar" bar number
 
 data NullableFieldExample = NullableFieldExample
@@ -61,7 +61,7 @@ nullableFieldExampleSchema :: Fleece schema => schema NullableFieldExample
 nullableFieldExampleSchema =
   object $
     constructor NullableFieldExample
-      #+ required "nullableField" exampleNullableField (nullable string)
+      #+ required "nullableField" exampleNullableField (nullable text)
 
 newtype ValidationExample = ValidationExample T.Text
   deriving (Eq, Show)
@@ -71,7 +71,7 @@ validationExampleSchema =
   validate
     (\(ValidationExample t) -> t)
     (\t -> if T.length t > 12 then Left "At most 12 characters allowed" else Right (ValidationExample t))
-    string
+    text
 
 data OptionalFieldExample = OptionalFieldExample
   { exampleOptionalField :: Maybe T.Text
@@ -82,7 +82,7 @@ optionalFieldExampleSchema :: Fleece schema => schema OptionalFieldExample
 optionalFieldExampleSchema =
   object $
     constructor OptionalFieldExample
-      #+ optional "optionalField" exampleOptionalField string
+      #+ optional "optionalField" exampleOptionalField text
 
 data OptionalField_EmitNull_AcceptNull_Example = OptionalField_EmitNull_AcceptNull_Example
   { exampleOptional_EmitNull_AcceptNull_Field :: Maybe T.Text
@@ -95,7 +95,7 @@ optionalField_EmitNull_AcceptNull_ExampleSchema ::
 optionalField_EmitNull_AcceptNull_ExampleSchema =
   object $
     constructor OptionalField_EmitNull_AcceptNull_Example
-      #+ optionalField EmitNull_AcceptNull "optional_EmitNull_AcceptNull_Field" exampleOptional_EmitNull_AcceptNull_Field string
+      #+ optionalField EmitNull_AcceptNull "optional_EmitNull_AcceptNull_Field" exampleOptional_EmitNull_AcceptNull_Field text
 
 data OptionalField_OmitKey_AcceptNull_Example = OptionalField_OmitKey_AcceptNull_Example
   { exampleOptional_OmitKey_AcceptNull_Field :: Maybe T.Text
@@ -108,7 +108,7 @@ optionalField_OmitKey_AcceptNull_ExampleSchema ::
 optionalField_OmitKey_AcceptNull_ExampleSchema =
   object $
     constructor OptionalField_OmitKey_AcceptNull_Example
-      #+ optionalField OmitKey_AcceptNull "optional_OmitKey_AcceptNull_Field" exampleOptional_OmitKey_AcceptNull_Field string
+      #+ optionalField OmitKey_AcceptNull "optional_OmitKey_AcceptNull_Field" exampleOptional_OmitKey_AcceptNull_Field text
 
 data OptionalField_OmitKey_DelegateNull_Example = OptionalField_OmitKey_DelegateNull_Example
   { exampleOptional_OmitKey_DelegateNull_Field :: Maybe T.Text
@@ -121,7 +121,7 @@ optionalField_OmitKey_DelegateNull_ExampleSchema ::
 optionalField_OmitKey_DelegateNull_ExampleSchema =
   object $
     constructor OptionalField_OmitKey_DelegateNull_Example
-      #+ optionalField OmitKey_DelegateNull "optional_OmitKey_DelegateNull_Field" exampleOptional_OmitKey_DelegateNull_Field string
+      #+ optionalField OmitKey_DelegateNull "optional_OmitKey_DelegateNull_Field" exampleOptional_OmitKey_DelegateNull_Field text
 
 data OptionalField_OmitKey_DelegateNull_NullableExample = OptionalField_OmitKey_DelegateNull_NullableExample
   { exampleOptional_OmitKey_DelegateNull_NullableField :: Maybe (Maybe T.Text)
@@ -138,7 +138,7 @@ optionalField_OmitKey_DelegateNull_NullableExampleSchema =
         OmitKey_DelegateNull
         "optional_OmitKey_DelegateNull_Nullable_Field"
         exampleOptional_OmitKey_DelegateNull_NullableField
-        (nullable string)
+        (nullable text)
 
 data BoundedEnumExample
   = Apple

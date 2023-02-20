@@ -34,8 +34,8 @@ instance FC.Fleece Decoder where
   number =
     Decoder $ Aeson.withScientific "number" pure
 
-  string =
-    Decoder $ Aeson.withText "string" pure
+  text =
+    Decoder $ Aeson.withText "text" pure
 
   boolean =
     Decoder $ Aeson.withBool "bool" pure

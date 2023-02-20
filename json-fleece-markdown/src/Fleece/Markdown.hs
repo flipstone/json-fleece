@@ -43,7 +43,7 @@ instance FC.Fleece Markdown where
   number =
     mkMarkdown (LTB.fromString "number")
 
-  string =
+  text =
     mkMarkdown (LTB.fromString "string")
 
   boolean =

@@ -4,7 +4,7 @@ module Fleece.Core
   ( Fleece
       ( Field
       , Object
-      , string
+      , text
       , number
       , boolean
       , array
@@ -33,6 +33,7 @@ module Fleece.Core
   , word16
   , word32
   , word64
+  , string
   , utcTime
   , localTime
   , zonedTime
@@ -74,7 +75,7 @@ class Fleece schema where
 
   number :: schema Scientific
 
-  string :: schema T.Text
+  text :: schema T.Text
 
   boolean :: schema Bool
 
@@ -312,6 +313,9 @@ word32 = boundedIntegralNumber
 word64 :: Fleece schema => schema W.Word64
 word64 = boundedIntegralNumber
 
+string :: Fleece schema => schema String
+string = transform T.pack T.unpack text
+
 utcTime :: Fleece schema => schema Time.UTCTime
 utcTime =
   iso8601Formatted ISO8601.iso8601Format
@@ -337,20 +341,20 @@ iso8601Formatted format =
     name =
       defaultSchemaName format
 
-    parseTime text =
-      case ISO8601.formatParseM format (T.unpack text) of
+    parseTime jsonText =
+      case ISO8601.formatParseM format (T.unpack jsonText) of
         Just time -> pure time
         Nothing ->
           Left $
             "Invalid time format for "
               <> name
               <> ": "
-              <> T.unpack text
+              <> show jsonText
   in
     validate
       (T.pack . ISO8601.formatShow format)
       parseTime
-      string
+      text
 
 -- Internal Helpers
 

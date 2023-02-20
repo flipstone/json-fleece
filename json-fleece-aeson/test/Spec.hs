@@ -74,13 +74,13 @@ prop_decode_string :: HH.Property
 prop_decode_string =
   HH.property $ do
     text <- HH.forAll genText
-    FA.decode FC.string (Aeson.encode (Aeson.String text)) === Right text
+    FA.decode FC.text (Aeson.encode (Aeson.String text)) === Right text
 
 prop_encode_string :: HH.Property
 prop_encode_string =
   HH.property $ do
     text <- HH.forAll genText
-    FA.encode FC.string text === Aeson.encode (Aeson.String text)
+    FA.encode FC.text text === Aeson.encode (Aeson.String text)
 
 prop_decode_boolean :: HH.Property
 prop_decode_boolean =
@@ -125,7 +125,7 @@ prop_decode_array =
 
       decoded =
         FA.decode
-          (FC.array FC.string)
+          (FC.array FC.text)
           testInput
 
     decoded === expected
@@ -148,7 +148,7 @@ prop_encode_array =
 
       encoded =
         FA.encode
-          (FC.array FC.string)
+          (FC.array FC.text)
           texts
 
     encoded === expected
@@ -480,7 +480,7 @@ prop_decode_optionalField_OmitKey_DelegateNull_Failure =
           testInput
 
       expected =
-        Left "Error in $['optional_OmitKey_DelegateNull_Field']: parsing string failed, expected String, but encountered Null"
+        Left "Error in $['optional_OmitKey_DelegateNull_Field']: parsing text failed, expected String, but encountered Null"
 
     decoded === expected
 
