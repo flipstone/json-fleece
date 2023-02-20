@@ -34,8 +34,20 @@ instance FC.Fleece Decoder where
   number =
     Decoder $ Aeson.withScientific "number" pure
 
-  text =
-    Decoder $ Aeson.withText "text" pure
+  string =
+    Decoder $ Aeson.withText "string" pure
+
+  boolean =
+    Decoder $ Aeson.withBool "bool" pure
+
+  array (Decoder itemFromValue) =
+    Decoder $ Aeson.withArray "array" (traverse itemFromValue)
+
+  null =
+    Decoder $ \value ->
+      case value of
+        Aeson.Null -> pure FC.Null
+        _ -> AesonTypes.typeMismatch "Null" value
 
   nullable (Decoder parseValue) =
     Decoder $ \value ->

@@ -8,7 +8,9 @@ module Fleece.Aeson.Encoder
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Encoding as AesonEncoding
 import qualified Data.Aeson.Key as AesonKey
+import qualified Data.Aeson.Types as AesonTypes
 import qualified Data.ByteString.Lazy as LBS
+import qualified Data.Vector as V
 import qualified Fleece.Core as FC
 
 newtype Encoder a
@@ -28,8 +30,17 @@ instance FC.Fleece Encoder where
   number =
     Encoder Aeson.toEncoding
 
-  text =
+  string =
     Encoder Aeson.toEncoding
+
+  boolean =
+    Encoder Aeson.toEncoding
+
+  null =
+    Encoder (\FC.Null -> Aeson.toEncoding Aeson.Null)
+
+  array (Encoder itemToEncoding) =
+    Encoder (AesonTypes.listEncoding itemToEncoding . V.toList)
 
   nullable (Encoder toEncoding) =
     Encoder $ \mbValue ->

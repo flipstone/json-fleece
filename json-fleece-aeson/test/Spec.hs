@@ -11,6 +11,7 @@ import qualified Data.Aeson.Encoding as AesonEncoding
 import qualified Data.ByteString.Lazy as LBS
 import Data.Scientific (Scientific, scientific)
 import qualified Data.Text as T
+import qualified Data.Vector as V
 import Hedgehog ((===))
 import qualified Hedgehog as HH
 import qualified Hedgehog.Gen as Gen
@@ -29,8 +30,14 @@ tests :: [(HH.PropertyName, HH.Property)]
 tests =
   [ ("prop_decode_number", prop_decode_number)
   , ("prop_encode_number", prop_encode_number)
-  , ("prop_decode_text", prop_decode_text)
-  , ("prop_encode_text", prop_encode_text)
+  , ("prop_decode_string", prop_decode_string)
+  , ("prop_encode_string", prop_encode_string)
+  , ("prop_decode_boolean", prop_decode_boolean)
+  , ("prop_encode_boolean", prop_encode_boolean)
+  , ("prop_decode_null", prop_decode_null)
+  , ("prop_encode_null", prop_encode_null)
+  , ("prop_decode_array", prop_decode_array)
+  , ("prop_encode_array", prop_encode_array)
   , ("prop_decode_object", prop_decode_object)
   , ("prop_encode_object", prop_encode_object)
   , ("prop_decode_boundedEnum", prop_decode_boundedEnum)
@@ -63,17 +70,88 @@ prop_encode_number =
     num <- HH.forAll genScientific
     FA.encode FC.number num === Aeson.encode (Aeson.Number num)
 
-prop_decode_text :: HH.Property
-prop_decode_text =
+prop_decode_string :: HH.Property
+prop_decode_string =
   HH.property $ do
     text <- HH.forAll genText
-    FA.decode FC.text (Aeson.encode (Aeson.String text)) === Right text
+    FA.decode FC.string (Aeson.encode (Aeson.String text)) === Right text
 
-prop_encode_text :: HH.Property
-prop_encode_text =
+prop_encode_string :: HH.Property
+prop_encode_string =
   HH.property $ do
     text <- HH.forAll genText
-    FA.encode FC.text text === Aeson.encode (Aeson.String text)
+    FA.encode FC.string text === Aeson.encode (Aeson.String text)
+
+prop_decode_boolean :: HH.Property
+prop_decode_boolean =
+  HH.property $ do
+    bool <- HH.forAll Gen.bool
+    FA.decode FC.boolean (Aeson.encode (Aeson.Bool bool)) === Right bool
+
+prop_encode_boolean :: HH.Property
+prop_encode_boolean =
+  HH.property $ do
+    bool <- HH.forAll Gen.bool
+    FA.encode FC.boolean bool === Aeson.encode (Aeson.Bool bool)
+
+prop_decode_null :: HH.Property
+prop_decode_null =
+  HH.withTests 1 . HH.property $ do
+    FA.decode FC.null (Aeson.encode Aeson.Null) === Right FC.Null
+
+prop_encode_null :: HH.Property
+prop_encode_null =
+  HH.withTests 1 . HH.property $ do
+    FA.encode FC.null FC.Null === Aeson.encode Aeson.Null
+
+prop_decode_array :: HH.Property
+prop_decode_array =
+  HH.property $ do
+    texts <-
+      HH.forAll $
+        fmap
+          V.fromList
+          (Gen.list (Range.linear 0 10) genText)
+
+    let
+      testInput =
+        Aeson.encode
+          . Aeson.Array
+          . fmap Aeson.toJSON
+          $ texts
+
+      expected =
+        Right texts
+
+      decoded =
+        FA.decode
+          (FC.array FC.string)
+          testInput
+
+    decoded === expected
+
+prop_encode_array :: HH.Property
+prop_encode_array =
+  HH.property $ do
+    texts <-
+      HH.forAll $
+        fmap
+          V.fromList
+          (Gen.list (Range.linear 0 10) genText)
+
+    let
+      expected =
+        Aeson.encode
+          . Aeson.Array
+          . fmap Aeson.toJSON
+          $ texts
+
+      encoded =
+        FA.encode
+          (FC.array FC.string)
+          texts
+
+    encoded === expected
 
 prop_decode_object :: HH.Property
 prop_decode_object =
@@ -402,7 +480,7 @@ prop_decode_optionalField_OmitKey_DelegateNull_Failure =
           testInput
 
       expected =
-        Left "Error in $['optional_OmitKey_DelegateNull_Field']: parsing text failed, expected String, but encountered Null"
+        Left "Error in $['optional_OmitKey_DelegateNull_Field']: parsing string failed, expected String, but encountered Null"
 
     decoded === expected
 

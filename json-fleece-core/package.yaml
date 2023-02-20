@@ -50,4 +50,6 @@ library:
   source-dirs: src
   exposed-modules:
     - Fleece.Core
+  dependencies:
+    - vector >= 0.12 && < 0.13
 

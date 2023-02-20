@@ -39,11 +39,26 @@ renderMarkdown (Markdown _ builder) = LTB.toLazyText builder
 instance FC.Fleece Markdown where
   newtype Object Markdown _object _a = Object LTB.Builder
   newtype Field Markdown _object _a = Field LTB.Builder
+
   number =
     mkMarkdown (LTB.fromString "number")
 
-  text =
+  string =
     mkMarkdown (LTB.fromString "string")
+
+  boolean =
+    mkMarkdown (LTB.fromString "boolean")
+
+  array itemSchema =
+    mkMarkdown $
+      LTB.fromString "array of "
+        <> schemaDocs itemSchema
+        <> case schemaNullability itemSchema of
+          NotNull -> mempty
+          Nullable -> LTB.fromString " (nullable)"
+
+  null =
+    mkMarkdown (LTB.fromString "null")
 
   nullable =
     markNullable

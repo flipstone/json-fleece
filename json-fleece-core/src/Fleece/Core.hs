@@ -4,10 +4,13 @@ module Fleece.Core
   ( Fleece
       ( Field
       , Object
+      , string
       , number
+      , boolean
+      , array
+      , null
       , required
       , optionalField
-      , text
       , objectNamed
       , constructor
       , nullable
@@ -19,12 +22,18 @@ module Fleece.Core
   , object
   , boundedEnum
   , validate
+  , list
   , transform
   , transformNamed
   , coerceSchema
   , coerceSchemaNamed
   , (#+)
-  , NullBehavior (..)
+  , Null (Null)
+  , NullBehavior
+    ( EmitNull_AcceptNull
+    , OmitKey_AcceptNull
+    , OmitKey_DelegateNull
+    )
   ) where
 
 import Data.Coerce (Coercible, coerce)
@@ -32,6 +41,11 @@ import Data.Kind (Type)
 import Data.Scientific (Scientific)
 import qualified Data.Text as T
 import Data.Typeable (Typeable, tyConName, typeRep, typeRepTyCon)
+import qualified Data.Vector as V
+
+data Null
+  = Null
+  deriving (Eq, Show)
 
 class Fleece schema where
   data Object schema :: Type -> Type -> Type
@@ -39,7 +53,13 @@ class Fleece schema where
 
   number :: schema Scientific
 
-  text :: schema T.Text
+  string :: schema T.Text
+
+  boolean :: schema Bool
+
+  array :: schema a -> schema (V.Vector a)
+
+  null :: schema Null
 
   nullable :: schema a -> schema (Maybe a)
 
@@ -197,6 +217,14 @@ optional ::
   schema a ->
   Field schema object (Maybe a)
 optional = optionalField OmitKey_AcceptNull
+
+list :: Fleece schema => schema a -> schema [a]
+list itemSchema =
+  transformNamed
+    "List"
+    V.fromList
+    V.toList
+    (array itemSchema)
 
 -- Internal Helpers
 
