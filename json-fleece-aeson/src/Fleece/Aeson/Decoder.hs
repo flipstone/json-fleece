@@ -25,11 +25,14 @@ decode decoder =
   fromValue decoder <=< Aeson.eitherDecode
 
 instance FC.Fleece Decoder where
-  data Object Decoder _object a
+  newtype Object Decoder _object a
     = Object (Aeson.Object -> AesonTypes.Parser a)
 
-  data Field Decoder _object a
+  newtype Field Decoder _object a
     = Field (Aeson.Object -> AesonTypes.Parser a)
+
+  newtype EmbeddedObject Decoder _object a
+    = EmbeddedObject (Aeson.Object -> AesonTypes.Parser a)
 
   number =
     Decoder $ Aeson.withScientific "number" pure
@@ -80,6 +83,12 @@ instance FC.Fleece Decoder where
 
   field (Object parseF) (Field parseField) =
     Object (\object -> parseF object <*> parseField object)
+
+  embed (Object parseF) (EmbeddedObject parseSubobject) =
+    Object (\object -> parseF object <*> parseSubobject object)
+
+  embedded _accessor (Object parseObject) =
+    EmbeddedObject parseObject
 
   objectNamed name (Object f) =
     Decoder $ Aeson.withObject name $ \object ->

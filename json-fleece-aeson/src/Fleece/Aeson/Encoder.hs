@@ -21,11 +21,14 @@ encode (Encoder toEncoding) =
   AesonEncoding.encodingToLazyByteString . toEncoding
 
 instance FC.Fleece Encoder where
-  data Object Encoder object _constructor
+  newtype Object Encoder object _constructor
     = Object (object -> Aeson.Series)
 
-  data Field Encoder object _a
+  newtype Field Encoder object _a
     = Field (object -> Aeson.Series)
+
+  newtype EmbeddedObject Encoder object _a
+    = EmbeddedObject (object -> Aeson.Series)
 
   number =
     Encoder Aeson.toEncoding
@@ -75,6 +78,13 @@ instance FC.Fleece Encoder where
   field (Object mkStart) (Field mkNext) =
     Object $ \object ->
       mkStart object <> mkNext object
+
+  embed (Object mkStart) (EmbeddedObject mkMore) =
+    Object $ \object ->
+      mkStart object <> mkMore object
+
+  embedded accessor (Object mkFields) =
+    EmbeddedObject (mkFields . accessor)
 
   objectNamed _name (Object toSeries) =
     Encoder (Aeson.pairs . toSeries)

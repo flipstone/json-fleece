@@ -4,6 +4,7 @@ module Fleece.Core
   ( Fleece
       ( Field
       , Object
+      , EmbeddedObject
       , text
       , number
       , boolean
@@ -15,6 +16,8 @@ module Fleece.Core
       , constructor
       , nullable
       , field
+      , embed
+      , embedded
       , validateNamed
       , boundedEnumNamed
       )
@@ -47,6 +50,7 @@ module Fleece.Core
   , coerceSchema
   , coerceSchemaNamed
   , (#+)
+  , (##)
   , Null (Null)
   , NullBehavior
     ( EmitNull_AcceptNull
@@ -74,6 +78,7 @@ data Null
 class Fleece schema where
   data Object schema :: Type -> Type -> Type
   data Field schema :: Type -> Type -> Type
+  data EmbeddedObject schema :: Type -> Type -> Type
 
   number :: schema Scientific
 
@@ -114,6 +119,16 @@ class Fleece schema where
     Field schema object a ->
     Object schema object b
 
+  embed ::
+    Object schema object (a -> b) ->
+    EmbeddedObject schema object a ->
+    Object schema object b
+
+  embedded ::
+    (object -> subobject) ->
+    Object schema subobject subobject ->
+    EmbeddedObject schema object subobject
+
   validateNamed ::
     String ->
     (a -> b) ->
@@ -136,6 +151,16 @@ class Fleece schema where
   field
 
 infixl 9 #+
+
+(##) ::
+  Fleece schema =>
+  Object schema object (a -> b) ->
+  EmbeddedObject schema object a ->
+  Object schema object b
+(##) =
+  embed
+
+infixl 9 ##
 
 data NullBehavior
   = EmitNull_AcceptNull

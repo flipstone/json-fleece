@@ -39,6 +39,7 @@ renderMarkdown (Markdown _ builder) = LTB.toLazyText builder
 instance FC.Fleece Markdown where
   newtype Object Markdown _object _a = Object LTB.Builder
   newtype Field Markdown _object _a = Field LTB.Builder
+  newtype EmbeddedObject Markdown _object _a = EmbeddedObject LTB.Builder
 
   number =
     mkMarkdown (LTB.fromString "number")
@@ -74,6 +75,12 @@ instance FC.Fleece Markdown where
 
   field (Object fieldsMarkdown) (Field moreMarkdown) =
     Object (fieldsMarkdown <> moreMarkdown)
+
+  embed (Object fieldsMarkdown) (EmbeddedObject embeddedFieldsMarkdown) =
+    Object (fieldsMarkdown <> embeddedFieldsMarkdown)
+
+  embedded _accessor (Object embeddedFieldsMarkdown) =
+    EmbeddedObject embeddedFieldsMarkdown
 
   objectNamed name (Object fieldsMarkdown) =
     let

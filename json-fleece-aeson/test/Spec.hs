@@ -56,6 +56,8 @@ tests =
   , ("prop_decode_optionalField_OmitKey_DelegateNull_Failure", prop_decode_optionalField_OmitKey_DelegateNull_Failure)
   , ("prop_encode_optionalField_OmitKey_DelegateNull_Nullable", prop_encode_optionalField_OmitKey_DelegateNull_Nullable)
   , ("prop_decode_optionalField_OmitKey_DelegateNull_Nullable", prop_decode_optionalField_OmitKey_DelegateNull_Nullable)
+  , ("prop_decode_embeddedObject", prop_decode_embeddedObject)
+  , ("prop_encode_embeddedObject", prop_encode_embeddedObject)
   ]
 
 prop_decode_number :: HH.Property
@@ -216,11 +218,11 @@ prop_decode_boundedEnum =
           "apple" -> Right Examples.Apple
           "orange" -> Right Examples.Orange
           "kumquat" -> Right Examples.Kumquat
-          _ -> Left $ "Error in $: Unrecognized value for BoundedEnumExample enum: " <> show textValue
+          _ -> Left $ "Error in $: Unrecognized value for BoundedEnum enum: " <> show textValue
 
       decoded =
         FA.decode
-          Examples.boundedEnumExampleSchema
+          Examples.boundedEnumSchema
           testInput
 
     decoded === expected
@@ -233,12 +235,12 @@ prop_encode_boundedEnum =
     let
       expected =
         Aeson.encode
-          . Examples.boundedEnumExampleToText
+          . Examples.boundedEnumToText
           $ enumValue
 
       encoded =
         FA.encode
-          Examples.boundedEnumExampleSchema
+          Examples.boundedEnumSchema
           enumValue
 
     encoded === expected
@@ -251,8 +253,8 @@ prop_encode_nullableField =
     let
       encoded =
         FA.encode
-          Examples.nullableFieldExampleSchema
-          (Examples.NullableFieldExample mbText)
+          Examples.nullableFieldSchema
+          (Examples.NullableField mbText)
 
       expected =
         encodeTestObject
@@ -272,12 +274,12 @@ prop_decode_nullableField =
 
       decoded =
         FA.decode
-          Examples.nullableFieldExampleSchema
+          Examples.nullableFieldSchema
           testInput
 
       expected =
         Right
-          . Examples.NullableFieldExample
+          . Examples.NullableField
           $ mbText
 
     decoded === expected
@@ -290,8 +292,8 @@ prop_encode_validate =
     let
       encoded =
         FA.encode
-          Examples.validationExampleSchema
-          (Examples.ValidationExample text)
+          Examples.validationSchema
+          (Examples.Validation text)
 
       expected =
         Aeson.encode text
@@ -309,13 +311,13 @@ prop_decode_validate =
 
       decoded =
         FA.decode
-          Examples.validationExampleSchema
+          Examples.validationSchema
           testInput
 
       expected =
         if T.length text > 12
-          then Left "Error in $: Error validating ValidationExample: At most 12 characters allowed"
-          else Right (Examples.ValidationExample text)
+          then Left "Error in $: Error validating Validation: At most 12 characters allowed"
+          else Right (Examples.Validation text)
 
     decoded === expected
 
@@ -328,7 +330,7 @@ prop_decode_nullableField_Failure =
 
       decoded =
         FA.decode
-          Examples.nullableFieldExampleSchema
+          Examples.nullableFieldSchema
           testInput
 
       expected =
@@ -344,8 +346,8 @@ prop_encode_optionalField_EmitNull_AcceptNull =
     let
       encoded =
         FA.encode
-          Examples.optionalField_EmitNull_AcceptNull_ExampleSchema
-          (Examples.OptionalField_EmitNull_AcceptNull_Example mbText)
+          Examples.optionalField_EmitNull_AcceptNullSchema
+          (Examples.OptionalField_EmitNull_AcceptNull mbText)
 
       expected =
         encodeTestObject
@@ -367,12 +369,12 @@ prop_decode_optionalField_EmitNull_AcceptNull =
 
       decoded =
         FA.decode
-          Examples.optionalField_EmitNull_AcceptNull_ExampleSchema
+          Examples.optionalField_EmitNull_AcceptNullSchema
           testInput
 
       expected =
         Right
-          . Examples.OptionalField_EmitNull_AcceptNull_Example
+          . Examples.OptionalField_EmitNull_AcceptNull
           . join
           $ mbMbText
 
@@ -386,8 +388,8 @@ prop_encode_optionalField_OmitKey_AcceptNull =
     let
       encoded =
         FA.encode
-          Examples.optionalField_OmitKey_AcceptNull_ExampleSchema
-          (Examples.OptionalField_OmitKey_AcceptNull_Example mbText)
+          Examples.optionalField_OmitKey_AcceptNullSchema
+          (Examples.OptionalField_OmitKey_AcceptNull mbText)
 
       expected =
         encodeTestObject $
@@ -411,12 +413,12 @@ prop_decode_optionalField_OmitKey_AcceptNull =
 
       decoded =
         FA.decode
-          Examples.optionalField_OmitKey_AcceptNull_ExampleSchema
+          Examples.optionalField_OmitKey_AcceptNullSchema
           testInput
 
       expected =
         Right
-          . Examples.OptionalField_OmitKey_AcceptNull_Example
+          . Examples.OptionalField_OmitKey_AcceptNull
           . join
           $ mbMbText
 
@@ -430,8 +432,8 @@ prop_encode_optionalField_OmitKey_DelegateNull =
     let
       encoded =
         FA.encode
-          Examples.optionalField_OmitKey_DelegateNull_ExampleSchema
-          (Examples.OptionalField_OmitKey_DelegateNull_Example mbText)
+          Examples.optionalField_OmitKey_DelegateNullSchema
+          (Examples.OptionalField_OmitKey_DelegateNull mbText)
 
       expected =
         encodeTestObject $
@@ -455,12 +457,12 @@ prop_decode_optionalField_OmitKey_DelegateNull =
 
       decoded =
         FA.decode
-          Examples.optionalField_OmitKey_DelegateNull_ExampleSchema
+          Examples.optionalField_OmitKey_DelegateNullSchema
           testInput
 
       expected =
         Right
-          . Examples.OptionalField_OmitKey_DelegateNull_Example
+          . Examples.OptionalField_OmitKey_DelegateNull
           $ mbText
 
     decoded === expected
@@ -476,7 +478,7 @@ prop_decode_optionalField_OmitKey_DelegateNull_Failure =
 
       decoded =
         FA.decode
-          Examples.optionalField_OmitKey_DelegateNull_ExampleSchema
+          Examples.optionalField_OmitKey_DelegateNullSchema
           testInput
 
       expected =
@@ -492,8 +494,8 @@ prop_encode_optionalField_OmitKey_DelegateNull_Nullable =
     let
       encoded =
         FA.encode
-          Examples.optionalField_OmitKey_DelegateNull_NullableExampleSchema
-          (Examples.OptionalField_OmitKey_DelegateNull_NullableExample mbMbText)
+          Examples.optionalField_OmitKey_DelegateNull_NullableSchema
+          (Examples.OptionalField_OmitKey_DelegateNull_Nullable mbMbText)
 
       expected =
         encodeTestObject $
@@ -517,13 +519,72 @@ prop_decode_optionalField_OmitKey_DelegateNull_Nullable =
 
       decoded =
         FA.decode
-          Examples.optionalField_OmitKey_DelegateNull_NullableExampleSchema
+          Examples.optionalField_OmitKey_DelegateNull_NullableSchema
           testInput
 
       expected =
         Right
-          . Examples.OptionalField_OmitKey_DelegateNull_NullableExample
+          . Examples.OptionalField_OmitKey_DelegateNull_Nullable
           $ mbMbText
+
+    decoded === expected
+
+prop_encode_embeddedObject :: HH.Property
+prop_encode_embeddedObject =
+  HH.property $ do
+    parentText <- HH.forAll genText
+    childText <- HH.forAll genText
+
+    let
+      parent =
+        Examples.EmbeddedObjectParent
+          { Examples.parentField = parentText
+          , Examples.child =
+              Examples.EmbeddedObjectChild
+                { Examples.childField = childText
+                }
+          }
+
+      encoded =
+        FA.encode
+          Examples.embeddedObjectParentSchema
+          parent
+
+      expected =
+        encodeTestObject $
+          [ "parentField" .= parentText
+          , "childField" .= childText
+          ]
+
+    encoded === expected
+
+prop_decode_embeddedObject :: HH.Property
+prop_decode_embeddedObject =
+  HH.property $ do
+    parentText <- HH.forAll genText
+    childText <- HH.forAll genText
+
+    let
+      testInput =
+        encodeTestObject $
+          [ "parentField" .= parentText
+          , "childField" .= childText
+          ]
+
+      decoded =
+        FA.decode
+          Examples.embeddedObjectParentSchema
+          testInput
+
+      expected =
+        Right $
+          Examples.EmbeddedObjectParent
+            { Examples.parentField = parentText
+            , Examples.child =
+                Examples.EmbeddedObjectChild
+                  { Examples.childField = childText
+                  }
+            }
 
     decoded === expected
 

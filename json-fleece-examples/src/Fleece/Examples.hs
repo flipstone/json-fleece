@@ -1,23 +1,26 @@
 module Fleece.Examples
   ( FooBar (..)
   , fooBarSchema
-  , NullableFieldExample (..)
-  , nullableFieldExampleSchema
-  , ValidationExample (..)
-  , validationExampleSchema
-  , OptionalFieldExample (..)
-  , optionalFieldExampleSchema
-  , OptionalField_EmitNull_AcceptNull_Example (..)
-  , optionalField_EmitNull_AcceptNull_ExampleSchema
-  , OptionalField_OmitKey_AcceptNull_Example (..)
-  , optionalField_OmitKey_AcceptNull_ExampleSchema
-  , OptionalField_OmitKey_DelegateNull_Example (..)
-  , optionalField_OmitKey_DelegateNull_ExampleSchema
-  , OptionalField_OmitKey_DelegateNull_NullableExample (..)
-  , optionalField_OmitKey_DelegateNull_NullableExampleSchema
-  , BoundedEnumExample (..)
-  , boundedEnumExampleSchema
-  , boundedEnumExampleToText
+  , NullableField (..)
+  , nullableFieldSchema
+  , Validation (..)
+  , validationSchema
+  , OptionalField (..)
+  , optionalFieldSchema
+  , OptionalField_EmitNull_AcceptNull (..)
+  , optionalField_EmitNull_AcceptNullSchema
+  , OptionalField_OmitKey_AcceptNull (..)
+  , optionalField_OmitKey_AcceptNullSchema
+  , OptionalField_OmitKey_DelegateNull (..)
+  , optionalField_OmitKey_DelegateNullSchema
+  , OptionalField_OmitKey_DelegateNull_Nullable (..)
+  , optionalField_OmitKey_DelegateNull_NullableSchema
+  , BoundedEnum (..)
+  , boundedEnumSchema
+  , boundedEnumToText
+  , EmbeddedObjectParent (..)
+  , embeddedObjectParentSchema
+  , EmbeddedObjectChild (..)
   ) where
 
 import Data.Scientific (Scientific)
@@ -26,8 +29,10 @@ import qualified Data.Text as T
 import Fleece.Core
   ( Fleece
   , NullBehavior (EmitNull_AcceptNull, OmitKey_AcceptNull, OmitKey_DelegateNull)
+  , Object
   , boundedEnum
   , constructor
+  , embedded
   , nullable
   , number
   , object
@@ -36,6 +41,7 @@ import Fleece.Core
   , required
   , text
   , validate
+  , (##)
   , (#+)
   )
 
@@ -52,107 +58,132 @@ fooBarSchema =
       #+ required "foo" foo text
       #+ required "bar" bar number
 
-data NullableFieldExample = NullableFieldExample
+data NullableField = NullableField
   { exampleNullableField :: Maybe T.Text
   }
   deriving (Eq, Show)
 
-nullableFieldExampleSchema :: Fleece schema => schema NullableFieldExample
-nullableFieldExampleSchema =
+nullableFieldSchema :: Fleece schema => schema NullableField
+nullableFieldSchema =
   object $
-    constructor NullableFieldExample
+    constructor NullableField
       #+ required "nullableField" exampleNullableField (nullable text)
 
-newtype ValidationExample = ValidationExample T.Text
+newtype Validation = Validation T.Text
   deriving (Eq, Show)
 
-validationExampleSchema :: Fleece schema => schema ValidationExample
-validationExampleSchema =
+validationSchema :: Fleece schema => schema Validation
+validationSchema =
   validate
-    (\(ValidationExample t) -> t)
-    (\t -> if T.length t > 12 then Left "At most 12 characters allowed" else Right (ValidationExample t))
+    (\(Validation t) -> t)
+    (\t -> if T.length t > 12 then Left "At most 12 characters allowed" else Right (Validation t))
     text
 
-data OptionalFieldExample = OptionalFieldExample
+data OptionalField = OptionalField
   { exampleOptionalField :: Maybe T.Text
   }
   deriving (Eq, Show)
 
-optionalFieldExampleSchema :: Fleece schema => schema OptionalFieldExample
-optionalFieldExampleSchema =
+optionalFieldSchema :: Fleece schema => schema OptionalField
+optionalFieldSchema =
   object $
-    constructor OptionalFieldExample
+    constructor OptionalField
       #+ optional "optionalField" exampleOptionalField text
 
-data OptionalField_EmitNull_AcceptNull_Example = OptionalField_EmitNull_AcceptNull_Example
+data OptionalField_EmitNull_AcceptNull = OptionalField_EmitNull_AcceptNull
   { exampleOptional_EmitNull_AcceptNull_Field :: Maybe T.Text
   }
   deriving (Eq, Show)
 
-optionalField_EmitNull_AcceptNull_ExampleSchema ::
+optionalField_EmitNull_AcceptNullSchema ::
   Fleece schema =>
-  schema OptionalField_EmitNull_AcceptNull_Example
-optionalField_EmitNull_AcceptNull_ExampleSchema =
+  schema OptionalField_EmitNull_AcceptNull
+optionalField_EmitNull_AcceptNullSchema =
   object $
-    constructor OptionalField_EmitNull_AcceptNull_Example
+    constructor OptionalField_EmitNull_AcceptNull
       #+ optionalField EmitNull_AcceptNull "optional_EmitNull_AcceptNull_Field" exampleOptional_EmitNull_AcceptNull_Field text
 
-data OptionalField_OmitKey_AcceptNull_Example = OptionalField_OmitKey_AcceptNull_Example
+data OptionalField_OmitKey_AcceptNull = OptionalField_OmitKey_AcceptNull
   { exampleOptional_OmitKey_AcceptNull_Field :: Maybe T.Text
   }
   deriving (Eq, Show)
 
-optionalField_OmitKey_AcceptNull_ExampleSchema ::
+optionalField_OmitKey_AcceptNullSchema ::
   Fleece schema =>
-  schema OptionalField_OmitKey_AcceptNull_Example
-optionalField_OmitKey_AcceptNull_ExampleSchema =
+  schema OptionalField_OmitKey_AcceptNull
+optionalField_OmitKey_AcceptNullSchema =
   object $
-    constructor OptionalField_OmitKey_AcceptNull_Example
+    constructor OptionalField_OmitKey_AcceptNull
       #+ optionalField OmitKey_AcceptNull "optional_OmitKey_AcceptNull_Field" exampleOptional_OmitKey_AcceptNull_Field text
 
-data OptionalField_OmitKey_DelegateNull_Example = OptionalField_OmitKey_DelegateNull_Example
+data OptionalField_OmitKey_DelegateNull = OptionalField_OmitKey_DelegateNull
   { exampleOptional_OmitKey_DelegateNull_Field :: Maybe T.Text
   }
   deriving (Eq, Show)
 
-optionalField_OmitKey_DelegateNull_ExampleSchema ::
+optionalField_OmitKey_DelegateNullSchema ::
   Fleece schema =>
-  schema OptionalField_OmitKey_DelegateNull_Example
-optionalField_OmitKey_DelegateNull_ExampleSchema =
+  schema OptionalField_OmitKey_DelegateNull
+optionalField_OmitKey_DelegateNullSchema =
   object $
-    constructor OptionalField_OmitKey_DelegateNull_Example
+    constructor OptionalField_OmitKey_DelegateNull
       #+ optionalField OmitKey_DelegateNull "optional_OmitKey_DelegateNull_Field" exampleOptional_OmitKey_DelegateNull_Field text
 
-data OptionalField_OmitKey_DelegateNull_NullableExample = OptionalField_OmitKey_DelegateNull_NullableExample
+data OptionalField_OmitKey_DelegateNull_Nullable = OptionalField_OmitKey_DelegateNull_Nullable
   { exampleOptional_OmitKey_DelegateNull_NullableField :: Maybe (Maybe T.Text)
   }
   deriving (Eq, Show)
 
-optionalField_OmitKey_DelegateNull_NullableExampleSchema ::
+optionalField_OmitKey_DelegateNull_NullableSchema ::
   Fleece schema =>
-  schema OptionalField_OmitKey_DelegateNull_NullableExample
-optionalField_OmitKey_DelegateNull_NullableExampleSchema =
+  schema OptionalField_OmitKey_DelegateNull_Nullable
+optionalField_OmitKey_DelegateNull_NullableSchema =
   object $
-    constructor OptionalField_OmitKey_DelegateNull_NullableExample
+    constructor OptionalField_OmitKey_DelegateNull_Nullable
       #+ optionalField
         OmitKey_DelegateNull
         "optional_OmitKey_DelegateNull_Nullable_Field"
         exampleOptional_OmitKey_DelegateNull_NullableField
         (nullable text)
 
-data BoundedEnumExample
+data BoundedEnum
   = Apple
   | Orange
   | Kumquat
   deriving (Eq, Show, Enum, Bounded)
 
-boundedEnumExampleSchema :: Fleece schema => schema BoundedEnumExample
-boundedEnumExampleSchema =
-  boundedEnum boundedEnumExampleToText
+boundedEnumSchema :: Fleece schema => schema BoundedEnum
+boundedEnumSchema =
+  boundedEnum boundedEnumToText
 
-boundedEnumExampleToText :: BoundedEnumExample -> T.Text
-boundedEnumExampleToText e =
+boundedEnumToText :: BoundedEnum -> T.Text
+boundedEnumToText e =
   case e of
     Apple -> T.pack "apple"
     Orange -> T.pack "orange"
     Kumquat -> T.pack "kumquat"
+
+data EmbeddedObjectParent = EmbeddedObjectParent
+  { parentField :: T.Text
+  , child :: EmbeddedObjectChild
+  }
+  deriving (Eq, Show)
+
+embeddedObjectParentSchema :: Fleece schema => schema EmbeddedObjectParent
+embeddedObjectParentSchema =
+  object $
+    constructor EmbeddedObjectParent
+      #+ required "parentField" parentField text
+      ## embedded child embeddedObjectChildObject
+
+embeddedObjectChildObject ::
+  Fleece schema =>
+  Object schema EmbeddedObjectChild EmbeddedObjectChild
+embeddedObjectChildObject =
+  constructor EmbeddedObjectChild
+    #+ required "childField" childField text
+
+data EmbeddedObjectChild = EmbeddedObjectChild
+  { childField :: T.Text
+  }
+  deriving (Eq, Show)
