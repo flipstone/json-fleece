@@ -23,6 +23,7 @@ module Fleece.Core
   , boundedEnum
   , validate
   , list
+  , nonEmpty
   , int
   , int8
   , int16
@@ -57,6 +58,7 @@ module Fleece.Core
 import Data.Coerce (Coercible, coerce)
 import qualified Data.Int as I
 import Data.Kind (Type)
+import qualified Data.List.NonEmpty as NEL
 import Data.Scientific (Scientific, toBoundedInteger)
 import qualified Data.Text as T
 import qualified Data.Time as Time
@@ -247,6 +249,20 @@ list itemSchema =
     V.fromList
     V.toList
     (array itemSchema)
+
+nonEmpty :: Fleece schema => schema a -> schema (NEL.NonEmpty a)
+nonEmpty itemSchema =
+  let
+    validateNonEmpty items =
+      case NEL.nonEmpty items of
+        Just nonEmptyItems -> Right nonEmptyItems
+        Nothing -> Left "Expected non-empty array for NonEmpty list, but array was empty"
+  in
+    validateNamed
+      "NonEmpty"
+      NEL.toList
+      validateNonEmpty
+      (list itemSchema)
 
 boundedIntegralNumberNamed ::
   (Fleece schema, Integral n, Bounded n) =>
