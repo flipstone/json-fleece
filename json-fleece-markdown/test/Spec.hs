@@ -90,11 +90,11 @@ prop_optionalField_EmitNull_AcceptNull =
     FM.renderMarkdown Examples.optionalField_EmitNull_AcceptNullSchema
       === LT.intercalate
         "\n"
-        [ "# OptionalField_EmitNull_AcceptNull"
+        [ "# OptionalField\\_EmitNull\\_AcceptNull"
         , ""
         , "|Field|Key Required|Null Allowed|Type|"
         , "|---|---|---|---|"
-        , "|optional_EmitNull_AcceptNull_Field|no|yes|string|"
+        , "|optional\\_EmitNull\\_AcceptNull\\_Field|no|yes|string|"
         , ""
         ]
 
@@ -104,11 +104,11 @@ prop_optionalField_OmitKey_AcceptNull =
     FM.renderMarkdown Examples.optionalField_OmitKey_AcceptNullSchema
       === LT.intercalate
         "\n"
-        [ "# OptionalField_OmitKey_AcceptNull"
+        [ "# OptionalField\\_OmitKey\\_AcceptNull"
         , ""
         , "|Field|Key Required|Null Allowed|Type|"
         , "|---|---|---|---|"
-        , "|optional_OmitKey_AcceptNull_Field|no|yes|string|"
+        , "|optional\\_OmitKey\\_AcceptNull\\_Field|no|yes|string|"
         , ""
         ]
 
@@ -118,11 +118,11 @@ prop_optionalField_OmitKey_DelegateNull =
     FM.renderMarkdown Examples.optionalField_OmitKey_DelegateNullSchema
       === LT.intercalate
         "\n"
-        [ "# OptionalField_OmitKey_DelegateNull"
+        [ "# OptionalField\\_OmitKey\\_DelegateNull"
         , ""
         , "|Field|Key Required|Null Allowed|Type|"
         , "|---|---|---|---|"
-        , "|optional_OmitKey_DelegateNull_Field|no|no|string|"
+        , "|optional\\_OmitKey\\_DelegateNull\\_Field|no|no|string|"
         , ""
         ]
 
@@ -132,11 +132,11 @@ prop_optionalField_OmitKey_DelegateNull_Nullable =
     FM.renderMarkdown Examples.optionalField_OmitKey_DelegateNull_NullableSchema
       === LT.intercalate
         "\n"
-        [ "# OptionalField_OmitKey_DelegateNull_Nullable"
+        [ "# OptionalField\\_OmitKey\\_DelegateNull\\_Nullable"
         , ""
         , "|Field|Key Required|Null Allowed|Type|"
         , "|---|---|---|---|"
-        , "|optional_OmitKey_DelegateNull_Nullable_Field|no|yes|string|"
+        , "|optional\\_OmitKey\\_DelegateNull\\_Nullable\\_Field|no|yes|string|"
         , ""
         ]
 

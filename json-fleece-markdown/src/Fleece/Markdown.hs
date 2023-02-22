@@ -52,7 +52,7 @@ primitiveMarkdown :: String -> Markdown a
 primitiveMarkdown name =
   let
     nameBuilder =
-      LTB.fromString name
+      markdownString name
   in
     Markdown $
       SchemaDocumentation
@@ -102,11 +102,11 @@ instance FC.Fleece Markdown where
   array (Markdown itemSchemaDocs) =
     let
       arrayDescription =
-        LTB.fromString "array of "
+        markdownString "array of "
           <> schemaFieldTypeDocs itemSchemaDocs
           <> case schemaNullability itemSchemaDocs of
             NotNull -> mempty
-            Nullable -> LTB.fromString " (nullable)"
+            Nullable -> markdownString " (nullable)"
     in
       Markdown $
         SchemaDocumentation
@@ -160,7 +160,7 @@ instance FC.Fleece Markdown where
           , schemaExcludeFromRender = False
           , schemaNullability = NotNull
           , schemaMainEntryDocs = mainEntry
-          , schemaFieldTypeDocs = LTB.fromString name
+          , schemaFieldTypeDocs = markdownString name
           , schemaReferences = allReferences
           }
 
@@ -178,7 +178,7 @@ instance FC.Fleece Markdown where
         h1 name
           <> newline
           <> newline
-          <> LTB.fromString "Enum values:"
+          <> markdownString "Enum values:"
           <> newline
           <> newline
           <> enumValues
@@ -189,19 +189,19 @@ instance FC.Fleece Markdown where
           , schemaExcludeFromRender = False
           , schemaNullability = NotNull
           , schemaMainEntryDocs = mainEntry
-          , schemaFieldTypeDocs = LTB.fromString name
+          , schemaFieldTypeDocs = markdownString name
           , schemaReferences = Map.empty
           }
 
 h1 :: String -> LTB.Builder
 h1 str =
-  LTB.fromString "# " <> LTB.fromString str
+  markdownString "# " <> markdownString str
 
 fieldsHeader :: LTB.Builder
 fieldsHeader =
-  LTB.fromString "|Field|Key Required|Null Allowed|Type|"
+  markdownString "|Field|Key Required|Null Allowed|Type|"
     <> newline
-    <> LTB.fromString "|---|---|---|---|"
+    <> markdownString "|---|---|---|---|"
     <> newline
 
 mkFieldDocs ::
@@ -238,7 +238,7 @@ mkFieldDocs name mbNullBehavior (Markdown schemaDocs) =
 fieldRow :: FieldDocumentation -> LTB.Builder
 fieldRow fieldDocs =
   pipe
-    <> LTB.fromString (fieldName fieldDocs)
+    <> markdownString (fieldName fieldDocs)
     <> pipe
     <> yesOrNo (fieldKeyRequired fieldDocs)
     <> pipe
@@ -250,19 +250,19 @@ fieldRow fieldDocs =
 
 pipe :: LTB.Builder
 pipe =
-  LTB.fromString "|"
+  markdownString "|"
 
 newline :: LTB.Builder
 newline =
-  LTB.fromString "\n"
+  markdownString "\n"
 
 yes :: LTB.Builder
 yes =
-  LTB.fromString "yes"
+  markdownString "yes"
 
 no :: LTB.Builder
 no =
-  LTB.fromString "no"
+  markdownString "no"
 
 yesOrNo :: Bool -> LTB.Builder
 yesOrNo b =
@@ -272,4 +272,10 @@ yesOrNo b =
 
 listItem :: LTB.Builder -> LTB.Builder
 listItem item =
-  LTB.fromString "- " <> item <> newline
+  markdownString "- " <> item <> newline
+
+markdownString :: String -> LTB.Builder
+markdownString =
+  LTB.fromLazyText
+    . LT.replace (LT.pack "_") (LT.pack "\\_")
+    . LT.pack
