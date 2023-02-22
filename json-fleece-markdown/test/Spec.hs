@@ -4,11 +4,14 @@ module Main
   ( main
   ) where
 
+import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
 import Hedgehog ((===))
 import qualified Hedgehog as HH
 import qualified Hedgehog.Main as HHM
 
+import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import qualified Fleece.Examples as Examples
 import qualified Fleece.Markdown as FM
 
@@ -27,6 +30,7 @@ tests =
   , ("prop_optionalField_OmitKey_DelegateNull", prop_optionalField_OmitKey_DelegateNull)
   , ("prop_optionalField_OmitKey_DelegateNull_Nullable", prop_optionalField_OmitKey_DelegateNull_Nullable)
   , ("prop_embeddedObject", prop_embeddedObject)
+  , ("prop_nestedObject", prop_nestedObject)
   ]
 
 prop_object :: HH.Property
@@ -156,3 +160,52 @@ prop_embeddedObject =
         , "|childField|yes|no|string|"
         , ""
         ]
+
+prop_nestedObject :: HH.Property
+prop_nestedObject =
+  HH.withTests 1 . HH.property $
+    FM.renderMarkdown parentSchema
+      === LT.intercalate
+        "\n"
+        [ "# Parent"
+        , ""
+        , "|Field|Key Required|Null Allowed|Type|"
+        , "|---|---|---|---|"
+        , "|field1|yes|no|string|"
+        , "|field2|yes|no|string|"
+        , "|nested|yes|no|NestedObject|"
+        , ""
+        , "# NestedObject"
+        , ""
+        , "|Field|Key Required|Null Allowed|Type|"
+        , "|---|---|---|---|"
+        , "|field1|yes|no|string|"
+        , "|field2|yes|no|string|"
+        , ""
+        ]
+
+data Parent = Parent
+  { parentField1 :: T.Text
+  , parentField2 :: T.Text
+  , nestedObject :: NestedObject
+  }
+
+parentSchema :: FC.Fleece schema => schema Parent
+parentSchema =
+  FC.object $
+    FC.constructor Parent
+      #+ FC.required "field1" parentField1 FC.text
+      #+ FC.required "field2" parentField2 FC.text
+      #+ FC.required "nested" nestedObject nestedObjectSchema
+
+data NestedObject = NestedObject
+  { nestedField1 :: T.Text
+  , nestedField2 :: T.Text
+  }
+
+nestedObjectSchema :: FC.Fleece schema => schema NestedObject
+nestedObjectSchema =
+  FC.object $
+    FC.constructor NestedObject
+      #+ FC.required "field1" nestedField1 FC.text
+      #+ FC.required "field2" nestedField2 FC.text

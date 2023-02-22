@@ -5,105 +5,184 @@ module Fleece.Markdown
   , renderMarkdown
   ) where
 
--- import Data.Coerce (coerce)
+import Data.DList (DList, snoc)
+import qualified Data.Map.Strict as Map
 import qualified Data.Text.Lazy as LT
 import qualified Data.Text.Lazy.Builder as LTB
 
 import qualified Fleece.Core as FC
 
-data Markdown a = Markdown
-  { schemaNullability :: SchemaNullability
-  , schemaDocs :: LTB.Builder
+data Markdown a = Markdown SchemaDocumentation
+
+renderMarkdown :: Markdown a -> LT.Text
+renderMarkdown (Markdown schemaDocs) =
+  LTB.toLazyText $
+    schemaMainEntryDocs schemaDocs
+      <> foldMap
+        (\docs -> newline <> schemaMainEntryDocs docs)
+        ( Map.filter
+            (not . schemaExcludeFromRender)
+            (schemaReferences schemaDocs)
+        )
+
+data SchemaDocumentation = SchemaDocumentation
+  { schemaName :: String
+  , schemaExcludeFromRender :: Bool
+  , schemaNullability :: SchemaNullability
+  , schemaMainEntryDocs :: LTB.Builder
+  , schemaFieldTypeDocs :: LTB.Builder
+  , schemaReferences :: Map.Map String SchemaDocumentation
   }
 
-mkMarkdown :: LTB.Builder -> Markdown a
-mkMarkdown builder =
-  Markdown
-    { schemaNullability = NotNull
-    , schemaDocs = builder
-    }
+schemaReferencesIncludingSelf ::
+  SchemaDocumentation ->
+  Map.Map String SchemaDocumentation
+schemaReferencesIncludingSelf schemaDocs =
+  Map.singleton (schemaName schemaDocs) schemaDocs
+    <> schemaReferences schemaDocs
+
+data FieldDocumentation = FieldDocumentation
+  { fieldName :: String
+  , fieldKeyRequired :: Bool
+  , fieldAllowsNull :: Bool
+  , fieldSchemaDocs :: SchemaDocumentation
+  }
+
+primitiveMarkdown :: String -> Markdown a
+primitiveMarkdown name =
+  let
+    nameBuilder =
+      LTB.fromString name
+  in
+    Markdown $
+      SchemaDocumentation
+        { schemaName = name
+        , schemaExcludeFromRender = True
+        , schemaNullability = NotNull
+        , schemaMainEntryDocs = nameBuilder
+        , schemaFieldTypeDocs = nameBuilder
+        , schemaReferences = Map.empty
+        }
 
 markNullable :: Markdown a -> Markdown (Maybe a)
-markNullable markdown =
-  markdown
-    { schemaNullability = Nullable
-    }
+markNullable (Markdown schemaDocs) =
+  Markdown $
+    SchemaDocumentation
+      { schemaName = "nullable " <> schemaName schemaDocs
+      , schemaExcludeFromRender = schemaExcludeFromRender schemaDocs
+      , schemaNullability = Nullable
+      , schemaMainEntryDocs = schemaMainEntryDocs schemaDocs
+      , schemaFieldTypeDocs = schemaFieldTypeDocs schemaDocs
+      , schemaReferences = schemaReferences schemaDocs
+      }
 
 data SchemaNullability
   = NotNull
   | Nullable
 
-renderMarkdown :: Markdown a -> LT.Text
-renderMarkdown (Markdown _ builder) = LTB.toLazyText builder
-
 instance FC.Fleece Markdown where
-  newtype Object Markdown _object _a = Object LTB.Builder
-  newtype Field Markdown _object _a = Field LTB.Builder
-  newtype EmbeddedObject Markdown _object _a = EmbeddedObject LTB.Builder
+  newtype Object Markdown _object _a
+    = Object (DList FieldDocumentation)
+
+  newtype Field Markdown _object _a
+    = Field FieldDocumentation
+
+  newtype EmbeddedObject Markdown _object _a
+    = EmbeddedObject (DList FieldDocumentation)
 
   number =
-    mkMarkdown (LTB.fromString "number")
+    primitiveMarkdown "number"
 
   text =
-    mkMarkdown (LTB.fromString "string")
+    primitiveMarkdown "string"
 
   boolean =
-    mkMarkdown (LTB.fromString "boolean")
+    primitiveMarkdown "boolean"
 
-  array itemSchema =
-    mkMarkdown $
-      LTB.fromString "array of "
-        <> schemaDocs itemSchema
-        <> case schemaNullability itemSchema of
-          NotNull -> mempty
-          Nullable -> LTB.fromString " (nullable)"
+  array (Markdown itemSchemaDocs) =
+    let
+      arrayDescription =
+        LTB.fromString "array of "
+          <> schemaFieldTypeDocs itemSchemaDocs
+          <> case schemaNullability itemSchemaDocs of
+            NotNull -> mempty
+            Nullable -> LTB.fromString " (nullable)"
+    in
+      Markdown $
+        SchemaDocumentation
+          { schemaName = "array of " <> schemaName itemSchemaDocs
+          , schemaExcludeFromRender = True
+          , schemaNullability = NotNull
+          , schemaMainEntryDocs = arrayDescription
+          , schemaFieldTypeDocs = arrayDescription
+          , schemaReferences = schemaReferences itemSchemaDocs
+          }
 
   null =
-    mkMarkdown (LTB.fromString "null")
+    primitiveMarkdown "null"
 
   nullable =
     markNullable
 
   required name _accessor fieldSchema =
-    Field (fieldRow name Nothing fieldSchema)
+    Field (mkFieldDocs name Nothing fieldSchema)
 
   optionalField nullBehavior name _accessor fieldSchema =
-    Field (fieldRow name (Just nullBehavior) fieldSchema)
+    Field (mkFieldDocs name (Just nullBehavior) fieldSchema)
 
   constructor _f =
     Object mempty
 
-  field (Object fieldsMarkdown) (Field moreMarkdown) =
-    Object (fieldsMarkdown <> moreMarkdown)
+  field (Object fields) (Field fieldDocs) =
+    Object (snoc fields fieldDocs)
 
-  embed (Object fieldsMarkdown) (EmbeddedObject embeddedFieldsMarkdown) =
-    Object (fieldsMarkdown <> embeddedFieldsMarkdown)
+  embed (Object fields) (EmbeddedObject embeddedFields) =
+    Object (fields <> embeddedFields)
 
-  embedded _accessor (Object embeddedFieldsMarkdown) =
-    EmbeddedObject embeddedFieldsMarkdown
+  embedded _accessor (Object fields) =
+    EmbeddedObject fields
 
-  objectNamed name (Object fieldsMarkdown) =
+  objectNamed name (Object fields) =
     let
-      markdown =
-        mkMarkdown $
-          h1 name
-            <> newline
-            <> newline
-            <> fieldsHeader
-            <> fieldsMarkdown
-    in
-      markdown
+      mainEntry =
+        h1 name
+          <> newline
+          <> newline
+          <> fieldsHeader
+          <> foldMap fieldRow fields
 
-  validateNamed name _check _unvalidate markdown =
-    markdown
-      { schemaDocs =
-          h1 name
-            <> newline
-            <> newline
-            <> schemaDocs markdown
-            <> LTB.fromString " (with validation restrictions)"
-            <> newline
-      }
+      allReferences =
+        foldMap (schemaReferencesIncludingSelf . fieldSchemaDocs) fields
+    in
+      Markdown $
+        SchemaDocumentation
+          { schemaName = name
+          , schemaExcludeFromRender = False
+          , schemaNullability = NotNull
+          , schemaMainEntryDocs = mainEntry
+          , schemaFieldTypeDocs = LTB.fromString name
+          , schemaReferences = allReferences
+          }
+
+  validateNamed name _check _unvalidate (Markdown schemaDocs) =
+    let
+      mainEntry =
+        h1 name
+          <> newline
+          <> newline
+          <> schemaMainEntryDocs schemaDocs
+          <> LTB.fromString " (with validation restrictions)"
+          <> newline
+    in
+      Markdown $
+        SchemaDocumentation
+          { schemaName = name
+          , schemaExcludeFromRender = schemaExcludeFromRender schemaDocs
+          , schemaNullability = schemaNullability schemaDocs
+          , schemaMainEntryDocs = mainEntry
+          , schemaFieldTypeDocs = LTB.fromString name
+          , schemaReferences = schemaReferences schemaDocs
+          }
 
   boundedEnumNamed name toText =
     let
@@ -111,8 +190,8 @@ instance FC.Fleece Markdown where
         foldMap
           (listItem . LTB.fromText . toText)
           [minBound .. maxBound]
-    in
-      mkMarkdown $
+
+      mainEntry =
         h1 name
           <> newline
           <> newline
@@ -120,6 +199,16 @@ instance FC.Fleece Markdown where
           <> newline
           <> newline
           <> enumValues
+    in
+      Markdown $
+        SchemaDocumentation
+          { schemaName = name
+          , schemaExcludeFromRender = False
+          , schemaNullability = NotNull
+          , schemaMainEntryDocs = mainEntry
+          , schemaFieldTypeDocs = LTB.fromString name
+          , schemaReferences = Map.empty
+          }
 
 h1 :: String -> LTB.Builder
 h1 str =
@@ -132,36 +221,49 @@ fieldsHeader =
     <> LTB.fromString "|---|---|---|---|"
     <> newline
 
-fieldRow :: String -> Maybe FC.NullBehavior -> Markdown a -> LTB.Builder
-fieldRow name mbNullBehavior fieldSchema =
+mkFieldDocs ::
+  String ->
+  Maybe FC.NullBehavior ->
+  Markdown a ->
+  FieldDocumentation
+mkFieldDocs name mbNullBehavior (Markdown schemaDocs) =
   let
     doesSchemaAllowNull =
-      case schemaNullability fieldSchema of
-        NotNull -> no
-        Nullable -> yes
+      case schemaNullability schemaDocs of
+        NotNull -> False
+        Nullable -> True
 
     required =
       case mbNullBehavior of
-        Nothing -> yes
-        Just _ -> no
+        Nothing -> True
+        Just _ -> False
 
     nullAllowed =
       case mbNullBehavior of
         Nothing -> doesSchemaAllowNull
-        Just FC.EmitNull_AcceptNull -> yes
-        Just FC.OmitKey_AcceptNull -> yes
+        Just FC.EmitNull_AcceptNull -> True
+        Just FC.OmitKey_AcceptNull -> True
         Just FC.OmitKey_DelegateNull -> doesSchemaAllowNull
   in
-    pipe
-      <> LTB.fromString name
-      <> pipe
-      <> required
-      <> pipe
-      <> nullAllowed
-      <> pipe
-      <> schemaDocs fieldSchema
-      <> pipe
-      <> newline
+    FieldDocumentation
+      { fieldName = name
+      , fieldKeyRequired = required
+      , fieldAllowsNull = nullAllowed
+      , fieldSchemaDocs = schemaDocs
+      }
+
+fieldRow :: FieldDocumentation -> LTB.Builder
+fieldRow fieldDocs =
+  pipe
+    <> LTB.fromString (fieldName fieldDocs)
+    <> pipe
+    <> yesOrNo (fieldKeyRequired fieldDocs)
+    <> pipe
+    <> yesOrNo (fieldAllowsNull fieldDocs)
+    <> pipe
+    <> schemaFieldTypeDocs (fieldSchemaDocs fieldDocs)
+    <> pipe
+    <> newline
 
 pipe :: LTB.Builder
 pipe =
@@ -178,6 +280,12 @@ yes =
 no :: LTB.Builder
 no =
   LTB.fromString "no"
+
+yesOrNo :: Bool -> LTB.Builder
+yesOrNo b =
+  case b of
+    True -> yes
+    False -> no
 
 listItem :: LTB.Builder -> LTB.Builder
 listItem item =

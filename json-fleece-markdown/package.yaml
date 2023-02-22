@@ -51,6 +51,8 @@ library:
     - Fleece.Markdown
   dependencies:
     - json-fleece-core >= 0.1 &&  < 0.2
+    - containers >= 0.6 && < 0.7
+    - dlist >= 1.0 && < 1.1
 
 tests:
   json-fleece-markdown-test:
@@ -62,5 +64,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - json-fleece-examples
+    - json-fleece-core
     - json-fleece-markdown
     - hedgehog

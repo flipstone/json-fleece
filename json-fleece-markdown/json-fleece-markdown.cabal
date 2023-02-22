@@ -33,6 +33,8 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , containers ==0.6.*
+    , dlist ==1.0.*
     , json-fleece-core ==0.1.*
     , text ==1.2.*
   default-language: Haskell2010
@@ -52,6 +54,7 @@ test-suite json-fleece-markdown-test
   build-depends:
       base >=4.7 && <5
     , hedgehog
+    , json-fleece-core
     , json-fleece-examples
     , json-fleece-markdown
     , text ==1.2.*
