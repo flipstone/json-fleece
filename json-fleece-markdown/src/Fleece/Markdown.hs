@@ -164,25 +164,8 @@ instance FC.Fleece Markdown where
           , schemaReferences = allReferences
           }
 
-  validateNamed name _check _unvalidate (Markdown schemaDocs) =
-    let
-      mainEntry =
-        h1 name
-          <> newline
-          <> newline
-          <> schemaMainEntryDocs schemaDocs
-          <> LTB.fromString " (with validation restrictions)"
-          <> newline
-    in
-      Markdown $
-        SchemaDocumentation
-          { schemaName = name
-          , schemaExcludeFromRender = schemaExcludeFromRender schemaDocs
-          , schemaNullability = schemaNullability schemaDocs
-          , schemaMainEntryDocs = mainEntry
-          , schemaFieldTypeDocs = LTB.fromString name
-          , schemaReferences = schemaReferences schemaDocs
-          }
+  validateNamed _name _check _unvalidate (Markdown schemaDocs) =
+    Markdown schemaDocs
 
   boundedEnumNamed name toText =
     let

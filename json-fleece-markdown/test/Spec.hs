@@ -82,13 +82,7 @@ prop_validate :: HH.Property
 prop_validate =
   HH.withTests 1 . HH.property $
     FM.renderMarkdown Examples.validationSchema
-      === LT.intercalate
-        "\n"
-        [ "# Validation"
-        , ""
-        , "string (with validation restrictions)"
-        , ""
-        ]
+      === "string"
 
 prop_optionalField_EmitNull_AcceptNull :: HH.Property
 prop_optionalField_EmitNull_AcceptNull =
