@@ -4,6 +4,8 @@ module Fleece.Markdown.Render
   ( schemaDocumentationToMarkdown
   ) where
 
+import Data.Function (on)
+import qualified Data.List as List
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
 import qualified Data.Text as T
@@ -38,15 +40,19 @@ schemaDocumentationToMarkdown schemaDocs =
 
     nameContext =
       mkNameContext allNames
+
+    referencesToRenderInOrder =
+      List.sortBy (schemaDocumentationOrder nameContext)
+        . filter (not . schemaExcludeFromRender)
+        . Map.elems
+        . schemaReferences
+        $ schemaDocs
   in
     LTB.toLazyText $
       schemaMainEntryDocs nameContext schemaDocs
         <> foldMap
           (\docs -> newline <> schemaMainEntryDocs nameContext docs)
-          ( Map.filter
-              (not . schemaExcludeFromRender)
-              (schemaReferences schemaDocs)
-          )
+          referencesToRenderInOrder
 
 newtype NameContext = NameContext
   { namesRequiringQualification :: Set.Set FC.Name
@@ -68,9 +74,21 @@ mkNameContext names =
       { namesRequiringQualification = duplicateNames
       }
 
+schemaDocumentationOrder ::
+  NameContext ->
+  SchemaDocumentation ->
+  SchemaDocumentation ->
+  Ordering
+schemaDocumentationOrder context =
+  compare `on` (nameToText context . schemaName)
+
 renderName :: NameContext -> FC.Name -> LTB.Builder
-renderName context name =
-  markdownText . T.pack $
+renderName context =
+  markdownText . nameToText context
+
+nameToText :: NameContext -> FC.Name -> T.Text
+nameToText context name =
+  T.pack $
     if Set.member name (namesRequiringQualification context)
       then FC.nameToString name
       else FC.nameUnqualified name
