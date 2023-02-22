@@ -31,6 +31,7 @@ tests =
   , ("prop_optionalField_OmitKey_DelegateNull_Nullable", prop_optionalField_OmitKey_DelegateNull_Nullable)
   , ("prop_embeddedObject", prop_embeddedObject)
   , ("prop_nestedObject", prop_nestedObject)
+  , ("prop_nameDisambiguation", prop_nameDisambiguation)
   ]
 
 prop_object :: HH.Property
@@ -82,7 +83,12 @@ prop_validate :: HH.Property
 prop_validate =
   HH.withTests 1 . HH.property $
     FM.renderMarkdown Examples.validationSchema
-      === "string"
+      === LT.intercalate
+        "\n"
+        [ "# string"
+        , ""
+        , "string"
+        ]
 
 prop_optionalField_EmitNull_AcceptNull :: HH.Property
 prop_optionalField_EmitNull_AcceptNull =
@@ -203,3 +209,62 @@ nestedObjectSchema =
     FC.constructor NestedObject
       #+ FC.required "field1" nestedField1 FC.text
       #+ FC.required "field2" nestedField2 FC.text
+
+prop_nameDisambiguation :: HH.Property
+prop_nameDisambiguation =
+  HH.withTests 1 . HH.property $
+    FM.renderMarkdown ambiguousNameParentSchema
+      === LT.intercalate
+        "\n"
+        [ "# AmbiguousNameParent"
+        , ""
+        , "|Field|Key Required|Null Allowed|Type|"
+        , "|---|---|---|---|"
+        , "|child1|yes|no|Child1.AmbiguousName|"
+        , "|child2|yes|no|Child2.AmbiguousName|"
+        , ""
+        , "# Child1.AmbiguousName"
+        , ""
+        , "|Field|Key Required|Null Allowed|Type|"
+        , "|---|---|---|---|"
+        , "|value|yes|no|string|"
+        , ""
+        , "# Child2.AmbiguousName"
+        , ""
+        , "|Field|Key Required|Null Allowed|Type|"
+        , "|---|---|---|---|"
+        , "|value|yes|no|string|"
+        , ""
+        ]
+
+data AmbiguousNameParent = AmbiguousNameParent
+  { ambiguousNameChild1 :: AmbiguousNameChild1
+  , ambiguousNameChild2 :: AmbiguousNameChild2
+  }
+
+ambiguousNameParentSchema :: FC.Fleece schema => schema AmbiguousNameParent
+ambiguousNameParentSchema =
+  FC.objectNamed "Parent.AmbiguousNameParent" $
+    FC.constructor AmbiguousNameParent
+      #+ FC.required "child1" ambiguousNameChild1 ambiguousNameChild1Schema
+      #+ FC.required "child2" ambiguousNameChild2 ambiguousNameChild2Schema
+
+newtype AmbiguousNameChild1 = AmbiguousNameChild1
+  { ambiguousNameChild1Value :: T.Text
+  }
+
+ambiguousNameChild1Schema :: FC.Fleece schema => schema AmbiguousNameChild1
+ambiguousNameChild1Schema =
+  FC.objectNamed "Child1.AmbiguousName" $
+    FC.constructor AmbiguousNameChild1
+      #+ FC.required "value" ambiguousNameChild1Value FC.text
+
+newtype AmbiguousNameChild2 = AmbiguousNameChild2
+  { ambiguousNameChild2Value :: T.Text
+  }
+
+ambiguousNameChild2Schema :: FC.Fleece schema => schema AmbiguousNameChild2
+ambiguousNameChild2Schema =
+  FC.objectNamed "Child2.AmbiguousName" $
+    FC.constructor AmbiguousNameChild2
+      #+ FC.required "value" ambiguousNameChild2Value FC.text

@@ -218,7 +218,7 @@ prop_decode_boundedEnum =
           "apple" -> Right Examples.Apple
           "orange" -> Right Examples.Orange
           "kumquat" -> Right Examples.Kumquat
-          _ -> Left $ "Error in $: Unrecognized value for BoundedEnum enum: " <> show textValue
+          _ -> Left $ "Error in $: Unrecognized value for Fleece.Examples.BoundedEnum enum: " <> show textValue
 
       decoded =
         FA.decode
@@ -316,7 +316,7 @@ prop_decode_validate =
 
       expected =
         if T.length text > 12
-          then Left "Error in $: Error validating Validation: At most 12 characters allowed"
+          then Left "Error in $: Error validating Fleece.Examples.Validation: At most 12 characters allowed"
           else Right (Examples.Validation text)
 
     decoded === expected

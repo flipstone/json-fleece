@@ -13,11 +13,11 @@ import qualified Data.ByteString.Lazy as LBS
 import qualified Data.Vector as V
 import qualified Fleece.Core as FC
 
-newtype Encoder a
-  = Encoder (a -> Aeson.Encoding)
+data Encoder a
+  = Encoder FC.Name (a -> Aeson.Encoding)
 
 encode :: Encoder a -> a -> LBS.ByteString
-encode (Encoder toEncoding) =
+encode (Encoder _name toEncoding) =
   AesonEncoding.encodingToLazyByteString . toEncoding
 
 instance FC.Fleece Encoder where
@@ -30,34 +30,41 @@ instance FC.Fleece Encoder where
   newtype EmbeddedObject Encoder object _a
     = EmbeddedObject (object -> Aeson.Series)
 
+  schemaName (Encoder name _toEncoding) =
+    name
+
   number =
-    Encoder Aeson.toEncoding
+    Encoder (FC.unqualifiedName "number") Aeson.toEncoding
 
   text =
-    Encoder Aeson.toEncoding
+    Encoder (FC.unqualifiedName "text") Aeson.toEncoding
 
   boolean =
-    Encoder Aeson.toEncoding
+    Encoder (FC.unqualifiedName "boolean") Aeson.toEncoding
 
   null =
-    Encoder (\FC.Null -> Aeson.toEncoding Aeson.Null)
+    Encoder
+      (FC.unqualifiedName "null")
+      (\FC.Null -> Aeson.toEncoding Aeson.Null)
 
-  array (Encoder itemToEncoding) =
-    Encoder (AesonTypes.listEncoding itemToEncoding . V.toList)
+  array (Encoder name itemToEncoding) =
+    Encoder
+      (FC.annotateName name "array")
+      (AesonTypes.listEncoding itemToEncoding . V.toList)
 
-  nullable (Encoder toEncoding) =
-    Encoder $ \mbValue ->
+  nullable (Encoder name toEncoding) =
+    Encoder (FC.annotateName name "nullable") $ \mbValue ->
       case mbValue of
         Nothing -> Aeson.toEncoding Aeson.Null
         Just value -> toEncoding value
 
-  required name accessor (Encoder toEncoding) =
+  required name accessor (Encoder _name toEncoding) =
     Field $ \object ->
       AesonEncoding.pair
         (AesonKey.fromString name)
         (toEncoding (accessor object))
 
-  optionalField nullBehavior name accessor (Encoder toEncoding) =
+  optionalField nullBehavior name accessor (Encoder _name toEncoding) =
     let
       key = AesonKey.fromString name
     in
@@ -86,11 +93,11 @@ instance FC.Fleece Encoder where
   embedded accessor (Object mkFields) =
     EmbeddedObject (mkFields . accessor)
 
-  objectNamed _name (Object toSeries) =
-    Encoder (Aeson.pairs . toSeries)
+  objectNamed name (Object toSeries) =
+    Encoder name (Aeson.pairs . toSeries)
 
-  boundedEnumNamed _name toText =
-    Encoder (Aeson.toEncoding . toText)
+  boundedEnumNamed name toText =
+    Encoder name (Aeson.toEncoding . toText)
 
-  validateNamed _name uncheck _check (Encoder toEncoding) =
-    Encoder (toEncoding . uncheck)
+  validateNamed name uncheck _check (Encoder _unvalidatedName toEncoding) =
+    Encoder name (toEncoding . uncheck)

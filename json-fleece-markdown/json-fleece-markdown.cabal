@@ -28,6 +28,9 @@ library
   exposed-modules:
       Fleece.Markdown
   other-modules:
+      Fleece.Markdown.FleeceInstance
+      Fleece.Markdown.Render
+      Fleece.Markdown.SchemaDocumentation
       Paths_json_fleece_markdown
   hs-source-dirs:
       src

@@ -14,11 +14,11 @@ import qualified Data.ByteString.Lazy as LBS
 import qualified Data.Map.Strict as Map
 import qualified Fleece.Core as FC
 
-newtype Decoder a
-  = Decoder (Aeson.Value -> AesonTypes.Parser a)
+data Decoder a
+  = Decoder FC.Name (Aeson.Value -> AesonTypes.Parser a)
 
 fromValue :: Decoder a -> Aeson.Value -> Either String a
-fromValue (Decoder f) = AesonTypes.parseEither f
+fromValue (Decoder _name f) = AesonTypes.parseEither f
 
 decode :: Decoder a -> LBS.ByteString -> Either String a
 decode decoder =
@@ -34,38 +34,42 @@ instance FC.Fleece Decoder where
   newtype EmbeddedObject Decoder _object a
     = EmbeddedObject (Aeson.Object -> AesonTypes.Parser a)
 
+  schemaName (Decoder name _parseValue) =
+    name
+
   number =
-    Decoder $ Aeson.withScientific "number" pure
+    Decoder (FC.unqualifiedName "number") $ Aeson.withScientific "number" pure
 
   text =
-    Decoder $ Aeson.withText "text" pure
+    Decoder (FC.unqualifiedName "text") $ Aeson.withText "text" pure
 
   boolean =
-    Decoder $ Aeson.withBool "bool" pure
+    Decoder (FC.unqualifiedName "boolean") $ Aeson.withBool "boolean" pure
 
-  array (Decoder itemFromValue) =
-    Decoder $ Aeson.withArray "array" (traverse itemFromValue)
+  array (Decoder name itemFromValue) =
+    Decoder (FC.annotateName name "array") $
+      Aeson.withArray "array" (traverse itemFromValue)
 
   null =
-    Decoder $ \value ->
+    Decoder (FC.unqualifiedName "null") $ \value ->
       case value of
         Aeson.Null -> pure FC.Null
         _ -> AesonTypes.typeMismatch "Null" value
 
-  nullable (Decoder parseValue) =
-    Decoder $ \value ->
+  nullable (Decoder name parseValue) =
+    Decoder (FC.annotateName name "nullable") $ \value ->
       case value of
         Aeson.Null -> pure Nothing
         _ -> fmap Just (parseValue value)
 
-  required name _accessor (Decoder parseValue) =
+  required name _accessor (Decoder _name parseValue) =
     Field $ \object ->
       AesonTypes.explicitParseField
         parseValue
         object
         (AesonKey.fromString name)
 
-  optionalField nullBehavior name _accessor (Decoder parseValue) =
+  optionalField nullBehavior name _accessor (Decoder _name parseValue) =
     let
       key = AesonKey.fromString name
     in
@@ -91,8 +95,9 @@ instance FC.Fleece Decoder where
     EmbeddedObject parseObject
 
   objectNamed name (Object f) =
-    Decoder $ Aeson.withObject name $ \object ->
-      f object
+    Decoder name $
+      Aeson.withObject (FC.nameToString name) $ \object ->
+        f object
 
   boundedEnumNamed name toText =
     let
@@ -101,14 +106,20 @@ instance FC.Fleece Decoder where
           . map (\e -> (toText e, e))
           $ [minBound .. maxBound]
     in
-      Decoder . Aeson.withText name $ \textValue ->
-        case Map.lookup textValue decodingMap of
-          Just enumValue -> pure enumValue
-          Nothing -> fail $ "Unrecognized value for " <> name <> " enum: " <> show textValue
+      Decoder name $
+        Aeson.withText (FC.nameToString name) $ \textValue ->
+          case Map.lookup textValue decodingMap of
+            Just enumValue -> pure enumValue
+            Nothing ->
+              fail $
+                "Unrecognized value for "
+                  <> FC.nameToString name
+                  <> " enum: "
+                  <> show textValue
 
-  validateNamed name _uncheck check (Decoder parseValue) =
-    Decoder $ \jsonValue -> do
+  validateNamed name _uncheck check (Decoder _unvalidatedName parseValue) =
+    Decoder name $ \jsonValue -> do
       uncheckedValue <- parseValue jsonValue
       case check uncheckedValue of
         Right checkedValue -> pure checkedValue
-        Left err -> fail $ "Error validating " <> name <> ": " <> err
+        Left err -> fail $ "Error validating " <> FC.nameToString name <> ": " <> err

@@ -5,6 +5,7 @@ module Fleece.Core
       ( Field
       , Object
       , EmbeddedObject
+      , schemaName
       , text
       , number
       , boolean
@@ -51,6 +52,12 @@ module Fleece.Core
   , coerceSchemaNamed
   , (#+)
   , (##)
+  , Name (nameQualification, nameUnqualified)
+  , unqualifiedName
+  , qualifiedName
+  , autoQualifiedName
+  , nameToString
+  , annotateName
   , Null (Null)
   , NullBehavior
     ( EmitNull_AcceptNull
@@ -64,10 +71,11 @@ import qualified Data.Int as I
 import Data.Kind (Type)
 import qualified Data.List.NonEmpty as NEL
 import Data.Scientific (Scientific, toBoundedInteger)
+import qualified Data.String as String
 import qualified Data.Text as T
 import qualified Data.Time as Time
 import qualified Data.Time.Format.ISO8601 as ISO8601
-import Data.Typeable (Typeable, tyConName, typeRep, typeRepTyCon)
+import Data.Typeable (Typeable, tyConModule, typeRep, typeRepTyCon)
 import qualified Data.Vector as V
 import qualified Data.Word as W
 
@@ -75,10 +83,69 @@ data Null
   = Null
   deriving (Eq, Show)
 
+data Name = Name
+  { nameQualification :: Maybe String
+  , nameUnqualified :: String
+  }
+  deriving (Eq, Ord)
+
+instance Show Name where
+  show = nameToString
+
+instance String.IsString Name where
+  fromString = autoQualifiedName
+
+annotateName :: Name -> String -> Name
+annotateName name annotation =
+  name
+    { nameUnqualified = nameUnqualified name <> " " <> annotation
+    }
+
+unqualifiedName :: String -> Name
+unqualifiedName n =
+  Name
+    { nameQualification = Nothing
+    , nameUnqualified = n
+    }
+
+qualifiedName :: String -> String -> Name
+qualifiedName q n =
+  Name
+    { nameQualification = Just q
+    , nameUnqualified = n
+    }
+
+autoQualifiedName :: String -> Name
+autoQualifiedName input =
+  let
+    splitQual c (mbQ, rest) =
+      case mbQ of
+        Just q -> (Just (c : q), rest)
+        Nothing ->
+          case c of
+            '.' -> (Just "", rest)
+            _ -> (Nothing, c : rest)
+
+    (qualification, name) =
+      foldr splitQual (Nothing, []) input
+  in
+    Name
+      { nameQualification = qualification
+      , nameUnqualified = name
+      }
+
+nameToString :: Name -> String
+nameToString name =
+  case nameQualification name of
+    Just q -> q <> "." <> nameUnqualified name
+    Nothing -> nameUnqualified name
+
 class Fleece schema where
   data Object schema :: Type -> Type -> Type
   data Field schema :: Type -> Type -> Type
   data EmbeddedObject schema :: Type -> Type -> Type
+
+  schemaName :: schema a -> Name
 
   number :: schema Scientific
 
@@ -106,7 +173,7 @@ class Fleece schema where
     Field schema object (Maybe a)
 
   objectNamed ::
-    String ->
+    Name ->
     Object schema a a ->
     schema a
 
@@ -130,7 +197,7 @@ class Fleece schema where
     EmbeddedObject schema object subobject
 
   validateNamed ::
-    String ->
+    Name ->
     (a -> b) ->
     (b -> Either String a) ->
     (schema b) ->
@@ -138,7 +205,7 @@ class Fleece schema where
 
   boundedEnumNamed ::
     (Bounded a, Enum a) =>
-    String ->
+    Name ->
     (a -> T.Text) ->
     schema a
 
@@ -229,7 +296,7 @@ transform aToB bToA schemaB =
 
 transformNamed ::
   Fleece schema =>
-  String ->
+  Name ->
   (a -> b) ->
   (b -> a) ->
   schema b ->
@@ -253,7 +320,7 @@ coerceSchema schemaB =
 
 coerceSchemaNamed ::
   (Fleece schema, Coercible a b) =>
-  String ->
+  Name ->
   schema b ->
   schema a
 coerceSchemaNamed name schemaB =
@@ -270,7 +337,7 @@ optional = optionalField OmitKey_AcceptNull
 list :: Fleece schema => schema a -> schema [a]
 list itemSchema =
   transformNamed
-    "List"
+    (unqualifiedName $ "[" <> nameUnqualified (schemaName itemSchema) <> "]")
     V.fromList
     V.toList
     (array itemSchema)
@@ -284,14 +351,14 @@ nonEmpty itemSchema =
         Nothing -> Left "Expected non-empty array for NonEmpty list, but array was empty"
   in
     validateNamed
-      "NonEmpty"
+      (unqualifiedName $ "NonEmpty " <> nameUnqualified (schemaName itemSchema))
       NEL.toList
       validateNonEmpty
       (list itemSchema)
 
 boundedIntegralNumberNamed ::
   (Fleece schema, Integral n, Bounded n) =>
-  String ->
+  Name ->
   schema n
 boundedIntegralNumberNamed name =
   let
@@ -301,7 +368,7 @@ boundedIntegralNumberNamed name =
         Nothing ->
           Left $
             "Error parsing bounded integer value for "
-              <> name
+              <> nameToString name
               <> ". Value not integral, or exceeds the bounds of the expected type: "
               <> show s
   in
@@ -388,7 +455,7 @@ iso8601Formatted format =
         Nothing ->
           Left $
             "Invalid time format for "
-              <> name
+              <> nameToString name
               <> ": "
               <> show jsonText
   in
@@ -402,8 +469,16 @@ iso8601Formatted format =
 defaultSchemaName ::
   Typeable a =>
   schema a ->
-  String
-defaultSchemaName =
-  tyConName
-    . typeRepTyCon
-    . typeRep
+  Name
+defaultSchemaName schema =
+  let
+    schemaType =
+      typeRep schema
+
+    moduleName =
+      tyConModule (typeRepTyCon schemaType)
+  in
+    Name
+      { nameQualification = Just moduleName
+      , nameUnqualified = show schemaType
+      }
