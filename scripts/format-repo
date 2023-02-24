@@ -10,4 +10,6 @@ else
   MODE=inplace
 fi
 
-find */* -iname '*.hs' | xargs fourmolu --mode $MODE
+find */* -iname '*.hs' \
+  | grep -v openapi3/examples \
+  | xargs fourmolu --mode $MODE

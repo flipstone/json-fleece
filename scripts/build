@@ -6,3 +6,4 @@ source scripts/lib/run-in-container.sh
 
 ./scripts/test
 ./scripts/format-repo
+./scripts/test-examples

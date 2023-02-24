@@ -28,6 +28,7 @@ module Fleece.Core
   , validate
   , list
   , nonEmpty
+  , integer
   , int
   , int8
   , int16
@@ -46,6 +47,8 @@ module Fleece.Core
   , iso8601Formatted
   , boundedIntegralNumber
   , boundedIntegralNumberNamed
+  , unboundedIntegralNumber
+  , unboundedIntegralNumberNamed
   , transform
   , transformNamed
   , coerceSchema
@@ -70,7 +73,7 @@ import Data.Coerce (Coercible, coerce)
 import qualified Data.Int as I
 import Data.Kind (Type)
 import qualified Data.List.NonEmpty as NEL
-import Data.Scientific (Scientific, toBoundedInteger)
+import Data.Scientific (Scientific, floatingOrInteger, toBoundedInteger)
 import qualified Data.String as String
 import qualified Data.Text as T
 import qualified Data.Time as Time
@@ -355,6 +358,49 @@ nonEmpty itemSchema =
       NEL.toList
       validateNonEmpty
       (list itemSchema)
+
+integer :: Fleece schema => schema Integer
+integer =
+  unboundedIntegralNumber
+
+unboundedIntegralNumberNamed ::
+  (Fleece schema, Integral n) =>
+  Name ->
+  schema n
+unboundedIntegralNumberNamed name =
+  let
+    asDouble :: Double -> a -> a
+    asDouble _ = id
+
+    validateInteger s =
+      case floatingOrInteger s of
+        Right n -> pure n
+        Left f ->
+          asDouble f $
+            Left $
+              "Error parsing bounded integer value for "
+                <> nameToString name
+                <> ". Value not integral: "
+                <> show s
+  in
+    validateNamed
+      name
+      fromIntegral
+      validateInteger
+      number
+
+unboundedIntegralNumber ::
+  (Fleece schema, Integral n, Typeable n) =>
+  schema n
+unboundedIntegralNumber =
+  let
+    name =
+      defaultSchemaName schema
+
+    schema =
+      unboundedIntegralNumberNamed name
+  in
+    schema
 
 boundedIntegralNumberNamed ::
   (Fleece schema, Integral n, Bounded n) =>

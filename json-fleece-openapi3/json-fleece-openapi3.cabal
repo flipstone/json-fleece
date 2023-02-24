@@ -1,0 +1,322 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.35.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           json-fleece-openapi3
+version:        0.1.1.0
+description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
+homepage:       https://github.com/flipstone/json-fleece-openapi3#readme
+bug-reports:    https://github.com/flipstone/json-fleece-openapi3/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2023 Author name here
+license:        BSD3
+build-type:     Simple
+extra-source-files:
+    examples/star-trek/package.yaml
+    examples/star-trek/stack.yaml
+    examples/star-trek/star-trek.yaml
+    examples/star-trek/.stack-work/dist/x86_64-linux/Cabal-3.6.3.0/build/autogen/Paths_star_trek.hs
+    examples/star-trek/.stack-work/dist/x86_64-linux/Cabal-3.6.3.0/build/star-trek/autogen/Paths_star_trek.hs
+    examples/star-trek/StarTrek/AnimalBase.hs
+    examples/star-trek/StarTrek/AnimalBaseResponse.hs
+    examples/star-trek/StarTrek/AnimalFull.hs
+    examples/star-trek/StarTrek/AnimalFullResponse.hs
+    examples/star-trek/StarTrek/AnimalHeader.hs
+    examples/star-trek/StarTrek/AstronomicalObjectBase.hs
+    examples/star-trek/StarTrek/AstronomicalObjectBaseResponse.hs
+    examples/star-trek/StarTrek/AstronomicalObjectFull.hs
+    examples/star-trek/StarTrek/AstronomicalObjectFullResponse.hs
+    examples/star-trek/StarTrek/AstronomicalObjectHeader.hs
+    examples/star-trek/StarTrek/AstronomicalObjectType.hs
+    examples/star-trek/StarTrek/BloodType.hs
+    examples/star-trek/StarTrek/BookBase.hs
+    examples/star-trek/StarTrek/BookBaseResponse.hs
+    examples/star-trek/StarTrek/BookCollectionBase.hs
+    examples/star-trek/StarTrek/BookCollectionBaseResponse.hs
+    examples/star-trek/StarTrek/BookCollectionFull.hs
+    examples/star-trek/StarTrek/BookCollectionFullResponse.hs
+    examples/star-trek/StarTrek/BookCollectionHeader.hs
+    examples/star-trek/StarTrek/BookFull.hs
+    examples/star-trek/StarTrek/BookFullResponse.hs
+    examples/star-trek/StarTrek/BookHeader.hs
+    examples/star-trek/StarTrek/BookSeriesBase.hs
+    examples/star-trek/StarTrek/BookSeriesBaseResponse.hs
+    examples/star-trek/StarTrek/BookSeriesFull.hs
+    examples/star-trek/StarTrek/BookSeriesFullResponse.hs
+    examples/star-trek/StarTrek/BookSeriesHeader.hs
+    examples/star-trek/StarTrek/CharacterBase.hs
+    examples/star-trek/StarTrek/CharacterBaseResponse.hs
+    examples/star-trek/StarTrek/CharacterFull.hs
+    examples/star-trek/StarTrek/CharacterFullResponse.hs
+    examples/star-trek/StarTrek/CharacterHeader.hs
+    examples/star-trek/StarTrek/CharacterRelation.hs
+    examples/star-trek/StarTrek/CharacterSpecies.hs
+    examples/star-trek/StarTrek/ComicCollectionBase.hs
+    examples/star-trek/StarTrek/ComicCollectionBaseResponse.hs
+    examples/star-trek/StarTrek/ComicCollectionFull.hs
+    examples/star-trek/StarTrek/ComicCollectionFullResponse.hs
+    examples/star-trek/StarTrek/ComicCollectionHeader.hs
+    examples/star-trek/StarTrek/ComicsBase.hs
+    examples/star-trek/StarTrek/ComicsBaseResponse.hs
+    examples/star-trek/StarTrek/ComicSeriesBase.hs
+    examples/star-trek/StarTrek/ComicSeriesBaseResponse.hs
+    examples/star-trek/StarTrek/ComicSeriesFull.hs
+    examples/star-trek/StarTrek/ComicSeriesFullResponse.hs
+    examples/star-trek/StarTrek/ComicSeriesHeader.hs
+    examples/star-trek/StarTrek/ComicsFull.hs
+    examples/star-trek/StarTrek/ComicsFullResponse.hs
+    examples/star-trek/StarTrek/ComicsHeader.hs
+    examples/star-trek/StarTrek/ComicStripBase.hs
+    examples/star-trek/StarTrek/ComicStripBaseResponse.hs
+    examples/star-trek/StarTrek/ComicStripFull.hs
+    examples/star-trek/StarTrek/ComicStripFullResponse.hs
+    examples/star-trek/StarTrek/ComicStripHeader.hs
+    examples/star-trek/StarTrek/CompanyBase.hs
+    examples/star-trek/StarTrek/CompanyBaseResponse.hs
+    examples/star-trek/StarTrek/CompanyFull.hs
+    examples/star-trek/StarTrek/CompanyFullResponse.hs
+    examples/star-trek/StarTrek/CompanyHeader.hs
+    examples/star-trek/StarTrek/ConflictBase.hs
+    examples/star-trek/StarTrek/ConflictBaseResponse.hs
+    examples/star-trek/StarTrek/ConflictFull.hs
+    examples/star-trek/StarTrek/ConflictFullResponse.hs
+    examples/star-trek/StarTrek/ConflictHeader.hs
+    examples/star-trek/StarTrek/ContentLanguage.hs
+    examples/star-trek/StarTrek/ContentRating.hs
+    examples/star-trek/StarTrek/ContentRatingSystem.hs
+    examples/star-trek/StarTrek/Country.hs
+    examples/star-trek/StarTrek/ElementBase.hs
+    examples/star-trek/StarTrek/ElementBaseResponse.hs
+    examples/star-trek/StarTrek/ElementFull.hs
+    examples/star-trek/StarTrek/ElementFullResponse.hs
+    examples/star-trek/StarTrek/ElementHeader.hs
+    examples/star-trek/StarTrek/EpisodeBase.hs
+    examples/star-trek/StarTrek/EpisodeBaseResponse.hs
+    examples/star-trek/StarTrek/EpisodeFull.hs
+    examples/star-trek/StarTrek/EpisodeFullResponse.hs
+    examples/star-trek/StarTrek/EpisodeHeader.hs
+    examples/star-trek/StarTrek/Error.hs
+    examples/star-trek/StarTrek/FoodBase.hs
+    examples/star-trek/StarTrek/FoodBaseResponse.hs
+    examples/star-trek/StarTrek/FoodFull.hs
+    examples/star-trek/StarTrek/FoodFullResponse.hs
+    examples/star-trek/StarTrek/FoodHeader.hs
+    examples/star-trek/StarTrek/Gender.hs
+    examples/star-trek/StarTrek/Genre.hs
+    examples/star-trek/StarTrek/LiteratureBase.hs
+    examples/star-trek/StarTrek/LiteratureBaseResponse.hs
+    examples/star-trek/StarTrek/LiteratureFull.hs
+    examples/star-trek/StarTrek/LiteratureFullResponse.hs
+    examples/star-trek/StarTrek/LiteratureHeader.hs
+    examples/star-trek/StarTrek/LocationBase.hs
+    examples/star-trek/StarTrek/LocationBaseResponse.hs
+    examples/star-trek/StarTrek/LocationFull.hs
+    examples/star-trek/StarTrek/LocationFullResponse.hs
+    examples/star-trek/StarTrek/LocationHeader.hs
+    examples/star-trek/StarTrek/MagazineBase.hs
+    examples/star-trek/StarTrek/MagazineBaseResponse.hs
+    examples/star-trek/StarTrek/MagazineFull.hs
+    examples/star-trek/StarTrek/MagazineFullResponse.hs
+    examples/star-trek/StarTrek/MagazineHeader.hs
+    examples/star-trek/StarTrek/MagazineSeriesBase.hs
+    examples/star-trek/StarTrek/MagazineSeriesBaseResponse.hs
+    examples/star-trek/StarTrek/MagazineSeriesFull.hs
+    examples/star-trek/StarTrek/MagazineSeriesFullResponse.hs
+    examples/star-trek/StarTrek/MagazineSeriesHeader.hs
+    examples/star-trek/StarTrek/MaritalStatus.hs
+    examples/star-trek/StarTrek/MaterialBase.hs
+    examples/star-trek/StarTrek/MaterialBaseResponse.hs
+    examples/star-trek/StarTrek/MaterialFull.hs
+    examples/star-trek/StarTrek/MaterialFullResponse.hs
+    examples/star-trek/StarTrek/MaterialHeader.hs
+    examples/star-trek/StarTrek/MedicalConditionBase.hs
+    examples/star-trek/StarTrek/MedicalConditionBaseResponse.hs
+    examples/star-trek/StarTrek/MedicalConditionFull.hs
+    examples/star-trek/StarTrek/MedicalConditionFullResponse.hs
+    examples/star-trek/StarTrek/MedicalConditionHeader.hs
+    examples/star-trek/StarTrek/MovieBase.hs
+    examples/star-trek/StarTrek/MovieBaseResponse.hs
+    examples/star-trek/StarTrek/MovieFull.hs
+    examples/star-trek/StarTrek/MovieFullResponse.hs
+    examples/star-trek/StarTrek/MovieHeader.hs
+    examples/star-trek/StarTrek/OccupationBase.hs
+    examples/star-trek/StarTrek/OccupationBaseResponse.hs
+    examples/star-trek/StarTrek/OccupationFull.hs
+    examples/star-trek/StarTrek/OccupationFullResponse.hs
+    examples/star-trek/StarTrek/OccupationHeader.hs
+    examples/star-trek/StarTrek/OrganizationBase.hs
+    examples/star-trek/StarTrek/OrganizationBaseResponse.hs
+    examples/star-trek/StarTrek/OrganizationFull.hs
+    examples/star-trek/StarTrek/OrganizationFullResponse.hs
+    examples/star-trek/StarTrek/OrganizationHeader.hs
+    examples/star-trek/StarTrek/PerformerBase.hs
+    examples/star-trek/StarTrek/PerformerBaseResponse.hs
+    examples/star-trek/StarTrek/PerformerFull.hs
+    examples/star-trek/StarTrek/PerformerFullResponse.hs
+    examples/star-trek/StarTrek/PerformerHeader.hs
+    examples/star-trek/StarTrek/Platform.hs
+    examples/star-trek/StarTrek/ProductionRunUnit.hs
+    examples/star-trek/StarTrek/Reference.hs
+    examples/star-trek/StarTrek/ReferenceType.hs
+    examples/star-trek/StarTrek/ResponsePage.hs
+    examples/star-trek/StarTrek/ResponseSort.hs
+    examples/star-trek/StarTrek/ResponseSortClause.hs
+    examples/star-trek/StarTrek/ResponseSortDirection.hs
+    examples/star-trek/StarTrek/SeasonBase.hs
+    examples/star-trek/StarTrek/SeasonBaseResponse.hs
+    examples/star-trek/StarTrek/SeasonFull.hs
+    examples/star-trek/StarTrek/SeasonFullResponse.hs
+    examples/star-trek/StarTrek/SeasonHeader.hs
+    examples/star-trek/StarTrek/SeriesBase.hs
+    examples/star-trek/StarTrek/SeriesBaseResponse.hs
+    examples/star-trek/StarTrek/SeriesFull.hs
+    examples/star-trek/StarTrek/SeriesFullResponse.hs
+    examples/star-trek/StarTrek/SeriesHeader.hs
+    examples/star-trek/StarTrek/SoundtrackBase.hs
+    examples/star-trek/StarTrek/SoundtrackBaseResponse.hs
+    examples/star-trek/StarTrek/SoundtrackFull.hs
+    examples/star-trek/StarTrek/SoundtrackFullResponse.hs
+    examples/star-trek/StarTrek/SoundtrackHeader.hs
+    examples/star-trek/StarTrek/SpacecraftBase.hs
+    examples/star-trek/StarTrek/SpacecraftBaseResponse.hs
+    examples/star-trek/StarTrek/SpacecraftClassBase.hs
+    examples/star-trek/StarTrek/SpacecraftClassBaseResponse.hs
+    examples/star-trek/StarTrek/SpacecraftClassFull.hs
+    examples/star-trek/StarTrek/SpacecraftClassFullResponse.hs
+    examples/star-trek/StarTrek/SpacecraftClassHeader.hs
+    examples/star-trek/StarTrek/SpacecraftFull.hs
+    examples/star-trek/StarTrek/SpacecraftFullResponse.hs
+    examples/star-trek/StarTrek/SpacecraftHeader.hs
+    examples/star-trek/StarTrek/SpacecraftType.hs
+    examples/star-trek/StarTrek/SpeciesBase.hs
+    examples/star-trek/StarTrek/SpeciesBaseResponse.hs
+    examples/star-trek/StarTrek/SpeciesFull.hs
+    examples/star-trek/StarTrek/SpeciesFullResponse.hs
+    examples/star-trek/StarTrek/SpeciesHeader.hs
+    examples/star-trek/StarTrek/StaffBase.hs
+    examples/star-trek/StarTrek/StaffBaseResponse.hs
+    examples/star-trek/StarTrek/StaffFull.hs
+    examples/star-trek/StarTrek/StaffFullResponse.hs
+    examples/star-trek/StarTrek/StaffHeader.hs
+    examples/star-trek/StarTrek/TechnologyBase.hs
+    examples/star-trek/StarTrek/TechnologyBaseResponse.hs
+    examples/star-trek/StarTrek/TechnologyFull.hs
+    examples/star-trek/StarTrek/TechnologyFullResponse.hs
+    examples/star-trek/StarTrek/TechnologyHeader.hs
+    examples/star-trek/StarTrek/TitleBase.hs
+    examples/star-trek/StarTrek/TitleBaseResponse.hs
+    examples/star-trek/StarTrek/TitleFull.hs
+    examples/star-trek/StarTrek/TitleFullResponse.hs
+    examples/star-trek/StarTrek/TitleHeader.hs
+    examples/star-trek/StarTrek/TradingCardBase.hs
+    examples/star-trek/StarTrek/TradingCardBaseResponse.hs
+    examples/star-trek/StarTrek/TradingCardDeckBase.hs
+    examples/star-trek/StarTrek/TradingCardDeckBaseResponse.hs
+    examples/star-trek/StarTrek/TradingCardDeckFull.hs
+    examples/star-trek/StarTrek/TradingCardDeckFullResponse.hs
+    examples/star-trek/StarTrek/TradingCardDeckHeader.hs
+    examples/star-trek/StarTrek/TradingCardFull.hs
+    examples/star-trek/StarTrek/TradingCardFullResponse.hs
+    examples/star-trek/StarTrek/TradingCardHeader.hs
+    examples/star-trek/StarTrek/TradingCardSetBase.hs
+    examples/star-trek/StarTrek/TradingCardSetBaseResponse.hs
+    examples/star-trek/StarTrek/TradingCardSetFull.hs
+    examples/star-trek/StarTrek/TradingCardSetFullResponse.hs
+    examples/star-trek/StarTrek/TradingCardSetHeader.hs
+    examples/star-trek/StarTrek/VideoGameBase.hs
+    examples/star-trek/StarTrek/VideoGameBaseResponse.hs
+    examples/star-trek/StarTrek/VideoGameFull.hs
+    examples/star-trek/StarTrek/VideoGameFullResponse.hs
+    examples/star-trek/StarTrek/VideoGameHeader.hs
+    examples/star-trek/StarTrek/VideoReleaseBase.hs
+    examples/star-trek/StarTrek/VideoReleaseBaseResponse.hs
+    examples/star-trek/StarTrek/VideoReleaseFormat.hs
+    examples/star-trek/StarTrek/VideoReleaseFull.hs
+    examples/star-trek/StarTrek/VideoReleaseFullResponse.hs
+    examples/star-trek/StarTrek/VideoReleaseHeader.hs
+    examples/star-trek/StarTrek/WeaponBase.hs
+    examples/star-trek/StarTrek/WeaponBaseResponse.hs
+    examples/star-trek/StarTrek/WeaponFull.hs
+    examples/star-trek/StarTrek/WeaponFullResponse.hs
+    examples/star-trek/StarTrek/WeaponHeader.hs
+
+source-repository head
+  type: git
+  location: https://github.com/flipstone/json-fleece-openapi3
+
+flag strict
+  description: More strict ghc options used for development and ci, not intended for end-use.
+  manual: True
+  default: False
+
+library
+  exposed-modules:
+      Fleece.OpenApi3
+  other-modules:
+      HaskellCode
+      Paths_json_fleece_openapi3
+  hs-source-dirs:
+      src
+  build-depends:
+      aeson ==2.0.*
+    , base >=4.7 && <5
+    , containers ==0.6.*
+    , insert-ordered-containers ==0.2.*
+    , mtl ==2.2.*
+    , openapi3 ==3.2.*
+    , text ==1.2.*
+    , text-manipulate ==0.3.*
+  default-language: Haskell2010
+  if flag(strict)
+    ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-import-lists -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations
+  else
+    ghc-options: -Wall
+
+executable fleece-openapi3
+  main-is: Main.hs
+  other-modules:
+      Paths_json_fleece_openapi3
+  hs-source-dirs:
+      exe
+  ghc-options: -rtsopts -threaded
+  build-depends:
+      base >=4.7 && <5
+    , directory ==1.3.*
+    , filepath ==1.4.*
+    , isocline ==1.0.*
+    , json-fleece-openapi3
+    , openapi3 ==3.2.*
+    , optparse-applicative ==0.17.*
+    , text ==1.2.*
+    , yaml ==0.11.*
+  default-language: Haskell2010
+  if flag(strict)
+    ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-import-lists -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations
+  else
+    ghc-options: -Wall
+
+test-suite json-fleece-aeson-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_json_fleece_openapi3
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , bytestring ==0.11.*
+    , containers ==0.6.*
+    , file-embed ==0.0.15.*
+    , hedgehog
+    , json-fleece-openapi3
+    , text ==1.2.*
+    , yaml ==0.11.*
+  default-language: Haskell2010
+  if flag(strict)
+    ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-import-lists -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations
+  else
+    ghc-options: -Wall

@@ -44,6 +44,8 @@ when:
         - -Wno-unsafe
         - -Wno-missing-safe-haskell-mode
         - -Wno-missing-deriving-strategies
+        - -Wno-all-missed-specialisations
+        - -Wno-missed-specialisations
     else:
       ghc-options:
         - -Wall

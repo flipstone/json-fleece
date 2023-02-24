@@ -1,0 +1,22 @@
+{-# LANGUAGE NoImplicitPrelude #-}
+
+module StarTrek.ElementFullResponse
+  ( ElementFullResponse(..)
+  , elementFullResponseSchema
+  ) where
+
+import qualified Fleece.Core as FC
+import Fleece.Core ((#+))
+import Prelude (($), Eq, Maybe, Show)
+import StarTrek.ElementFull (ElementFull, elementFullSchema)
+
+data ElementFullResponse = ElementFullResponse
+  { element :: Maybe ElementFull -- ^ Full element, returned when queried using UID
+  }
+  deriving (Eq, Show)
+
+elementFullResponseSchema :: FC.Fleece schema => schema ElementFullResponse
+elementFullResponseSchema =
+  FC.object $
+    FC.constructor ElementFullResponse
+      #+ FC.optionalField FC.OmitKey_DelegateNull "element" element elementFullSchema

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -e
+
+source scripts/lib/run-in-container.sh
+
+stack exec \
+  fleece-openapi3 \
+  -- \
+  StarTrek \
+  json-fleece-openapi3/examples/star-trek/star-trek.yaml \
+  --dest json-fleece-openapi3/examples/star-trek \
+  --yes
