@@ -5,16 +5,19 @@ module StarTrek.CharacterSpecies
   , characterSpeciesSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
-import Prelude (($), Eq, Integer, Maybe, Show)
+import Prelude (($), Eq, Maybe, Show)
+import StarTrek.CharacterSpecies.Denominator (Denominator, denominatorSchema)
+import StarTrek.CharacterSpecies.Name (Name, nameSchema)
+import StarTrek.CharacterSpecies.Numerator (Numerator, numeratorSchema)
+import StarTrek.CharacterSpecies.Uid (Uid, uidSchema)
 
 data CharacterSpecies = CharacterSpecies
-  { numerator :: Maybe Integer -- ^ Numerator
-  , name :: Maybe Text -- ^ Species name
-  , uid :: Maybe Text -- ^ Entity unique ID
-  , denominator :: Maybe Integer -- ^ Denominator
+  { numerator :: Maybe Numerator -- ^ Numerator
+  , name :: Maybe Name -- ^ Species name
+  , uid :: Maybe Uid -- ^ Entity unique ID
+  , denominator :: Maybe Denominator -- ^ Denominator
   }
   deriving (Eq, Show)
 
@@ -22,7 +25,7 @@ characterSpeciesSchema :: FC.Fleece schema => schema CharacterSpecies
 characterSpeciesSchema =
   FC.object $
     FC.constructor CharacterSpecies
-      #+ FC.optional "numerator" numerator FC.integer
-      #+ FC.optional "name" name FC.text
-      #+ FC.optional "uid" uid FC.text
-      #+ FC.optional "denominator" denominator FC.integer
+      #+ FC.optional "numerator" numerator numeratorSchema
+      #+ FC.optional "name" name nameSchema
+      #+ FC.optional "uid" uid uidSchema
+      #+ FC.optional "denominator" denominator denominatorSchema

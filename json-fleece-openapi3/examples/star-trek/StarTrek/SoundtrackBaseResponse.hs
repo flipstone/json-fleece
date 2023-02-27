@@ -14,7 +14,7 @@ import StarTrek.SoundtrackBase (SoundtrackBase, soundtrackBaseSchema)
 
 data SoundtrackBaseResponse = SoundtrackBaseResponse
   { sort :: Maybe ResponseSort -- ^ Response sort
-  , soundtracks :: Maybe [SoundtrackBase] -- ^ List of soundtracks matching given criteria
+  , soundtracks :: Maybe [SoundtrackBase] -- ^ Base soundtrack, returned in search results
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)

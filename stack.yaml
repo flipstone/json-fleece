@@ -35,7 +35,9 @@ packages:
 - json-fleece-examples
 - json-fleece-aeson
 - json-fleece-markdown
+- json-fleece-codegen-util
 - json-fleece-openapi3
+- json-fleece-swagger2
 # Dependency packages to be pulled from upstream that are not in the resolver.
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
@@ -60,7 +62,13 @@ flags:
   json-fleece-markdown:
     strict: true
 
+  json-fleece-codegen-util:
+    strict: true
+
   json-fleece-openapi3:
+    strict: true
+
+  json-fleece-swagger2:
     strict: true
 
 # Extra package databases containing global packages

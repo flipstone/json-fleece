@@ -13,7 +13,7 @@ import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
 import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 
 data BookBaseResponse = BookBaseResponse
-  { books :: Maybe [BookBase] -- ^ List of books matching given criteria
+  { books :: Maybe [BookBase] -- ^ Base book, returned in search results
   , sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }

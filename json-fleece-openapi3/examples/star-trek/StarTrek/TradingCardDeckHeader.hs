@@ -5,14 +5,15 @@ module StarTrek.TradingCardDeckHeader
   , tradingCardDeckHeaderSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
+import StarTrek.TradingCardDeckHeader.Name (Name, nameSchema)
+import StarTrek.TradingCardDeckHeader.Uid (Uid, uidSchema)
 
 data TradingCardDeckHeader = TradingCardDeckHeader
-  { name :: Text -- ^ Trading card deck name
-  , uid :: Text -- ^ Trading card deck unique ID
+  { name :: Name -- ^ Trading card deck name
+  , uid :: Uid -- ^ Trading card deck unique ID
   }
   deriving (Eq, Show)
 
@@ -20,5 +21,5 @@ tradingCardDeckHeaderSchema :: FC.Fleece schema => schema TradingCardDeckHeader
 tradingCardDeckHeaderSchema =
   FC.object $
     FC.constructor TradingCardDeckHeader
-      #+ FC.required "name" name FC.text
-      #+ FC.required "uid" uid FC.text
+      #+ FC.required "name" name nameSchema
+      #+ FC.required "uid" uid uidSchema

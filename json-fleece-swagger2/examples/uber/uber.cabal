@@ -1,0 +1,60 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.35.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           uber
+version:        0.1.0.0
+category:       Web
+homepage:       https://github.com/githubuser/uber#readme
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2023 Author name here
+license:        BSD3
+build-type:     Simple
+
+library
+  exposed-modules:
+      Uber.Activities
+      Uber.Activities.Count
+      Uber.Activities.Limit
+      Uber.Activities.Offset
+      Uber.Activity
+      Uber.Activity.Uuid
+      Uber.Error
+      Uber.Error.Code
+      Uber.Error.Fields
+      Uber.Error.Message
+      Uber.PriceEstimate
+      Uber.PriceEstimate.CurrencyCode
+      Uber.PriceEstimate.DisplayName
+      Uber.PriceEstimate.Estimate
+      Uber.PriceEstimate.HighEstimate
+      Uber.PriceEstimate.LowEstimate
+      Uber.PriceEstimate.ProductId
+      Uber.PriceEstimate.SurgeMultiplier
+      Uber.Product
+      Uber.Product.Capacity
+      Uber.Product.Description
+      Uber.Product.DisplayName
+      Uber.Product.Image
+      Uber.Product.ProductId
+      Uber.Profile
+      Uber.Profile.Email
+      Uber.Profile.FirstName
+      Uber.Profile.LastName
+      Uber.Profile.Picture
+      Uber.Profile.PromoCode
+  other-modules:
+      Paths_uber
+  hs-source-dirs:
+      ./
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      base >=4.7 && <5
+    , json-fleece-core
+    , scientific
+    , text
+    , time
+  default-language: Haskell2010

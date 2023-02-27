@@ -5,14 +5,15 @@ module StarTrek.ConflictHeader
   , conflictHeaderSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
+import StarTrek.ConflictHeader.Name (Name, nameSchema)
+import StarTrek.ConflictHeader.Uid (Uid, uidSchema)
 
 data ConflictHeader = ConflictHeader
-  { name :: Text -- ^ Conflict name
-  , uid :: Text -- ^ Conflict unique ID
+  { name :: Name -- ^ Conflict name
+  , uid :: Uid -- ^ Conflict unique ID
   }
   deriving (Eq, Show)
 
@@ -20,5 +21,5 @@ conflictHeaderSchema :: FC.Fleece schema => schema ConflictHeader
 conflictHeaderSchema =
   FC.object $
     FC.constructor ConflictHeader
-      #+ FC.required "name" name FC.text
-      #+ FC.required "uid" uid FC.text
+      #+ FC.required "name" name nameSchema
+      #+ FC.required "uid" uid uidSchema

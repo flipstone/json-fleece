@@ -14,7 +14,7 @@ import StarTrek.WeaponBase (WeaponBase, weaponBaseSchema)
 
 data WeaponBaseResponse = WeaponBaseResponse
   { sort :: Maybe ResponseSort -- ^ Response sort
-  , weapons :: Maybe [WeaponBase] -- ^ List of weapons matching given criteria
+  , weapons :: Maybe [WeaponBase] -- ^ Base weapon, returned in search results
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)

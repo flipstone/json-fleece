@@ -14,7 +14,7 @@ import StarTrek.SpeciesBase (SpeciesBase, speciesBaseSchema)
 
 data SpeciesBaseResponse = SpeciesBaseResponse
   { sort :: Maybe ResponseSort -- ^ Response sort
-  , species :: Maybe [SpeciesBase] -- ^ List of species matching given criteria
+  , species :: Maybe [SpeciesBase] -- ^ Base species, returned in search results
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)

@@ -15,7 +15,7 @@ import StarTrek.SeriesBase (SeriesBase, seriesBaseSchema)
 data SeriesBaseResponse = SeriesBaseResponse
   { sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
-  , series :: Maybe [SeriesBase] -- ^ List of series matching given criteria
+  , series :: Maybe [SeriesBase] -- ^ Base series, returned in search results
   }
   deriving (Eq, Show)
 

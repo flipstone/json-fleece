@@ -4,6 +4,18 @@ set -e
 
 source scripts/lib/run-in-container.sh
 
+echo "Generating Test Cases API (OpenAPI 3.0.1)"
+rm -rf json-fleece-openapi3/examples/test-cases/TestCases
+stack exec \
+  fleece-openapi3 \
+  -- \
+  TestCases \
+  json-fleece-openapi3/examples/test-cases/test-cases.yaml \
+  --dest json-fleece-openapi3/examples/test-cases \
+  --yes
+
+echo "Generating StarTrek API (OpenAPI 3.0.1)"
+rm -rf json-fleece-openapi3/examples/star-trek/StarTrek
 stack exec \
   fleece-openapi3 \
   -- \
@@ -11,3 +23,15 @@ stack exec \
   json-fleece-openapi3/examples/star-trek/star-trek.yaml \
   --dest json-fleece-openapi3/examples/star-trek \
   --yes
+
+echo "Generating Uber API (Swagger 2.0)"
+rm -rf json-fleece-swagger2/examples/uber/Uber
+stack exec \
+  fleece-swagger2 \
+  -- \
+  Uber \
+  json-fleece-swagger2/examples/uber/uber.json \
+  --dest json-fleece-swagger2/examples/uber \
+  --yes
+
+./scripts/test-examples

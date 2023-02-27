@@ -5,14 +5,15 @@ module StarTrek.PerformerHeader
   , performerHeaderSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
+import StarTrek.PerformerHeader.Name (Name, nameSchema)
+import StarTrek.PerformerHeader.Uid (Uid, uidSchema)
 
 data PerformerHeader = PerformerHeader
-  { name :: Text -- ^ Performer name
-  , uid :: Text -- ^ Performer unique ID
+  { name :: Name -- ^ Performer name
+  , uid :: Uid -- ^ Performer unique ID
   }
   deriving (Eq, Show)
 
@@ -20,5 +21,5 @@ performerHeaderSchema :: FC.Fleece schema => schema PerformerHeader
 performerHeaderSchema =
   FC.object $
     FC.constructor PerformerHeader
-      #+ FC.required "name" name FC.text
-      #+ FC.required "uid" uid FC.text
+      #+ FC.required "name" name nameSchema
+      #+ FC.required "uid" uid uidSchema

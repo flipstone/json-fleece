@@ -13,7 +13,7 @@ import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
 import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 
 data OccupationBaseResponse = OccupationBaseResponse
-  { occupations :: Maybe [OccupationBase] -- ^ List of occupations matching given criteria
+  { occupations :: Maybe [OccupationBase] -- ^ Base occupations, returned in search results
   , sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }

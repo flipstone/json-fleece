@@ -5,15 +5,17 @@ module StarTrek.ContentLanguage
   , contentLanguageSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
+import StarTrek.ContentLanguage.Iso6391Code (Iso6391Code, iso6391CodeSchema)
+import StarTrek.ContentLanguage.Name (Name, nameSchema)
+import StarTrek.ContentLanguage.Uid (Uid, uidSchema)
 
 data ContentLanguage = ContentLanguage
-  { name :: Maybe Text -- ^ Language name
-  , iso6391Code :: Maybe Text -- ^ ISO 639-1 code
-  , uid :: Maybe Text -- ^ Language unique ID
+  { name :: Maybe Name -- ^ Language name
+  , iso6391Code :: Maybe Iso6391Code -- ^ ISO 639-1 code
+  , uid :: Maybe Uid -- ^ Language unique ID
   }
   deriving (Eq, Show)
 
@@ -21,6 +23,6 @@ contentLanguageSchema :: FC.Fleece schema => schema ContentLanguage
 contentLanguageSchema =
   FC.object $
     FC.constructor ContentLanguage
-      #+ FC.optional "name" name FC.text
-      #+ FC.optional "iso6391Code" iso6391Code FC.text
-      #+ FC.optional "uid" uid FC.text
+      #+ FC.optional "name" name nameSchema
+      #+ FC.optional "iso6391Code" iso6391Code iso6391CodeSchema
+      #+ FC.optional "uid" uid uidSchema

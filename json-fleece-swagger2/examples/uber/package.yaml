@@ -1,0 +1,31 @@
+name:                uber
+version:             0.1.0.0
+#synopsis:
+#description:
+homepage:            https://github.com/githubuser/uber#readme
+license:             BSD3
+author:              Author name here
+maintainer:          example@example.com
+copyright:           2023 Author name here
+category:            Web
+
+dependencies:
+  - base >= 4.7 && < 5
+  - text
+  - scientific
+  - json-fleece-core
+  - time
+
+ghc-options:
+- -Wall
+- -Wcompat
+- -Widentities
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wmissing-export-lists
+- -Wmissing-home-modules
+- -Wpartial-fields
+- -Wredundant-constraints
+
+library:
+  source-dirs: .

@@ -15,7 +15,7 @@ import StarTrek.StaffBase (StaffBase, staffBaseSchema)
 data StaffBaseResponse = StaffBaseResponse
   { sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
-  , staff :: Maybe [StaffBase] -- ^ List of staff matching given criteria
+  , staff :: Maybe [StaffBase] -- ^ Base staff, returned in search results
   }
   deriving (Eq, Show)
 

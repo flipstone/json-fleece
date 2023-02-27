@@ -5,22 +5,31 @@ module StarTrek.MagazineBase
   , magazineBaseSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
-import Prelude (($), Eq, Integer, Maybe, Show)
+import Prelude (($), Eq, Maybe, Show)
+import StarTrek.MagazineBase.CoverDay (CoverDay, coverDaySchema)
+import StarTrek.MagazineBase.CoverMonth (CoverMonth, coverMonthSchema)
+import StarTrek.MagazineBase.CoverYear (CoverYear, coverYearSchema)
+import StarTrek.MagazineBase.IssueNumber (IssueNumber, issueNumberSchema)
+import StarTrek.MagazineBase.NumberOfPages (NumberOfPages, numberOfPagesSchema)
+import StarTrek.MagazineBase.PublishedDay (PublishedDay, publishedDaySchema)
+import StarTrek.MagazineBase.PublishedMonth (PublishedMonth, publishedMonthSchema)
+import StarTrek.MagazineBase.PublishedYear (PublishedYear, publishedYearSchema)
+import StarTrek.MagazineBase.Title (Title, titleSchema)
+import StarTrek.MagazineBase.Uid (Uid, uidSchema)
 
 data MagazineBase = MagazineBase
-  { publishedMonth :: Maybe Integer -- ^ Month the magazine was published
-  , publishedYear :: Maybe Integer -- ^ Year the magazine was published
-  , uid :: Text -- ^ Magazine unique ID
-  , publishedDay :: Maybe Integer -- ^ Day the magazine was published
-  , coverYear :: Maybe Integer -- ^ Cover publication year
-  , issueNumber :: Maybe Text -- ^ Magazine issue number
-  , title :: Text -- ^ Magazine title
-  , coverDay :: Maybe Integer -- ^ Cover publication day
-  , numberOfPages :: Maybe Integer -- ^ Number of pages
-  , coverMonth :: Maybe Integer -- ^ Cover publication month
+  { publishedMonth :: Maybe PublishedMonth -- ^ Month the magazine was published
+  , publishedYear :: Maybe PublishedYear -- ^ Year the magazine was published
+  , uid :: Uid -- ^ Magazine unique ID
+  , publishedDay :: Maybe PublishedDay -- ^ Day the magazine was published
+  , coverYear :: Maybe CoverYear -- ^ Cover publication year
+  , issueNumber :: Maybe IssueNumber -- ^ Magazine issue number
+  , title :: Title -- ^ Magazine title
+  , coverDay :: Maybe CoverDay -- ^ Cover publication day
+  , numberOfPages :: Maybe NumberOfPages -- ^ Number of pages
+  , coverMonth :: Maybe CoverMonth -- ^ Cover publication month
   }
   deriving (Eq, Show)
 
@@ -28,13 +37,13 @@ magazineBaseSchema :: FC.Fleece schema => schema MagazineBase
 magazineBaseSchema =
   FC.object $
     FC.constructor MagazineBase
-      #+ FC.optional "publishedMonth" publishedMonth FC.integer
-      #+ FC.optional "publishedYear" publishedYear FC.integer
-      #+ FC.required "uid" uid FC.text
-      #+ FC.optional "publishedDay" publishedDay FC.integer
-      #+ FC.optional "coverYear" coverYear FC.integer
-      #+ FC.optional "issueNumber" issueNumber FC.text
-      #+ FC.required "title" title FC.text
-      #+ FC.optional "coverDay" coverDay FC.integer
-      #+ FC.optional "numberOfPages" numberOfPages FC.integer
-      #+ FC.optional "coverMonth" coverMonth FC.integer
+      #+ FC.optional "publishedMonth" publishedMonth publishedMonthSchema
+      #+ FC.optional "publishedYear" publishedYear publishedYearSchema
+      #+ FC.required "uid" uid uidSchema
+      #+ FC.optional "publishedDay" publishedDay publishedDaySchema
+      #+ FC.optional "coverYear" coverYear coverYearSchema
+      #+ FC.optional "issueNumber" issueNumber issueNumberSchema
+      #+ FC.required "title" title titleSchema
+      #+ FC.optional "coverDay" coverDay coverDaySchema
+      #+ FC.optional "numberOfPages" numberOfPages numberOfPagesSchema
+      #+ FC.optional "coverMonth" coverMonth coverMonthSchema

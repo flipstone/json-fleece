@@ -1,0 +1,17 @@
+{-# LANGUAGE NoImplicitPrelude #-}
+
+module StarTrek.SpeciesFull.ExtinctSpecies
+  ( ExtinctSpecies(..)
+  , extinctSpeciesSchema
+  ) where
+
+import Fleece.Core ()
+import qualified Fleece.Core as FC
+import Prelude (Bool, Eq, Show)
+
+newtype ExtinctSpecies = ExtinctSpecies Bool
+  deriving (Show, Eq)
+
+extinctSpeciesSchema :: FC.Fleece schema => schema ExtinctSpecies
+extinctSpeciesSchema =
+  FC.coerceSchema FC.boolean

@@ -4,5 +4,6 @@ set -e
 
 source scripts/lib/run-in-container.sh
 
-cd json-fleece-openapi3/examples/star-trek
-stack build --fast "$@"
+(cd json-fleece-openapi3/examples/test-cases && stack build --fast "$@")
+(cd json-fleece-openapi3/examples/star-trek && stack build --fast "$@")
+(cd json-fleece-swagger2/examples/uber && stack build --fast "$@")

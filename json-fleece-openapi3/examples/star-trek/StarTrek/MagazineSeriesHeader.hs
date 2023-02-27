@@ -5,14 +5,15 @@ module StarTrek.MagazineSeriesHeader
   , magazineSeriesHeaderSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
+import StarTrek.MagazineSeriesHeader.Title (Title, titleSchema)
+import StarTrek.MagazineSeriesHeader.Uid (Uid, uidSchema)
 
 data MagazineSeriesHeader = MagazineSeriesHeader
-  { uid :: Text -- ^ Magazine series unique ID
-  , title :: Text -- ^ Magazine series title
+  { uid :: Uid -- ^ Magazine series unique ID
+  , title :: Title -- ^ Magazine series title
   }
   deriving (Eq, Show)
 
@@ -20,5 +21,5 @@ magazineSeriesHeaderSchema :: FC.Fleece schema => schema MagazineSeriesHeader
 magazineSeriesHeaderSchema =
   FC.object $
     FC.constructor MagazineSeriesHeader
-      #+ FC.required "uid" uid FC.text
-      #+ FC.required "title" title FC.text
+      #+ FC.required "uid" uid uidSchema
+      #+ FC.required "title" title titleSchema

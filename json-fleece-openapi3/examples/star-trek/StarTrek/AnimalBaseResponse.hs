@@ -15,7 +15,7 @@ import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 data AnimalBaseResponse = AnimalBaseResponse
   { sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
-  , animals :: Maybe [AnimalBase] -- ^ List of animals matching given criteria
+  , animals :: Maybe [AnimalBase] -- ^ Base animal, returned in search results
   }
   deriving (Eq, Show)
 

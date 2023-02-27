@@ -13,7 +13,7 @@ import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
 import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 
 data FoodBaseResponse = FoodBaseResponse
-  { foods :: Maybe [FoodBase] -- ^ List of foods matching given criteria
+  { foods :: Maybe [FoodBase] -- ^ Base food, returned in search results
   , sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }

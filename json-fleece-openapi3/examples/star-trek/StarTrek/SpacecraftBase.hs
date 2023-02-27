@@ -5,22 +5,26 @@ module StarTrek.SpacecraftBase
   , spacecraftBaseSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import StarTrek.OrganizationHeader (OrganizationHeader, organizationHeaderSchema)
+import StarTrek.SpacecraftBase.DateStatus (DateStatus, dateStatusSchema)
+import StarTrek.SpacecraftBase.Name (Name, nameSchema)
+import StarTrek.SpacecraftBase.Registry (Registry, registrySchema)
+import StarTrek.SpacecraftBase.Status (Status, statusSchema)
+import StarTrek.SpacecraftBase.Uid (Uid, uidSchema)
 import StarTrek.SpacecraftClassHeader (SpacecraftClassHeader, spacecraftClassHeaderSchema)
 
 data SpacecraftBase = SpacecraftBase
-  { name :: Text -- ^ Spacecraft name
-  , registry :: Maybe Text -- ^ Spacecraft registry
-  , uid :: Text -- ^ Spacecraft unique ID
-  , status :: Maybe Text -- ^ Status of a spacecraft (in prime reality, if spacecraft was in more than one realities)
+  { name :: Name -- ^ Spacecraft name
+  , registry :: Maybe Registry -- ^ Spacecraft registry
+  , uid :: Uid -- ^ Spacecraft unique ID
+  , status :: Maybe Status -- ^ Status of a spacecraft (in prime reality, if spacecraft was in more than one realities)
   , owner :: Maybe OrganizationHeader -- ^ Header organization, embedded in other objects
   , operator :: Maybe OrganizationHeader -- ^ Header organization, embedded in other objects
   , spacecraftClass :: Maybe SpacecraftClassHeader -- ^ Header spacecraft class, embedded in other objects
-  , dateStatus :: Maybe Text -- ^ Date the spacecraft status was last known
+  , dateStatus :: Maybe DateStatus -- ^ Date the spacecraft status was last known
   }
   deriving (Eq, Show)
 
@@ -28,11 +32,11 @@ spacecraftBaseSchema :: FC.Fleece schema => schema SpacecraftBase
 spacecraftBaseSchema =
   FC.object $
     FC.constructor SpacecraftBase
-      #+ FC.required "name" name FC.text
-      #+ FC.optional "registry" registry FC.text
-      #+ FC.required "uid" uid FC.text
-      #+ FC.optional "status" status FC.text
+      #+ FC.required "name" name nameSchema
+      #+ FC.optional "registry" registry registrySchema
+      #+ FC.required "uid" uid uidSchema
+      #+ FC.optional "status" status statusSchema
       #+ FC.optional "owner" owner organizationHeaderSchema
       #+ FC.optional "operator" operator organizationHeaderSchema
       #+ FC.optional "spacecraftClass" spacecraftClass spacecraftClassHeaderSchema
-      #+ FC.optional "dateStatus" dateStatus FC.text
+      #+ FC.optional "dateStatus" dateStatus dateStatusSchema

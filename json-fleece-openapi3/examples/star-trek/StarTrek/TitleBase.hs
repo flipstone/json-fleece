@@ -5,19 +5,25 @@ module StarTrek.TitleBase
   , titleBaseSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
-import Prelude (($), Bool, Eq, Maybe, Show)
+import Prelude (($), Eq, Maybe, Show)
+import StarTrek.TitleBase.FleetRank (FleetRank, fleetRankSchema)
+import StarTrek.TitleBase.MilitaryRank (MilitaryRank, militaryRankSchema)
+import StarTrek.TitleBase.Mirror (Mirror, mirrorSchema)
+import StarTrek.TitleBase.Name (Name, nameSchema)
+import StarTrek.TitleBase.Position (Position, positionSchema)
+import StarTrek.TitleBase.ReligiousTitle (ReligiousTitle, religiousTitleSchema)
+import StarTrek.TitleBase.Uid (Uid, uidSchema)
 
 data TitleBase = TitleBase
-  { militaryRank :: Maybe Bool -- ^ Whether it's a military rank
-  , name :: Text -- ^ Title name
-  , religiousTitle :: Maybe Bool -- ^ Whether it's a religious title
-  , uid :: Text -- ^ Title unique ID
-  , mirror :: Maybe Bool -- ^ Whether this title is from mirror universe
-  , fleetRank :: Maybe Bool -- ^ Whether it's a fleet rank
-  , position :: Maybe Bool -- ^ Whether it's a position
+  { militaryRank :: Maybe MilitaryRank -- ^ Whether it's a military rank
+  , name :: Name -- ^ Title name
+  , religiousTitle :: Maybe ReligiousTitle -- ^ Whether it's a religious title
+  , uid :: Uid -- ^ Title unique ID
+  , mirror :: Maybe Mirror -- ^ Whether this title is from mirror universe
+  , fleetRank :: Maybe FleetRank -- ^ Whether it's a fleet rank
+  , position :: Maybe Position -- ^ Whether it's a position
   }
   deriving (Eq, Show)
 
@@ -25,10 +31,10 @@ titleBaseSchema :: FC.Fleece schema => schema TitleBase
 titleBaseSchema =
   FC.object $
     FC.constructor TitleBase
-      #+ FC.optional "militaryRank" militaryRank FC.boolean
-      #+ FC.required "name" name FC.text
-      #+ FC.optional "religiousTitle" religiousTitle FC.boolean
-      #+ FC.required "uid" uid FC.text
-      #+ FC.optional "mirror" mirror FC.boolean
-      #+ FC.optional "fleetRank" fleetRank FC.boolean
-      #+ FC.optional "position" position FC.boolean
+      #+ FC.optional "militaryRank" militaryRank militaryRankSchema
+      #+ FC.required "name" name nameSchema
+      #+ FC.optional "religiousTitle" religiousTitle religiousTitleSchema
+      #+ FC.required "uid" uid uidSchema
+      #+ FC.optional "mirror" mirror mirrorSchema
+      #+ FC.optional "fleetRank" fleetRank fleetRankSchema
+      #+ FC.optional "position" position positionSchema

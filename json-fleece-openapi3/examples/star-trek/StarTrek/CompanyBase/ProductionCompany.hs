@@ -1,0 +1,17 @@
+{-# LANGUAGE NoImplicitPrelude #-}
+
+module StarTrek.CompanyBase.ProductionCompany
+  ( ProductionCompany(..)
+  , productionCompanySchema
+  ) where
+
+import Fleece.Core ()
+import qualified Fleece.Core as FC
+import Prelude (Bool, Eq, Show)
+
+newtype ProductionCompany = ProductionCompany Bool
+  deriving (Show, Eq)
+
+productionCompanySchema :: FC.Fleece schema => schema ProductionCompany
+productionCompanySchema =
+  FC.coerceSchema FC.boolean

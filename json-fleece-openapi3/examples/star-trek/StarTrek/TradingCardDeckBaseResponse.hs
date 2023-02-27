@@ -13,7 +13,7 @@ import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 import StarTrek.TradingCardDeckBase (TradingCardDeckBase, tradingCardDeckBaseSchema)
 
 data TradingCardDeckBaseResponse = TradingCardDeckBaseResponse
-  { tradingCardDecks :: Maybe [TradingCardDeckBase] -- ^ List of trading card decks matching given criteria
+  { tradingCardDecks :: Maybe [TradingCardDeckBase] -- ^ Base trading card deck, returned in search results
   , sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }

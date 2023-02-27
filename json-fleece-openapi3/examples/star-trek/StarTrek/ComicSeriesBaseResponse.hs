@@ -14,7 +14,7 @@ import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 
 data ComicSeriesBaseResponse = ComicSeriesBaseResponse
   { sort :: Maybe ResponseSort -- ^ Response sort
-  , comicSeries :: Maybe [ComicSeriesBase] -- ^ List of comic series matching given criteria
+  , comicSeries :: Maybe [ComicSeriesBase] -- ^ Base comic series, returned in search results
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)

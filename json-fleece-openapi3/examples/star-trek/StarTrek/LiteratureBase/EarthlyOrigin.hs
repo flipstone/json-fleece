@@ -1,0 +1,17 @@
+{-# LANGUAGE NoImplicitPrelude #-}
+
+module StarTrek.LiteratureBase.EarthlyOrigin
+  ( EarthlyOrigin(..)
+  , earthlyOriginSchema
+  ) where
+
+import Fleece.Core ()
+import qualified Fleece.Core as FC
+import Prelude (Bool, Eq, Show)
+
+newtype EarthlyOrigin = EarthlyOrigin Bool
+  deriving (Show, Eq)
+
+earthlyOriginSchema :: FC.Fleece schema => schema EarthlyOrigin
+earthlyOriginSchema =
+  FC.coerceSchema FC.boolean

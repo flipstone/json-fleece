@@ -1,0 +1,17 @@
+{-# LANGUAGE NoImplicitPrelude #-}
+
+module StarTrek.StaffBase.ArtDirector
+  ( ArtDirector(..)
+  , artDirectorSchema
+  ) where
+
+import Fleece.Core ()
+import qualified Fleece.Core as FC
+import Prelude (Bool, Eq, Show)
+
+newtype ArtDirector = ArtDirector Bool
+  deriving (Show, Eq)
+
+artDirectorSchema :: FC.Fleece schema => schema ArtDirector
+artDirectorSchema =
+  FC.coerceSchema FC.boolean

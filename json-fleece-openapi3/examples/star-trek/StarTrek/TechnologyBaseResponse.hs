@@ -13,7 +13,7 @@ import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 import StarTrek.TechnologyBase (TechnologyBase, technologyBaseSchema)
 
 data TechnologyBaseResponse = TechnologyBaseResponse
-  { technology :: Maybe [TechnologyBase] -- ^ List of technology matching given criteria
+  { technology :: Maybe [TechnologyBase] -- ^ Base technology, returned in search results
   , sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }

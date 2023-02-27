@@ -45,7 +45,6 @@ when:
 
 dependencies:
   - base >= 4.7 && < 5
-  - text >= 1.2 && < 1.3
 
 extra-source-files:
   - examples/**/*.yaml
@@ -56,12 +55,12 @@ library:
   exposed-modules:
     - Fleece.OpenApi3
   dependencies:
+    - json-fleece-codegen-util >= 0.1 &&  < 0.2
     - aeson >= 2.0 && < 2.1
     - insert-ordered-containers >= 0.2 && < 0.3
-    - text-manipulate >= 0.3 && < 0.4
-    - mtl >= 2.2 && < 2.3
     - containers >= 0.6 && < 0.7
     - openapi3 >= 3.2 && < 3.3
+    - text >= 1.2 && < 1.3
 
 executables:
   fleece-openapi3:
@@ -72,15 +71,10 @@ executables:
       - -threaded
     dependencies:
       - json-fleece-openapi3
-      - optparse-applicative >= 0.17 && < 0.18
-      - yaml >= 0.11 && < 0.12
-      - isocline >= 1.0 && < 1.1
-      - directory >= 1.3 && < 1.4
-      - filepath >= 1.4 && < 1.5
-      - openapi3 >= 3.2 && < 3.3
+      - json-fleece-codegen-util >= 0.1 &&  < 0.2
 
 tests:
-  json-fleece-aeson-test:
+  json-fleece-openapi3-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
@@ -89,8 +83,8 @@ tests:
       - -with-rtsopts=-N
     dependencies:
       - json-fleece-openapi3
+      - json-fleece-codegen-util >= 0.1 &&  < 0.2
       - hedgehog
       - bytestring >= 0.11 && < 0.12
-      - containers >= 0.6 && < 0.7
       - file-embed >= 0.0.15 && < 0.0.16
       - yaml >= 0.11 && < 0.12

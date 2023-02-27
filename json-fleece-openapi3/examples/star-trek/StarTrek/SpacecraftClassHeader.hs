@@ -5,14 +5,15 @@ module StarTrek.SpacecraftClassHeader
   , spacecraftClassHeaderSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
+import StarTrek.SpacecraftClassHeader.Name (Name, nameSchema)
+import StarTrek.SpacecraftClassHeader.Uid (Uid, uidSchema)
 
 data SpacecraftClassHeader = SpacecraftClassHeader
-  { name :: Text -- ^ Spacecraft class name
-  , uid :: Text -- ^ Spacecraft class unique ID
+  { name :: Name -- ^ Spacecraft class name
+  , uid :: Uid -- ^ Spacecraft class unique ID
   }
   deriving (Eq, Show)
 
@@ -20,5 +21,5 @@ spacecraftClassHeaderSchema :: FC.Fleece schema => schema SpacecraftClassHeader
 spacecraftClassHeaderSchema =
   FC.object $
     FC.constructor SpacecraftClassHeader
-      #+ FC.required "name" name FC.text
-      #+ FC.required "uid" uid FC.text
+      #+ FC.required "name" name nameSchema
+      #+ FC.required "uid" uid uidSchema

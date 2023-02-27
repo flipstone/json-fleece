@@ -18,230 +18,1389 @@ extra-source-files:
     examples/star-trek/package.yaml
     examples/star-trek/stack.yaml
     examples/star-trek/star-trek.yaml
+    examples/test-cases/package.yaml
+    examples/test-cases/stack.yaml
+    examples/test-cases/test-cases.yaml
     examples/star-trek/.stack-work/dist/x86_64-linux/Cabal-3.6.3.0/build/autogen/Paths_star_trek.hs
     examples/star-trek/.stack-work/dist/x86_64-linux/Cabal-3.6.3.0/build/star-trek/autogen/Paths_star_trek.hs
     examples/star-trek/StarTrek/AnimalBase.hs
+    examples/star-trek/StarTrek/AnimalBase/Avian.hs
+    examples/star-trek/StarTrek/AnimalBase/Canine.hs
+    examples/star-trek/StarTrek/AnimalBase/EarthAnimal.hs
+    examples/star-trek/StarTrek/AnimalBase/EarthInsect.hs
+    examples/star-trek/StarTrek/AnimalBase/Feline.hs
+    examples/star-trek/StarTrek/AnimalBase/Name.hs
+    examples/star-trek/StarTrek/AnimalBase/Uid.hs
     examples/star-trek/StarTrek/AnimalBaseResponse.hs
     examples/star-trek/StarTrek/AnimalFull.hs
+    examples/star-trek/StarTrek/AnimalFull/Avian.hs
+    examples/star-trek/StarTrek/AnimalFull/Canine.hs
+    examples/star-trek/StarTrek/AnimalFull/EarthAnimal.hs
+    examples/star-trek/StarTrek/AnimalFull/EarthInsect.hs
+    examples/star-trek/StarTrek/AnimalFull/Feline.hs
+    examples/star-trek/StarTrek/AnimalFull/Name.hs
+    examples/star-trek/StarTrek/AnimalFull/Uid.hs
     examples/star-trek/StarTrek/AnimalFullResponse.hs
     examples/star-trek/StarTrek/AnimalHeader.hs
+    examples/star-trek/StarTrek/AnimalHeader/Name.hs
+    examples/star-trek/StarTrek/AnimalHeader/Uid.hs
     examples/star-trek/StarTrek/AstronomicalObjectBase.hs
+    examples/star-trek/StarTrek/AstronomicalObjectBase/Name.hs
+    examples/star-trek/StarTrek/AstronomicalObjectBase/Uid.hs
     examples/star-trek/StarTrek/AstronomicalObjectBaseResponse.hs
     examples/star-trek/StarTrek/AstronomicalObjectFull.hs
+    examples/star-trek/StarTrek/AstronomicalObjectFull/Name.hs
+    examples/star-trek/StarTrek/AstronomicalObjectFull/Uid.hs
     examples/star-trek/StarTrek/AstronomicalObjectFullResponse.hs
     examples/star-trek/StarTrek/AstronomicalObjectHeader.hs
+    examples/star-trek/StarTrek/AstronomicalObjectHeader/Name.hs
+    examples/star-trek/StarTrek/AstronomicalObjectHeader/Uid.hs
     examples/star-trek/StarTrek/AstronomicalObjectType.hs
     examples/star-trek/StarTrek/BloodType.hs
     examples/star-trek/StarTrek/BookBase.hs
+    examples/star-trek/StarTrek/BookBase/Anthology.hs
+    examples/star-trek/StarTrek/BookBase/Audiobook.hs
+    examples/star-trek/StarTrek/BookBase/AudiobookAbridged.hs
+    examples/star-trek/StarTrek/BookBase/AudiobookPublishedDay.hs
+    examples/star-trek/StarTrek/BookBase/AudiobookPublishedMonth.hs
+    examples/star-trek/StarTrek/BookBase/AudiobookPublishedYear.hs
+    examples/star-trek/StarTrek/BookBase/AudiobookRunTime.hs
+    examples/star-trek/StarTrek/BookBase/BiographyBook.hs
+    examples/star-trek/StarTrek/BookBase/EBook.hs
+    examples/star-trek/StarTrek/BookBase/Novel.hs
+    examples/star-trek/StarTrek/BookBase/Novelization.hs
+    examples/star-trek/StarTrek/BookBase/NumberOfPages.hs
+    examples/star-trek/StarTrek/BookBase/ProductionNumber.hs
+    examples/star-trek/StarTrek/BookBase/PublishedDay.hs
+    examples/star-trek/StarTrek/BookBase/PublishedMonth.hs
+    examples/star-trek/StarTrek/BookBase/PublishedYear.hs
+    examples/star-trek/StarTrek/BookBase/ReferenceBook.hs
+    examples/star-trek/StarTrek/BookBase/RolePlayingBook.hs
+    examples/star-trek/StarTrek/BookBase/StardateFrom.hs
+    examples/star-trek/StarTrek/BookBase/StardateTo.hs
+    examples/star-trek/StarTrek/BookBase/Title.hs
+    examples/star-trek/StarTrek/BookBase/Uid.hs
+    examples/star-trek/StarTrek/BookBase/YearFrom.hs
+    examples/star-trek/StarTrek/BookBase/YearTo.hs
     examples/star-trek/StarTrek/BookBaseResponse.hs
     examples/star-trek/StarTrek/BookCollectionBase.hs
+    examples/star-trek/StarTrek/BookCollectionBase/NumberOfPages.hs
+    examples/star-trek/StarTrek/BookCollectionBase/PublishedDay.hs
+    examples/star-trek/StarTrek/BookCollectionBase/PublishedMonth.hs
+    examples/star-trek/StarTrek/BookCollectionBase/PublishedYear.hs
+    examples/star-trek/StarTrek/BookCollectionBase/StardateFrom.hs
+    examples/star-trek/StarTrek/BookCollectionBase/StardateTo.hs
+    examples/star-trek/StarTrek/BookCollectionBase/Title.hs
+    examples/star-trek/StarTrek/BookCollectionBase/Uid.hs
+    examples/star-trek/StarTrek/BookCollectionBase/YearFrom.hs
+    examples/star-trek/StarTrek/BookCollectionBase/YearTo.hs
     examples/star-trek/StarTrek/BookCollectionBaseResponse.hs
     examples/star-trek/StarTrek/BookCollectionFull.hs
+    examples/star-trek/StarTrek/BookCollectionFull/NumberOfPages.hs
+    examples/star-trek/StarTrek/BookCollectionFull/PublishedDay.hs
+    examples/star-trek/StarTrek/BookCollectionFull/PublishedMonth.hs
+    examples/star-trek/StarTrek/BookCollectionFull/PublishedYear.hs
+    examples/star-trek/StarTrek/BookCollectionFull/StardateFrom.hs
+    examples/star-trek/StarTrek/BookCollectionFull/StardateTo.hs
+    examples/star-trek/StarTrek/BookCollectionFull/Title.hs
+    examples/star-trek/StarTrek/BookCollectionFull/Uid.hs
+    examples/star-trek/StarTrek/BookCollectionFull/YearFrom.hs
+    examples/star-trek/StarTrek/BookCollectionFull/YearTo.hs
     examples/star-trek/StarTrek/BookCollectionFullResponse.hs
     examples/star-trek/StarTrek/BookCollectionHeader.hs
+    examples/star-trek/StarTrek/BookCollectionHeader/Title.hs
+    examples/star-trek/StarTrek/BookCollectionHeader/Uid.hs
     examples/star-trek/StarTrek/BookFull.hs
+    examples/star-trek/StarTrek/BookFull/Anthology.hs
+    examples/star-trek/StarTrek/BookFull/Audiobook.hs
+    examples/star-trek/StarTrek/BookFull/AudiobookAbridged.hs
+    examples/star-trek/StarTrek/BookFull/AudiobookPublishedDay.hs
+    examples/star-trek/StarTrek/BookFull/AudiobookPublishedMonth.hs
+    examples/star-trek/StarTrek/BookFull/AudiobookPublishedYear.hs
+    examples/star-trek/StarTrek/BookFull/AudiobookRunTime.hs
+    examples/star-trek/StarTrek/BookFull/BiographyBook.hs
+    examples/star-trek/StarTrek/BookFull/EBook.hs
+    examples/star-trek/StarTrek/BookFull/Novel.hs
+    examples/star-trek/StarTrek/BookFull/Novelization.hs
+    examples/star-trek/StarTrek/BookFull/NumberOfPages.hs
+    examples/star-trek/StarTrek/BookFull/ProductionNumber.hs
+    examples/star-trek/StarTrek/BookFull/PublishedDay.hs
+    examples/star-trek/StarTrek/BookFull/PublishedMonth.hs
+    examples/star-trek/StarTrek/BookFull/PublishedYear.hs
+    examples/star-trek/StarTrek/BookFull/ReferenceBook.hs
+    examples/star-trek/StarTrek/BookFull/RolePlayingBook.hs
+    examples/star-trek/StarTrek/BookFull/StardateFrom.hs
+    examples/star-trek/StarTrek/BookFull/StardateTo.hs
+    examples/star-trek/StarTrek/BookFull/Title.hs
+    examples/star-trek/StarTrek/BookFull/Uid.hs
+    examples/star-trek/StarTrek/BookFull/YearFrom.hs
+    examples/star-trek/StarTrek/BookFull/YearTo.hs
     examples/star-trek/StarTrek/BookFullResponse.hs
     examples/star-trek/StarTrek/BookHeader.hs
+    examples/star-trek/StarTrek/BookHeader/Title.hs
+    examples/star-trek/StarTrek/BookHeader/Uid.hs
     examples/star-trek/StarTrek/BookSeriesBase.hs
+    examples/star-trek/StarTrek/BookSeriesBase/EBookSeries.hs
+    examples/star-trek/StarTrek/BookSeriesBase/Miniseries.hs
+    examples/star-trek/StarTrek/BookSeriesBase/NumberOfBooks.hs
+    examples/star-trek/StarTrek/BookSeriesBase/PublishedMonthFrom.hs
+    examples/star-trek/StarTrek/BookSeriesBase/PublishedMonthTo.hs
+    examples/star-trek/StarTrek/BookSeriesBase/PublishedYearFrom.hs
+    examples/star-trek/StarTrek/BookSeriesBase/PublishedYearTo.hs
+    examples/star-trek/StarTrek/BookSeriesBase/Title.hs
+    examples/star-trek/StarTrek/BookSeriesBase/Uid.hs
+    examples/star-trek/StarTrek/BookSeriesBase/YearFrom.hs
+    examples/star-trek/StarTrek/BookSeriesBase/YearTo.hs
     examples/star-trek/StarTrek/BookSeriesBaseResponse.hs
     examples/star-trek/StarTrek/BookSeriesFull.hs
+    examples/star-trek/StarTrek/BookSeriesFull/EBookSeries.hs
+    examples/star-trek/StarTrek/BookSeriesFull/Miniseries.hs
+    examples/star-trek/StarTrek/BookSeriesFull/NumberOfBooks.hs
+    examples/star-trek/StarTrek/BookSeriesFull/PublishedMonthFrom.hs
+    examples/star-trek/StarTrek/BookSeriesFull/PublishedMonthTo.hs
+    examples/star-trek/StarTrek/BookSeriesFull/PublishedYearFrom.hs
+    examples/star-trek/StarTrek/BookSeriesFull/PublishedYearTo.hs
+    examples/star-trek/StarTrek/BookSeriesFull/Title.hs
+    examples/star-trek/StarTrek/BookSeriesFull/Uid.hs
+    examples/star-trek/StarTrek/BookSeriesFull/YearFrom.hs
+    examples/star-trek/StarTrek/BookSeriesFull/YearTo.hs
     examples/star-trek/StarTrek/BookSeriesFullResponse.hs
     examples/star-trek/StarTrek/BookSeriesHeader.hs
+    examples/star-trek/StarTrek/BookSeriesHeader/Title.hs
+    examples/star-trek/StarTrek/BookSeriesHeader/Uid.hs
     examples/star-trek/StarTrek/CharacterBase.hs
+    examples/star-trek/StarTrek/CharacterBase/AlternateReality.hs
+    examples/star-trek/StarTrek/CharacterBase/DayOfBirth.hs
+    examples/star-trek/StarTrek/CharacterBase/DayOfDeath.hs
+    examples/star-trek/StarTrek/CharacterBase/Deceased.hs
+    examples/star-trek/StarTrek/CharacterBase/FictionalCharacter.hs
+    examples/star-trek/StarTrek/CharacterBase/Height.hs
+    examples/star-trek/StarTrek/CharacterBase/Hologram.hs
+    examples/star-trek/StarTrek/CharacterBase/HologramActivationDate.hs
+    examples/star-trek/StarTrek/CharacterBase/HologramDateStatus.hs
+    examples/star-trek/StarTrek/CharacterBase/HologramStatus.hs
+    examples/star-trek/StarTrek/CharacterBase/Mirror.hs
+    examples/star-trek/StarTrek/CharacterBase/MonthOfBirth.hs
+    examples/star-trek/StarTrek/CharacterBase/MonthOfDeath.hs
+    examples/star-trek/StarTrek/CharacterBase/Name.hs
+    examples/star-trek/StarTrek/CharacterBase/PlaceOfBirth.hs
+    examples/star-trek/StarTrek/CharacterBase/PlaceOfDeath.hs
+    examples/star-trek/StarTrek/CharacterBase/SerialNumber.hs
+    examples/star-trek/StarTrek/CharacterBase/Uid.hs
+    examples/star-trek/StarTrek/CharacterBase/Weight.hs
+    examples/star-trek/StarTrek/CharacterBase/YearOfBirth.hs
+    examples/star-trek/StarTrek/CharacterBase/YearOfDeath.hs
     examples/star-trek/StarTrek/CharacterBaseResponse.hs
     examples/star-trek/StarTrek/CharacterFull.hs
+    examples/star-trek/StarTrek/CharacterFull/AlternateReality.hs
+    examples/star-trek/StarTrek/CharacterFull/DayOfBirth.hs
+    examples/star-trek/StarTrek/CharacterFull/DayOfDeath.hs
+    examples/star-trek/StarTrek/CharacterFull/Deceased.hs
+    examples/star-trek/StarTrek/CharacterFull/FictionalCharacter.hs
+    examples/star-trek/StarTrek/CharacterFull/Height.hs
+    examples/star-trek/StarTrek/CharacterFull/Hologram.hs
+    examples/star-trek/StarTrek/CharacterFull/HologramActivationDate.hs
+    examples/star-trek/StarTrek/CharacterFull/HologramDateStatus.hs
+    examples/star-trek/StarTrek/CharacterFull/HologramStatus.hs
+    examples/star-trek/StarTrek/CharacterFull/Mirror.hs
+    examples/star-trek/StarTrek/CharacterFull/MonthOfBirth.hs
+    examples/star-trek/StarTrek/CharacterFull/MonthOfDeath.hs
+    examples/star-trek/StarTrek/CharacterFull/Name.hs
+    examples/star-trek/StarTrek/CharacterFull/PlaceOfBirth.hs
+    examples/star-trek/StarTrek/CharacterFull/PlaceOfDeath.hs
+    examples/star-trek/StarTrek/CharacterFull/SerialNumber.hs
+    examples/star-trek/StarTrek/CharacterFull/Uid.hs
+    examples/star-trek/StarTrek/CharacterFull/Weight.hs
+    examples/star-trek/StarTrek/CharacterFull/YearOfBirth.hs
+    examples/star-trek/StarTrek/CharacterFull/YearOfDeath.hs
     examples/star-trek/StarTrek/CharacterFullResponse.hs
     examples/star-trek/StarTrek/CharacterHeader.hs
+    examples/star-trek/StarTrek/CharacterHeader/Name.hs
+    examples/star-trek/StarTrek/CharacterHeader/Uid.hs
     examples/star-trek/StarTrek/CharacterRelation.hs
+    examples/star-trek/StarTrek/CharacterRelation/Type.hs
     examples/star-trek/StarTrek/CharacterSpecies.hs
+    examples/star-trek/StarTrek/CharacterSpecies/Denominator.hs
+    examples/star-trek/StarTrek/CharacterSpecies/Name.hs
+    examples/star-trek/StarTrek/CharacterSpecies/Numerator.hs
+    examples/star-trek/StarTrek/CharacterSpecies/Uid.hs
     examples/star-trek/StarTrek/ComicCollectionBase.hs
+    examples/star-trek/StarTrek/ComicCollectionBase/CoverDay.hs
+    examples/star-trek/StarTrek/ComicCollectionBase/CoverMonth.hs
+    examples/star-trek/StarTrek/ComicCollectionBase/CoverYear.hs
+    examples/star-trek/StarTrek/ComicCollectionBase/NumberOfPages.hs
+    examples/star-trek/StarTrek/ComicCollectionBase/Photonovel.hs
+    examples/star-trek/StarTrek/ComicCollectionBase/PublishedDay.hs
+    examples/star-trek/StarTrek/ComicCollectionBase/PublishedMonth.hs
+    examples/star-trek/StarTrek/ComicCollectionBase/PublishedYear.hs
+    examples/star-trek/StarTrek/ComicCollectionBase/StardateFrom.hs
+    examples/star-trek/StarTrek/ComicCollectionBase/StardateTo.hs
+    examples/star-trek/StarTrek/ComicCollectionBase/Title.hs
+    examples/star-trek/StarTrek/ComicCollectionBase/Uid.hs
+    examples/star-trek/StarTrek/ComicCollectionBase/YearFrom.hs
+    examples/star-trek/StarTrek/ComicCollectionBase/YearTo.hs
     examples/star-trek/StarTrek/ComicCollectionBaseResponse.hs
     examples/star-trek/StarTrek/ComicCollectionFull.hs
+    examples/star-trek/StarTrek/ComicCollectionFull/CoverDay.hs
+    examples/star-trek/StarTrek/ComicCollectionFull/CoverMonth.hs
+    examples/star-trek/StarTrek/ComicCollectionFull/CoverYear.hs
+    examples/star-trek/StarTrek/ComicCollectionFull/NumberOfPages.hs
+    examples/star-trek/StarTrek/ComicCollectionFull/Photonovel.hs
+    examples/star-trek/StarTrek/ComicCollectionFull/PublishedDay.hs
+    examples/star-trek/StarTrek/ComicCollectionFull/PublishedMonth.hs
+    examples/star-trek/StarTrek/ComicCollectionFull/PublishedYear.hs
+    examples/star-trek/StarTrek/ComicCollectionFull/StardateFrom.hs
+    examples/star-trek/StarTrek/ComicCollectionFull/StardateTo.hs
+    examples/star-trek/StarTrek/ComicCollectionFull/Title.hs
+    examples/star-trek/StarTrek/ComicCollectionFull/Uid.hs
+    examples/star-trek/StarTrek/ComicCollectionFull/YearFrom.hs
+    examples/star-trek/StarTrek/ComicCollectionFull/YearTo.hs
     examples/star-trek/StarTrek/ComicCollectionFullResponse.hs
     examples/star-trek/StarTrek/ComicCollectionHeader.hs
+    examples/star-trek/StarTrek/ComicCollectionHeader/Title.hs
+    examples/star-trek/StarTrek/ComicCollectionHeader/Uid.hs
     examples/star-trek/StarTrek/ComicsBase.hs
+    examples/star-trek/StarTrek/ComicsBase/Adaptation.hs
+    examples/star-trek/StarTrek/ComicsBase/CoverDay.hs
+    examples/star-trek/StarTrek/ComicsBase/CoverMonth.hs
+    examples/star-trek/StarTrek/ComicsBase/CoverYear.hs
+    examples/star-trek/StarTrek/ComicsBase/NumberOfPages.hs
+    examples/star-trek/StarTrek/ComicsBase/Photonovel.hs
+    examples/star-trek/StarTrek/ComicsBase/PublishedDay.hs
+    examples/star-trek/StarTrek/ComicsBase/PublishedMonth.hs
+    examples/star-trek/StarTrek/ComicsBase/PublishedYear.hs
+    examples/star-trek/StarTrek/ComicsBase/StardateFrom.hs
+    examples/star-trek/StarTrek/ComicsBase/StardateTo.hs
+    examples/star-trek/StarTrek/ComicsBase/Title.hs
+    examples/star-trek/StarTrek/ComicsBase/Uid.hs
+    examples/star-trek/StarTrek/ComicsBase/YearFrom.hs
+    examples/star-trek/StarTrek/ComicsBase/YearTo.hs
     examples/star-trek/StarTrek/ComicsBaseResponse.hs
     examples/star-trek/StarTrek/ComicSeriesBase.hs
+    examples/star-trek/StarTrek/ComicSeriesBase/Miniseries.hs
+    examples/star-trek/StarTrek/ComicSeriesBase/NumberOfIssues.hs
+    examples/star-trek/StarTrek/ComicSeriesBase/PhotonovelSeries.hs
+    examples/star-trek/StarTrek/ComicSeriesBase/PublishedDayFrom.hs
+    examples/star-trek/StarTrek/ComicSeriesBase/PublishedDayTo.hs
+    examples/star-trek/StarTrek/ComicSeriesBase/PublishedMonthFrom.hs
+    examples/star-trek/StarTrek/ComicSeriesBase/PublishedMonthTo.hs
+    examples/star-trek/StarTrek/ComicSeriesBase/PublishedYearFrom.hs
+    examples/star-trek/StarTrek/ComicSeriesBase/PublishedYearTo.hs
+    examples/star-trek/StarTrek/ComicSeriesBase/StardateFrom.hs
+    examples/star-trek/StarTrek/ComicSeriesBase/StardateTo.hs
+    examples/star-trek/StarTrek/ComicSeriesBase/Title.hs
+    examples/star-trek/StarTrek/ComicSeriesBase/Uid.hs
+    examples/star-trek/StarTrek/ComicSeriesBase/YearFrom.hs
+    examples/star-trek/StarTrek/ComicSeriesBase/YearTo.hs
     examples/star-trek/StarTrek/ComicSeriesBaseResponse.hs
     examples/star-trek/StarTrek/ComicSeriesFull.hs
+    examples/star-trek/StarTrek/ComicSeriesFull/Miniseries.hs
+    examples/star-trek/StarTrek/ComicSeriesFull/NumberOfIssues.hs
+    examples/star-trek/StarTrek/ComicSeriesFull/PhotonovelSeries.hs
+    examples/star-trek/StarTrek/ComicSeriesFull/PublishedDayFrom.hs
+    examples/star-trek/StarTrek/ComicSeriesFull/PublishedDayTo.hs
+    examples/star-trek/StarTrek/ComicSeriesFull/PublishedMonthFrom.hs
+    examples/star-trek/StarTrek/ComicSeriesFull/PublishedMonthTo.hs
+    examples/star-trek/StarTrek/ComicSeriesFull/PublishedYearFrom.hs
+    examples/star-trek/StarTrek/ComicSeriesFull/PublishedYearTo.hs
+    examples/star-trek/StarTrek/ComicSeriesFull/StardateFrom.hs
+    examples/star-trek/StarTrek/ComicSeriesFull/StardateTo.hs
+    examples/star-trek/StarTrek/ComicSeriesFull/Title.hs
+    examples/star-trek/StarTrek/ComicSeriesFull/Uid.hs
+    examples/star-trek/StarTrek/ComicSeriesFull/YearFrom.hs
+    examples/star-trek/StarTrek/ComicSeriesFull/YearTo.hs
     examples/star-trek/StarTrek/ComicSeriesFullResponse.hs
     examples/star-trek/StarTrek/ComicSeriesHeader.hs
+    examples/star-trek/StarTrek/ComicSeriesHeader/Title.hs
+    examples/star-trek/StarTrek/ComicSeriesHeader/Uid.hs
     examples/star-trek/StarTrek/ComicsFull.hs
+    examples/star-trek/StarTrek/ComicsFull/Adaptation.hs
+    examples/star-trek/StarTrek/ComicsFull/CoverDay.hs
+    examples/star-trek/StarTrek/ComicsFull/CoverMonth.hs
+    examples/star-trek/StarTrek/ComicsFull/CoverYear.hs
+    examples/star-trek/StarTrek/ComicsFull/NumberOfPages.hs
+    examples/star-trek/StarTrek/ComicsFull/Photonovel.hs
+    examples/star-trek/StarTrek/ComicsFull/PublishedDay.hs
+    examples/star-trek/StarTrek/ComicsFull/PublishedMonth.hs
+    examples/star-trek/StarTrek/ComicsFull/PublishedYear.hs
+    examples/star-trek/StarTrek/ComicsFull/StardateFrom.hs
+    examples/star-trek/StarTrek/ComicsFull/StardateTo.hs
+    examples/star-trek/StarTrek/ComicsFull/Title.hs
+    examples/star-trek/StarTrek/ComicsFull/Uid.hs
+    examples/star-trek/StarTrek/ComicsFull/YearFrom.hs
+    examples/star-trek/StarTrek/ComicsFull/YearTo.hs
     examples/star-trek/StarTrek/ComicsFullResponse.hs
     examples/star-trek/StarTrek/ComicsHeader.hs
+    examples/star-trek/StarTrek/ComicsHeader/Title.hs
+    examples/star-trek/StarTrek/ComicsHeader/Uid.hs
     examples/star-trek/StarTrek/ComicStripBase.hs
+    examples/star-trek/StarTrek/ComicStripBase/NumberOfPages.hs
+    examples/star-trek/StarTrek/ComicStripBase/Periodical.hs
+    examples/star-trek/StarTrek/ComicStripBase/PublishedDayFrom.hs
+    examples/star-trek/StarTrek/ComicStripBase/PublishedDayTo.hs
+    examples/star-trek/StarTrek/ComicStripBase/PublishedMonthFrom.hs
+    examples/star-trek/StarTrek/ComicStripBase/PublishedMonthTo.hs
+    examples/star-trek/StarTrek/ComicStripBase/PublishedYearFrom.hs
+    examples/star-trek/StarTrek/ComicStripBase/PublishedYearTo.hs
+    examples/star-trek/StarTrek/ComicStripBase/Title.hs
+    examples/star-trek/StarTrek/ComicStripBase/Uid.hs
+    examples/star-trek/StarTrek/ComicStripBase/YearFrom.hs
+    examples/star-trek/StarTrek/ComicStripBase/YearTo.hs
     examples/star-trek/StarTrek/ComicStripBaseResponse.hs
     examples/star-trek/StarTrek/ComicStripFull.hs
+    examples/star-trek/StarTrek/ComicStripFull/NumberOfPages.hs
+    examples/star-trek/StarTrek/ComicStripFull/Periodical.hs
+    examples/star-trek/StarTrek/ComicStripFull/PublishedDayFrom.hs
+    examples/star-trek/StarTrek/ComicStripFull/PublishedDayTo.hs
+    examples/star-trek/StarTrek/ComicStripFull/PublishedMonthFrom.hs
+    examples/star-trek/StarTrek/ComicStripFull/PublishedMonthTo.hs
+    examples/star-trek/StarTrek/ComicStripFull/PublishedYearFrom.hs
+    examples/star-trek/StarTrek/ComicStripFull/PublishedYearTo.hs
+    examples/star-trek/StarTrek/ComicStripFull/Title.hs
+    examples/star-trek/StarTrek/ComicStripFull/Uid.hs
+    examples/star-trek/StarTrek/ComicStripFull/YearFrom.hs
+    examples/star-trek/StarTrek/ComicStripFull/YearTo.hs
     examples/star-trek/StarTrek/ComicStripFullResponse.hs
     examples/star-trek/StarTrek/ComicStripHeader.hs
+    examples/star-trek/StarTrek/ComicStripHeader/Title.hs
+    examples/star-trek/StarTrek/ComicStripHeader/Uid.hs
     examples/star-trek/StarTrek/CompanyBase.hs
+    examples/star-trek/StarTrek/CompanyBase/Broadcaster.hs
+    examples/star-trek/StarTrek/CompanyBase/CollectibleCompany.hs
+    examples/star-trek/StarTrek/CompanyBase/Conglomerate.hs
+    examples/star-trek/StarTrek/CompanyBase/DigitalVisualEffectsCompany.hs
+    examples/star-trek/StarTrek/CompanyBase/Distributor.hs
+    examples/star-trek/StarTrek/CompanyBase/FilmEquipmentCompany.hs
+    examples/star-trek/StarTrek/CompanyBase/GameCompany.hs
+    examples/star-trek/StarTrek/CompanyBase/MakeUpEffectsStudio.hs
+    examples/star-trek/StarTrek/CompanyBase/MattePaintingCompany.hs
+    examples/star-trek/StarTrek/CompanyBase/ModelAndMiniatureEffectsCompany.hs
+    examples/star-trek/StarTrek/CompanyBase/Name.hs
+    examples/star-trek/StarTrek/CompanyBase/PostProductionCompany.hs
+    examples/star-trek/StarTrek/CompanyBase/ProductionCompany.hs
+    examples/star-trek/StarTrek/CompanyBase/PropCompany.hs
+    examples/star-trek/StarTrek/CompanyBase/RecordLabel.hs
+    examples/star-trek/StarTrek/CompanyBase/SpecialEffectsCompany.hs
+    examples/star-trek/StarTrek/CompanyBase/TvAndFilmProductionCompany.hs
+    examples/star-trek/StarTrek/CompanyBase/Uid.hs
+    examples/star-trek/StarTrek/CompanyBase/VideoGameCompany.hs
     examples/star-trek/StarTrek/CompanyBaseResponse.hs
     examples/star-trek/StarTrek/CompanyFull.hs
+    examples/star-trek/StarTrek/CompanyFull/Broadcaster.hs
+    examples/star-trek/StarTrek/CompanyFull/CollectibleCompany.hs
+    examples/star-trek/StarTrek/CompanyFull/Conglomerate.hs
+    examples/star-trek/StarTrek/CompanyFull/DigitalVisualEffectsCompany.hs
+    examples/star-trek/StarTrek/CompanyFull/Distributor.hs
+    examples/star-trek/StarTrek/CompanyFull/FilmEquipmentCompany.hs
+    examples/star-trek/StarTrek/CompanyFull/GameCompany.hs
+    examples/star-trek/StarTrek/CompanyFull/MakeUpEffectsStudio.hs
+    examples/star-trek/StarTrek/CompanyFull/MattePaintingCompany.hs
+    examples/star-trek/StarTrek/CompanyFull/ModelAndMiniatureEffectsCompany.hs
+    examples/star-trek/StarTrek/CompanyFull/Name.hs
+    examples/star-trek/StarTrek/CompanyFull/PostProductionCompany.hs
+    examples/star-trek/StarTrek/CompanyFull/ProductionCompany.hs
+    examples/star-trek/StarTrek/CompanyFull/PropCompany.hs
+    examples/star-trek/StarTrek/CompanyFull/RecordLabel.hs
+    examples/star-trek/StarTrek/CompanyFull/SpecialEffectsCompany.hs
+    examples/star-trek/StarTrek/CompanyFull/TvAndFilmProductionCompany.hs
+    examples/star-trek/StarTrek/CompanyFull/Uid.hs
+    examples/star-trek/StarTrek/CompanyFull/VideoGameCompany.hs
     examples/star-trek/StarTrek/CompanyFullResponse.hs
     examples/star-trek/StarTrek/CompanyHeader.hs
+    examples/star-trek/StarTrek/CompanyHeader/Name.hs
+    examples/star-trek/StarTrek/CompanyHeader/Uid.hs
     examples/star-trek/StarTrek/ConflictBase.hs
+    examples/star-trek/StarTrek/ConflictBase/AlternateReality.hs
+    examples/star-trek/StarTrek/ConflictBase/DominionWarBattle.hs
+    examples/star-trek/StarTrek/ConflictBase/EarthConflict.hs
+    examples/star-trek/StarTrek/ConflictBase/FederationWar.hs
+    examples/star-trek/StarTrek/ConflictBase/KlingonWar.hs
+    examples/star-trek/StarTrek/ConflictBase/Name.hs
+    examples/star-trek/StarTrek/ConflictBase/Uid.hs
+    examples/star-trek/StarTrek/ConflictBase/YearFrom.hs
+    examples/star-trek/StarTrek/ConflictBase/YearTo.hs
     examples/star-trek/StarTrek/ConflictBaseResponse.hs
     examples/star-trek/StarTrek/ConflictFull.hs
+    examples/star-trek/StarTrek/ConflictFull/AlternateReality.hs
+    examples/star-trek/StarTrek/ConflictFull/DominionWarBattle.hs
+    examples/star-trek/StarTrek/ConflictFull/EarthConflict.hs
+    examples/star-trek/StarTrek/ConflictFull/FederationWar.hs
+    examples/star-trek/StarTrek/ConflictFull/KlingonWar.hs
+    examples/star-trek/StarTrek/ConflictFull/Name.hs
+    examples/star-trek/StarTrek/ConflictFull/Uid.hs
+    examples/star-trek/StarTrek/ConflictFull/YearFrom.hs
+    examples/star-trek/StarTrek/ConflictFull/YearTo.hs
     examples/star-trek/StarTrek/ConflictFullResponse.hs
     examples/star-trek/StarTrek/ConflictHeader.hs
+    examples/star-trek/StarTrek/ConflictHeader/Name.hs
+    examples/star-trek/StarTrek/ConflictHeader/Uid.hs
     examples/star-trek/StarTrek/ContentLanguage.hs
+    examples/star-trek/StarTrek/ContentLanguage/Iso6391Code.hs
+    examples/star-trek/StarTrek/ContentLanguage/Name.hs
+    examples/star-trek/StarTrek/ContentLanguage/Uid.hs
     examples/star-trek/StarTrek/ContentRating.hs
+    examples/star-trek/StarTrek/ContentRating/Rating.hs
+    examples/star-trek/StarTrek/ContentRating/Uid.hs
     examples/star-trek/StarTrek/ContentRatingSystem.hs
     examples/star-trek/StarTrek/Country.hs
+    examples/star-trek/StarTrek/Country/Iso31661Alpha2Code.hs
+    examples/star-trek/StarTrek/Country/Name.hs
+    examples/star-trek/StarTrek/Country/Uid.hs
     examples/star-trek/StarTrek/ElementBase.hs
+    examples/star-trek/StarTrek/ElementBase/AtomicNumber.hs
+    examples/star-trek/StarTrek/ElementBase/AtomicWeight.hs
+    examples/star-trek/StarTrek/ElementBase/GammaSeries.hs
+    examples/star-trek/StarTrek/ElementBase/HypersonicSeries.hs
+    examples/star-trek/StarTrek/ElementBase/MegaSeries.hs
+    examples/star-trek/StarTrek/ElementBase/Name.hs
+    examples/star-trek/StarTrek/ElementBase/OmegaSeries.hs
+    examples/star-trek/StarTrek/ElementBase/Symbol.hs
+    examples/star-trek/StarTrek/ElementBase/TransonicSeries.hs
+    examples/star-trek/StarTrek/ElementBase/Transuranium.hs
+    examples/star-trek/StarTrek/ElementBase/Uid.hs
+    examples/star-trek/StarTrek/ElementBase/WorldSeries.hs
     examples/star-trek/StarTrek/ElementBaseResponse.hs
     examples/star-trek/StarTrek/ElementFull.hs
+    examples/star-trek/StarTrek/ElementFull/AtomicNumber.hs
+    examples/star-trek/StarTrek/ElementFull/AtomicWeight.hs
+    examples/star-trek/StarTrek/ElementFull/GammaSeries.hs
+    examples/star-trek/StarTrek/ElementFull/HypersonicSeries.hs
+    examples/star-trek/StarTrek/ElementFull/MegaSeries.hs
+    examples/star-trek/StarTrek/ElementFull/Name.hs
+    examples/star-trek/StarTrek/ElementFull/OmegaSeries.hs
+    examples/star-trek/StarTrek/ElementFull/Symbol.hs
+    examples/star-trek/StarTrek/ElementFull/TransonicSeries.hs
+    examples/star-trek/StarTrek/ElementFull/Transuranium.hs
+    examples/star-trek/StarTrek/ElementFull/Uid.hs
+    examples/star-trek/StarTrek/ElementFull/WorldSeries.hs
     examples/star-trek/StarTrek/ElementFullResponse.hs
     examples/star-trek/StarTrek/ElementHeader.hs
+    examples/star-trek/StarTrek/ElementHeader/Name.hs
+    examples/star-trek/StarTrek/ElementHeader/Uid.hs
     examples/star-trek/StarTrek/EpisodeBase.hs
+    examples/star-trek/StarTrek/EpisodeBase/EpisodeNumber.hs
+    examples/star-trek/StarTrek/EpisodeBase/FeatureLength.hs
+    examples/star-trek/StarTrek/EpisodeBase/FinalScriptDate.hs
+    examples/star-trek/StarTrek/EpisodeBase/ProductionSerialNumber.hs
+    examples/star-trek/StarTrek/EpisodeBase/SeasonNumber.hs
+    examples/star-trek/StarTrek/EpisodeBase/StardateFrom.hs
+    examples/star-trek/StarTrek/EpisodeBase/StardateTo.hs
+    examples/star-trek/StarTrek/EpisodeBase/Title.hs
+    examples/star-trek/StarTrek/EpisodeBase/TitleGerman.hs
+    examples/star-trek/StarTrek/EpisodeBase/TitleItalian.hs
+    examples/star-trek/StarTrek/EpisodeBase/TitleJapanese.hs
+    examples/star-trek/StarTrek/EpisodeBase/Uid.hs
+    examples/star-trek/StarTrek/EpisodeBase/UsAirDate.hs
+    examples/star-trek/StarTrek/EpisodeBase/YearFrom.hs
+    examples/star-trek/StarTrek/EpisodeBase/YearTo.hs
     examples/star-trek/StarTrek/EpisodeBaseResponse.hs
     examples/star-trek/StarTrek/EpisodeFull.hs
+    examples/star-trek/StarTrek/EpisodeFull/EpisodeNumber.hs
+    examples/star-trek/StarTrek/EpisodeFull/FeatureLength.hs
+    examples/star-trek/StarTrek/EpisodeFull/FinalScriptDate.hs
+    examples/star-trek/StarTrek/EpisodeFull/ProductionSerialNumber.hs
+    examples/star-trek/StarTrek/EpisodeFull/SeasonNumber.hs
+    examples/star-trek/StarTrek/EpisodeFull/StardateFrom.hs
+    examples/star-trek/StarTrek/EpisodeFull/StardateTo.hs
+    examples/star-trek/StarTrek/EpisodeFull/Title.hs
+    examples/star-trek/StarTrek/EpisodeFull/TitleGerman.hs
+    examples/star-trek/StarTrek/EpisodeFull/TitleItalian.hs
+    examples/star-trek/StarTrek/EpisodeFull/TitleJapanese.hs
+    examples/star-trek/StarTrek/EpisodeFull/Uid.hs
+    examples/star-trek/StarTrek/EpisodeFull/UsAirDate.hs
+    examples/star-trek/StarTrek/EpisodeFull/YearFrom.hs
+    examples/star-trek/StarTrek/EpisodeFull/YearTo.hs
     examples/star-trek/StarTrek/EpisodeFullResponse.hs
     examples/star-trek/StarTrek/EpisodeHeader.hs
+    examples/star-trek/StarTrek/EpisodeHeader/Title.hs
+    examples/star-trek/StarTrek/EpisodeHeader/Uid.hs
     examples/star-trek/StarTrek/Error.hs
+    examples/star-trek/StarTrek/Error/Code.hs
+    examples/star-trek/StarTrek/Error/Message.hs
     examples/star-trek/StarTrek/FoodBase.hs
+    examples/star-trek/StarTrek/FoodBase/AlcoholicBeverage.hs
+    examples/star-trek/StarTrek/FoodBase/Beverage.hs
+    examples/star-trek/StarTrek/FoodBase/Dessert.hs
+    examples/star-trek/StarTrek/FoodBase/EarthlyOrigin.hs
+    examples/star-trek/StarTrek/FoodBase/Fruit.hs
+    examples/star-trek/StarTrek/FoodBase/HerbOrSpice.hs
+    examples/star-trek/StarTrek/FoodBase/Juice.hs
+    examples/star-trek/StarTrek/FoodBase/Name.hs
+    examples/star-trek/StarTrek/FoodBase/Sauce.hs
+    examples/star-trek/StarTrek/FoodBase/Soup.hs
+    examples/star-trek/StarTrek/FoodBase/Tea.hs
+    examples/star-trek/StarTrek/FoodBase/Uid.hs
     examples/star-trek/StarTrek/FoodBaseResponse.hs
     examples/star-trek/StarTrek/FoodFull.hs
+    examples/star-trek/StarTrek/FoodFull/AlcoholicBeverage.hs
+    examples/star-trek/StarTrek/FoodFull/Beverage.hs
+    examples/star-trek/StarTrek/FoodFull/Dessert.hs
+    examples/star-trek/StarTrek/FoodFull/EarthlyOrigin.hs
+    examples/star-trek/StarTrek/FoodFull/Fruit.hs
+    examples/star-trek/StarTrek/FoodFull/HerbOrSpice.hs
+    examples/star-trek/StarTrek/FoodFull/Juice.hs
+    examples/star-trek/StarTrek/FoodFull/Name.hs
+    examples/star-trek/StarTrek/FoodFull/Sauce.hs
+    examples/star-trek/StarTrek/FoodFull/Soup.hs
+    examples/star-trek/StarTrek/FoodFull/Tea.hs
+    examples/star-trek/StarTrek/FoodFull/Uid.hs
     examples/star-trek/StarTrek/FoodFullResponse.hs
     examples/star-trek/StarTrek/FoodHeader.hs
+    examples/star-trek/StarTrek/FoodHeader/Name.hs
+    examples/star-trek/StarTrek/FoodHeader/Uid.hs
     examples/star-trek/StarTrek/Gender.hs
     examples/star-trek/StarTrek/Genre.hs
+    examples/star-trek/StarTrek/Genre/Name.hs
+    examples/star-trek/StarTrek/Genre/Uid.hs
     examples/star-trek/StarTrek/LiteratureBase.hs
+    examples/star-trek/StarTrek/LiteratureBase/EarthlyOrigin.hs
+    examples/star-trek/StarTrek/LiteratureBase/ReligiousLiterature.hs
+    examples/star-trek/StarTrek/LiteratureBase/Report.hs
+    examples/star-trek/StarTrek/LiteratureBase/ScientificLiterature.hs
+    examples/star-trek/StarTrek/LiteratureBase/ShakespeareanWork.hs
+    examples/star-trek/StarTrek/LiteratureBase/TechnicalManual.hs
+    examples/star-trek/StarTrek/LiteratureBase/Title.hs
+    examples/star-trek/StarTrek/LiteratureBase/Uid.hs
     examples/star-trek/StarTrek/LiteratureBaseResponse.hs
     examples/star-trek/StarTrek/LiteratureFull.hs
+    examples/star-trek/StarTrek/LiteratureFull/EarthlyOrigin.hs
+    examples/star-trek/StarTrek/LiteratureFull/ReligiousLiterature.hs
+    examples/star-trek/StarTrek/LiteratureFull/Report.hs
+    examples/star-trek/StarTrek/LiteratureFull/ScientificLiterature.hs
+    examples/star-trek/StarTrek/LiteratureFull/ShakespeareanWork.hs
+    examples/star-trek/StarTrek/LiteratureFull/TechnicalManual.hs
+    examples/star-trek/StarTrek/LiteratureFull/Title.hs
+    examples/star-trek/StarTrek/LiteratureFull/Uid.hs
     examples/star-trek/StarTrek/LiteratureFullResponse.hs
     examples/star-trek/StarTrek/LiteratureHeader.hs
+    examples/star-trek/StarTrek/LiteratureHeader/Title.hs
+    examples/star-trek/StarTrek/LiteratureHeader/Uid.hs
     examples/star-trek/StarTrek/LocationBase.hs
+    examples/star-trek/StarTrek/LocationBase/AlternateReality.hs
+    examples/star-trek/StarTrek/LocationBase/BajoranSettlement.hs
+    examples/star-trek/StarTrek/LocationBase/BodyOfWater.hs
+    examples/star-trek/StarTrek/LocationBase/BuildingInterior.hs
+    examples/star-trek/StarTrek/LocationBase/Colony.hs
+    examples/star-trek/StarTrek/LocationBase/Country.hs
+    examples/star-trek/StarTrek/LocationBase/Ds9Establishment.hs
+    examples/star-trek/StarTrek/LocationBase/EarthlyLocation.hs
+    examples/star-trek/StarTrek/LocationBase/Establishment.hs
+    examples/star-trek/StarTrek/LocationBase/FictionalLocation.hs
+    examples/star-trek/StarTrek/LocationBase/GeographicalLocation.hs
+    examples/star-trek/StarTrek/LocationBase/Landform.hs
+    examples/star-trek/StarTrek/LocationBase/Landmark.hs
+    examples/star-trek/StarTrek/LocationBase/MedicalEstablishment.hs
+    examples/star-trek/StarTrek/LocationBase/Mirror.hs
+    examples/star-trek/StarTrek/LocationBase/Name.hs
+    examples/star-trek/StarTrek/LocationBase/ReligiousLocation.hs
+    examples/star-trek/StarTrek/LocationBase/Road.hs
+    examples/star-trek/StarTrek/LocationBase/School.hs
+    examples/star-trek/StarTrek/LocationBase/Settlement.hs
+    examples/star-trek/StarTrek/LocationBase/Shipyard.hs
+    examples/star-trek/StarTrek/LocationBase/Structure.hs
+    examples/star-trek/StarTrek/LocationBase/SubnationalEntity.hs
+    examples/star-trek/StarTrek/LocationBase/Uid.hs
+    examples/star-trek/StarTrek/LocationBase/UsSettlement.hs
     examples/star-trek/StarTrek/LocationBaseResponse.hs
     examples/star-trek/StarTrek/LocationFull.hs
+    examples/star-trek/StarTrek/LocationFull/AlternateReality.hs
+    examples/star-trek/StarTrek/LocationFull/BajoranSettlement.hs
+    examples/star-trek/StarTrek/LocationFull/BodyOfWater.hs
+    examples/star-trek/StarTrek/LocationFull/BuildingInterior.hs
+    examples/star-trek/StarTrek/LocationFull/Colony.hs
+    examples/star-trek/StarTrek/LocationFull/Country.hs
+    examples/star-trek/StarTrek/LocationFull/Ds9Establishment.hs
+    examples/star-trek/StarTrek/LocationFull/EarthlyLocation.hs
+    examples/star-trek/StarTrek/LocationFull/Establishment.hs
+    examples/star-trek/StarTrek/LocationFull/FictionalLocation.hs
+    examples/star-trek/StarTrek/LocationFull/GeographicalLocation.hs
+    examples/star-trek/StarTrek/LocationFull/Landform.hs
+    examples/star-trek/StarTrek/LocationFull/Landmark.hs
+    examples/star-trek/StarTrek/LocationFull/MedicalEstablishment.hs
+    examples/star-trek/StarTrek/LocationFull/Mirror.hs
+    examples/star-trek/StarTrek/LocationFull/Name.hs
+    examples/star-trek/StarTrek/LocationFull/ReligiousLocation.hs
+    examples/star-trek/StarTrek/LocationFull/Road.hs
+    examples/star-trek/StarTrek/LocationFull/School.hs
+    examples/star-trek/StarTrek/LocationFull/Settlement.hs
+    examples/star-trek/StarTrek/LocationFull/Shipyard.hs
+    examples/star-trek/StarTrek/LocationFull/Structure.hs
+    examples/star-trek/StarTrek/LocationFull/SubnationalEntity.hs
+    examples/star-trek/StarTrek/LocationFull/Uid.hs
+    examples/star-trek/StarTrek/LocationFull/UsSettlement.hs
     examples/star-trek/StarTrek/LocationFullResponse.hs
     examples/star-trek/StarTrek/LocationHeader.hs
+    examples/star-trek/StarTrek/LocationHeader/Name.hs
+    examples/star-trek/StarTrek/LocationHeader/Uid.hs
     examples/star-trek/StarTrek/MagazineBase.hs
+    examples/star-trek/StarTrek/MagazineBase/CoverDay.hs
+    examples/star-trek/StarTrek/MagazineBase/CoverMonth.hs
+    examples/star-trek/StarTrek/MagazineBase/CoverYear.hs
+    examples/star-trek/StarTrek/MagazineBase/IssueNumber.hs
+    examples/star-trek/StarTrek/MagazineBase/NumberOfPages.hs
+    examples/star-trek/StarTrek/MagazineBase/PublishedDay.hs
+    examples/star-trek/StarTrek/MagazineBase/PublishedMonth.hs
+    examples/star-trek/StarTrek/MagazineBase/PublishedYear.hs
+    examples/star-trek/StarTrek/MagazineBase/Title.hs
+    examples/star-trek/StarTrek/MagazineBase/Uid.hs
     examples/star-trek/StarTrek/MagazineBaseResponse.hs
     examples/star-trek/StarTrek/MagazineFull.hs
+    examples/star-trek/StarTrek/MagazineFull/CoverDay.hs
+    examples/star-trek/StarTrek/MagazineFull/CoverMonth.hs
+    examples/star-trek/StarTrek/MagazineFull/CoverYear.hs
+    examples/star-trek/StarTrek/MagazineFull/IssueNumber.hs
+    examples/star-trek/StarTrek/MagazineFull/NumberOfPages.hs
+    examples/star-trek/StarTrek/MagazineFull/PublishedDay.hs
+    examples/star-trek/StarTrek/MagazineFull/PublishedMonth.hs
+    examples/star-trek/StarTrek/MagazineFull/PublishedYear.hs
+    examples/star-trek/StarTrek/MagazineFull/Title.hs
+    examples/star-trek/StarTrek/MagazineFull/Uid.hs
     examples/star-trek/StarTrek/MagazineFullResponse.hs
     examples/star-trek/StarTrek/MagazineHeader.hs
+    examples/star-trek/StarTrek/MagazineHeader/Title.hs
+    examples/star-trek/StarTrek/MagazineHeader/Uid.hs
     examples/star-trek/StarTrek/MagazineSeriesBase.hs
+    examples/star-trek/StarTrek/MagazineSeriesBase/NumberOfIssues.hs
+    examples/star-trek/StarTrek/MagazineSeriesBase/PublishedMonthFrom.hs
+    examples/star-trek/StarTrek/MagazineSeriesBase/PublishedMonthTo.hs
+    examples/star-trek/StarTrek/MagazineSeriesBase/PublishedYearFrom.hs
+    examples/star-trek/StarTrek/MagazineSeriesBase/PublishedYearTo.hs
+    examples/star-trek/StarTrek/MagazineSeriesBase/Title.hs
+    examples/star-trek/StarTrek/MagazineSeriesBase/Uid.hs
     examples/star-trek/StarTrek/MagazineSeriesBaseResponse.hs
     examples/star-trek/StarTrek/MagazineSeriesFull.hs
+    examples/star-trek/StarTrek/MagazineSeriesFull/NumberOfIssues.hs
+    examples/star-trek/StarTrek/MagazineSeriesFull/PublishedMonthFrom.hs
+    examples/star-trek/StarTrek/MagazineSeriesFull/PublishedMonthTo.hs
+    examples/star-trek/StarTrek/MagazineSeriesFull/PublishedYearFrom.hs
+    examples/star-trek/StarTrek/MagazineSeriesFull/PublishedYearTo.hs
+    examples/star-trek/StarTrek/MagazineSeriesFull/Title.hs
+    examples/star-trek/StarTrek/MagazineSeriesFull/Uid.hs
     examples/star-trek/StarTrek/MagazineSeriesFullResponse.hs
     examples/star-trek/StarTrek/MagazineSeriesHeader.hs
+    examples/star-trek/StarTrek/MagazineSeriesHeader/Title.hs
+    examples/star-trek/StarTrek/MagazineSeriesHeader/Uid.hs
     examples/star-trek/StarTrek/MaritalStatus.hs
     examples/star-trek/StarTrek/MaterialBase.hs
+    examples/star-trek/StarTrek/MaterialBase/AlloyOrComposite.hs
+    examples/star-trek/StarTrek/MaterialBase/BiochemicalCompound.hs
+    examples/star-trek/StarTrek/MaterialBase/ChemicalCompound.hs
+    examples/star-trek/StarTrek/MaterialBase/Drug.hs
+    examples/star-trek/StarTrek/MaterialBase/Explosive.hs
+    examples/star-trek/StarTrek/MaterialBase/Fuel.hs
+    examples/star-trek/StarTrek/MaterialBase/Gemstone.hs
+    examples/star-trek/StarTrek/MaterialBase/Mineral.hs
+    examples/star-trek/StarTrek/MaterialBase/Name.hs
+    examples/star-trek/StarTrek/MaterialBase/PoisonousSubstance.hs
+    examples/star-trek/StarTrek/MaterialBase/PreciousMaterial.hs
+    examples/star-trek/StarTrek/MaterialBase/Uid.hs
     examples/star-trek/StarTrek/MaterialBaseResponse.hs
     examples/star-trek/StarTrek/MaterialFull.hs
+    examples/star-trek/StarTrek/MaterialFull/AlloyOrComposite.hs
+    examples/star-trek/StarTrek/MaterialFull/BiochemicalCompound.hs
+    examples/star-trek/StarTrek/MaterialFull/ChemicalCompound.hs
+    examples/star-trek/StarTrek/MaterialFull/Drug.hs
+    examples/star-trek/StarTrek/MaterialFull/Explosive.hs
+    examples/star-trek/StarTrek/MaterialFull/Fuel.hs
+    examples/star-trek/StarTrek/MaterialFull/Gemstone.hs
+    examples/star-trek/StarTrek/MaterialFull/Mineral.hs
+    examples/star-trek/StarTrek/MaterialFull/Name.hs
+    examples/star-trek/StarTrek/MaterialFull/PoisonousSubstance.hs
+    examples/star-trek/StarTrek/MaterialFull/PreciousMaterial.hs
+    examples/star-trek/StarTrek/MaterialFull/Uid.hs
     examples/star-trek/StarTrek/MaterialFullResponse.hs
     examples/star-trek/StarTrek/MaterialHeader.hs
+    examples/star-trek/StarTrek/MaterialHeader/Name.hs
+    examples/star-trek/StarTrek/MaterialHeader/Uid.hs
     examples/star-trek/StarTrek/MedicalConditionBase.hs
+    examples/star-trek/StarTrek/MedicalConditionBase/Name.hs
+    examples/star-trek/StarTrek/MedicalConditionBase/PsychologicalCondition.hs
+    examples/star-trek/StarTrek/MedicalConditionBase/Uid.hs
     examples/star-trek/StarTrek/MedicalConditionBaseResponse.hs
     examples/star-trek/StarTrek/MedicalConditionFull.hs
+    examples/star-trek/StarTrek/MedicalConditionFull/Name.hs
+    examples/star-trek/StarTrek/MedicalConditionFull/PsychologicalCondition.hs
+    examples/star-trek/StarTrek/MedicalConditionFull/Uid.hs
     examples/star-trek/StarTrek/MedicalConditionFullResponse.hs
     examples/star-trek/StarTrek/MedicalConditionHeader.hs
+    examples/star-trek/StarTrek/MedicalConditionHeader/Name.hs
+    examples/star-trek/StarTrek/MedicalConditionHeader/Uid.hs
     examples/star-trek/StarTrek/MovieBase.hs
+    examples/star-trek/StarTrek/MovieBase/StardateFrom.hs
+    examples/star-trek/StarTrek/MovieBase/StardateTo.hs
+    examples/star-trek/StarTrek/MovieBase/Title.hs
+    examples/star-trek/StarTrek/MovieBase/TitleBulgarian.hs
+    examples/star-trek/StarTrek/MovieBase/TitleCatalan.hs
+    examples/star-trek/StarTrek/MovieBase/TitleChineseTraditional.hs
+    examples/star-trek/StarTrek/MovieBase/TitleGerman.hs
+    examples/star-trek/StarTrek/MovieBase/TitleItalian.hs
+    examples/star-trek/StarTrek/MovieBase/TitleJapanese.hs
+    examples/star-trek/StarTrek/MovieBase/TitlePolish.hs
+    examples/star-trek/StarTrek/MovieBase/TitleRussian.hs
+    examples/star-trek/StarTrek/MovieBase/TitleSerbian.hs
+    examples/star-trek/StarTrek/MovieBase/TitleSpanish.hs
+    examples/star-trek/StarTrek/MovieBase/Uid.hs
+    examples/star-trek/StarTrek/MovieBase/UsReleaseDate.hs
+    examples/star-trek/StarTrek/MovieBase/YearFrom.hs
+    examples/star-trek/StarTrek/MovieBase/YearTo.hs
     examples/star-trek/StarTrek/MovieBaseResponse.hs
     examples/star-trek/StarTrek/MovieFull.hs
+    examples/star-trek/StarTrek/MovieFull/StardateFrom.hs
+    examples/star-trek/StarTrek/MovieFull/StardateTo.hs
+    examples/star-trek/StarTrek/MovieFull/Title.hs
+    examples/star-trek/StarTrek/MovieFull/TitleBulgarian.hs
+    examples/star-trek/StarTrek/MovieFull/TitleCatalan.hs
+    examples/star-trek/StarTrek/MovieFull/TitleChineseTraditional.hs
+    examples/star-trek/StarTrek/MovieFull/TitleGerman.hs
+    examples/star-trek/StarTrek/MovieFull/TitleItalian.hs
+    examples/star-trek/StarTrek/MovieFull/TitleJapanese.hs
+    examples/star-trek/StarTrek/MovieFull/TitlePolish.hs
+    examples/star-trek/StarTrek/MovieFull/TitleRussian.hs
+    examples/star-trek/StarTrek/MovieFull/TitleSerbian.hs
+    examples/star-trek/StarTrek/MovieFull/TitleSpanish.hs
+    examples/star-trek/StarTrek/MovieFull/Uid.hs
+    examples/star-trek/StarTrek/MovieFull/UsReleaseDate.hs
+    examples/star-trek/StarTrek/MovieFull/YearFrom.hs
+    examples/star-trek/StarTrek/MovieFull/YearTo.hs
     examples/star-trek/StarTrek/MovieFullResponse.hs
     examples/star-trek/StarTrek/MovieHeader.hs
+    examples/star-trek/StarTrek/MovieHeader/Title.hs
+    examples/star-trek/StarTrek/MovieHeader/Uid.hs
     examples/star-trek/StarTrek/OccupationBase.hs
+    examples/star-trek/StarTrek/OccupationBase/LegalOccupation.hs
+    examples/star-trek/StarTrek/OccupationBase/MedicalOccupation.hs
+    examples/star-trek/StarTrek/OccupationBase/Name.hs
+    examples/star-trek/StarTrek/OccupationBase/ScientificOccupation.hs
+    examples/star-trek/StarTrek/OccupationBase/Uid.hs
     examples/star-trek/StarTrek/OccupationBaseResponse.hs
     examples/star-trek/StarTrek/OccupationFull.hs
+    examples/star-trek/StarTrek/OccupationFull/LegalOccupation.hs
+    examples/star-trek/StarTrek/OccupationFull/MedicalOccupation.hs
+    examples/star-trek/StarTrek/OccupationFull/Name.hs
+    examples/star-trek/StarTrek/OccupationFull/ScientificOccupation.hs
+    examples/star-trek/StarTrek/OccupationFull/Uid.hs
     examples/star-trek/StarTrek/OccupationFullResponse.hs
     examples/star-trek/StarTrek/OccupationHeader.hs
+    examples/star-trek/StarTrek/OccupationHeader/Name.hs
+    examples/star-trek/StarTrek/OccupationHeader/Uid.hs
     examples/star-trek/StarTrek/OrganizationBase.hs
+    examples/star-trek/StarTrek/OrganizationBase/AlternateReality.hs
+    examples/star-trek/StarTrek/OrganizationBase/Government.hs
+    examples/star-trek/StarTrek/OrganizationBase/GovernmentAgency.hs
+    examples/star-trek/StarTrek/OrganizationBase/IntergovernmentalOrganization.hs
+    examples/star-trek/StarTrek/OrganizationBase/LawEnforcementAgency.hs
+    examples/star-trek/StarTrek/OrganizationBase/MedicalOrganization.hs
+    examples/star-trek/StarTrek/OrganizationBase/MilitaryOrganization.hs
+    examples/star-trek/StarTrek/OrganizationBase/MilitaryUnit.hs
+    examples/star-trek/StarTrek/OrganizationBase/Mirror.hs
+    examples/star-trek/StarTrek/OrganizationBase/Name.hs
+    examples/star-trek/StarTrek/OrganizationBase/PrisonOrPenalColony.hs
+    examples/star-trek/StarTrek/OrganizationBase/ResearchOrganization.hs
+    examples/star-trek/StarTrek/OrganizationBase/SportOrganization.hs
+    examples/star-trek/StarTrek/OrganizationBase/Uid.hs
     examples/star-trek/StarTrek/OrganizationBaseResponse.hs
     examples/star-trek/StarTrek/OrganizationFull.hs
+    examples/star-trek/StarTrek/OrganizationFull/AlternateReality.hs
+    examples/star-trek/StarTrek/OrganizationFull/Government.hs
+    examples/star-trek/StarTrek/OrganizationFull/GovernmentAgency.hs
+    examples/star-trek/StarTrek/OrganizationFull/IntergovernmentalOrganization.hs
+    examples/star-trek/StarTrek/OrganizationFull/LawEnforcementAgency.hs
+    examples/star-trek/StarTrek/OrganizationFull/MedicalOrganization.hs
+    examples/star-trek/StarTrek/OrganizationFull/MilitaryOrganization.hs
+    examples/star-trek/StarTrek/OrganizationFull/MilitaryUnit.hs
+    examples/star-trek/StarTrek/OrganizationFull/Mirror.hs
+    examples/star-trek/StarTrek/OrganizationFull/Name.hs
+    examples/star-trek/StarTrek/OrganizationFull/PrisonOrPenalColony.hs
+    examples/star-trek/StarTrek/OrganizationFull/ResearchOrganization.hs
+    examples/star-trek/StarTrek/OrganizationFull/SportOrganization.hs
+    examples/star-trek/StarTrek/OrganizationFull/Uid.hs
     examples/star-trek/StarTrek/OrganizationFullResponse.hs
     examples/star-trek/StarTrek/OrganizationHeader.hs
+    examples/star-trek/StarTrek/OrganizationHeader/Name.hs
+    examples/star-trek/StarTrek/OrganizationHeader/Uid.hs
     examples/star-trek/StarTrek/PerformerBase.hs
+    examples/star-trek/StarTrek/PerformerBase/AnimalPerformer.hs
+    examples/star-trek/StarTrek/PerformerBase/BirthName.hs
+    examples/star-trek/StarTrek/PerformerBase/DateOfBirth.hs
+    examples/star-trek/StarTrek/PerformerBase/DateOfDeath.hs
+    examples/star-trek/StarTrek/PerformerBase/DisPerformer.hs
+    examples/star-trek/StarTrek/PerformerBase/Ds9Performer.hs
+    examples/star-trek/StarTrek/PerformerBase/EntPerformer.hs
+    examples/star-trek/StarTrek/PerformerBase/FilmPerformer.hs
+    examples/star-trek/StarTrek/PerformerBase/Name.hs
+    examples/star-trek/StarTrek/PerformerBase/PlaceOfBirth.hs
+    examples/star-trek/StarTrek/PerformerBase/PlaceOfDeath.hs
+    examples/star-trek/StarTrek/PerformerBase/StandInPerformer.hs
+    examples/star-trek/StarTrek/PerformerBase/StuntPerformer.hs
+    examples/star-trek/StarTrek/PerformerBase/TasPerformer.hs
+    examples/star-trek/StarTrek/PerformerBase/TngPerformer.hs
+    examples/star-trek/StarTrek/PerformerBase/TosPerformer.hs
+    examples/star-trek/StarTrek/PerformerBase/Uid.hs
+    examples/star-trek/StarTrek/PerformerBase/VideoGamePerformer.hs
+    examples/star-trek/StarTrek/PerformerBase/VoicePerformer.hs
+    examples/star-trek/StarTrek/PerformerBase/VoyPerformer.hs
     examples/star-trek/StarTrek/PerformerBaseResponse.hs
     examples/star-trek/StarTrek/PerformerFull.hs
+    examples/star-trek/StarTrek/PerformerFull/AnimalPerformer.hs
+    examples/star-trek/StarTrek/PerformerFull/BirthName.hs
+    examples/star-trek/StarTrek/PerformerFull/DateOfBirth.hs
+    examples/star-trek/StarTrek/PerformerFull/DateOfDeath.hs
+    examples/star-trek/StarTrek/PerformerFull/DisPerformer.hs
+    examples/star-trek/StarTrek/PerformerFull/Ds9Performer.hs
+    examples/star-trek/StarTrek/PerformerFull/EntPerformer.hs
+    examples/star-trek/StarTrek/PerformerFull/FilmPerformer.hs
+    examples/star-trek/StarTrek/PerformerFull/Name.hs
+    examples/star-trek/StarTrek/PerformerFull/PlaceOfBirth.hs
+    examples/star-trek/StarTrek/PerformerFull/PlaceOfDeath.hs
+    examples/star-trek/StarTrek/PerformerFull/StandInPerformer.hs
+    examples/star-trek/StarTrek/PerformerFull/StuntPerformer.hs
+    examples/star-trek/StarTrek/PerformerFull/TasPerformer.hs
+    examples/star-trek/StarTrek/PerformerFull/TngPerformer.hs
+    examples/star-trek/StarTrek/PerformerFull/TosPerformer.hs
+    examples/star-trek/StarTrek/PerformerFull/Uid.hs
+    examples/star-trek/StarTrek/PerformerFull/VideoGamePerformer.hs
+    examples/star-trek/StarTrek/PerformerFull/VoicePerformer.hs
+    examples/star-trek/StarTrek/PerformerFull/VoyPerformer.hs
     examples/star-trek/StarTrek/PerformerFullResponse.hs
     examples/star-trek/StarTrek/PerformerHeader.hs
+    examples/star-trek/StarTrek/PerformerHeader/Name.hs
+    examples/star-trek/StarTrek/PerformerHeader/Uid.hs
     examples/star-trek/StarTrek/Platform.hs
+    examples/star-trek/StarTrek/Platform/Name.hs
+    examples/star-trek/StarTrek/Platform/Uid.hs
     examples/star-trek/StarTrek/ProductionRunUnit.hs
     examples/star-trek/StarTrek/Reference.hs
+    examples/star-trek/StarTrek/Reference/ReferenceNumber.hs
+    examples/star-trek/StarTrek/Reference/Uid.hs
     examples/star-trek/StarTrek/ReferenceType.hs
     examples/star-trek/StarTrek/ResponsePage.hs
+    examples/star-trek/StarTrek/ResponsePage/FirstPage.hs
+    examples/star-trek/StarTrek/ResponsePage/LastPage.hs
+    examples/star-trek/StarTrek/ResponsePage/NumberOfElements.hs
+    examples/star-trek/StarTrek/ResponsePage/PageNumber.hs
+    examples/star-trek/StarTrek/ResponsePage/PageSize.hs
+    examples/star-trek/StarTrek/ResponsePage/TotalElements.hs
+    examples/star-trek/StarTrek/ResponsePage/TotalPages.hs
     examples/star-trek/StarTrek/ResponseSort.hs
     examples/star-trek/StarTrek/ResponseSortClause.hs
+    examples/star-trek/StarTrek/ResponseSortClause/ClauseOrder.hs
+    examples/star-trek/StarTrek/ResponseSortClause/Name.hs
     examples/star-trek/StarTrek/ResponseSortDirection.hs
     examples/star-trek/StarTrek/SeasonBase.hs
+    examples/star-trek/StarTrek/SeasonBase/NumberOfEpisodes.hs
+    examples/star-trek/StarTrek/SeasonBase/SeasonNumber.hs
+    examples/star-trek/StarTrek/SeasonBase/Title.hs
+    examples/star-trek/StarTrek/SeasonBase/Uid.hs
     examples/star-trek/StarTrek/SeasonBaseResponse.hs
     examples/star-trek/StarTrek/SeasonFull.hs
+    examples/star-trek/StarTrek/SeasonFull/NumberOfEpisodes.hs
+    examples/star-trek/StarTrek/SeasonFull/SeasonNumber.hs
+    examples/star-trek/StarTrek/SeasonFull/Title.hs
+    examples/star-trek/StarTrek/SeasonFull/Uid.hs
     examples/star-trek/StarTrek/SeasonFullResponse.hs
     examples/star-trek/StarTrek/SeasonHeader.hs
+    examples/star-trek/StarTrek/SeasonHeader/Title.hs
+    examples/star-trek/StarTrek/SeasonHeader/Uid.hs
     examples/star-trek/StarTrek/SeriesBase.hs
+    examples/star-trek/StarTrek/SeriesBase/Abbreviation.hs
+    examples/star-trek/StarTrek/SeriesBase/EpisodesCount.hs
+    examples/star-trek/StarTrek/SeriesBase/FeatureLengthEpisodesCount.hs
+    examples/star-trek/StarTrek/SeriesBase/OriginalRunEndDate.hs
+    examples/star-trek/StarTrek/SeriesBase/OriginalRunStartDate.hs
+    examples/star-trek/StarTrek/SeriesBase/ProductionEndYear.hs
+    examples/star-trek/StarTrek/SeriesBase/ProductionStartYear.hs
+    examples/star-trek/StarTrek/SeriesBase/SeasonsCount.hs
+    examples/star-trek/StarTrek/SeriesBase/Title.hs
+    examples/star-trek/StarTrek/SeriesBase/Uid.hs
     examples/star-trek/StarTrek/SeriesBaseResponse.hs
     examples/star-trek/StarTrek/SeriesFull.hs
+    examples/star-trek/StarTrek/SeriesFull/Abbreviation.hs
+    examples/star-trek/StarTrek/SeriesFull/EpisodesCount.hs
+    examples/star-trek/StarTrek/SeriesFull/FeatureLengthEpisodesCount.hs
+    examples/star-trek/StarTrek/SeriesFull/OriginalRunEndDate.hs
+    examples/star-trek/StarTrek/SeriesFull/OriginalRunStartDate.hs
+    examples/star-trek/StarTrek/SeriesFull/ProductionEndYear.hs
+    examples/star-trek/StarTrek/SeriesFull/ProductionStartYear.hs
+    examples/star-trek/StarTrek/SeriesFull/SeasonsCount.hs
+    examples/star-trek/StarTrek/SeriesFull/Title.hs
+    examples/star-trek/StarTrek/SeriesFull/Uid.hs
     examples/star-trek/StarTrek/SeriesFullResponse.hs
     examples/star-trek/StarTrek/SeriesHeader.hs
+    examples/star-trek/StarTrek/SeriesHeader/Title.hs
+    examples/star-trek/StarTrek/SeriesHeader/Uid.hs
     examples/star-trek/StarTrek/SoundtrackBase.hs
+    examples/star-trek/StarTrek/SoundtrackBase/Length.hs
+    examples/star-trek/StarTrek/SoundtrackBase/ReleaseDate.hs
+    examples/star-trek/StarTrek/SoundtrackBase/Title.hs
+    examples/star-trek/StarTrek/SoundtrackBase/Uid.hs
     examples/star-trek/StarTrek/SoundtrackBaseResponse.hs
     examples/star-trek/StarTrek/SoundtrackFull.hs
+    examples/star-trek/StarTrek/SoundtrackFull/Length.hs
+    examples/star-trek/StarTrek/SoundtrackFull/ReleaseDate.hs
+    examples/star-trek/StarTrek/SoundtrackFull/Title.hs
+    examples/star-trek/StarTrek/SoundtrackFull/Uid.hs
     examples/star-trek/StarTrek/SoundtrackFullResponse.hs
     examples/star-trek/StarTrek/SoundtrackHeader.hs
+    examples/star-trek/StarTrek/SoundtrackHeader/Title.hs
+    examples/star-trek/StarTrek/SoundtrackHeader/Uid.hs
     examples/star-trek/StarTrek/SpacecraftBase.hs
+    examples/star-trek/StarTrek/SpacecraftBase/DateStatus.hs
+    examples/star-trek/StarTrek/SpacecraftBase/Name.hs
+    examples/star-trek/StarTrek/SpacecraftBase/Registry.hs
+    examples/star-trek/StarTrek/SpacecraftBase/Status.hs
+    examples/star-trek/StarTrek/SpacecraftBase/Uid.hs
     examples/star-trek/StarTrek/SpacecraftBaseResponse.hs
     examples/star-trek/StarTrek/SpacecraftClassBase.hs
+    examples/star-trek/StarTrek/SpacecraftClassBase/ActiveFrom.hs
+    examples/star-trek/StarTrek/SpacecraftClassBase/ActiveTo.hs
+    examples/star-trek/StarTrek/SpacecraftClassBase/AlternateReality.hs
+    examples/star-trek/StarTrek/SpacecraftClassBase/Name.hs
+    examples/star-trek/StarTrek/SpacecraftClassBase/NumberOfDecks.hs
+    examples/star-trek/StarTrek/SpacecraftClassBase/Uid.hs
+    examples/star-trek/StarTrek/SpacecraftClassBase/WarpCapable.hs
     examples/star-trek/StarTrek/SpacecraftClassBaseResponse.hs
     examples/star-trek/StarTrek/SpacecraftClassFull.hs
+    examples/star-trek/StarTrek/SpacecraftClassFull/ActiveFrom.hs
+    examples/star-trek/StarTrek/SpacecraftClassFull/ActiveTo.hs
+    examples/star-trek/StarTrek/SpacecraftClassFull/AlternateReality.hs
+    examples/star-trek/StarTrek/SpacecraftClassFull/Name.hs
+    examples/star-trek/StarTrek/SpacecraftClassFull/NumberOfDecks.hs
+    examples/star-trek/StarTrek/SpacecraftClassFull/Uid.hs
+    examples/star-trek/StarTrek/SpacecraftClassFull/WarpCapable.hs
     examples/star-trek/StarTrek/SpacecraftClassFullResponse.hs
     examples/star-trek/StarTrek/SpacecraftClassHeader.hs
+    examples/star-trek/StarTrek/SpacecraftClassHeader/Name.hs
+    examples/star-trek/StarTrek/SpacecraftClassHeader/Uid.hs
     examples/star-trek/StarTrek/SpacecraftFull.hs
+    examples/star-trek/StarTrek/SpacecraftFull/DateStatus.hs
+    examples/star-trek/StarTrek/SpacecraftFull/Name.hs
+    examples/star-trek/StarTrek/SpacecraftFull/Registry.hs
+    examples/star-trek/StarTrek/SpacecraftFull/Status.hs
+    examples/star-trek/StarTrek/SpacecraftFull/Uid.hs
     examples/star-trek/StarTrek/SpacecraftFullResponse.hs
     examples/star-trek/StarTrek/SpacecraftHeader.hs
+    examples/star-trek/StarTrek/SpacecraftHeader/Name.hs
+    examples/star-trek/StarTrek/SpacecraftHeader/Uid.hs
     examples/star-trek/StarTrek/SpacecraftType.hs
+    examples/star-trek/StarTrek/SpacecraftType/Name.hs
+    examples/star-trek/StarTrek/SpacecraftType/Uid.hs
     examples/star-trek/StarTrek/SpeciesBase.hs
+    examples/star-trek/StarTrek/SpeciesBase/AlternateReality.hs
+    examples/star-trek/StarTrek/SpeciesBase/ExtinctSpecies.hs
+    examples/star-trek/StarTrek/SpeciesBase/ExtraGalacticSpecies.hs
+    examples/star-trek/StarTrek/SpeciesBase/HumanoidSpecies.hs
+    examples/star-trek/StarTrek/SpeciesBase/Name.hs
+    examples/star-trek/StarTrek/SpeciesBase/NonCorporealSpecies.hs
+    examples/star-trek/StarTrek/SpeciesBase/ReptilianSpecies.hs
+    examples/star-trek/StarTrek/SpeciesBase/ShapeshiftingSpecies.hs
+    examples/star-trek/StarTrek/SpeciesBase/SpaceborneSpecies.hs
+    examples/star-trek/StarTrek/SpeciesBase/TelepathicSpecies.hs
+    examples/star-trek/StarTrek/SpeciesBase/TransDimensionalSpecies.hs
+    examples/star-trek/StarTrek/SpeciesBase/Uid.hs
+    examples/star-trek/StarTrek/SpeciesBase/UnnamedSpecies.hs
+    examples/star-trek/StarTrek/SpeciesBase/WarpCapableSpecies.hs
     examples/star-trek/StarTrek/SpeciesBaseResponse.hs
     examples/star-trek/StarTrek/SpeciesFull.hs
+    examples/star-trek/StarTrek/SpeciesFull/AlternateReality.hs
+    examples/star-trek/StarTrek/SpeciesFull/ExtinctSpecies.hs
+    examples/star-trek/StarTrek/SpeciesFull/ExtraGalacticSpecies.hs
+    examples/star-trek/StarTrek/SpeciesFull/HumanoidSpecies.hs
+    examples/star-trek/StarTrek/SpeciesFull/Name.hs
+    examples/star-trek/StarTrek/SpeciesFull/NonCorporealSpecies.hs
+    examples/star-trek/StarTrek/SpeciesFull/ReptilianSpecies.hs
+    examples/star-trek/StarTrek/SpeciesFull/ShapeshiftingSpecies.hs
+    examples/star-trek/StarTrek/SpeciesFull/SpaceborneSpecies.hs
+    examples/star-trek/StarTrek/SpeciesFull/TelepathicSpecies.hs
+    examples/star-trek/StarTrek/SpeciesFull/TransDimensionalSpecies.hs
+    examples/star-trek/StarTrek/SpeciesFull/Uid.hs
+    examples/star-trek/StarTrek/SpeciesFull/UnnamedSpecies.hs
+    examples/star-trek/StarTrek/SpeciesFull/WarpCapableSpecies.hs
     examples/star-trek/StarTrek/SpeciesFullResponse.hs
     examples/star-trek/StarTrek/SpeciesHeader.hs
+    examples/star-trek/StarTrek/SpeciesHeader/Name.hs
+    examples/star-trek/StarTrek/SpeciesHeader/Uid.hs
     examples/star-trek/StarTrek/StaffBase.hs
+    examples/star-trek/StarTrek/StaffBase/ArtDepartment.hs
+    examples/star-trek/StarTrek/StaffBase/ArtDirector.hs
+    examples/star-trek/StarTrek/StaffBase/AssistantOrSecondUnitDirector.hs
+    examples/star-trek/StarTrek/StaffBase/AudioAuthor.hs
+    examples/star-trek/StarTrek/StaffBase/Author.hs
+    examples/star-trek/StarTrek/StaffBase/BirthName.hs
+    examples/star-trek/StarTrek/StaffBase/CalendarArtist.hs
+    examples/star-trek/StarTrek/StaffBase/CameraAndElectricalDepartment.hs
+    examples/star-trek/StarTrek/StaffBase/CastingDepartment.hs
+    examples/star-trek/StarTrek/StaffBase/CbsDigitalStaff.hs
+    examples/star-trek/StarTrek/StaffBase/Cinematographer.hs
+    examples/star-trek/StarTrek/StaffBase/ComicArtist.hs
+    examples/star-trek/StarTrek/StaffBase/ComicAuthor.hs
+    examples/star-trek/StarTrek/StaffBase/ComicColorArtist.hs
+    examples/star-trek/StarTrek/StaffBase/ComicInkArtist.hs
+    examples/star-trek/StarTrek/StaffBase/ComicInteriorArtist.hs
+    examples/star-trek/StarTrek/StaffBase/ComicLetterArtist.hs
+    examples/star-trek/StarTrek/StaffBase/ComicPencilArtist.hs
+    examples/star-trek/StarTrek/StaffBase/ComicStripArtist.hs
+    examples/star-trek/StarTrek/StaffBase/Composer.hs
+    examples/star-trek/StarTrek/StaffBase/CostumeDepartment.hs
+    examples/star-trek/StarTrek/StaffBase/CostumeDesigner.hs
+    examples/star-trek/StarTrek/StaffBase/DateOfBirth.hs
+    examples/star-trek/StarTrek/StaffBase/DateOfDeath.hs
+    examples/star-trek/StarTrek/StaffBase/Director.hs
+    examples/star-trek/StarTrek/StaffBase/ExhibitAndAttractionStaff.hs
+    examples/star-trek/StarTrek/StaffBase/FilmEditor.hs
+    examples/star-trek/StarTrek/StaffBase/GameArtist.hs
+    examples/star-trek/StarTrek/StaffBase/GameAuthor.hs
+    examples/star-trek/StarTrek/StaffBase/IlmProductionStaff.hs
+    examples/star-trek/StarTrek/StaffBase/Linguist.hs
+    examples/star-trek/StarTrek/StaffBase/LocationStaff.hs
+    examples/star-trek/StarTrek/StaffBase/MakeupStaff.hs
+    examples/star-trek/StarTrek/StaffBase/MusicDepartment.hs
+    examples/star-trek/StarTrek/StaffBase/Name.hs
+    examples/star-trek/StarTrek/StaffBase/NovelArtist.hs
+    examples/star-trek/StarTrek/StaffBase/NovelAuthor.hs
+    examples/star-trek/StarTrek/StaffBase/PersonalAssistant.hs
+    examples/star-trek/StarTrek/StaffBase/PlaceOfBirth.hs
+    examples/star-trek/StarTrek/StaffBase/PlaceOfDeath.hs
+    examples/star-trek/StarTrek/StaffBase/Producer.hs
+    examples/star-trek/StarTrek/StaffBase/ProductionAssociate.hs
+    examples/star-trek/StarTrek/StaffBase/ProductionDesigner.hs
+    examples/star-trek/StarTrek/StaffBase/ProductionStaff.hs
+    examples/star-trek/StarTrek/StaffBase/PublicationArtist.hs
+    examples/star-trek/StarTrek/StaffBase/PublicationDesigner.hs
+    examples/star-trek/StarTrek/StaffBase/PublicationEditor.hs
+    examples/star-trek/StarTrek/StaffBase/PublicationStaff.hs
+    examples/star-trek/StarTrek/StaffBase/PublicityArtist.hs
+    examples/star-trek/StarTrek/StaffBase/ReferenceArtist.hs
+    examples/star-trek/StarTrek/StaffBase/ReferenceAuthor.hs
+    examples/star-trek/StarTrek/StaffBase/ScienceConsultant.hs
+    examples/star-trek/StarTrek/StaffBase/SoundDepartment.hs
+    examples/star-trek/StarTrek/StaffBase/SpecialAndVisualEffectsStaff.hs
+    examples/star-trek/StarTrek/StaffBase/SpecialFeaturesStaff.hs
+    examples/star-trek/StarTrek/StaffBase/StoryEditor.hs
+    examples/star-trek/StarTrek/StaffBase/StudioExecutive.hs
+    examples/star-trek/StarTrek/StaffBase/StuntDepartment.hs
+    examples/star-trek/StarTrek/StaffBase/TransportationDepartment.hs
+    examples/star-trek/StarTrek/StaffBase/Uid.hs
+    examples/star-trek/StarTrek/StaffBase/VideoGameProductionStaff.hs
+    examples/star-trek/StarTrek/StaffBase/Writer.hs
     examples/star-trek/StarTrek/StaffBaseResponse.hs
     examples/star-trek/StarTrek/StaffFull.hs
+    examples/star-trek/StarTrek/StaffFull/ArtDepartment.hs
+    examples/star-trek/StarTrek/StaffFull/ArtDirector.hs
+    examples/star-trek/StarTrek/StaffFull/AssistantOrSecondUnitDirector.hs
+    examples/star-trek/StarTrek/StaffFull/AudioAuthor.hs
+    examples/star-trek/StarTrek/StaffFull/Author.hs
+    examples/star-trek/StarTrek/StaffFull/BirthName.hs
+    examples/star-trek/StarTrek/StaffFull/CalendarArtist.hs
+    examples/star-trek/StarTrek/StaffFull/CameraAndElectricalDepartment.hs
+    examples/star-trek/StarTrek/StaffFull/CastingDepartment.hs
+    examples/star-trek/StarTrek/StaffFull/CbsDigitalStaff.hs
+    examples/star-trek/StarTrek/StaffFull/Cinematographer.hs
+    examples/star-trek/StarTrek/StaffFull/ComicArtist.hs
+    examples/star-trek/StarTrek/StaffFull/ComicAuthor.hs
+    examples/star-trek/StarTrek/StaffFull/ComicColorArtist.hs
+    examples/star-trek/StarTrek/StaffFull/ComicInkArtist.hs
+    examples/star-trek/StarTrek/StaffFull/ComicInteriorArtist.hs
+    examples/star-trek/StarTrek/StaffFull/ComicLetterArtist.hs
+    examples/star-trek/StarTrek/StaffFull/ComicPencilArtist.hs
+    examples/star-trek/StarTrek/StaffFull/ComicStripArtist.hs
+    examples/star-trek/StarTrek/StaffFull/Composer.hs
+    examples/star-trek/StarTrek/StaffFull/CostumeDepartment.hs
+    examples/star-trek/StarTrek/StaffFull/CostumeDesigner.hs
+    examples/star-trek/StarTrek/StaffFull/DateOfBirth.hs
+    examples/star-trek/StarTrek/StaffFull/DateOfDeath.hs
+    examples/star-trek/StarTrek/StaffFull/Director.hs
+    examples/star-trek/StarTrek/StaffFull/ExhibitAndAttractionStaff.hs
+    examples/star-trek/StarTrek/StaffFull/FilmEditor.hs
+    examples/star-trek/StarTrek/StaffFull/GameArtist.hs
+    examples/star-trek/StarTrek/StaffFull/GameAuthor.hs
+    examples/star-trek/StarTrek/StaffFull/IlmProductionStaff.hs
+    examples/star-trek/StarTrek/StaffFull/Linguist.hs
+    examples/star-trek/StarTrek/StaffFull/LocationStaff.hs
+    examples/star-trek/StarTrek/StaffFull/MakeupStaff.hs
+    examples/star-trek/StarTrek/StaffFull/MusicDepartment.hs
+    examples/star-trek/StarTrek/StaffFull/Name.hs
+    examples/star-trek/StarTrek/StaffFull/NovelArtist.hs
+    examples/star-trek/StarTrek/StaffFull/NovelAuthor.hs
+    examples/star-trek/StarTrek/StaffFull/PersonalAssistant.hs
+    examples/star-trek/StarTrek/StaffFull/PlaceOfBirth.hs
+    examples/star-trek/StarTrek/StaffFull/PlaceOfDeath.hs
+    examples/star-trek/StarTrek/StaffFull/Producer.hs
+    examples/star-trek/StarTrek/StaffFull/ProductionAssociate.hs
+    examples/star-trek/StarTrek/StaffFull/ProductionDesigner.hs
+    examples/star-trek/StarTrek/StaffFull/ProductionStaff.hs
+    examples/star-trek/StarTrek/StaffFull/PublicationArtist.hs
+    examples/star-trek/StarTrek/StaffFull/PublicationDesigner.hs
+    examples/star-trek/StarTrek/StaffFull/PublicationEditor.hs
+    examples/star-trek/StarTrek/StaffFull/PublicationStaff.hs
+    examples/star-trek/StarTrek/StaffFull/PublicityArtist.hs
+    examples/star-trek/StarTrek/StaffFull/ReferenceArtist.hs
+    examples/star-trek/StarTrek/StaffFull/ReferenceAuthor.hs
+    examples/star-trek/StarTrek/StaffFull/ScienceConsultant.hs
+    examples/star-trek/StarTrek/StaffFull/SoundDepartment.hs
+    examples/star-trek/StarTrek/StaffFull/SpecialAndVisualEffectsStaff.hs
+    examples/star-trek/StarTrek/StaffFull/SpecialFeaturesStaff.hs
+    examples/star-trek/StarTrek/StaffFull/StoryEditor.hs
+    examples/star-trek/StarTrek/StaffFull/StudioExecutive.hs
+    examples/star-trek/StarTrek/StaffFull/StuntDepartment.hs
+    examples/star-trek/StarTrek/StaffFull/TransportationDepartment.hs
+    examples/star-trek/StarTrek/StaffFull/Uid.hs
+    examples/star-trek/StarTrek/StaffFull/VideoGameProductionStaff.hs
+    examples/star-trek/StarTrek/StaffFull/Writer.hs
     examples/star-trek/StarTrek/StaffFullResponse.hs
     examples/star-trek/StarTrek/StaffHeader.hs
+    examples/star-trek/StarTrek/StaffHeader/Name.hs
+    examples/star-trek/StarTrek/StaffHeader/Uid.hs
     examples/star-trek/StarTrek/TechnologyBase.hs
+    examples/star-trek/StarTrek/TechnologyBase/BorgComponent.hs
+    examples/star-trek/StarTrek/TechnologyBase/BorgTechnology.hs
+    examples/star-trek/StarTrek/TechnologyBase/CommunicationsTechnology.hs
+    examples/star-trek/StarTrek/TechnologyBase/ComputerProgramming.hs
+    examples/star-trek/StarTrek/TechnologyBase/ComputerTechnology.hs
+    examples/star-trek/StarTrek/TechnologyBase/CulinaryTool.hs
+    examples/star-trek/StarTrek/TechnologyBase/Database.hs
+    examples/star-trek/StarTrek/TechnologyBase/EnergyTechnology.hs
+    examples/star-trek/StarTrek/TechnologyBase/EngineeringTool.hs
+    examples/star-trek/StarTrek/TechnologyBase/FictionalTechnology.hs
+    examples/star-trek/StarTrek/TechnologyBase/HolographicTechnology.hs
+    examples/star-trek/StarTrek/TechnologyBase/HouseholdTool.hs
+    examples/star-trek/StarTrek/TechnologyBase/IdentificationTechnology.hs
+    examples/star-trek/StarTrek/TechnologyBase/LifeSupportTechnology.hs
+    examples/star-trek/StarTrek/TechnologyBase/MedicalEquipment.hs
+    examples/star-trek/StarTrek/TechnologyBase/Name.hs
+    examples/star-trek/StarTrek/TechnologyBase/SensorTechnology.hs
+    examples/star-trek/StarTrek/TechnologyBase/ShieldTechnology.hs
+    examples/star-trek/StarTrek/TechnologyBase/Subroutine.hs
+    examples/star-trek/StarTrek/TechnologyBase/Tool.hs
+    examples/star-trek/StarTrek/TechnologyBase/TransporterTechnology.hs
+    examples/star-trek/StarTrek/TechnologyBase/Uid.hs
     examples/star-trek/StarTrek/TechnologyBaseResponse.hs
     examples/star-trek/StarTrek/TechnologyFull.hs
+    examples/star-trek/StarTrek/TechnologyFull/BorgComponent.hs
+    examples/star-trek/StarTrek/TechnologyFull/BorgTechnology.hs
+    examples/star-trek/StarTrek/TechnologyFull/CommunicationsTechnology.hs
+    examples/star-trek/StarTrek/TechnologyFull/ComputerProgramming.hs
+    examples/star-trek/StarTrek/TechnologyFull/ComputerTechnology.hs
+    examples/star-trek/StarTrek/TechnologyFull/CulinaryTool.hs
+    examples/star-trek/StarTrek/TechnologyFull/Database.hs
+    examples/star-trek/StarTrek/TechnologyFull/EnergyTechnology.hs
+    examples/star-trek/StarTrek/TechnologyFull/EngineeringTool.hs
+    examples/star-trek/StarTrek/TechnologyFull/FictionalTechnology.hs
+    examples/star-trek/StarTrek/TechnologyFull/HolographicTechnology.hs
+    examples/star-trek/StarTrek/TechnologyFull/HouseholdTool.hs
+    examples/star-trek/StarTrek/TechnologyFull/IdentificationTechnology.hs
+    examples/star-trek/StarTrek/TechnologyFull/LifeSupportTechnology.hs
+    examples/star-trek/StarTrek/TechnologyFull/MedicalEquipment.hs
+    examples/star-trek/StarTrek/TechnologyFull/Name.hs
+    examples/star-trek/StarTrek/TechnologyFull/SensorTechnology.hs
+    examples/star-trek/StarTrek/TechnologyFull/ShieldTechnology.hs
+    examples/star-trek/StarTrek/TechnologyFull/Subroutine.hs
+    examples/star-trek/StarTrek/TechnologyFull/Tool.hs
+    examples/star-trek/StarTrek/TechnologyFull/TransporterTechnology.hs
+    examples/star-trek/StarTrek/TechnologyFull/Uid.hs
     examples/star-trek/StarTrek/TechnologyFullResponse.hs
     examples/star-trek/StarTrek/TechnologyHeader.hs
+    examples/star-trek/StarTrek/TechnologyHeader/Name.hs
+    examples/star-trek/StarTrek/TechnologyHeader/Uid.hs
     examples/star-trek/StarTrek/TitleBase.hs
+    examples/star-trek/StarTrek/TitleBase/FleetRank.hs
+    examples/star-trek/StarTrek/TitleBase/MilitaryRank.hs
+    examples/star-trek/StarTrek/TitleBase/Mirror.hs
+    examples/star-trek/StarTrek/TitleBase/Name.hs
+    examples/star-trek/StarTrek/TitleBase/Position.hs
+    examples/star-trek/StarTrek/TitleBase/ReligiousTitle.hs
+    examples/star-trek/StarTrek/TitleBase/Uid.hs
     examples/star-trek/StarTrek/TitleBaseResponse.hs
     examples/star-trek/StarTrek/TitleFull.hs
+    examples/star-trek/StarTrek/TitleFull/FleetRank.hs
+    examples/star-trek/StarTrek/TitleFull/MilitaryRank.hs
+    examples/star-trek/StarTrek/TitleFull/Mirror.hs
+    examples/star-trek/StarTrek/TitleFull/Name.hs
+    examples/star-trek/StarTrek/TitleFull/Position.hs
+    examples/star-trek/StarTrek/TitleFull/ReligiousTitle.hs
+    examples/star-trek/StarTrek/TitleFull/Uid.hs
     examples/star-trek/StarTrek/TitleFullResponse.hs
     examples/star-trek/StarTrek/TitleHeader.hs
+    examples/star-trek/StarTrek/TitleHeader/Name.hs
+    examples/star-trek/StarTrek/TitleHeader/Uid.hs
     examples/star-trek/StarTrek/TradingCardBase.hs
+    examples/star-trek/StarTrek/TradingCardBase/Name.hs
+    examples/star-trek/StarTrek/TradingCardBase/Number.hs
+    examples/star-trek/StarTrek/TradingCardBase/ProductionRun.hs
+    examples/star-trek/StarTrek/TradingCardBase/ReleaseYear.hs
+    examples/star-trek/StarTrek/TradingCardBase/Uid.hs
     examples/star-trek/StarTrek/TradingCardBaseResponse.hs
     examples/star-trek/StarTrek/TradingCardDeckBase.hs
+    examples/star-trek/StarTrek/TradingCardDeckBase/Frequency.hs
+    examples/star-trek/StarTrek/TradingCardDeckBase/Name.hs
+    examples/star-trek/StarTrek/TradingCardDeckBase/Uid.hs
     examples/star-trek/StarTrek/TradingCardDeckBaseResponse.hs
     examples/star-trek/StarTrek/TradingCardDeckFull.hs
+    examples/star-trek/StarTrek/TradingCardDeckFull/Frequency.hs
+    examples/star-trek/StarTrek/TradingCardDeckFull/Name.hs
+    examples/star-trek/StarTrek/TradingCardDeckFull/Uid.hs
     examples/star-trek/StarTrek/TradingCardDeckFullResponse.hs
     examples/star-trek/StarTrek/TradingCardDeckHeader.hs
+    examples/star-trek/StarTrek/TradingCardDeckHeader/Name.hs
+    examples/star-trek/StarTrek/TradingCardDeckHeader/Uid.hs
     examples/star-trek/StarTrek/TradingCardFull.hs
+    examples/star-trek/StarTrek/TradingCardFull/Name.hs
+    examples/star-trek/StarTrek/TradingCardFull/Number.hs
+    examples/star-trek/StarTrek/TradingCardFull/ProductionRun.hs
+    examples/star-trek/StarTrek/TradingCardFull/ReleaseYear.hs
+    examples/star-trek/StarTrek/TradingCardFull/Uid.hs
     examples/star-trek/StarTrek/TradingCardFullResponse.hs
     examples/star-trek/StarTrek/TradingCardHeader.hs
+    examples/star-trek/StarTrek/TradingCardHeader/Name.hs
+    examples/star-trek/StarTrek/TradingCardHeader/Uid.hs
     examples/star-trek/StarTrek/TradingCardSetBase.hs
+    examples/star-trek/StarTrek/TradingCardSetBase/BoxesPerCase.hs
+    examples/star-trek/StarTrek/TradingCardSetBase/CardHeight.hs
+    examples/star-trek/StarTrek/TradingCardSetBase/CardsPerPack.hs
+    examples/star-trek/StarTrek/TradingCardSetBase/CardWidth.hs
+    examples/star-trek/StarTrek/TradingCardSetBase/Name.hs
+    examples/star-trek/StarTrek/TradingCardSetBase/PacksPerBox.hs
+    examples/star-trek/StarTrek/TradingCardSetBase/ProductionRun.hs
+    examples/star-trek/StarTrek/TradingCardSetBase/ReleaseDay.hs
+    examples/star-trek/StarTrek/TradingCardSetBase/ReleaseMonth.hs
+    examples/star-trek/StarTrek/TradingCardSetBase/ReleaseYear.hs
+    examples/star-trek/StarTrek/TradingCardSetBase/Uid.hs
     examples/star-trek/StarTrek/TradingCardSetBaseResponse.hs
     examples/star-trek/StarTrek/TradingCardSetFull.hs
+    examples/star-trek/StarTrek/TradingCardSetFull/BoxesPerCase.hs
+    examples/star-trek/StarTrek/TradingCardSetFull/CardHeight.hs
+    examples/star-trek/StarTrek/TradingCardSetFull/CardsPerPack.hs
+    examples/star-trek/StarTrek/TradingCardSetFull/CardWidth.hs
+    examples/star-trek/StarTrek/TradingCardSetFull/Name.hs
+    examples/star-trek/StarTrek/TradingCardSetFull/PacksPerBox.hs
+    examples/star-trek/StarTrek/TradingCardSetFull/ProductionRun.hs
+    examples/star-trek/StarTrek/TradingCardSetFull/ReleaseDay.hs
+    examples/star-trek/StarTrek/TradingCardSetFull/ReleaseMonth.hs
+    examples/star-trek/StarTrek/TradingCardSetFull/ReleaseYear.hs
+    examples/star-trek/StarTrek/TradingCardSetFull/Uid.hs
     examples/star-trek/StarTrek/TradingCardSetFullResponse.hs
     examples/star-trek/StarTrek/TradingCardSetHeader.hs
+    examples/star-trek/StarTrek/TradingCardSetHeader/Name.hs
+    examples/star-trek/StarTrek/TradingCardSetHeader/Uid.hs
     examples/star-trek/StarTrek/VideoGameBase.hs
+    examples/star-trek/StarTrek/VideoGameBase/ReleaseDate.hs
+    examples/star-trek/StarTrek/VideoGameBase/StardateFrom.hs
+    examples/star-trek/StarTrek/VideoGameBase/StardateTo.hs
+    examples/star-trek/StarTrek/VideoGameBase/SystemRequirements.hs
+    examples/star-trek/StarTrek/VideoGameBase/Title.hs
+    examples/star-trek/StarTrek/VideoGameBase/Uid.hs
+    examples/star-trek/StarTrek/VideoGameBase/YearFrom.hs
+    examples/star-trek/StarTrek/VideoGameBase/YearTo.hs
     examples/star-trek/StarTrek/VideoGameBaseResponse.hs
     examples/star-trek/StarTrek/VideoGameFull.hs
+    examples/star-trek/StarTrek/VideoGameFull/ReleaseDate.hs
+    examples/star-trek/StarTrek/VideoGameFull/StardateFrom.hs
+    examples/star-trek/StarTrek/VideoGameFull/StardateTo.hs
+    examples/star-trek/StarTrek/VideoGameFull/SystemRequirements.hs
+    examples/star-trek/StarTrek/VideoGameFull/Title.hs
+    examples/star-trek/StarTrek/VideoGameFull/Uid.hs
+    examples/star-trek/StarTrek/VideoGameFull/YearFrom.hs
+    examples/star-trek/StarTrek/VideoGameFull/YearTo.hs
     examples/star-trek/StarTrek/VideoGameFullResponse.hs
     examples/star-trek/StarTrek/VideoGameHeader.hs
+    examples/star-trek/StarTrek/VideoGameHeader/Title.hs
+    examples/star-trek/StarTrek/VideoGameHeader/Uid.hs
     examples/star-trek/StarTrek/VideoReleaseBase.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/AmazonDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/DailymotionDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/GooglePlayDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/ITunesDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/NetflixDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/NumberOfDataCarriers.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/NumberOfEpisodes.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/NumberOfFeatureLengthEpisodes.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/Region1AReleaseDate.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/Region1SlimlineReleaseDate.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/Region2BReleaseDate.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/Region2SlimlineReleaseDate.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/Region4AReleaseDate.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/Region4SlimlineReleaseDate.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/RegionFreeReleaseDate.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/RunTime.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/Title.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/Uid.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/UltraVioletDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/VimeoDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/VuduDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/XboxSmartGlassDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/YearFrom.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/YearTo.hs
+    examples/star-trek/StarTrek/VideoReleaseBase/YouTubeDigitalRelease.hs
     examples/star-trek/StarTrek/VideoReleaseBaseResponse.hs
     examples/star-trek/StarTrek/VideoReleaseFormat.hs
     examples/star-trek/StarTrek/VideoReleaseFull.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/AmazonDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/DailymotionDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/GooglePlayDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/ITunesDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/NetflixDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/NumberOfDataCarriers.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/NumberOfEpisodes.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/NumberOfFeatureLengthEpisodes.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/Region1AReleaseDate.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/Region1SlimlineReleaseDate.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/Region2BReleaseDate.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/Region2SlimlineReleaseDate.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/Region4AReleaseDate.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/Region4SlimlineReleaseDate.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/RegionFreeReleaseDate.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/RunTime.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/Title.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/Uid.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/UltraVioletDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/VimeoDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/VuduDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/XboxSmartGlassDigitalRelease.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/YearFrom.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/YearTo.hs
+    examples/star-trek/StarTrek/VideoReleaseFull/YouTubeDigitalRelease.hs
     examples/star-trek/StarTrek/VideoReleaseFullResponse.hs
     examples/star-trek/StarTrek/VideoReleaseHeader.hs
+    examples/star-trek/StarTrek/VideoReleaseHeader/Title.hs
+    examples/star-trek/StarTrek/VideoReleaseHeader/Uid.hs
     examples/star-trek/StarTrek/WeaponBase.hs
+    examples/star-trek/StarTrek/WeaponBase/AlternateReality.hs
+    examples/star-trek/StarTrek/WeaponBase/HandHeldWeapon.hs
+    examples/star-trek/StarTrek/WeaponBase/LaserTechnology.hs
+    examples/star-trek/StarTrek/WeaponBase/Mirror.hs
+    examples/star-trek/StarTrek/WeaponBase/Name.hs
+    examples/star-trek/StarTrek/WeaponBase/PhaserTechnology.hs
+    examples/star-trek/StarTrek/WeaponBase/PhotonicTechnology.hs
+    examples/star-trek/StarTrek/WeaponBase/PlasmaTechnology.hs
+    examples/star-trek/StarTrek/WeaponBase/Uid.hs
     examples/star-trek/StarTrek/WeaponBaseResponse.hs
     examples/star-trek/StarTrek/WeaponFull.hs
+    examples/star-trek/StarTrek/WeaponFull/AlternateReality.hs
+    examples/star-trek/StarTrek/WeaponFull/HandHeldWeapon.hs
+    examples/star-trek/StarTrek/WeaponFull/LaserTechnology.hs
+    examples/star-trek/StarTrek/WeaponFull/Mirror.hs
+    examples/star-trek/StarTrek/WeaponFull/Name.hs
+    examples/star-trek/StarTrek/WeaponFull/PhaserTechnology.hs
+    examples/star-trek/StarTrek/WeaponFull/PhotonicTechnology.hs
+    examples/star-trek/StarTrek/WeaponFull/PlasmaTechnology.hs
+    examples/star-trek/StarTrek/WeaponFull/Uid.hs
     examples/star-trek/StarTrek/WeaponFullResponse.hs
     examples/star-trek/StarTrek/WeaponHeader.hs
+    examples/star-trek/StarTrek/WeaponHeader/Name.hs
+    examples/star-trek/StarTrek/WeaponHeader/Uid.hs
+    examples/test-cases/.stack-work/dist/x86_64-linux/Cabal-3.6.3.0/build/autogen/Paths_test_cases.hs
+    examples/test-cases/TestCases/FieldTestCases.hs
+    examples/test-cases/TestCases/FieldTestCases/ArrayFieldItem.hs
+    examples/test-cases/TestCases/FieldTestCases/NullableArrayFieldItem.hs
+    examples/test-cases/TestCases/FieldTestCases/OptionalArrayFieldItem.hs
+    examples/test-cases/TestCases/FieldTestCases/OptionalField.hs
+    examples/test-cases/TestCases/FieldTestCases/OptionalNullableArrayFieldItem.hs
+    examples/test-cases/TestCases/FieldTestCases/OptionalNullableField.hs
+    examples/test-cases/TestCases/FieldTestCases/RequiredField.hs
+    examples/test-cases/TestCases/FieldTestCases/RequiredNullableField.hs
+    examples/test-cases/TestCases/TopLevelArray.hs
+    examples/test-cases/TestCases/TopLevelArray/TopLevelArrayItem.hs
+    examples/test-cases/TestCases/TopLevelArrayNullable.hs
+    examples/test-cases/TestCases/TopLevelArrayNullable/TopLevelArrayNullableItem.hs
 
 source-repository head
   type: git
@@ -256,7 +1415,6 @@ library
   exposed-modules:
       Fleece.OpenApi3
   other-modules:
-      HaskellCode
       Paths_json_fleece_openapi3
   hs-source-dirs:
       src
@@ -265,10 +1423,9 @@ library
     , base >=4.7 && <5
     , containers ==0.6.*
     , insert-ordered-containers ==0.2.*
-    , mtl ==2.2.*
+    , json-fleece-codegen-util ==0.1.*
     , openapi3 ==3.2.*
     , text ==1.2.*
-    , text-manipulate ==0.3.*
   default-language: Haskell2010
   if flag(strict)
     ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-import-lists -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations
@@ -284,21 +1441,15 @@ executable fleece-openapi3
   ghc-options: -rtsopts -threaded
   build-depends:
       base >=4.7 && <5
-    , directory ==1.3.*
-    , filepath ==1.4.*
-    , isocline ==1.0.*
+    , json-fleece-codegen-util ==0.1.*
     , json-fleece-openapi3
-    , openapi3 ==3.2.*
-    , optparse-applicative ==0.17.*
-    , text ==1.2.*
-    , yaml ==0.11.*
   default-language: Haskell2010
   if flag(strict)
     ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-import-lists -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations
   else
     ghc-options: -Wall
 
-test-suite json-fleece-aeson-test
+test-suite json-fleece-openapi3-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
@@ -309,11 +1460,10 @@ test-suite json-fleece-aeson-test
   build-depends:
       base >=4.7 && <5
     , bytestring ==0.11.*
-    , containers ==0.6.*
     , file-embed ==0.0.15.*
     , hedgehog
+    , json-fleece-codegen-util ==0.1.*
     , json-fleece-openapi3
-    , text ==1.2.*
     , yaml ==0.11.*
   default-language: Haskell2010
   if flag(strict)

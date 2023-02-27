@@ -5,15 +5,17 @@ module StarTrek.MedicalConditionBase
   , medicalConditionBaseSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
-import Prelude (($), Bool, Eq, Maybe, Show)
+import Prelude (($), Eq, Maybe, Show)
+import StarTrek.MedicalConditionBase.Name (Name, nameSchema)
+import StarTrek.MedicalConditionBase.PsychologicalCondition (PsychologicalCondition, psychologicalConditionSchema)
+import StarTrek.MedicalConditionBase.Uid (Uid, uidSchema)
 
 data MedicalConditionBase = MedicalConditionBase
-  { name :: Text -- ^ Medical condition name
-  , uid :: Text -- ^ Medical condition unique ID
-  , psychologicalCondition :: Maybe Bool -- ^ Whether it's a psychological condition
+  { name :: Name -- ^ Medical condition name
+  , uid :: Uid -- ^ Medical condition unique ID
+  , psychologicalCondition :: Maybe PsychologicalCondition -- ^ Whether it's a psychological condition
   }
   deriving (Eq, Show)
 
@@ -21,6 +23,6 @@ medicalConditionBaseSchema :: FC.Fleece schema => schema MedicalConditionBase
 medicalConditionBaseSchema =
   FC.object $
     FC.constructor MedicalConditionBase
-      #+ FC.required "name" name FC.text
-      #+ FC.required "uid" uid FC.text
-      #+ FC.optional "psychologicalCondition" psychologicalCondition FC.boolean
+      #+ FC.required "name" name nameSchema
+      #+ FC.required "uid" uid uidSchema
+      #+ FC.optional "psychologicalCondition" psychologicalCondition psychologicalConditionSchema

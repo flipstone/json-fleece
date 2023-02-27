@@ -5,14 +5,15 @@ module StarTrek.AstronomicalObjectHeader
   , astronomicalObjectHeaderSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
+import StarTrek.AstronomicalObjectHeader.Name (Name, nameSchema)
+import StarTrek.AstronomicalObjectHeader.Uid (Uid, uidSchema)
 
 data AstronomicalObjectHeader = AstronomicalObjectHeader
-  { name :: Text -- ^ Astronomical object name
-  , uid :: Text -- ^ Astronomical object's unique ID
+  { name :: Name -- ^ Astronomical object name
+  , uid :: Uid -- ^ Astronomical object's unique ID
   }
   deriving (Eq, Show)
 
@@ -20,5 +21,5 @@ astronomicalObjectHeaderSchema :: FC.Fleece schema => schema AstronomicalObjectH
 astronomicalObjectHeaderSchema =
   FC.object $
     FC.constructor AstronomicalObjectHeader
-      #+ FC.required "name" name FC.text
-      #+ FC.required "uid" uid FC.text
+      #+ FC.required "name" name nameSchema
+      #+ FC.required "uid" uid uidSchema

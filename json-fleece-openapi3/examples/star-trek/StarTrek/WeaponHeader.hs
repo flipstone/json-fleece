@@ -5,14 +5,15 @@ module StarTrek.WeaponHeader
   , weaponHeaderSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
+import StarTrek.WeaponHeader.Name (Name, nameSchema)
+import StarTrek.WeaponHeader.Uid (Uid, uidSchema)
 
 data WeaponHeader = WeaponHeader
-  { name :: Text -- ^ Weapon name
-  , uid :: Text -- ^ Weapon unique ID
+  { name :: Name -- ^ Weapon name
+  , uid :: Uid -- ^ Weapon unique ID
   }
   deriving (Eq, Show)
 
@@ -20,5 +21,5 @@ weaponHeaderSchema :: FC.Fleece schema => schema WeaponHeader
 weaponHeaderSchema =
   FC.object $
     FC.constructor WeaponHeader
-      #+ FC.required "name" name FC.text
-      #+ FC.required "uid" uid FC.text
+      #+ FC.required "name" name nameSchema
+      #+ FC.required "uid" uid uidSchema

@@ -13,7 +13,7 @@ import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 import StarTrek.SeasonBase (SeasonBase, seasonBaseSchema)
 
 data SeasonBaseResponse = SeasonBaseResponse
-  { seasons :: Maybe [SeasonBase] -- ^ List of seasons matching given criteria
+  { seasons :: Maybe [SeasonBase] -- ^ Base season, returned in search results
   , sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }

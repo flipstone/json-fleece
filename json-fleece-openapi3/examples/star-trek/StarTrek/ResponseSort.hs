@@ -11,7 +11,7 @@ import Prelude (($), Eq, Maybe, Show)
 import StarTrek.ResponseSortClause (ResponseSortClause, responseSortClauseSchema)
 
 data ResponseSort = ResponseSort
-  { clauses :: Maybe [ResponseSortClause] -- ^ List of response sort rules
+  { clauses :: Maybe [ResponseSortClause] -- ^ Single response sort clause
   }
   deriving (Eq, Show)
 

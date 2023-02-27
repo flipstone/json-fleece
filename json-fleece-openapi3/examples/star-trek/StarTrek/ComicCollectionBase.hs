@@ -5,26 +5,39 @@ module StarTrek.ComicCollectionBase
   , comicCollectionBaseSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
-import Prelude (($), Bool, Eq, Float, Integer, Maybe, Show)
+import Prelude (($), Eq, Maybe, Show)
+import StarTrek.ComicCollectionBase.CoverDay (CoverDay, coverDaySchema)
+import StarTrek.ComicCollectionBase.CoverMonth (CoverMonth, coverMonthSchema)
+import StarTrek.ComicCollectionBase.CoverYear (CoverYear, coverYearSchema)
+import StarTrek.ComicCollectionBase.NumberOfPages (NumberOfPages, numberOfPagesSchema)
+import StarTrek.ComicCollectionBase.Photonovel (Photonovel, photonovelSchema)
+import StarTrek.ComicCollectionBase.PublishedDay (PublishedDay, publishedDaySchema)
+import StarTrek.ComicCollectionBase.PublishedMonth (PublishedMonth, publishedMonthSchema)
+import StarTrek.ComicCollectionBase.PublishedYear (PublishedYear, publishedYearSchema)
+import StarTrek.ComicCollectionBase.StardateFrom (StardateFrom, stardateFromSchema)
+import StarTrek.ComicCollectionBase.StardateTo (StardateTo, stardateToSchema)
+import StarTrek.ComicCollectionBase.Title (Title, titleSchema)
+import StarTrek.ComicCollectionBase.Uid (Uid, uidSchema)
+import StarTrek.ComicCollectionBase.YearFrom (YearFrom, yearFromSchema)
+import StarTrek.ComicCollectionBase.YearTo (YearTo, yearToSchema)
 
 data ComicCollectionBase = ComicCollectionBase
-  { yearFrom :: Maybe Integer -- ^ Starting year of comic collection stories
-  , stardateTo :: Maybe Float -- ^ Ending stardate of comic collection stories
-  , publishedMonth :: Maybe Integer -- ^ Month the comic collection was published
-  , publishedYear :: Maybe Integer -- ^ Year the comic collection was published
-  , uid :: Text -- ^ Comic collection unique ID
-  , stardateFrom :: Maybe Float -- ^ Starting stardate of comic collection stories
-  , publishedDay :: Maybe Integer -- ^ Day the comic collection was published
-  , photonovel :: Maybe Bool -- ^ Whether it's a photonovel collection
-  , coverYear :: Maybe Integer -- ^ Cover publication year
-  , title :: Text -- ^ Comic collection title
-  , coverDay :: Maybe Integer -- ^ Cover publication day
-  , yearTo :: Maybe Integer -- ^ Ending year of comic collection stories
-  , numberOfPages :: Maybe Integer -- ^ Number of pages
-  , coverMonth :: Maybe Integer -- ^ Cover publication month
+  { yearFrom :: Maybe YearFrom -- ^ Starting year of comic collection stories
+  , stardateTo :: Maybe StardateTo -- ^ Ending stardate of comic collection stories
+  , publishedMonth :: Maybe PublishedMonth -- ^ Month the comic collection was published
+  , publishedYear :: Maybe PublishedYear -- ^ Year the comic collection was published
+  , uid :: Uid -- ^ Comic collection unique ID
+  , stardateFrom :: Maybe StardateFrom -- ^ Starting stardate of comic collection stories
+  , publishedDay :: Maybe PublishedDay -- ^ Day the comic collection was published
+  , photonovel :: Maybe Photonovel -- ^ Whether it's a photonovel collection
+  , coverYear :: Maybe CoverYear -- ^ Cover publication year
+  , title :: Title -- ^ Comic collection title
+  , coverDay :: Maybe CoverDay -- ^ Cover publication day
+  , yearTo :: Maybe YearTo -- ^ Ending year of comic collection stories
+  , numberOfPages :: Maybe NumberOfPages -- ^ Number of pages
+  , coverMonth :: Maybe CoverMonth -- ^ Cover publication month
   }
   deriving (Eq, Show)
 
@@ -32,17 +45,17 @@ comicCollectionBaseSchema :: FC.Fleece schema => schema ComicCollectionBase
 comicCollectionBaseSchema =
   FC.object $
     FC.constructor ComicCollectionBase
-      #+ FC.optional "yearFrom" yearFrom FC.integer
-      #+ FC.optional "stardateTo" stardateTo FC.float
-      #+ FC.optional "publishedMonth" publishedMonth FC.integer
-      #+ FC.optional "publishedYear" publishedYear FC.integer
-      #+ FC.required "uid" uid FC.text
-      #+ FC.optional "stardateFrom" stardateFrom FC.float
-      #+ FC.optional "publishedDay" publishedDay FC.integer
-      #+ FC.optional "photonovel" photonovel FC.boolean
-      #+ FC.optional "coverYear" coverYear FC.integer
-      #+ FC.required "title" title FC.text
-      #+ FC.optional "coverDay" coverDay FC.integer
-      #+ FC.optional "yearTo" yearTo FC.integer
-      #+ FC.optional "numberOfPages" numberOfPages FC.integer
-      #+ FC.optional "coverMonth" coverMonth FC.integer
+      #+ FC.optional "yearFrom" yearFrom yearFromSchema
+      #+ FC.optional "stardateTo" stardateTo stardateToSchema
+      #+ FC.optional "publishedMonth" publishedMonth publishedMonthSchema
+      #+ FC.optional "publishedYear" publishedYear publishedYearSchema
+      #+ FC.required "uid" uid uidSchema
+      #+ FC.optional "stardateFrom" stardateFrom stardateFromSchema
+      #+ FC.optional "publishedDay" publishedDay publishedDaySchema
+      #+ FC.optional "photonovel" photonovel photonovelSchema
+      #+ FC.optional "coverYear" coverYear coverYearSchema
+      #+ FC.required "title" title titleSchema
+      #+ FC.optional "coverDay" coverDay coverDaySchema
+      #+ FC.optional "yearTo" yearTo yearToSchema
+      #+ FC.optional "numberOfPages" numberOfPages numberOfPagesSchema
+      #+ FC.optional "coverMonth" coverMonth coverMonthSchema

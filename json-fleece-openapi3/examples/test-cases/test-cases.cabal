@@ -1,0 +1,43 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.35.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           test-cases
+version:        0.1.0.0
+category:       Web
+homepage:       https://github.com/githubuser/star-trek#readme
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2023 Author name here
+license:        BSD3
+build-type:     Simple
+
+library
+  exposed-modules:
+      TestCases.FieldTestCases
+      TestCases.FieldTestCases.ArrayFieldItem
+      TestCases.FieldTestCases.NullableArrayFieldItem
+      TestCases.FieldTestCases.OptionalArrayFieldItem
+      TestCases.FieldTestCases.OptionalField
+      TestCases.FieldTestCases.OptionalNullableArrayFieldItem
+      TestCases.FieldTestCases.OptionalNullableField
+      TestCases.FieldTestCases.RequiredField
+      TestCases.FieldTestCases.RequiredNullableField
+      TestCases.TopLevelArray
+      TestCases.TopLevelArray.TopLevelArrayItem
+      TestCases.TopLevelArrayNullable
+      TestCases.TopLevelArrayNullable.TopLevelArrayNullableItem
+  other-modules:
+      Paths_test_cases
+  hs-source-dirs:
+      ./
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      base >=4.7 && <5
+    , json-fleece-core
+    , scientific
+    , text
+    , time
+  default-language: Haskell2010

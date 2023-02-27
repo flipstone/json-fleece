@@ -13,7 +13,7 @@ import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
 import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 
 data MagazineBaseResponse = MagazineBaseResponse
-  { magazines :: Maybe [MagazineBase] -- ^ List of magazines matching given criteria
+  { magazines :: Maybe [MagazineBase] -- ^ Base magazine, returned in search results
   , sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }

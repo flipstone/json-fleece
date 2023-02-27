@@ -5,14 +5,14 @@ module StarTrek.CharacterRelation
   , characterRelationSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import StarTrek.CharacterHeader (CharacterHeader, characterHeaderSchema)
+import StarTrek.CharacterRelation.Type (Type, typeSchema)
 
 data CharacterRelation = CharacterRelation
-  { type_ :: Maybe Text -- ^ Relation type
+  { type_ :: Maybe Type -- ^ Relation type
   , target :: Maybe CharacterHeader -- ^ Header character, embedded in other objects
   , source :: Maybe CharacterHeader -- ^ Header character, embedded in other objects
   }
@@ -22,6 +22,6 @@ characterRelationSchema :: FC.Fleece schema => schema CharacterRelation
 characterRelationSchema =
   FC.object $
     FC.constructor CharacterRelation
-      #+ FC.optional "type" type_ FC.text
+      #+ FC.optional "type" type_ typeSchema
       #+ FC.optional "target" target characterHeaderSchema
       #+ FC.optional "source" source characterHeaderSchema

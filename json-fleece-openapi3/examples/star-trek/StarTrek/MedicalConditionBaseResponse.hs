@@ -14,7 +14,7 @@ import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 
 data MedicalConditionBaseResponse = MedicalConditionBaseResponse
   { sort :: Maybe ResponseSort -- ^ Response sort
-  , medicalConditions :: Maybe [MedicalConditionBase] -- ^ List of medical conditions matching given criteria
+  , medicalConditions :: Maybe [MedicalConditionBase] -- ^ Base medical condition, returned in search results
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)

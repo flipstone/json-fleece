@@ -13,7 +13,7 @@ import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
 import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 
 data CharacterBaseResponse = CharacterBaseResponse
-  { characters :: Maybe [CharacterBase] -- ^ List of characters matching given criteria
+  { characters :: Maybe [CharacterBase] -- ^ Base character, returned in search results
   , sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }

@@ -1,0 +1,85 @@
+name:                json-fleece-swagger2
+version:             0.1.0.0
+github:              "flipstone/json-fleece/json-fleece-swagger2"
+license:             BSD3
+author:              "Author name here"
+maintainer:          "example@example.com"
+copyright:           "2023 Author name here"
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/githubuser/json-fleece-swagger2#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- json-fleece-codegen-util >= 0.1 && < 0.2
+
+flags:
+  strict:
+    description: More strict ghc options used for development and ci, not intended for end-use.
+    manual: true
+    default: false
+
+when:
+  - condition: flag(strict)
+    then:
+      ghc-options:
+        - -Weverything
+        - -Werror
+        - -Wno-missing-local-signatures
+        - -Wno-monomorphism-restriction
+        - -Wno-missing-import-lists
+        - -Wno-missing-kind-signatures
+        - -Wno-prepositive-qualified-module
+        - -Wno-implicit-prelude
+        - -Wno-safe
+        - -Wno-unsafe
+        - -Wno-missing-safe-haskell-mode
+        - -Wno-missing-deriving-strategies
+        - -Wno-all-missed-specialisations
+        - -Wno-missed-specialisations
+    else:
+      ghc-options:
+        - -Wall
+
+library:
+  source-dirs: src
+  exposed-modules:
+    - Fleece.Swagger2
+  dependencies:
+    - json-fleece-openapi3 >= 0.1 && < 0.2
+    - containers >= 0.6 && < 0.7
+    - insert-ordered-containers >= 0.2 && < 0.3
+    - swagger2 >= 2.8 && < 2.9
+    - openapi3 >= 3.2 &&  < 3.3
+    - text >= 1.2 && < 1.3
+
+executables:
+  fleece-swagger2:
+    main: Main.hs
+    source-dirs: exe
+    ghc-options:
+      - -rtsopts
+      - -threaded
+    dependencies:
+      - json-fleece-swagger2
+
+tests:
+  json-fleece-swagger2-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - json-fleece-swagger2
+      - hedgehog
+      - aeson >= 2.0 && < 2.1
+      - bytestring >= 0.11 && < 0.12
+      - file-embed >= 0.0.15 && < 0.0.16

@@ -5,24 +5,35 @@ module StarTrek.ElementFull
   , elementFullSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
-import Prelude (($), Bool, Eq, Integer, Maybe, Show)
+import Prelude (($), Eq, Maybe, Show)
+import StarTrek.ElementFull.AtomicNumber (AtomicNumber, atomicNumberSchema)
+import StarTrek.ElementFull.AtomicWeight (AtomicWeight, atomicWeightSchema)
+import StarTrek.ElementFull.GammaSeries (GammaSeries, gammaSeriesSchema)
+import StarTrek.ElementFull.HypersonicSeries (HypersonicSeries, hypersonicSeriesSchema)
+import StarTrek.ElementFull.MegaSeries (MegaSeries, megaSeriesSchema)
+import StarTrek.ElementFull.Name (Name, nameSchema)
+import StarTrek.ElementFull.OmegaSeries (OmegaSeries, omegaSeriesSchema)
+import StarTrek.ElementFull.Symbol (Symbol, symbolSchema)
+import StarTrek.ElementFull.TransonicSeries (TransonicSeries, transonicSeriesSchema)
+import StarTrek.ElementFull.Transuranium (Transuranium, transuraniumSchema)
+import StarTrek.ElementFull.Uid (Uid, uidSchema)
+import StarTrek.ElementFull.WorldSeries (WorldSeries, worldSeriesSchema)
 
 data ElementFull = ElementFull
-  { hypersonicSeries :: Maybe Bool -- ^ Whether it belongs to Hypersonic series
-  , name :: Text -- ^ Element name
-  , atomicNumber :: Maybe Integer -- ^ Element atomic number
-  , megaSeries :: Maybe Bool -- ^ Whether it belongs to Mega series
-  , symbol :: Maybe Text -- ^ Element symbol
-  , atomicWeight :: Maybe Integer -- ^ Element atomic weight
-  , uid :: Text -- ^ Element unique ID
-  , transonicSeries :: Maybe Bool -- ^ Whether it belongs to Transonic series
-  , transuranium :: Maybe Bool -- ^ Whether it's a transuranium
-  , gammaSeries :: Maybe Bool -- ^ Whether it belongs to Gamma series
-  , omegaSeries :: Maybe Bool -- ^ Whether it belongs to Omega series
-  , worldSeries :: Maybe Bool -- ^ Whether it belongs to World series
+  { hypersonicSeries :: Maybe HypersonicSeries -- ^ Whether it belongs to Hypersonic series
+  , name :: Name -- ^ Element name
+  , atomicNumber :: Maybe AtomicNumber -- ^ Element atomic number
+  , megaSeries :: Maybe MegaSeries -- ^ Whether it belongs to Mega series
+  , symbol :: Maybe Symbol -- ^ Element symbol
+  , atomicWeight :: Maybe AtomicWeight -- ^ Element atomic weight
+  , uid :: Uid -- ^ Element unique ID
+  , transonicSeries :: Maybe TransonicSeries -- ^ Whether it belongs to Transonic series
+  , transuranium :: Maybe Transuranium -- ^ Whether it's a transuranium
+  , gammaSeries :: Maybe GammaSeries -- ^ Whether it belongs to Gamma series
+  , omegaSeries :: Maybe OmegaSeries -- ^ Whether it belongs to Omega series
+  , worldSeries :: Maybe WorldSeries -- ^ Whether it belongs to World series
   }
   deriving (Eq, Show)
 
@@ -30,15 +41,15 @@ elementFullSchema :: FC.Fleece schema => schema ElementFull
 elementFullSchema =
   FC.object $
     FC.constructor ElementFull
-      #+ FC.optional "hypersonicSeries" hypersonicSeries FC.boolean
-      #+ FC.required "name" name FC.text
-      #+ FC.optional "atomicNumber" atomicNumber FC.integer
-      #+ FC.optional "megaSeries" megaSeries FC.boolean
-      #+ FC.optional "symbol" symbol FC.text
-      #+ FC.optional "atomicWeight" atomicWeight FC.integer
-      #+ FC.required "uid" uid FC.text
-      #+ FC.optional "transonicSeries" transonicSeries FC.boolean
-      #+ FC.optional "transuranium" transuranium FC.boolean
-      #+ FC.optional "gammaSeries" gammaSeries FC.boolean
-      #+ FC.optional "omegaSeries" omegaSeries FC.boolean
-      #+ FC.optional "worldSeries" worldSeries FC.boolean
+      #+ FC.optional "hypersonicSeries" hypersonicSeries hypersonicSeriesSchema
+      #+ FC.required "name" name nameSchema
+      #+ FC.optional "atomicNumber" atomicNumber atomicNumberSchema
+      #+ FC.optional "megaSeries" megaSeries megaSeriesSchema
+      #+ FC.optional "symbol" symbol symbolSchema
+      #+ FC.optional "atomicWeight" atomicWeight atomicWeightSchema
+      #+ FC.required "uid" uid uidSchema
+      #+ FC.optional "transonicSeries" transonicSeries transonicSeriesSchema
+      #+ FC.optional "transuranium" transuranium transuraniumSchema
+      #+ FC.optional "gammaSeries" gammaSeries gammaSeriesSchema
+      #+ FC.optional "omegaSeries" omegaSeries omegaSeriesSchema
+      #+ FC.optional "worldSeries" worldSeries worldSeriesSchema

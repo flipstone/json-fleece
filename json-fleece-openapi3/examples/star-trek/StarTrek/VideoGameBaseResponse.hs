@@ -13,7 +13,7 @@ import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 import StarTrek.VideoGameBase (VideoGameBase, videoGameBaseSchema)
 
 data VideoGameBaseResponse = VideoGameBaseResponse
-  { videoGames :: Maybe [VideoGameBase] -- ^ List of video games matching given criteria
+  { videoGames :: Maybe [VideoGameBase] -- ^ Base video game, returned in search results
   , sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }

@@ -5,24 +5,35 @@ module StarTrek.FoodBase
   , foodBaseSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
-import Prelude (($), Bool, Eq, Maybe, Show)
+import Prelude (($), Eq, Maybe, Show)
+import StarTrek.FoodBase.AlcoholicBeverage (AlcoholicBeverage, alcoholicBeverageSchema)
+import StarTrek.FoodBase.Beverage (Beverage, beverageSchema)
+import StarTrek.FoodBase.Dessert (Dessert, dessertSchema)
+import StarTrek.FoodBase.EarthlyOrigin (EarthlyOrigin, earthlyOriginSchema)
+import StarTrek.FoodBase.Fruit (Fruit, fruitSchema)
+import StarTrek.FoodBase.HerbOrSpice (HerbOrSpice, herbOrSpiceSchema)
+import StarTrek.FoodBase.Juice (Juice, juiceSchema)
+import StarTrek.FoodBase.Name (Name, nameSchema)
+import StarTrek.FoodBase.Sauce (Sauce, sauceSchema)
+import StarTrek.FoodBase.Soup (Soup, soupSchema)
+import StarTrek.FoodBase.Tea (Tea, teaSchema)
+import StarTrek.FoodBase.Uid (Uid, uidSchema)
 
 data FoodBase = FoodBase
-  { name :: Text -- ^ Food name
-  , tea :: Maybe Bool -- ^ Whether it's a tea
-  , juice :: Maybe Bool -- ^ Whether it's a juice
-  , uid :: Text -- ^ Food unique ID
-  , fruit :: Maybe Bool -- ^ Whether it's a fruit
-  , dessert :: Maybe Bool -- ^ Whether it's a dessert
-  , herbOrSpice :: Maybe Bool -- ^ Whether it's a herb or a spice
-  , beverage :: Maybe Bool -- ^ Whether it's a beverage
-  , soup :: Maybe Bool -- ^ Whether it's a soup
-  , earthlyOrigin :: Maybe Bool -- ^ Whether it's of earthly origin
-  , sauce :: Maybe Bool -- ^ Whether it's a sauce
-  , alcoholicBeverage :: Maybe Bool -- ^ Whether it's an alcoholic beverage
+  { name :: Name -- ^ Food name
+  , tea :: Maybe Tea -- ^ Whether it's a tea
+  , juice :: Maybe Juice -- ^ Whether it's a juice
+  , uid :: Uid -- ^ Food unique ID
+  , fruit :: Maybe Fruit -- ^ Whether it's a fruit
+  , dessert :: Maybe Dessert -- ^ Whether it's a dessert
+  , herbOrSpice :: Maybe HerbOrSpice -- ^ Whether it's a herb or a spice
+  , beverage :: Maybe Beverage -- ^ Whether it's a beverage
+  , soup :: Maybe Soup -- ^ Whether it's a soup
+  , earthlyOrigin :: Maybe EarthlyOrigin -- ^ Whether it's of earthly origin
+  , sauce :: Maybe Sauce -- ^ Whether it's a sauce
+  , alcoholicBeverage :: Maybe AlcoholicBeverage -- ^ Whether it's an alcoholic beverage
   }
   deriving (Eq, Show)
 
@@ -30,15 +41,15 @@ foodBaseSchema :: FC.Fleece schema => schema FoodBase
 foodBaseSchema =
   FC.object $
     FC.constructor FoodBase
-      #+ FC.required "name" name FC.text
-      #+ FC.optional "tea" tea FC.boolean
-      #+ FC.optional "juice" juice FC.boolean
-      #+ FC.required "uid" uid FC.text
-      #+ FC.optional "fruit" fruit FC.boolean
-      #+ FC.optional "dessert" dessert FC.boolean
-      #+ FC.optional "herbOrSpice" herbOrSpice FC.boolean
-      #+ FC.optional "beverage" beverage FC.boolean
-      #+ FC.optional "soup" soup FC.boolean
-      #+ FC.optional "earthlyOrigin" earthlyOrigin FC.boolean
-      #+ FC.optional "sauce" sauce FC.boolean
-      #+ FC.optional "alcoholicBeverage" alcoholicBeverage FC.boolean
+      #+ FC.required "name" name nameSchema
+      #+ FC.optional "tea" tea teaSchema
+      #+ FC.optional "juice" juice juiceSchema
+      #+ FC.required "uid" uid uidSchema
+      #+ FC.optional "fruit" fruit fruitSchema
+      #+ FC.optional "dessert" dessert dessertSchema
+      #+ FC.optional "herbOrSpice" herbOrSpice herbOrSpiceSchema
+      #+ FC.optional "beverage" beverage beverageSchema
+      #+ FC.optional "soup" soup soupSchema
+      #+ FC.optional "earthlyOrigin" earthlyOrigin earthlyOriginSchema
+      #+ FC.optional "sauce" sauce sauceSchema
+      #+ FC.optional "alcoholicBeverage" alcoholicBeverage alcoholicBeverageSchema

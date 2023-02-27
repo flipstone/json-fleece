@@ -13,7 +13,7 @@ import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 import StarTrek.SpacecraftClassBase (SpacecraftClassBase, spacecraftClassBaseSchema)
 
 data SpacecraftClassBaseResponse = SpacecraftClassBaseResponse
-  { spacecraftClasses :: Maybe [SpacecraftClassBase] -- ^ List of spacecraft classes matching given criteria
+  { spacecraftClasses :: Maybe [SpacecraftClassBase] -- ^ Base spacecraft class, returned in search results
   , sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }

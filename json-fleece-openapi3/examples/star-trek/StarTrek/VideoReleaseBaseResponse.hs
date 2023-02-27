@@ -13,7 +13,7 @@ import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 import StarTrek.VideoReleaseBase (VideoReleaseBase, videoReleaseBaseSchema)
 
 data VideoReleaseBaseResponse = VideoReleaseBaseResponse
-  { videoReleases :: Maybe [VideoReleaseBase] -- ^ List of video releases matching given criteria
+  { videoReleases :: Maybe [VideoReleaseBase] -- ^ Base video release, returned in search results
   , sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }

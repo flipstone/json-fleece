@@ -14,7 +14,7 @@ import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 
 data MaterialBaseResponse = MaterialBaseResponse
   { sort :: Maybe ResponseSort -- ^ Response sort
-  , materials :: Maybe [MaterialBase] -- ^ List of materials matching given criteria
+  , materials :: Maybe [MaterialBase] -- ^ Base material, returned in search results
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)

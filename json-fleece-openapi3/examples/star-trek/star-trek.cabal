@@ -17,227 +17,1369 @@ build-type:     Simple
 library
   exposed-modules:
       StarTrek.AnimalBase
+      StarTrek.AnimalBase.Avian
+      StarTrek.AnimalBase.Canine
+      StarTrek.AnimalBase.EarthAnimal
+      StarTrek.AnimalBase.EarthInsect
+      StarTrek.AnimalBase.Feline
+      StarTrek.AnimalBase.Name
+      StarTrek.AnimalBase.Uid
       StarTrek.AnimalBaseResponse
       StarTrek.AnimalFull
+      StarTrek.AnimalFull.Avian
+      StarTrek.AnimalFull.Canine
+      StarTrek.AnimalFull.EarthAnimal
+      StarTrek.AnimalFull.EarthInsect
+      StarTrek.AnimalFull.Feline
+      StarTrek.AnimalFull.Name
+      StarTrek.AnimalFull.Uid
       StarTrek.AnimalFullResponse
       StarTrek.AnimalHeader
+      StarTrek.AnimalHeader.Name
+      StarTrek.AnimalHeader.Uid
       StarTrek.AstronomicalObjectBase
+      StarTrek.AstronomicalObjectBase.Name
+      StarTrek.AstronomicalObjectBase.Uid
       StarTrek.AstronomicalObjectBaseResponse
       StarTrek.AstronomicalObjectFull
+      StarTrek.AstronomicalObjectFull.Name
+      StarTrek.AstronomicalObjectFull.Uid
       StarTrek.AstronomicalObjectFullResponse
       StarTrek.AstronomicalObjectHeader
+      StarTrek.AstronomicalObjectHeader.Name
+      StarTrek.AstronomicalObjectHeader.Uid
       StarTrek.AstronomicalObjectType
       StarTrek.BloodType
       StarTrek.BookBase
+      StarTrek.BookBase.Anthology
+      StarTrek.BookBase.Audiobook
+      StarTrek.BookBase.AudiobookAbridged
+      StarTrek.BookBase.AudiobookPublishedDay
+      StarTrek.BookBase.AudiobookPublishedMonth
+      StarTrek.BookBase.AudiobookPublishedYear
+      StarTrek.BookBase.AudiobookRunTime
+      StarTrek.BookBase.BiographyBook
+      StarTrek.BookBase.EBook
+      StarTrek.BookBase.Novel
+      StarTrek.BookBase.Novelization
+      StarTrek.BookBase.NumberOfPages
+      StarTrek.BookBase.ProductionNumber
+      StarTrek.BookBase.PublishedDay
+      StarTrek.BookBase.PublishedMonth
+      StarTrek.BookBase.PublishedYear
+      StarTrek.BookBase.ReferenceBook
+      StarTrek.BookBase.RolePlayingBook
+      StarTrek.BookBase.StardateFrom
+      StarTrek.BookBase.StardateTo
+      StarTrek.BookBase.Title
+      StarTrek.BookBase.Uid
+      StarTrek.BookBase.YearFrom
+      StarTrek.BookBase.YearTo
       StarTrek.BookBaseResponse
       StarTrek.BookCollectionBase
+      StarTrek.BookCollectionBase.NumberOfPages
+      StarTrek.BookCollectionBase.PublishedDay
+      StarTrek.BookCollectionBase.PublishedMonth
+      StarTrek.BookCollectionBase.PublishedYear
+      StarTrek.BookCollectionBase.StardateFrom
+      StarTrek.BookCollectionBase.StardateTo
+      StarTrek.BookCollectionBase.Title
+      StarTrek.BookCollectionBase.Uid
+      StarTrek.BookCollectionBase.YearFrom
+      StarTrek.BookCollectionBase.YearTo
       StarTrek.BookCollectionBaseResponse
       StarTrek.BookCollectionFull
+      StarTrek.BookCollectionFull.NumberOfPages
+      StarTrek.BookCollectionFull.PublishedDay
+      StarTrek.BookCollectionFull.PublishedMonth
+      StarTrek.BookCollectionFull.PublishedYear
+      StarTrek.BookCollectionFull.StardateFrom
+      StarTrek.BookCollectionFull.StardateTo
+      StarTrek.BookCollectionFull.Title
+      StarTrek.BookCollectionFull.Uid
+      StarTrek.BookCollectionFull.YearFrom
+      StarTrek.BookCollectionFull.YearTo
       StarTrek.BookCollectionFullResponse
       StarTrek.BookCollectionHeader
+      StarTrek.BookCollectionHeader.Title
+      StarTrek.BookCollectionHeader.Uid
       StarTrek.BookFull
+      StarTrek.BookFull.Anthology
+      StarTrek.BookFull.Audiobook
+      StarTrek.BookFull.AudiobookAbridged
+      StarTrek.BookFull.AudiobookPublishedDay
+      StarTrek.BookFull.AudiobookPublishedMonth
+      StarTrek.BookFull.AudiobookPublishedYear
+      StarTrek.BookFull.AudiobookRunTime
+      StarTrek.BookFull.BiographyBook
+      StarTrek.BookFull.EBook
+      StarTrek.BookFull.Novel
+      StarTrek.BookFull.Novelization
+      StarTrek.BookFull.NumberOfPages
+      StarTrek.BookFull.ProductionNumber
+      StarTrek.BookFull.PublishedDay
+      StarTrek.BookFull.PublishedMonth
+      StarTrek.BookFull.PublishedYear
+      StarTrek.BookFull.ReferenceBook
+      StarTrek.BookFull.RolePlayingBook
+      StarTrek.BookFull.StardateFrom
+      StarTrek.BookFull.StardateTo
+      StarTrek.BookFull.Title
+      StarTrek.BookFull.Uid
+      StarTrek.BookFull.YearFrom
+      StarTrek.BookFull.YearTo
       StarTrek.BookFullResponse
       StarTrek.BookHeader
+      StarTrek.BookHeader.Title
+      StarTrek.BookHeader.Uid
       StarTrek.BookSeriesBase
+      StarTrek.BookSeriesBase.EBookSeries
+      StarTrek.BookSeriesBase.Miniseries
+      StarTrek.BookSeriesBase.NumberOfBooks
+      StarTrek.BookSeriesBase.PublishedMonthFrom
+      StarTrek.BookSeriesBase.PublishedMonthTo
+      StarTrek.BookSeriesBase.PublishedYearFrom
+      StarTrek.BookSeriesBase.PublishedYearTo
+      StarTrek.BookSeriesBase.Title
+      StarTrek.BookSeriesBase.Uid
+      StarTrek.BookSeriesBase.YearFrom
+      StarTrek.BookSeriesBase.YearTo
       StarTrek.BookSeriesBaseResponse
       StarTrek.BookSeriesFull
+      StarTrek.BookSeriesFull.EBookSeries
+      StarTrek.BookSeriesFull.Miniseries
+      StarTrek.BookSeriesFull.NumberOfBooks
+      StarTrek.BookSeriesFull.PublishedMonthFrom
+      StarTrek.BookSeriesFull.PublishedMonthTo
+      StarTrek.BookSeriesFull.PublishedYearFrom
+      StarTrek.BookSeriesFull.PublishedYearTo
+      StarTrek.BookSeriesFull.Title
+      StarTrek.BookSeriesFull.Uid
+      StarTrek.BookSeriesFull.YearFrom
+      StarTrek.BookSeriesFull.YearTo
       StarTrek.BookSeriesFullResponse
       StarTrek.BookSeriesHeader
+      StarTrek.BookSeriesHeader.Title
+      StarTrek.BookSeriesHeader.Uid
       StarTrek.CharacterBase
+      StarTrek.CharacterBase.AlternateReality
+      StarTrek.CharacterBase.DayOfBirth
+      StarTrek.CharacterBase.DayOfDeath
+      StarTrek.CharacterBase.Deceased
+      StarTrek.CharacterBase.FictionalCharacter
+      StarTrek.CharacterBase.Height
+      StarTrek.CharacterBase.Hologram
+      StarTrek.CharacterBase.HologramActivationDate
+      StarTrek.CharacterBase.HologramDateStatus
+      StarTrek.CharacterBase.HologramStatus
+      StarTrek.CharacterBase.Mirror
+      StarTrek.CharacterBase.MonthOfBirth
+      StarTrek.CharacterBase.MonthOfDeath
+      StarTrek.CharacterBase.Name
+      StarTrek.CharacterBase.PlaceOfBirth
+      StarTrek.CharacterBase.PlaceOfDeath
+      StarTrek.CharacterBase.SerialNumber
+      StarTrek.CharacterBase.Uid
+      StarTrek.CharacterBase.Weight
+      StarTrek.CharacterBase.YearOfBirth
+      StarTrek.CharacterBase.YearOfDeath
       StarTrek.CharacterBaseResponse
       StarTrek.CharacterFull
+      StarTrek.CharacterFull.AlternateReality
+      StarTrek.CharacterFull.DayOfBirth
+      StarTrek.CharacterFull.DayOfDeath
+      StarTrek.CharacterFull.Deceased
+      StarTrek.CharacterFull.FictionalCharacter
+      StarTrek.CharacterFull.Height
+      StarTrek.CharacterFull.Hologram
+      StarTrek.CharacterFull.HologramActivationDate
+      StarTrek.CharacterFull.HologramDateStatus
+      StarTrek.CharacterFull.HologramStatus
+      StarTrek.CharacterFull.Mirror
+      StarTrek.CharacterFull.MonthOfBirth
+      StarTrek.CharacterFull.MonthOfDeath
+      StarTrek.CharacterFull.Name
+      StarTrek.CharacterFull.PlaceOfBirth
+      StarTrek.CharacterFull.PlaceOfDeath
+      StarTrek.CharacterFull.SerialNumber
+      StarTrek.CharacterFull.Uid
+      StarTrek.CharacterFull.Weight
+      StarTrek.CharacterFull.YearOfBirth
+      StarTrek.CharacterFull.YearOfDeath
       StarTrek.CharacterFullResponse
       StarTrek.CharacterHeader
+      StarTrek.CharacterHeader.Name
+      StarTrek.CharacterHeader.Uid
       StarTrek.CharacterRelation
+      StarTrek.CharacterRelation.Type
       StarTrek.CharacterSpecies
+      StarTrek.CharacterSpecies.Denominator
+      StarTrek.CharacterSpecies.Name
+      StarTrek.CharacterSpecies.Numerator
+      StarTrek.CharacterSpecies.Uid
       StarTrek.ComicCollectionBase
+      StarTrek.ComicCollectionBase.CoverDay
+      StarTrek.ComicCollectionBase.CoverMonth
+      StarTrek.ComicCollectionBase.CoverYear
+      StarTrek.ComicCollectionBase.NumberOfPages
+      StarTrek.ComicCollectionBase.Photonovel
+      StarTrek.ComicCollectionBase.PublishedDay
+      StarTrek.ComicCollectionBase.PublishedMonth
+      StarTrek.ComicCollectionBase.PublishedYear
+      StarTrek.ComicCollectionBase.StardateFrom
+      StarTrek.ComicCollectionBase.StardateTo
+      StarTrek.ComicCollectionBase.Title
+      StarTrek.ComicCollectionBase.Uid
+      StarTrek.ComicCollectionBase.YearFrom
+      StarTrek.ComicCollectionBase.YearTo
       StarTrek.ComicCollectionBaseResponse
       StarTrek.ComicCollectionFull
+      StarTrek.ComicCollectionFull.CoverDay
+      StarTrek.ComicCollectionFull.CoverMonth
+      StarTrek.ComicCollectionFull.CoverYear
+      StarTrek.ComicCollectionFull.NumberOfPages
+      StarTrek.ComicCollectionFull.Photonovel
+      StarTrek.ComicCollectionFull.PublishedDay
+      StarTrek.ComicCollectionFull.PublishedMonth
+      StarTrek.ComicCollectionFull.PublishedYear
+      StarTrek.ComicCollectionFull.StardateFrom
+      StarTrek.ComicCollectionFull.StardateTo
+      StarTrek.ComicCollectionFull.Title
+      StarTrek.ComicCollectionFull.Uid
+      StarTrek.ComicCollectionFull.YearFrom
+      StarTrek.ComicCollectionFull.YearTo
       StarTrek.ComicCollectionFullResponse
       StarTrek.ComicCollectionHeader
+      StarTrek.ComicCollectionHeader.Title
+      StarTrek.ComicCollectionHeader.Uid
       StarTrek.ComicsBase
+      StarTrek.ComicsBase.Adaptation
+      StarTrek.ComicsBase.CoverDay
+      StarTrek.ComicsBase.CoverMonth
+      StarTrek.ComicsBase.CoverYear
+      StarTrek.ComicsBase.NumberOfPages
+      StarTrek.ComicsBase.Photonovel
+      StarTrek.ComicsBase.PublishedDay
+      StarTrek.ComicsBase.PublishedMonth
+      StarTrek.ComicsBase.PublishedYear
+      StarTrek.ComicsBase.StardateFrom
+      StarTrek.ComicsBase.StardateTo
+      StarTrek.ComicsBase.Title
+      StarTrek.ComicsBase.Uid
+      StarTrek.ComicsBase.YearFrom
+      StarTrek.ComicsBase.YearTo
       StarTrek.ComicsBaseResponse
       StarTrek.ComicSeriesBase
+      StarTrek.ComicSeriesBase.Miniseries
+      StarTrek.ComicSeriesBase.NumberOfIssues
+      StarTrek.ComicSeriesBase.PhotonovelSeries
+      StarTrek.ComicSeriesBase.PublishedDayFrom
+      StarTrek.ComicSeriesBase.PublishedDayTo
+      StarTrek.ComicSeriesBase.PublishedMonthFrom
+      StarTrek.ComicSeriesBase.PublishedMonthTo
+      StarTrek.ComicSeriesBase.PublishedYearFrom
+      StarTrek.ComicSeriesBase.PublishedYearTo
+      StarTrek.ComicSeriesBase.StardateFrom
+      StarTrek.ComicSeriesBase.StardateTo
+      StarTrek.ComicSeriesBase.Title
+      StarTrek.ComicSeriesBase.Uid
+      StarTrek.ComicSeriesBase.YearFrom
+      StarTrek.ComicSeriesBase.YearTo
       StarTrek.ComicSeriesBaseResponse
       StarTrek.ComicSeriesFull
+      StarTrek.ComicSeriesFull.Miniseries
+      StarTrek.ComicSeriesFull.NumberOfIssues
+      StarTrek.ComicSeriesFull.PhotonovelSeries
+      StarTrek.ComicSeriesFull.PublishedDayFrom
+      StarTrek.ComicSeriesFull.PublishedDayTo
+      StarTrek.ComicSeriesFull.PublishedMonthFrom
+      StarTrek.ComicSeriesFull.PublishedMonthTo
+      StarTrek.ComicSeriesFull.PublishedYearFrom
+      StarTrek.ComicSeriesFull.PublishedYearTo
+      StarTrek.ComicSeriesFull.StardateFrom
+      StarTrek.ComicSeriesFull.StardateTo
+      StarTrek.ComicSeriesFull.Title
+      StarTrek.ComicSeriesFull.Uid
+      StarTrek.ComicSeriesFull.YearFrom
+      StarTrek.ComicSeriesFull.YearTo
       StarTrek.ComicSeriesFullResponse
       StarTrek.ComicSeriesHeader
+      StarTrek.ComicSeriesHeader.Title
+      StarTrek.ComicSeriesHeader.Uid
       StarTrek.ComicsFull
+      StarTrek.ComicsFull.Adaptation
+      StarTrek.ComicsFull.CoverDay
+      StarTrek.ComicsFull.CoverMonth
+      StarTrek.ComicsFull.CoverYear
+      StarTrek.ComicsFull.NumberOfPages
+      StarTrek.ComicsFull.Photonovel
+      StarTrek.ComicsFull.PublishedDay
+      StarTrek.ComicsFull.PublishedMonth
+      StarTrek.ComicsFull.PublishedYear
+      StarTrek.ComicsFull.StardateFrom
+      StarTrek.ComicsFull.StardateTo
+      StarTrek.ComicsFull.Title
+      StarTrek.ComicsFull.Uid
+      StarTrek.ComicsFull.YearFrom
+      StarTrek.ComicsFull.YearTo
       StarTrek.ComicsFullResponse
       StarTrek.ComicsHeader
+      StarTrek.ComicsHeader.Title
+      StarTrek.ComicsHeader.Uid
       StarTrek.ComicStripBase
+      StarTrek.ComicStripBase.NumberOfPages
+      StarTrek.ComicStripBase.Periodical
+      StarTrek.ComicStripBase.PublishedDayFrom
+      StarTrek.ComicStripBase.PublishedDayTo
+      StarTrek.ComicStripBase.PublishedMonthFrom
+      StarTrek.ComicStripBase.PublishedMonthTo
+      StarTrek.ComicStripBase.PublishedYearFrom
+      StarTrek.ComicStripBase.PublishedYearTo
+      StarTrek.ComicStripBase.Title
+      StarTrek.ComicStripBase.Uid
+      StarTrek.ComicStripBase.YearFrom
+      StarTrek.ComicStripBase.YearTo
       StarTrek.ComicStripBaseResponse
       StarTrek.ComicStripFull
+      StarTrek.ComicStripFull.NumberOfPages
+      StarTrek.ComicStripFull.Periodical
+      StarTrek.ComicStripFull.PublishedDayFrom
+      StarTrek.ComicStripFull.PublishedDayTo
+      StarTrek.ComicStripFull.PublishedMonthFrom
+      StarTrek.ComicStripFull.PublishedMonthTo
+      StarTrek.ComicStripFull.PublishedYearFrom
+      StarTrek.ComicStripFull.PublishedYearTo
+      StarTrek.ComicStripFull.Title
+      StarTrek.ComicStripFull.Uid
+      StarTrek.ComicStripFull.YearFrom
+      StarTrek.ComicStripFull.YearTo
       StarTrek.ComicStripFullResponse
       StarTrek.ComicStripHeader
+      StarTrek.ComicStripHeader.Title
+      StarTrek.ComicStripHeader.Uid
       StarTrek.CompanyBase
+      StarTrek.CompanyBase.Broadcaster
+      StarTrek.CompanyBase.CollectibleCompany
+      StarTrek.CompanyBase.Conglomerate
+      StarTrek.CompanyBase.DigitalVisualEffectsCompany
+      StarTrek.CompanyBase.Distributor
+      StarTrek.CompanyBase.FilmEquipmentCompany
+      StarTrek.CompanyBase.GameCompany
+      StarTrek.CompanyBase.MakeUpEffectsStudio
+      StarTrek.CompanyBase.MattePaintingCompany
+      StarTrek.CompanyBase.ModelAndMiniatureEffectsCompany
+      StarTrek.CompanyBase.Name
+      StarTrek.CompanyBase.PostProductionCompany
+      StarTrek.CompanyBase.ProductionCompany
+      StarTrek.CompanyBase.PropCompany
+      StarTrek.CompanyBase.RecordLabel
+      StarTrek.CompanyBase.SpecialEffectsCompany
+      StarTrek.CompanyBase.TvAndFilmProductionCompany
+      StarTrek.CompanyBase.Uid
+      StarTrek.CompanyBase.VideoGameCompany
       StarTrek.CompanyBaseResponse
       StarTrek.CompanyFull
+      StarTrek.CompanyFull.Broadcaster
+      StarTrek.CompanyFull.CollectibleCompany
+      StarTrek.CompanyFull.Conglomerate
+      StarTrek.CompanyFull.DigitalVisualEffectsCompany
+      StarTrek.CompanyFull.Distributor
+      StarTrek.CompanyFull.FilmEquipmentCompany
+      StarTrek.CompanyFull.GameCompany
+      StarTrek.CompanyFull.MakeUpEffectsStudio
+      StarTrek.CompanyFull.MattePaintingCompany
+      StarTrek.CompanyFull.ModelAndMiniatureEffectsCompany
+      StarTrek.CompanyFull.Name
+      StarTrek.CompanyFull.PostProductionCompany
+      StarTrek.CompanyFull.ProductionCompany
+      StarTrek.CompanyFull.PropCompany
+      StarTrek.CompanyFull.RecordLabel
+      StarTrek.CompanyFull.SpecialEffectsCompany
+      StarTrek.CompanyFull.TvAndFilmProductionCompany
+      StarTrek.CompanyFull.Uid
+      StarTrek.CompanyFull.VideoGameCompany
       StarTrek.CompanyFullResponse
       StarTrek.CompanyHeader
+      StarTrek.CompanyHeader.Name
+      StarTrek.CompanyHeader.Uid
       StarTrek.ConflictBase
+      StarTrek.ConflictBase.AlternateReality
+      StarTrek.ConflictBase.DominionWarBattle
+      StarTrek.ConflictBase.EarthConflict
+      StarTrek.ConflictBase.FederationWar
+      StarTrek.ConflictBase.KlingonWar
+      StarTrek.ConflictBase.Name
+      StarTrek.ConflictBase.Uid
+      StarTrek.ConflictBase.YearFrom
+      StarTrek.ConflictBase.YearTo
       StarTrek.ConflictBaseResponse
       StarTrek.ConflictFull
+      StarTrek.ConflictFull.AlternateReality
+      StarTrek.ConflictFull.DominionWarBattle
+      StarTrek.ConflictFull.EarthConflict
+      StarTrek.ConflictFull.FederationWar
+      StarTrek.ConflictFull.KlingonWar
+      StarTrek.ConflictFull.Name
+      StarTrek.ConflictFull.Uid
+      StarTrek.ConflictFull.YearFrom
+      StarTrek.ConflictFull.YearTo
       StarTrek.ConflictFullResponse
       StarTrek.ConflictHeader
+      StarTrek.ConflictHeader.Name
+      StarTrek.ConflictHeader.Uid
       StarTrek.ContentLanguage
+      StarTrek.ContentLanguage.Iso6391Code
+      StarTrek.ContentLanguage.Name
+      StarTrek.ContentLanguage.Uid
       StarTrek.ContentRating
+      StarTrek.ContentRating.Rating
+      StarTrek.ContentRating.Uid
       StarTrek.ContentRatingSystem
       StarTrek.Country
+      StarTrek.Country.Iso31661Alpha2Code
+      StarTrek.Country.Name
+      StarTrek.Country.Uid
       StarTrek.ElementBase
+      StarTrek.ElementBase.AtomicNumber
+      StarTrek.ElementBase.AtomicWeight
+      StarTrek.ElementBase.GammaSeries
+      StarTrek.ElementBase.HypersonicSeries
+      StarTrek.ElementBase.MegaSeries
+      StarTrek.ElementBase.Name
+      StarTrek.ElementBase.OmegaSeries
+      StarTrek.ElementBase.Symbol
+      StarTrek.ElementBase.TransonicSeries
+      StarTrek.ElementBase.Transuranium
+      StarTrek.ElementBase.Uid
+      StarTrek.ElementBase.WorldSeries
       StarTrek.ElementBaseResponse
       StarTrek.ElementFull
+      StarTrek.ElementFull.AtomicNumber
+      StarTrek.ElementFull.AtomicWeight
+      StarTrek.ElementFull.GammaSeries
+      StarTrek.ElementFull.HypersonicSeries
+      StarTrek.ElementFull.MegaSeries
+      StarTrek.ElementFull.Name
+      StarTrek.ElementFull.OmegaSeries
+      StarTrek.ElementFull.Symbol
+      StarTrek.ElementFull.TransonicSeries
+      StarTrek.ElementFull.Transuranium
+      StarTrek.ElementFull.Uid
+      StarTrek.ElementFull.WorldSeries
       StarTrek.ElementFullResponse
       StarTrek.ElementHeader
+      StarTrek.ElementHeader.Name
+      StarTrek.ElementHeader.Uid
       StarTrek.EpisodeBase
+      StarTrek.EpisodeBase.EpisodeNumber
+      StarTrek.EpisodeBase.FeatureLength
+      StarTrek.EpisodeBase.FinalScriptDate
+      StarTrek.EpisodeBase.ProductionSerialNumber
+      StarTrek.EpisodeBase.SeasonNumber
+      StarTrek.EpisodeBase.StardateFrom
+      StarTrek.EpisodeBase.StardateTo
+      StarTrek.EpisodeBase.Title
+      StarTrek.EpisodeBase.TitleGerman
+      StarTrek.EpisodeBase.TitleItalian
+      StarTrek.EpisodeBase.TitleJapanese
+      StarTrek.EpisodeBase.Uid
+      StarTrek.EpisodeBase.UsAirDate
+      StarTrek.EpisodeBase.YearFrom
+      StarTrek.EpisodeBase.YearTo
       StarTrek.EpisodeBaseResponse
       StarTrek.EpisodeFull
+      StarTrek.EpisodeFull.EpisodeNumber
+      StarTrek.EpisodeFull.FeatureLength
+      StarTrek.EpisodeFull.FinalScriptDate
+      StarTrek.EpisodeFull.ProductionSerialNumber
+      StarTrek.EpisodeFull.SeasonNumber
+      StarTrek.EpisodeFull.StardateFrom
+      StarTrek.EpisodeFull.StardateTo
+      StarTrek.EpisodeFull.Title
+      StarTrek.EpisodeFull.TitleGerman
+      StarTrek.EpisodeFull.TitleItalian
+      StarTrek.EpisodeFull.TitleJapanese
+      StarTrek.EpisodeFull.Uid
+      StarTrek.EpisodeFull.UsAirDate
+      StarTrek.EpisodeFull.YearFrom
+      StarTrek.EpisodeFull.YearTo
       StarTrek.EpisodeFullResponse
       StarTrek.EpisodeHeader
+      StarTrek.EpisodeHeader.Title
+      StarTrek.EpisodeHeader.Uid
       StarTrek.Error
+      StarTrek.Error.Code
+      StarTrek.Error.Message
       StarTrek.FoodBase
+      StarTrek.FoodBase.AlcoholicBeverage
+      StarTrek.FoodBase.Beverage
+      StarTrek.FoodBase.Dessert
+      StarTrek.FoodBase.EarthlyOrigin
+      StarTrek.FoodBase.Fruit
+      StarTrek.FoodBase.HerbOrSpice
+      StarTrek.FoodBase.Juice
+      StarTrek.FoodBase.Name
+      StarTrek.FoodBase.Sauce
+      StarTrek.FoodBase.Soup
+      StarTrek.FoodBase.Tea
+      StarTrek.FoodBase.Uid
       StarTrek.FoodBaseResponse
       StarTrek.FoodFull
+      StarTrek.FoodFull.AlcoholicBeverage
+      StarTrek.FoodFull.Beverage
+      StarTrek.FoodFull.Dessert
+      StarTrek.FoodFull.EarthlyOrigin
+      StarTrek.FoodFull.Fruit
+      StarTrek.FoodFull.HerbOrSpice
+      StarTrek.FoodFull.Juice
+      StarTrek.FoodFull.Name
+      StarTrek.FoodFull.Sauce
+      StarTrek.FoodFull.Soup
+      StarTrek.FoodFull.Tea
+      StarTrek.FoodFull.Uid
       StarTrek.FoodFullResponse
       StarTrek.FoodHeader
+      StarTrek.FoodHeader.Name
+      StarTrek.FoodHeader.Uid
       StarTrek.Gender
       StarTrek.Genre
+      StarTrek.Genre.Name
+      StarTrek.Genre.Uid
       StarTrek.LiteratureBase
+      StarTrek.LiteratureBase.EarthlyOrigin
+      StarTrek.LiteratureBase.ReligiousLiterature
+      StarTrek.LiteratureBase.Report
+      StarTrek.LiteratureBase.ScientificLiterature
+      StarTrek.LiteratureBase.ShakespeareanWork
+      StarTrek.LiteratureBase.TechnicalManual
+      StarTrek.LiteratureBase.Title
+      StarTrek.LiteratureBase.Uid
       StarTrek.LiteratureBaseResponse
       StarTrek.LiteratureFull
+      StarTrek.LiteratureFull.EarthlyOrigin
+      StarTrek.LiteratureFull.ReligiousLiterature
+      StarTrek.LiteratureFull.Report
+      StarTrek.LiteratureFull.ScientificLiterature
+      StarTrek.LiteratureFull.ShakespeareanWork
+      StarTrek.LiteratureFull.TechnicalManual
+      StarTrek.LiteratureFull.Title
+      StarTrek.LiteratureFull.Uid
       StarTrek.LiteratureFullResponse
       StarTrek.LiteratureHeader
+      StarTrek.LiteratureHeader.Title
+      StarTrek.LiteratureHeader.Uid
       StarTrek.LocationBase
+      StarTrek.LocationBase.AlternateReality
+      StarTrek.LocationBase.BajoranSettlement
+      StarTrek.LocationBase.BodyOfWater
+      StarTrek.LocationBase.BuildingInterior
+      StarTrek.LocationBase.Colony
+      StarTrek.LocationBase.Country
+      StarTrek.LocationBase.Ds9Establishment
+      StarTrek.LocationBase.EarthlyLocation
+      StarTrek.LocationBase.Establishment
+      StarTrek.LocationBase.FictionalLocation
+      StarTrek.LocationBase.GeographicalLocation
+      StarTrek.LocationBase.Landform
+      StarTrek.LocationBase.Landmark
+      StarTrek.LocationBase.MedicalEstablishment
+      StarTrek.LocationBase.Mirror
+      StarTrek.LocationBase.Name
+      StarTrek.LocationBase.ReligiousLocation
+      StarTrek.LocationBase.Road
+      StarTrek.LocationBase.School
+      StarTrek.LocationBase.Settlement
+      StarTrek.LocationBase.Shipyard
+      StarTrek.LocationBase.Structure
+      StarTrek.LocationBase.SubnationalEntity
+      StarTrek.LocationBase.Uid
+      StarTrek.LocationBase.UsSettlement
       StarTrek.LocationBaseResponse
       StarTrek.LocationFull
+      StarTrek.LocationFull.AlternateReality
+      StarTrek.LocationFull.BajoranSettlement
+      StarTrek.LocationFull.BodyOfWater
+      StarTrek.LocationFull.BuildingInterior
+      StarTrek.LocationFull.Colony
+      StarTrek.LocationFull.Country
+      StarTrek.LocationFull.Ds9Establishment
+      StarTrek.LocationFull.EarthlyLocation
+      StarTrek.LocationFull.Establishment
+      StarTrek.LocationFull.FictionalLocation
+      StarTrek.LocationFull.GeographicalLocation
+      StarTrek.LocationFull.Landform
+      StarTrek.LocationFull.Landmark
+      StarTrek.LocationFull.MedicalEstablishment
+      StarTrek.LocationFull.Mirror
+      StarTrek.LocationFull.Name
+      StarTrek.LocationFull.ReligiousLocation
+      StarTrek.LocationFull.Road
+      StarTrek.LocationFull.School
+      StarTrek.LocationFull.Settlement
+      StarTrek.LocationFull.Shipyard
+      StarTrek.LocationFull.Structure
+      StarTrek.LocationFull.SubnationalEntity
+      StarTrek.LocationFull.Uid
+      StarTrek.LocationFull.UsSettlement
       StarTrek.LocationFullResponse
       StarTrek.LocationHeader
+      StarTrek.LocationHeader.Name
+      StarTrek.LocationHeader.Uid
       StarTrek.MagazineBase
+      StarTrek.MagazineBase.CoverDay
+      StarTrek.MagazineBase.CoverMonth
+      StarTrek.MagazineBase.CoverYear
+      StarTrek.MagazineBase.IssueNumber
+      StarTrek.MagazineBase.NumberOfPages
+      StarTrek.MagazineBase.PublishedDay
+      StarTrek.MagazineBase.PublishedMonth
+      StarTrek.MagazineBase.PublishedYear
+      StarTrek.MagazineBase.Title
+      StarTrek.MagazineBase.Uid
       StarTrek.MagazineBaseResponse
       StarTrek.MagazineFull
+      StarTrek.MagazineFull.CoverDay
+      StarTrek.MagazineFull.CoverMonth
+      StarTrek.MagazineFull.CoverYear
+      StarTrek.MagazineFull.IssueNumber
+      StarTrek.MagazineFull.NumberOfPages
+      StarTrek.MagazineFull.PublishedDay
+      StarTrek.MagazineFull.PublishedMonth
+      StarTrek.MagazineFull.PublishedYear
+      StarTrek.MagazineFull.Title
+      StarTrek.MagazineFull.Uid
       StarTrek.MagazineFullResponse
       StarTrek.MagazineHeader
+      StarTrek.MagazineHeader.Title
+      StarTrek.MagazineHeader.Uid
       StarTrek.MagazineSeriesBase
+      StarTrek.MagazineSeriesBase.NumberOfIssues
+      StarTrek.MagazineSeriesBase.PublishedMonthFrom
+      StarTrek.MagazineSeriesBase.PublishedMonthTo
+      StarTrek.MagazineSeriesBase.PublishedYearFrom
+      StarTrek.MagazineSeriesBase.PublishedYearTo
+      StarTrek.MagazineSeriesBase.Title
+      StarTrek.MagazineSeriesBase.Uid
       StarTrek.MagazineSeriesBaseResponse
       StarTrek.MagazineSeriesFull
+      StarTrek.MagazineSeriesFull.NumberOfIssues
+      StarTrek.MagazineSeriesFull.PublishedMonthFrom
+      StarTrek.MagazineSeriesFull.PublishedMonthTo
+      StarTrek.MagazineSeriesFull.PublishedYearFrom
+      StarTrek.MagazineSeriesFull.PublishedYearTo
+      StarTrek.MagazineSeriesFull.Title
+      StarTrek.MagazineSeriesFull.Uid
       StarTrek.MagazineSeriesFullResponse
       StarTrek.MagazineSeriesHeader
+      StarTrek.MagazineSeriesHeader.Title
+      StarTrek.MagazineSeriesHeader.Uid
       StarTrek.MaritalStatus
       StarTrek.MaterialBase
+      StarTrek.MaterialBase.AlloyOrComposite
+      StarTrek.MaterialBase.BiochemicalCompound
+      StarTrek.MaterialBase.ChemicalCompound
+      StarTrek.MaterialBase.Drug
+      StarTrek.MaterialBase.Explosive
+      StarTrek.MaterialBase.Fuel
+      StarTrek.MaterialBase.Gemstone
+      StarTrek.MaterialBase.Mineral
+      StarTrek.MaterialBase.Name
+      StarTrek.MaterialBase.PoisonousSubstance
+      StarTrek.MaterialBase.PreciousMaterial
+      StarTrek.MaterialBase.Uid
       StarTrek.MaterialBaseResponse
       StarTrek.MaterialFull
+      StarTrek.MaterialFull.AlloyOrComposite
+      StarTrek.MaterialFull.BiochemicalCompound
+      StarTrek.MaterialFull.ChemicalCompound
+      StarTrek.MaterialFull.Drug
+      StarTrek.MaterialFull.Explosive
+      StarTrek.MaterialFull.Fuel
+      StarTrek.MaterialFull.Gemstone
+      StarTrek.MaterialFull.Mineral
+      StarTrek.MaterialFull.Name
+      StarTrek.MaterialFull.PoisonousSubstance
+      StarTrek.MaterialFull.PreciousMaterial
+      StarTrek.MaterialFull.Uid
       StarTrek.MaterialFullResponse
       StarTrek.MaterialHeader
+      StarTrek.MaterialHeader.Name
+      StarTrek.MaterialHeader.Uid
       StarTrek.MedicalConditionBase
+      StarTrek.MedicalConditionBase.Name
+      StarTrek.MedicalConditionBase.PsychologicalCondition
+      StarTrek.MedicalConditionBase.Uid
       StarTrek.MedicalConditionBaseResponse
       StarTrek.MedicalConditionFull
+      StarTrek.MedicalConditionFull.Name
+      StarTrek.MedicalConditionFull.PsychologicalCondition
+      StarTrek.MedicalConditionFull.Uid
       StarTrek.MedicalConditionFullResponse
       StarTrek.MedicalConditionHeader
+      StarTrek.MedicalConditionHeader.Name
+      StarTrek.MedicalConditionHeader.Uid
       StarTrek.MovieBase
+      StarTrek.MovieBase.StardateFrom
+      StarTrek.MovieBase.StardateTo
+      StarTrek.MovieBase.Title
+      StarTrek.MovieBase.TitleBulgarian
+      StarTrek.MovieBase.TitleCatalan
+      StarTrek.MovieBase.TitleChineseTraditional
+      StarTrek.MovieBase.TitleGerman
+      StarTrek.MovieBase.TitleItalian
+      StarTrek.MovieBase.TitleJapanese
+      StarTrek.MovieBase.TitlePolish
+      StarTrek.MovieBase.TitleRussian
+      StarTrek.MovieBase.TitleSerbian
+      StarTrek.MovieBase.TitleSpanish
+      StarTrek.MovieBase.Uid
+      StarTrek.MovieBase.UsReleaseDate
+      StarTrek.MovieBase.YearFrom
+      StarTrek.MovieBase.YearTo
       StarTrek.MovieBaseResponse
       StarTrek.MovieFull
+      StarTrek.MovieFull.StardateFrom
+      StarTrek.MovieFull.StardateTo
+      StarTrek.MovieFull.Title
+      StarTrek.MovieFull.TitleBulgarian
+      StarTrek.MovieFull.TitleCatalan
+      StarTrek.MovieFull.TitleChineseTraditional
+      StarTrek.MovieFull.TitleGerman
+      StarTrek.MovieFull.TitleItalian
+      StarTrek.MovieFull.TitleJapanese
+      StarTrek.MovieFull.TitlePolish
+      StarTrek.MovieFull.TitleRussian
+      StarTrek.MovieFull.TitleSerbian
+      StarTrek.MovieFull.TitleSpanish
+      StarTrek.MovieFull.Uid
+      StarTrek.MovieFull.UsReleaseDate
+      StarTrek.MovieFull.YearFrom
+      StarTrek.MovieFull.YearTo
       StarTrek.MovieFullResponse
       StarTrek.MovieHeader
+      StarTrek.MovieHeader.Title
+      StarTrek.MovieHeader.Uid
       StarTrek.OccupationBase
+      StarTrek.OccupationBase.LegalOccupation
+      StarTrek.OccupationBase.MedicalOccupation
+      StarTrek.OccupationBase.Name
+      StarTrek.OccupationBase.ScientificOccupation
+      StarTrek.OccupationBase.Uid
       StarTrek.OccupationBaseResponse
       StarTrek.OccupationFull
+      StarTrek.OccupationFull.LegalOccupation
+      StarTrek.OccupationFull.MedicalOccupation
+      StarTrek.OccupationFull.Name
+      StarTrek.OccupationFull.ScientificOccupation
+      StarTrek.OccupationFull.Uid
       StarTrek.OccupationFullResponse
       StarTrek.OccupationHeader
+      StarTrek.OccupationHeader.Name
+      StarTrek.OccupationHeader.Uid
       StarTrek.OrganizationBase
+      StarTrek.OrganizationBase.AlternateReality
+      StarTrek.OrganizationBase.Government
+      StarTrek.OrganizationBase.GovernmentAgency
+      StarTrek.OrganizationBase.IntergovernmentalOrganization
+      StarTrek.OrganizationBase.LawEnforcementAgency
+      StarTrek.OrganizationBase.MedicalOrganization
+      StarTrek.OrganizationBase.MilitaryOrganization
+      StarTrek.OrganizationBase.MilitaryUnit
+      StarTrek.OrganizationBase.Mirror
+      StarTrek.OrganizationBase.Name
+      StarTrek.OrganizationBase.PrisonOrPenalColony
+      StarTrek.OrganizationBase.ResearchOrganization
+      StarTrek.OrganizationBase.SportOrganization
+      StarTrek.OrganizationBase.Uid
       StarTrek.OrganizationBaseResponse
       StarTrek.OrganizationFull
+      StarTrek.OrganizationFull.AlternateReality
+      StarTrek.OrganizationFull.Government
+      StarTrek.OrganizationFull.GovernmentAgency
+      StarTrek.OrganizationFull.IntergovernmentalOrganization
+      StarTrek.OrganizationFull.LawEnforcementAgency
+      StarTrek.OrganizationFull.MedicalOrganization
+      StarTrek.OrganizationFull.MilitaryOrganization
+      StarTrek.OrganizationFull.MilitaryUnit
+      StarTrek.OrganizationFull.Mirror
+      StarTrek.OrganizationFull.Name
+      StarTrek.OrganizationFull.PrisonOrPenalColony
+      StarTrek.OrganizationFull.ResearchOrganization
+      StarTrek.OrganizationFull.SportOrganization
+      StarTrek.OrganizationFull.Uid
       StarTrek.OrganizationFullResponse
       StarTrek.OrganizationHeader
+      StarTrek.OrganizationHeader.Name
+      StarTrek.OrganizationHeader.Uid
       StarTrek.PerformerBase
+      StarTrek.PerformerBase.AnimalPerformer
+      StarTrek.PerformerBase.BirthName
+      StarTrek.PerformerBase.DateOfBirth
+      StarTrek.PerformerBase.DateOfDeath
+      StarTrek.PerformerBase.DisPerformer
+      StarTrek.PerformerBase.Ds9Performer
+      StarTrek.PerformerBase.EntPerformer
+      StarTrek.PerformerBase.FilmPerformer
+      StarTrek.PerformerBase.Name
+      StarTrek.PerformerBase.PlaceOfBirth
+      StarTrek.PerformerBase.PlaceOfDeath
+      StarTrek.PerformerBase.StandInPerformer
+      StarTrek.PerformerBase.StuntPerformer
+      StarTrek.PerformerBase.TasPerformer
+      StarTrek.PerformerBase.TngPerformer
+      StarTrek.PerformerBase.TosPerformer
+      StarTrek.PerformerBase.Uid
+      StarTrek.PerformerBase.VideoGamePerformer
+      StarTrek.PerformerBase.VoicePerformer
+      StarTrek.PerformerBase.VoyPerformer
       StarTrek.PerformerBaseResponse
       StarTrek.PerformerFull
+      StarTrek.PerformerFull.AnimalPerformer
+      StarTrek.PerformerFull.BirthName
+      StarTrek.PerformerFull.DateOfBirth
+      StarTrek.PerformerFull.DateOfDeath
+      StarTrek.PerformerFull.DisPerformer
+      StarTrek.PerformerFull.Ds9Performer
+      StarTrek.PerformerFull.EntPerformer
+      StarTrek.PerformerFull.FilmPerformer
+      StarTrek.PerformerFull.Name
+      StarTrek.PerformerFull.PlaceOfBirth
+      StarTrek.PerformerFull.PlaceOfDeath
+      StarTrek.PerformerFull.StandInPerformer
+      StarTrek.PerformerFull.StuntPerformer
+      StarTrek.PerformerFull.TasPerformer
+      StarTrek.PerformerFull.TngPerformer
+      StarTrek.PerformerFull.TosPerformer
+      StarTrek.PerformerFull.Uid
+      StarTrek.PerformerFull.VideoGamePerformer
+      StarTrek.PerformerFull.VoicePerformer
+      StarTrek.PerformerFull.VoyPerformer
       StarTrek.PerformerFullResponse
       StarTrek.PerformerHeader
+      StarTrek.PerformerHeader.Name
+      StarTrek.PerformerHeader.Uid
       StarTrek.Platform
+      StarTrek.Platform.Name
+      StarTrek.Platform.Uid
       StarTrek.ProductionRunUnit
       StarTrek.Reference
+      StarTrek.Reference.ReferenceNumber
+      StarTrek.Reference.Uid
       StarTrek.ReferenceType
       StarTrek.ResponsePage
+      StarTrek.ResponsePage.FirstPage
+      StarTrek.ResponsePage.LastPage
+      StarTrek.ResponsePage.NumberOfElements
+      StarTrek.ResponsePage.PageNumber
+      StarTrek.ResponsePage.PageSize
+      StarTrek.ResponsePage.TotalElements
+      StarTrek.ResponsePage.TotalPages
       StarTrek.ResponseSort
       StarTrek.ResponseSortClause
+      StarTrek.ResponseSortClause.ClauseOrder
+      StarTrek.ResponseSortClause.Name
       StarTrek.ResponseSortDirection
       StarTrek.SeasonBase
+      StarTrek.SeasonBase.NumberOfEpisodes
+      StarTrek.SeasonBase.SeasonNumber
+      StarTrek.SeasonBase.Title
+      StarTrek.SeasonBase.Uid
       StarTrek.SeasonBaseResponse
       StarTrek.SeasonFull
+      StarTrek.SeasonFull.NumberOfEpisodes
+      StarTrek.SeasonFull.SeasonNumber
+      StarTrek.SeasonFull.Title
+      StarTrek.SeasonFull.Uid
       StarTrek.SeasonFullResponse
       StarTrek.SeasonHeader
+      StarTrek.SeasonHeader.Title
+      StarTrek.SeasonHeader.Uid
       StarTrek.SeriesBase
+      StarTrek.SeriesBase.Abbreviation
+      StarTrek.SeriesBase.EpisodesCount
+      StarTrek.SeriesBase.FeatureLengthEpisodesCount
+      StarTrek.SeriesBase.OriginalRunEndDate
+      StarTrek.SeriesBase.OriginalRunStartDate
+      StarTrek.SeriesBase.ProductionEndYear
+      StarTrek.SeriesBase.ProductionStartYear
+      StarTrek.SeriesBase.SeasonsCount
+      StarTrek.SeriesBase.Title
+      StarTrek.SeriesBase.Uid
       StarTrek.SeriesBaseResponse
       StarTrek.SeriesFull
+      StarTrek.SeriesFull.Abbreviation
+      StarTrek.SeriesFull.EpisodesCount
+      StarTrek.SeriesFull.FeatureLengthEpisodesCount
+      StarTrek.SeriesFull.OriginalRunEndDate
+      StarTrek.SeriesFull.OriginalRunStartDate
+      StarTrek.SeriesFull.ProductionEndYear
+      StarTrek.SeriesFull.ProductionStartYear
+      StarTrek.SeriesFull.SeasonsCount
+      StarTrek.SeriesFull.Title
+      StarTrek.SeriesFull.Uid
       StarTrek.SeriesFullResponse
       StarTrek.SeriesHeader
+      StarTrek.SeriesHeader.Title
+      StarTrek.SeriesHeader.Uid
       StarTrek.SoundtrackBase
+      StarTrek.SoundtrackBase.Length
+      StarTrek.SoundtrackBase.ReleaseDate
+      StarTrek.SoundtrackBase.Title
+      StarTrek.SoundtrackBase.Uid
       StarTrek.SoundtrackBaseResponse
       StarTrek.SoundtrackFull
+      StarTrek.SoundtrackFull.Length
+      StarTrek.SoundtrackFull.ReleaseDate
+      StarTrek.SoundtrackFull.Title
+      StarTrek.SoundtrackFull.Uid
       StarTrek.SoundtrackFullResponse
       StarTrek.SoundtrackHeader
+      StarTrek.SoundtrackHeader.Title
+      StarTrek.SoundtrackHeader.Uid
       StarTrek.SpacecraftBase
+      StarTrek.SpacecraftBase.DateStatus
+      StarTrek.SpacecraftBase.Name
+      StarTrek.SpacecraftBase.Registry
+      StarTrek.SpacecraftBase.Status
+      StarTrek.SpacecraftBase.Uid
       StarTrek.SpacecraftBaseResponse
       StarTrek.SpacecraftClassBase
+      StarTrek.SpacecraftClassBase.ActiveFrom
+      StarTrek.SpacecraftClassBase.ActiveTo
+      StarTrek.SpacecraftClassBase.AlternateReality
+      StarTrek.SpacecraftClassBase.Name
+      StarTrek.SpacecraftClassBase.NumberOfDecks
+      StarTrek.SpacecraftClassBase.Uid
+      StarTrek.SpacecraftClassBase.WarpCapable
       StarTrek.SpacecraftClassBaseResponse
       StarTrek.SpacecraftClassFull
+      StarTrek.SpacecraftClassFull.ActiveFrom
+      StarTrek.SpacecraftClassFull.ActiveTo
+      StarTrek.SpacecraftClassFull.AlternateReality
+      StarTrek.SpacecraftClassFull.Name
+      StarTrek.SpacecraftClassFull.NumberOfDecks
+      StarTrek.SpacecraftClassFull.Uid
+      StarTrek.SpacecraftClassFull.WarpCapable
       StarTrek.SpacecraftClassFullResponse
       StarTrek.SpacecraftClassHeader
+      StarTrek.SpacecraftClassHeader.Name
+      StarTrek.SpacecraftClassHeader.Uid
       StarTrek.SpacecraftFull
+      StarTrek.SpacecraftFull.DateStatus
+      StarTrek.SpacecraftFull.Name
+      StarTrek.SpacecraftFull.Registry
+      StarTrek.SpacecraftFull.Status
+      StarTrek.SpacecraftFull.Uid
       StarTrek.SpacecraftFullResponse
       StarTrek.SpacecraftHeader
+      StarTrek.SpacecraftHeader.Name
+      StarTrek.SpacecraftHeader.Uid
       StarTrek.SpacecraftType
+      StarTrek.SpacecraftType.Name
+      StarTrek.SpacecraftType.Uid
       StarTrek.SpeciesBase
+      StarTrek.SpeciesBase.AlternateReality
+      StarTrek.SpeciesBase.ExtinctSpecies
+      StarTrek.SpeciesBase.ExtraGalacticSpecies
+      StarTrek.SpeciesBase.HumanoidSpecies
+      StarTrek.SpeciesBase.Name
+      StarTrek.SpeciesBase.NonCorporealSpecies
+      StarTrek.SpeciesBase.ReptilianSpecies
+      StarTrek.SpeciesBase.ShapeshiftingSpecies
+      StarTrek.SpeciesBase.SpaceborneSpecies
+      StarTrek.SpeciesBase.TelepathicSpecies
+      StarTrek.SpeciesBase.TransDimensionalSpecies
+      StarTrek.SpeciesBase.Uid
+      StarTrek.SpeciesBase.UnnamedSpecies
+      StarTrek.SpeciesBase.WarpCapableSpecies
       StarTrek.SpeciesBaseResponse
       StarTrek.SpeciesFull
+      StarTrek.SpeciesFull.AlternateReality
+      StarTrek.SpeciesFull.ExtinctSpecies
+      StarTrek.SpeciesFull.ExtraGalacticSpecies
+      StarTrek.SpeciesFull.HumanoidSpecies
+      StarTrek.SpeciesFull.Name
+      StarTrek.SpeciesFull.NonCorporealSpecies
+      StarTrek.SpeciesFull.ReptilianSpecies
+      StarTrek.SpeciesFull.ShapeshiftingSpecies
+      StarTrek.SpeciesFull.SpaceborneSpecies
+      StarTrek.SpeciesFull.TelepathicSpecies
+      StarTrek.SpeciesFull.TransDimensionalSpecies
+      StarTrek.SpeciesFull.Uid
+      StarTrek.SpeciesFull.UnnamedSpecies
+      StarTrek.SpeciesFull.WarpCapableSpecies
       StarTrek.SpeciesFullResponse
       StarTrek.SpeciesHeader
+      StarTrek.SpeciesHeader.Name
+      StarTrek.SpeciesHeader.Uid
       StarTrek.StaffBase
+      StarTrek.StaffBase.ArtDepartment
+      StarTrek.StaffBase.ArtDirector
+      StarTrek.StaffBase.AssistantOrSecondUnitDirector
+      StarTrek.StaffBase.AudioAuthor
+      StarTrek.StaffBase.Author
+      StarTrek.StaffBase.BirthName
+      StarTrek.StaffBase.CalendarArtist
+      StarTrek.StaffBase.CameraAndElectricalDepartment
+      StarTrek.StaffBase.CastingDepartment
+      StarTrek.StaffBase.CbsDigitalStaff
+      StarTrek.StaffBase.Cinematographer
+      StarTrek.StaffBase.ComicArtist
+      StarTrek.StaffBase.ComicAuthor
+      StarTrek.StaffBase.ComicColorArtist
+      StarTrek.StaffBase.ComicInkArtist
+      StarTrek.StaffBase.ComicInteriorArtist
+      StarTrek.StaffBase.ComicLetterArtist
+      StarTrek.StaffBase.ComicPencilArtist
+      StarTrek.StaffBase.ComicStripArtist
+      StarTrek.StaffBase.Composer
+      StarTrek.StaffBase.CostumeDepartment
+      StarTrek.StaffBase.CostumeDesigner
+      StarTrek.StaffBase.DateOfBirth
+      StarTrek.StaffBase.DateOfDeath
+      StarTrek.StaffBase.Director
+      StarTrek.StaffBase.ExhibitAndAttractionStaff
+      StarTrek.StaffBase.FilmEditor
+      StarTrek.StaffBase.GameArtist
+      StarTrek.StaffBase.GameAuthor
+      StarTrek.StaffBase.IlmProductionStaff
+      StarTrek.StaffBase.Linguist
+      StarTrek.StaffBase.LocationStaff
+      StarTrek.StaffBase.MakeupStaff
+      StarTrek.StaffBase.MusicDepartment
+      StarTrek.StaffBase.Name
+      StarTrek.StaffBase.NovelArtist
+      StarTrek.StaffBase.NovelAuthor
+      StarTrek.StaffBase.PersonalAssistant
+      StarTrek.StaffBase.PlaceOfBirth
+      StarTrek.StaffBase.PlaceOfDeath
+      StarTrek.StaffBase.Producer
+      StarTrek.StaffBase.ProductionAssociate
+      StarTrek.StaffBase.ProductionDesigner
+      StarTrek.StaffBase.ProductionStaff
+      StarTrek.StaffBase.PublicationArtist
+      StarTrek.StaffBase.PublicationDesigner
+      StarTrek.StaffBase.PublicationEditor
+      StarTrek.StaffBase.PublicationStaff
+      StarTrek.StaffBase.PublicityArtist
+      StarTrek.StaffBase.ReferenceArtist
+      StarTrek.StaffBase.ReferenceAuthor
+      StarTrek.StaffBase.ScienceConsultant
+      StarTrek.StaffBase.SoundDepartment
+      StarTrek.StaffBase.SpecialAndVisualEffectsStaff
+      StarTrek.StaffBase.SpecialFeaturesStaff
+      StarTrek.StaffBase.StoryEditor
+      StarTrek.StaffBase.StudioExecutive
+      StarTrek.StaffBase.StuntDepartment
+      StarTrek.StaffBase.TransportationDepartment
+      StarTrek.StaffBase.Uid
+      StarTrek.StaffBase.VideoGameProductionStaff
+      StarTrek.StaffBase.Writer
       StarTrek.StaffBaseResponse
       StarTrek.StaffFull
+      StarTrek.StaffFull.ArtDepartment
+      StarTrek.StaffFull.ArtDirector
+      StarTrek.StaffFull.AssistantOrSecondUnitDirector
+      StarTrek.StaffFull.AudioAuthor
+      StarTrek.StaffFull.Author
+      StarTrek.StaffFull.BirthName
+      StarTrek.StaffFull.CalendarArtist
+      StarTrek.StaffFull.CameraAndElectricalDepartment
+      StarTrek.StaffFull.CastingDepartment
+      StarTrek.StaffFull.CbsDigitalStaff
+      StarTrek.StaffFull.Cinematographer
+      StarTrek.StaffFull.ComicArtist
+      StarTrek.StaffFull.ComicAuthor
+      StarTrek.StaffFull.ComicColorArtist
+      StarTrek.StaffFull.ComicInkArtist
+      StarTrek.StaffFull.ComicInteriorArtist
+      StarTrek.StaffFull.ComicLetterArtist
+      StarTrek.StaffFull.ComicPencilArtist
+      StarTrek.StaffFull.ComicStripArtist
+      StarTrek.StaffFull.Composer
+      StarTrek.StaffFull.CostumeDepartment
+      StarTrek.StaffFull.CostumeDesigner
+      StarTrek.StaffFull.DateOfBirth
+      StarTrek.StaffFull.DateOfDeath
+      StarTrek.StaffFull.Director
+      StarTrek.StaffFull.ExhibitAndAttractionStaff
+      StarTrek.StaffFull.FilmEditor
+      StarTrek.StaffFull.GameArtist
+      StarTrek.StaffFull.GameAuthor
+      StarTrek.StaffFull.IlmProductionStaff
+      StarTrek.StaffFull.Linguist
+      StarTrek.StaffFull.LocationStaff
+      StarTrek.StaffFull.MakeupStaff
+      StarTrek.StaffFull.MusicDepartment
+      StarTrek.StaffFull.Name
+      StarTrek.StaffFull.NovelArtist
+      StarTrek.StaffFull.NovelAuthor
+      StarTrek.StaffFull.PersonalAssistant
+      StarTrek.StaffFull.PlaceOfBirth
+      StarTrek.StaffFull.PlaceOfDeath
+      StarTrek.StaffFull.Producer
+      StarTrek.StaffFull.ProductionAssociate
+      StarTrek.StaffFull.ProductionDesigner
+      StarTrek.StaffFull.ProductionStaff
+      StarTrek.StaffFull.PublicationArtist
+      StarTrek.StaffFull.PublicationDesigner
+      StarTrek.StaffFull.PublicationEditor
+      StarTrek.StaffFull.PublicationStaff
+      StarTrek.StaffFull.PublicityArtist
+      StarTrek.StaffFull.ReferenceArtist
+      StarTrek.StaffFull.ReferenceAuthor
+      StarTrek.StaffFull.ScienceConsultant
+      StarTrek.StaffFull.SoundDepartment
+      StarTrek.StaffFull.SpecialAndVisualEffectsStaff
+      StarTrek.StaffFull.SpecialFeaturesStaff
+      StarTrek.StaffFull.StoryEditor
+      StarTrek.StaffFull.StudioExecutive
+      StarTrek.StaffFull.StuntDepartment
+      StarTrek.StaffFull.TransportationDepartment
+      StarTrek.StaffFull.Uid
+      StarTrek.StaffFull.VideoGameProductionStaff
+      StarTrek.StaffFull.Writer
       StarTrek.StaffFullResponse
       StarTrek.StaffHeader
+      StarTrek.StaffHeader.Name
+      StarTrek.StaffHeader.Uid
       StarTrek.TechnologyBase
+      StarTrek.TechnologyBase.BorgComponent
+      StarTrek.TechnologyBase.BorgTechnology
+      StarTrek.TechnologyBase.CommunicationsTechnology
+      StarTrek.TechnologyBase.ComputerProgramming
+      StarTrek.TechnologyBase.ComputerTechnology
+      StarTrek.TechnologyBase.CulinaryTool
+      StarTrek.TechnologyBase.Database
+      StarTrek.TechnologyBase.EnergyTechnology
+      StarTrek.TechnologyBase.EngineeringTool
+      StarTrek.TechnologyBase.FictionalTechnology
+      StarTrek.TechnologyBase.HolographicTechnology
+      StarTrek.TechnologyBase.HouseholdTool
+      StarTrek.TechnologyBase.IdentificationTechnology
+      StarTrek.TechnologyBase.LifeSupportTechnology
+      StarTrek.TechnologyBase.MedicalEquipment
+      StarTrek.TechnologyBase.Name
+      StarTrek.TechnologyBase.SensorTechnology
+      StarTrek.TechnologyBase.ShieldTechnology
+      StarTrek.TechnologyBase.Subroutine
+      StarTrek.TechnologyBase.Tool
+      StarTrek.TechnologyBase.TransporterTechnology
+      StarTrek.TechnologyBase.Uid
       StarTrek.TechnologyBaseResponse
       StarTrek.TechnologyFull
+      StarTrek.TechnologyFull.BorgComponent
+      StarTrek.TechnologyFull.BorgTechnology
+      StarTrek.TechnologyFull.CommunicationsTechnology
+      StarTrek.TechnologyFull.ComputerProgramming
+      StarTrek.TechnologyFull.ComputerTechnology
+      StarTrek.TechnologyFull.CulinaryTool
+      StarTrek.TechnologyFull.Database
+      StarTrek.TechnologyFull.EnergyTechnology
+      StarTrek.TechnologyFull.EngineeringTool
+      StarTrek.TechnologyFull.FictionalTechnology
+      StarTrek.TechnologyFull.HolographicTechnology
+      StarTrek.TechnologyFull.HouseholdTool
+      StarTrek.TechnologyFull.IdentificationTechnology
+      StarTrek.TechnologyFull.LifeSupportTechnology
+      StarTrek.TechnologyFull.MedicalEquipment
+      StarTrek.TechnologyFull.Name
+      StarTrek.TechnologyFull.SensorTechnology
+      StarTrek.TechnologyFull.ShieldTechnology
+      StarTrek.TechnologyFull.Subroutine
+      StarTrek.TechnologyFull.Tool
+      StarTrek.TechnologyFull.TransporterTechnology
+      StarTrek.TechnologyFull.Uid
       StarTrek.TechnologyFullResponse
       StarTrek.TechnologyHeader
+      StarTrek.TechnologyHeader.Name
+      StarTrek.TechnologyHeader.Uid
       StarTrek.TitleBase
+      StarTrek.TitleBase.FleetRank
+      StarTrek.TitleBase.MilitaryRank
+      StarTrek.TitleBase.Mirror
+      StarTrek.TitleBase.Name
+      StarTrek.TitleBase.Position
+      StarTrek.TitleBase.ReligiousTitle
+      StarTrek.TitleBase.Uid
       StarTrek.TitleBaseResponse
       StarTrek.TitleFull
+      StarTrek.TitleFull.FleetRank
+      StarTrek.TitleFull.MilitaryRank
+      StarTrek.TitleFull.Mirror
+      StarTrek.TitleFull.Name
+      StarTrek.TitleFull.Position
+      StarTrek.TitleFull.ReligiousTitle
+      StarTrek.TitleFull.Uid
       StarTrek.TitleFullResponse
       StarTrek.TitleHeader
+      StarTrek.TitleHeader.Name
+      StarTrek.TitleHeader.Uid
       StarTrek.TradingCardBase
+      StarTrek.TradingCardBase.Name
+      StarTrek.TradingCardBase.Number
+      StarTrek.TradingCardBase.ProductionRun
+      StarTrek.TradingCardBase.ReleaseYear
+      StarTrek.TradingCardBase.Uid
       StarTrek.TradingCardBaseResponse
       StarTrek.TradingCardDeckBase
+      StarTrek.TradingCardDeckBase.Frequency
+      StarTrek.TradingCardDeckBase.Name
+      StarTrek.TradingCardDeckBase.Uid
       StarTrek.TradingCardDeckBaseResponse
       StarTrek.TradingCardDeckFull
+      StarTrek.TradingCardDeckFull.Frequency
+      StarTrek.TradingCardDeckFull.Name
+      StarTrek.TradingCardDeckFull.Uid
       StarTrek.TradingCardDeckFullResponse
       StarTrek.TradingCardDeckHeader
+      StarTrek.TradingCardDeckHeader.Name
+      StarTrek.TradingCardDeckHeader.Uid
       StarTrek.TradingCardFull
+      StarTrek.TradingCardFull.Name
+      StarTrek.TradingCardFull.Number
+      StarTrek.TradingCardFull.ProductionRun
+      StarTrek.TradingCardFull.ReleaseYear
+      StarTrek.TradingCardFull.Uid
       StarTrek.TradingCardFullResponse
       StarTrek.TradingCardHeader
+      StarTrek.TradingCardHeader.Name
+      StarTrek.TradingCardHeader.Uid
       StarTrek.TradingCardSetBase
+      StarTrek.TradingCardSetBase.BoxesPerCase
+      StarTrek.TradingCardSetBase.CardHeight
+      StarTrek.TradingCardSetBase.CardsPerPack
+      StarTrek.TradingCardSetBase.CardWidth
+      StarTrek.TradingCardSetBase.Name
+      StarTrek.TradingCardSetBase.PacksPerBox
+      StarTrek.TradingCardSetBase.ProductionRun
+      StarTrek.TradingCardSetBase.ReleaseDay
+      StarTrek.TradingCardSetBase.ReleaseMonth
+      StarTrek.TradingCardSetBase.ReleaseYear
+      StarTrek.TradingCardSetBase.Uid
       StarTrek.TradingCardSetBaseResponse
       StarTrek.TradingCardSetFull
+      StarTrek.TradingCardSetFull.BoxesPerCase
+      StarTrek.TradingCardSetFull.CardHeight
+      StarTrek.TradingCardSetFull.CardsPerPack
+      StarTrek.TradingCardSetFull.CardWidth
+      StarTrek.TradingCardSetFull.Name
+      StarTrek.TradingCardSetFull.PacksPerBox
+      StarTrek.TradingCardSetFull.ProductionRun
+      StarTrek.TradingCardSetFull.ReleaseDay
+      StarTrek.TradingCardSetFull.ReleaseMonth
+      StarTrek.TradingCardSetFull.ReleaseYear
+      StarTrek.TradingCardSetFull.Uid
       StarTrek.TradingCardSetFullResponse
       StarTrek.TradingCardSetHeader
+      StarTrek.TradingCardSetHeader.Name
+      StarTrek.TradingCardSetHeader.Uid
       StarTrek.VideoGameBase
+      StarTrek.VideoGameBase.ReleaseDate
+      StarTrek.VideoGameBase.StardateFrom
+      StarTrek.VideoGameBase.StardateTo
+      StarTrek.VideoGameBase.SystemRequirements
+      StarTrek.VideoGameBase.Title
+      StarTrek.VideoGameBase.Uid
+      StarTrek.VideoGameBase.YearFrom
+      StarTrek.VideoGameBase.YearTo
       StarTrek.VideoGameBaseResponse
       StarTrek.VideoGameFull
+      StarTrek.VideoGameFull.ReleaseDate
+      StarTrek.VideoGameFull.StardateFrom
+      StarTrek.VideoGameFull.StardateTo
+      StarTrek.VideoGameFull.SystemRequirements
+      StarTrek.VideoGameFull.Title
+      StarTrek.VideoGameFull.Uid
+      StarTrek.VideoGameFull.YearFrom
+      StarTrek.VideoGameFull.YearTo
       StarTrek.VideoGameFullResponse
       StarTrek.VideoGameHeader
+      StarTrek.VideoGameHeader.Title
+      StarTrek.VideoGameHeader.Uid
       StarTrek.VideoReleaseBase
+      StarTrek.VideoReleaseBase.AmazonDigitalRelease
+      StarTrek.VideoReleaseBase.DailymotionDigitalRelease
+      StarTrek.VideoReleaseBase.GooglePlayDigitalRelease
+      StarTrek.VideoReleaseBase.ITunesDigitalRelease
+      StarTrek.VideoReleaseBase.NetflixDigitalRelease
+      StarTrek.VideoReleaseBase.NumberOfDataCarriers
+      StarTrek.VideoReleaseBase.NumberOfEpisodes
+      StarTrek.VideoReleaseBase.NumberOfFeatureLengthEpisodes
+      StarTrek.VideoReleaseBase.Region1AReleaseDate
+      StarTrek.VideoReleaseBase.Region1SlimlineReleaseDate
+      StarTrek.VideoReleaseBase.Region2BReleaseDate
+      StarTrek.VideoReleaseBase.Region2SlimlineReleaseDate
+      StarTrek.VideoReleaseBase.Region4AReleaseDate
+      StarTrek.VideoReleaseBase.Region4SlimlineReleaseDate
+      StarTrek.VideoReleaseBase.RegionFreeReleaseDate
+      StarTrek.VideoReleaseBase.RunTime
+      StarTrek.VideoReleaseBase.Title
+      StarTrek.VideoReleaseBase.Uid
+      StarTrek.VideoReleaseBase.UltraVioletDigitalRelease
+      StarTrek.VideoReleaseBase.VimeoDigitalRelease
+      StarTrek.VideoReleaseBase.VuduDigitalRelease
+      StarTrek.VideoReleaseBase.XboxSmartGlassDigitalRelease
+      StarTrek.VideoReleaseBase.YearFrom
+      StarTrek.VideoReleaseBase.YearTo
+      StarTrek.VideoReleaseBase.YouTubeDigitalRelease
       StarTrek.VideoReleaseBaseResponse
       StarTrek.VideoReleaseFormat
       StarTrek.VideoReleaseFull
+      StarTrek.VideoReleaseFull.AmazonDigitalRelease
+      StarTrek.VideoReleaseFull.DailymotionDigitalRelease
+      StarTrek.VideoReleaseFull.GooglePlayDigitalRelease
+      StarTrek.VideoReleaseFull.ITunesDigitalRelease
+      StarTrek.VideoReleaseFull.NetflixDigitalRelease
+      StarTrek.VideoReleaseFull.NumberOfDataCarriers
+      StarTrek.VideoReleaseFull.NumberOfEpisodes
+      StarTrek.VideoReleaseFull.NumberOfFeatureLengthEpisodes
+      StarTrek.VideoReleaseFull.Region1AReleaseDate
+      StarTrek.VideoReleaseFull.Region1SlimlineReleaseDate
+      StarTrek.VideoReleaseFull.Region2BReleaseDate
+      StarTrek.VideoReleaseFull.Region2SlimlineReleaseDate
+      StarTrek.VideoReleaseFull.Region4AReleaseDate
+      StarTrek.VideoReleaseFull.Region4SlimlineReleaseDate
+      StarTrek.VideoReleaseFull.RegionFreeReleaseDate
+      StarTrek.VideoReleaseFull.RunTime
+      StarTrek.VideoReleaseFull.Title
+      StarTrek.VideoReleaseFull.Uid
+      StarTrek.VideoReleaseFull.UltraVioletDigitalRelease
+      StarTrek.VideoReleaseFull.VimeoDigitalRelease
+      StarTrek.VideoReleaseFull.VuduDigitalRelease
+      StarTrek.VideoReleaseFull.XboxSmartGlassDigitalRelease
+      StarTrek.VideoReleaseFull.YearFrom
+      StarTrek.VideoReleaseFull.YearTo
+      StarTrek.VideoReleaseFull.YouTubeDigitalRelease
       StarTrek.VideoReleaseFullResponse
       StarTrek.VideoReleaseHeader
+      StarTrek.VideoReleaseHeader.Title
+      StarTrek.VideoReleaseHeader.Uid
       StarTrek.WeaponBase
+      StarTrek.WeaponBase.AlternateReality
+      StarTrek.WeaponBase.HandHeldWeapon
+      StarTrek.WeaponBase.LaserTechnology
+      StarTrek.WeaponBase.Mirror
+      StarTrek.WeaponBase.Name
+      StarTrek.WeaponBase.PhaserTechnology
+      StarTrek.WeaponBase.PhotonicTechnology
+      StarTrek.WeaponBase.PlasmaTechnology
+      StarTrek.WeaponBase.Uid
       StarTrek.WeaponBaseResponse
       StarTrek.WeaponFull
+      StarTrek.WeaponFull.AlternateReality
+      StarTrek.WeaponFull.HandHeldWeapon
+      StarTrek.WeaponFull.LaserTechnology
+      StarTrek.WeaponFull.Mirror
+      StarTrek.WeaponFull.Name
+      StarTrek.WeaponFull.PhaserTechnology
+      StarTrek.WeaponFull.PhotonicTechnology
+      StarTrek.WeaponFull.PlasmaTechnology
+      StarTrek.WeaponFull.Uid
       StarTrek.WeaponFullResponse
       StarTrek.WeaponHeader
+      StarTrek.WeaponHeader.Name
+      StarTrek.WeaponHeader.Uid
   other-modules:
       Paths_star_trek
   hs-source-dirs:

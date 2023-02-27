@@ -15,7 +15,7 @@ import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 data OrganizationBaseResponse = OrganizationBaseResponse
   { sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
-  , organizations :: Maybe [OrganizationBase] -- ^ List of organizations matching given criteria
+  , organizations :: Maybe [OrganizationBase] -- ^ Base organization, returned in search results
   }
   deriving (Eq, Show)
 

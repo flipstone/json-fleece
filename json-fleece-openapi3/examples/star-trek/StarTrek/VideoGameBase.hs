@@ -5,21 +5,27 @@ module StarTrek.VideoGameBase
   , videoGameBaseSchema
   ) where
 
-import Data.Text (Text)
-import Data.Time (Day)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
-import Prelude (($), Eq, Float, Integer, Maybe, Show)
+import Prelude (($), Eq, Maybe, Show)
+import StarTrek.VideoGameBase.ReleaseDate (ReleaseDate, releaseDateSchema)
+import StarTrek.VideoGameBase.StardateFrom (StardateFrom, stardateFromSchema)
+import StarTrek.VideoGameBase.StardateTo (StardateTo, stardateToSchema)
+import StarTrek.VideoGameBase.SystemRequirements (SystemRequirements, systemRequirementsSchema)
+import StarTrek.VideoGameBase.Title (Title, titleSchema)
+import StarTrek.VideoGameBase.Uid (Uid, uidSchema)
+import StarTrek.VideoGameBase.YearFrom (YearFrom, yearFromSchema)
+import StarTrek.VideoGameBase.YearTo (YearTo, yearToSchema)
 
 data VideoGameBase = VideoGameBase
-  { yearFrom :: Maybe Integer -- ^ Starting year of video game story
-  , stardateTo :: Maybe Float -- ^ Ending stardate of video game story
-  , systemRequirements :: Maybe Text -- ^ System requirements
-  , releaseDate :: Maybe Day -- ^ Release date
-  , uid :: Text -- ^ Video game unique ID
-  , stardateFrom :: Maybe Float -- ^ Starting stardate of video game story
-  , title :: Text -- ^ Video game title
-  , yearTo :: Maybe Integer -- ^ Ending year of video game story
+  { yearFrom :: Maybe YearFrom -- ^ Starting year of video game story
+  , stardateTo :: Maybe StardateTo -- ^ Ending stardate of video game story
+  , systemRequirements :: Maybe SystemRequirements -- ^ System requirements
+  , releaseDate :: Maybe ReleaseDate -- ^ Release date
+  , uid :: Uid -- ^ Video game unique ID
+  , stardateFrom :: Maybe StardateFrom -- ^ Starting stardate of video game story
+  , title :: Title -- ^ Video game title
+  , yearTo :: Maybe YearTo -- ^ Ending year of video game story
   }
   deriving (Eq, Show)
 
@@ -27,11 +33,11 @@ videoGameBaseSchema :: FC.Fleece schema => schema VideoGameBase
 videoGameBaseSchema =
   FC.object $
     FC.constructor VideoGameBase
-      #+ FC.optional "yearFrom" yearFrom FC.integer
-      #+ FC.optional "stardateTo" stardateTo FC.float
-      #+ FC.optional "systemRequirements" systemRequirements FC.text
-      #+ FC.optional "releaseDate" releaseDate FC.day
-      #+ FC.required "uid" uid FC.text
-      #+ FC.optional "stardateFrom" stardateFrom FC.float
-      #+ FC.required "title" title FC.text
-      #+ FC.optional "yearTo" yearTo FC.integer
+      #+ FC.optional "yearFrom" yearFrom yearFromSchema
+      #+ FC.optional "stardateTo" stardateTo stardateToSchema
+      #+ FC.optional "systemRequirements" systemRequirements systemRequirementsSchema
+      #+ FC.optional "releaseDate" releaseDate releaseDateSchema
+      #+ FC.required "uid" uid uidSchema
+      #+ FC.optional "stardateFrom" stardateFrom stardateFromSchema
+      #+ FC.required "title" title titleSchema
+      #+ FC.optional "yearTo" yearTo yearToSchema

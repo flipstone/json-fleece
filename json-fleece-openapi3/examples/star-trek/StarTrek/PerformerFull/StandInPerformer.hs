@@ -1,0 +1,17 @@
+{-# LANGUAGE NoImplicitPrelude #-}
+
+module StarTrek.PerformerFull.StandInPerformer
+  ( StandInPerformer(..)
+  , standInPerformerSchema
+  ) where
+
+import Fleece.Core ()
+import qualified Fleece.Core as FC
+import Prelude (Bool, Eq, Show)
+
+newtype StandInPerformer = StandInPerformer Bool
+  deriving (Show, Eq)
+
+standInPerformerSchema :: FC.Fleece schema => schema StandInPerformer
+standInPerformerSchema =
+  FC.coerceSchema FC.boolean

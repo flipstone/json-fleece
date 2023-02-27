@@ -13,7 +13,7 @@ import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
 import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 
 data PerformerBaseResponse = PerformerBaseResponse
-  { performers :: Maybe [PerformerBase] -- ^ List of performers matching given criteria
+  { performers :: Maybe [PerformerBase] -- ^ Base performer, returned in search results
   , sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }

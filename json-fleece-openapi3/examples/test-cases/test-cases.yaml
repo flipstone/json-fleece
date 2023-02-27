@@ -1,0 +1,56 @@
+openapi: 3.0.1
+info:
+  title: Fleece TestCases
+  version: 1.0.0
+components:
+  schemas:
+    FieldTestCases:
+      type: object
+      description: A schema that contains test cases for each kind of field
+      properties:
+        requiredField:
+          type: string
+        optionalField:
+          type: string
+        optionalNullableField:
+          type: string
+          nullable: true
+        requiredNullableField:
+          type: string
+          nullable: true
+        arrayField:
+          type: array
+          items:
+            type: string
+        nullableArrayField:
+          type: array
+          nullable: true
+          items:
+            type: string
+        optionalArrayField:
+          type: array
+          items:
+            type: string
+        optionalNullableArrayField:
+          type: array
+          nullable: true
+          items:
+            type: string
+      required:
+        - requiredField
+        - requiredNullableField
+        - arrayField
+        - nullableArrayField
+
+    TopLevelArray:
+      type: array
+      description: A schema that defines a top level array
+      items:
+        type: string
+
+    TopLevelArrayNullable:
+      type: array
+      description: A schema that defines a top level array with nullable items
+      items:
+        type: string
+        nullable: true

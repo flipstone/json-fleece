@@ -15,7 +15,7 @@ import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 data ElementBaseResponse = ElementBaseResponse
   { sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
-  , elements :: Maybe [ElementBase] -- ^ List of elements matching given criteria
+  , elements :: Maybe [ElementBase] -- ^ Base element, returned in search results
   }
   deriving (Eq, Show)
 

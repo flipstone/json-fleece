@@ -15,7 +15,7 @@ import StarTrek.TitleBase (TitleBase, titleBaseSchema)
 data TitleBaseResponse = TitleBaseResponse
   { sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
-  , titles :: Maybe [TitleBase] -- ^ List of titles matching given criteria
+  , titles :: Maybe [TitleBase] -- ^ Base title, returned in search results
   }
   deriving (Eq, Show)
 

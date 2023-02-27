@@ -15,7 +15,7 @@ import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 data AstronomicalObjectBaseResponse = AstronomicalObjectBaseResponse
   { sort :: Maybe ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage -- ^ Object describing response page
-  , astronomicalObjects :: Maybe [AstronomicalObjectBase] -- ^ List of astronomical objects matching given criteria
+  , astronomicalObjects :: Maybe [AstronomicalObjectBase] -- ^ Base astronomical object, returned in search results
   }
   deriving (Eq, Show)
 

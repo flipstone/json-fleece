@@ -5,18 +5,21 @@ module StarTrek.SeasonBase
   , seasonBaseSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
-import Prelude (($), Eq, Integer, Maybe, Show)
+import Prelude (($), Eq, Maybe, Show)
+import StarTrek.SeasonBase.NumberOfEpisodes (NumberOfEpisodes, numberOfEpisodesSchema)
+import StarTrek.SeasonBase.SeasonNumber (SeasonNumber, seasonNumberSchema)
+import StarTrek.SeasonBase.Title (Title, titleSchema)
+import StarTrek.SeasonBase.Uid (Uid, uidSchema)
 import StarTrek.SeriesHeader (SeriesHeader, seriesHeaderSchema)
 
 data SeasonBase = SeasonBase
-  { uid :: Text -- ^ Season unique ID
-  , title :: Text -- ^ Season title
+  { uid :: Uid -- ^ Season unique ID
+  , title :: Title -- ^ Season title
   , series :: Maybe SeriesHeader -- ^ Header series, embedded in other objects
-  , seasonNumber :: Maybe Integer -- ^ Season number in series
-  , numberOfEpisodes :: Maybe Integer -- ^ Number of episodes in this season
+  , seasonNumber :: Maybe SeasonNumber -- ^ Season number in series
+  , numberOfEpisodes :: Maybe NumberOfEpisodes -- ^ Number of episodes in this season
   }
   deriving (Eq, Show)
 
@@ -24,8 +27,8 @@ seasonBaseSchema :: FC.Fleece schema => schema SeasonBase
 seasonBaseSchema =
   FC.object $
     FC.constructor SeasonBase
-      #+ FC.required "uid" uid FC.text
-      #+ FC.required "title" title FC.text
+      #+ FC.required "uid" uid uidSchema
+      #+ FC.required "title" title titleSchema
       #+ FC.optional "series" series seriesHeaderSchema
-      #+ FC.optional "seasonNumber" seasonNumber FC.integer
-      #+ FC.optional "numberOfEpisodes" numberOfEpisodes FC.integer
+      #+ FC.optional "seasonNumber" seasonNumber seasonNumberSchema
+      #+ FC.optional "numberOfEpisodes" numberOfEpisodes numberOfEpisodesSchema

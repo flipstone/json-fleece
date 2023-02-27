@@ -5,17 +5,19 @@ module StarTrek.SoundtrackBase
   , soundtrackBaseSchema
   ) where
 
-import Data.Text (Text)
-import Data.Time (Day)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
-import Prelude (($), Eq, Integer, Maybe, Show)
+import Prelude (($), Eq, Maybe, Show)
+import StarTrek.SoundtrackBase.Length (Length, lengthSchema)
+import StarTrek.SoundtrackBase.ReleaseDate (ReleaseDate, releaseDateSchema)
+import StarTrek.SoundtrackBase.Title (Title, titleSchema)
+import StarTrek.SoundtrackBase.Uid (Uid, uidSchema)
 
 data SoundtrackBase = SoundtrackBase
-  { releaseDate :: Maybe Day -- ^ Release date
-  , uid :: Text -- ^ Soundtrack unique ID
-  , length :: Maybe Integer -- ^ Length, in seconds
-  , title :: Text -- ^ Soundtrack title
+  { releaseDate :: Maybe ReleaseDate -- ^ Release date
+  , uid :: Uid -- ^ Soundtrack unique ID
+  , length :: Maybe Length -- ^ Length, in seconds
+  , title :: Title -- ^ Soundtrack title
   }
   deriving (Eq, Show)
 
@@ -23,7 +25,7 @@ soundtrackBaseSchema :: FC.Fleece schema => schema SoundtrackBase
 soundtrackBaseSchema =
   FC.object $
     FC.constructor SoundtrackBase
-      #+ FC.optional "releaseDate" releaseDate FC.day
-      #+ FC.required "uid" uid FC.text
-      #+ FC.optional "length" length FC.integer
-      #+ FC.required "title" title FC.text
+      #+ FC.optional "releaseDate" releaseDate releaseDateSchema
+      #+ FC.required "uid" uid uidSchema
+      #+ FC.optional "length" length lengthSchema
+      #+ FC.required "title" title titleSchema

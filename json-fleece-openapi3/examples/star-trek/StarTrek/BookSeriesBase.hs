@@ -5,23 +5,33 @@ module StarTrek.BookSeriesBase
   , bookSeriesBaseSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
-import Prelude (($), Bool, Eq, Integer, Maybe, Show)
+import Prelude (($), Eq, Maybe, Show)
+import StarTrek.BookSeriesBase.EBookSeries (EBookSeries, eBookSeriesSchema)
+import StarTrek.BookSeriesBase.Miniseries (Miniseries, miniseriesSchema)
+import StarTrek.BookSeriesBase.NumberOfBooks (NumberOfBooks, numberOfBooksSchema)
+import StarTrek.BookSeriesBase.PublishedMonthFrom (PublishedMonthFrom, publishedMonthFromSchema)
+import StarTrek.BookSeriesBase.PublishedMonthTo (PublishedMonthTo, publishedMonthToSchema)
+import StarTrek.BookSeriesBase.PublishedYearFrom (PublishedYearFrom, publishedYearFromSchema)
+import StarTrek.BookSeriesBase.PublishedYearTo (PublishedYearTo, publishedYearToSchema)
+import StarTrek.BookSeriesBase.Title (Title, titleSchema)
+import StarTrek.BookSeriesBase.Uid (Uid, uidSchema)
+import StarTrek.BookSeriesBase.YearFrom (YearFrom, yearFromSchema)
+import StarTrek.BookSeriesBase.YearTo (YearTo, yearToSchema)
 
 data BookSeriesBase = BookSeriesBase
-  { yearFrom :: Maybe Integer -- ^ Starting year of book series stories
-  , numberOfBooks :: Maybe Integer -- ^ Number of pages
-  , publishedMonthFrom :: Maybe Integer -- ^ Month from which the book series was published
-  , publishedYearTo :: Maybe Integer -- ^ Year to which the book series was published
-  , uid :: Text -- ^ Book series unique ID
-  , publishedYearFrom :: Maybe Integer -- ^ Year from which the book series was published
-  , title :: Text -- ^ Book series title
-  , publishedMonthTo :: Maybe Integer -- ^ Month to which the book series was published
-  , miniseries :: Maybe Bool -- ^ Whether it's a miniseries
-  , yearTo :: Maybe Integer -- ^ Ending year of book series stories
-  , eBookSeries :: Maybe Bool -- ^ Whether it's a e-book series
+  { yearFrom :: Maybe YearFrom -- ^ Starting year of book series stories
+  , numberOfBooks :: Maybe NumberOfBooks -- ^ Number of pages
+  , publishedMonthFrom :: Maybe PublishedMonthFrom -- ^ Month from which the book series was published
+  , publishedYearTo :: Maybe PublishedYearTo -- ^ Year to which the book series was published
+  , uid :: Uid -- ^ Book series unique ID
+  , publishedYearFrom :: Maybe PublishedYearFrom -- ^ Year from which the book series was published
+  , title :: Title -- ^ Book series title
+  , publishedMonthTo :: Maybe PublishedMonthTo -- ^ Month to which the book series was published
+  , miniseries :: Maybe Miniseries -- ^ Whether it's a miniseries
+  , yearTo :: Maybe YearTo -- ^ Ending year of book series stories
+  , eBookSeries :: Maybe EBookSeries -- ^ Whether it's a e-book series
   }
   deriving (Eq, Show)
 
@@ -29,14 +39,14 @@ bookSeriesBaseSchema :: FC.Fleece schema => schema BookSeriesBase
 bookSeriesBaseSchema =
   FC.object $
     FC.constructor BookSeriesBase
-      #+ FC.optional "yearFrom" yearFrom FC.integer
-      #+ FC.optional "numberOfBooks" numberOfBooks FC.integer
-      #+ FC.optional "publishedMonthFrom" publishedMonthFrom FC.integer
-      #+ FC.optional "publishedYearTo" publishedYearTo FC.integer
-      #+ FC.required "uid" uid FC.text
-      #+ FC.optional "publishedYearFrom" publishedYearFrom FC.integer
-      #+ FC.required "title" title FC.text
-      #+ FC.optional "publishedMonthTo" publishedMonthTo FC.integer
-      #+ FC.optional "miniseries" miniseries FC.boolean
-      #+ FC.optional "yearTo" yearTo FC.integer
-      #+ FC.optional "eBookSeries" eBookSeries FC.boolean
+      #+ FC.optional "yearFrom" yearFrom yearFromSchema
+      #+ FC.optional "numberOfBooks" numberOfBooks numberOfBooksSchema
+      #+ FC.optional "publishedMonthFrom" publishedMonthFrom publishedMonthFromSchema
+      #+ FC.optional "publishedYearTo" publishedYearTo publishedYearToSchema
+      #+ FC.required "uid" uid uidSchema
+      #+ FC.optional "publishedYearFrom" publishedYearFrom publishedYearFromSchema
+      #+ FC.required "title" title titleSchema
+      #+ FC.optional "publishedMonthTo" publishedMonthTo publishedMonthToSchema
+      #+ FC.optional "miniseries" miniseries miniseriesSchema
+      #+ FC.optional "yearTo" yearTo yearToSchema
+      #+ FC.optional "eBookSeries" eBookSeries eBookSeriesSchema

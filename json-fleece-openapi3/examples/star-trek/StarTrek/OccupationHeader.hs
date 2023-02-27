@@ -5,14 +5,15 @@ module StarTrek.OccupationHeader
   , occupationHeaderSchema
   ) where
 
-import Data.Text (Text)
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
+import StarTrek.OccupationHeader.Name (Name, nameSchema)
+import StarTrek.OccupationHeader.Uid (Uid, uidSchema)
 
 data OccupationHeader = OccupationHeader
-  { name :: Text -- ^ Occupation name
-  , uid :: Text -- ^ Occupation unique ID
+  { name :: Name -- ^ Occupation name
+  , uid :: Uid -- ^ Occupation unique ID
   }
   deriving (Eq, Show)
 
@@ -20,5 +21,5 @@ occupationHeaderSchema :: FC.Fleece schema => schema OccupationHeader
 occupationHeaderSchema =
   FC.object $
     FC.constructor OccupationHeader
-      #+ FC.required "name" name FC.text
-      #+ FC.required "uid" uid FC.text
+      #+ FC.required "name" name nameSchema
+      #+ FC.required "uid" uid uidSchema

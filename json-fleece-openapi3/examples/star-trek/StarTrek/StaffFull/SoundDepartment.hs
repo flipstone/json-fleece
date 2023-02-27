@@ -1,0 +1,17 @@
+{-# LANGUAGE NoImplicitPrelude #-}
+
+module StarTrek.StaffFull.SoundDepartment
+  ( SoundDepartment(..)
+  , soundDepartmentSchema
+  ) where
+
+import Fleece.Core ()
+import qualified Fleece.Core as FC
+import Prelude (Bool, Eq, Show)
+
+newtype SoundDepartment = SoundDepartment Bool
+  deriving (Show, Eq)
+
+soundDepartmentSchema :: FC.Fleece schema => schema SoundDepartment
+soundDepartmentSchema =
+  FC.coerceSchema FC.boolean

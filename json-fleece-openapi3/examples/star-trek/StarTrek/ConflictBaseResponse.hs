@@ -14,7 +14,7 @@ import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
 
 data ConflictBaseResponse = ConflictBaseResponse
   { sort :: Maybe ResponseSort -- ^ Response sort
-  , conflicts :: Maybe [ConflictBase] -- ^ List of conflicts matching given criteria
+  , conflicts :: Maybe [ConflictBase] -- ^ Base conflict, returned in search results
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)

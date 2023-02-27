@@ -14,7 +14,7 @@ import StarTrek.TradingCardSetBase (TradingCardSetBase, tradingCardSetBaseSchema
 
 data TradingCardSetBaseResponse = TradingCardSetBaseResponse
   { sort :: Maybe ResponseSort -- ^ Response sort
-  , tradingCardSets :: Maybe [TradingCardSetBase] -- ^ List of trading card sets matching given criteria
+  , tradingCardSets :: Maybe [TradingCardSetBase] -- ^ Base trading card set, returned in search results
   , page :: Maybe ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)
