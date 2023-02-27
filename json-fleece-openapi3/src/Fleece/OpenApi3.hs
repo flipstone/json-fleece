@@ -210,7 +210,12 @@ generateHaskellString typeName schema = do
       let
         newtypeDecl =
           HC.lines
-            [ "newtype " <> HC.toCode typeName <> " " <> HC.toCode textType
+            [ "newtype "
+                <> HC.toCode typeName
+                <> " = "
+                <> HC.toCode typeName
+                <> " "
+                <> HC.toCode textType
             , HC.indent 2 (HC.deriving_ [HC.showClass, HC.eqClass])
             ]
 
