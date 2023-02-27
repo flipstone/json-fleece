@@ -10,6 +10,7 @@ import qualified Data.Aeson.Encoding as AesonEncoding
 import qualified Data.Aeson.Key as AesonKey
 import qualified Data.Aeson.Types as AesonTypes
 import qualified Data.ByteString.Lazy as LBS
+import Data.Coerce (coerce)
 import qualified Data.Vector as V
 import qualified Fleece.Core as FC
 
@@ -55,29 +56,29 @@ instance FC.Fleece Encoder where
   nullable (Encoder name toEncoding) =
     Encoder (FC.annotateName name "nullable") $ \mbValue ->
       case mbValue of
-        Nothing -> Aeson.toEncoding Aeson.Null
-        Just value -> toEncoding value
+        Left FC.Null -> Aeson.toEncoding Aeson.Null
+        Right value -> toEncoding value
 
   required name accessor (Encoder _name toEncoding) =
-    Field $ \object ->
-      AesonEncoding.pair
-        (AesonKey.fromString name)
-        (toEncoding (accessor object))
-
-  optionalField nullBehavior name accessor (Encoder _name toEncoding) =
     let
       key = AesonKey.fromString name
     in
       Field $ \object ->
-        case (accessor object, nullBehavior) of
-          (Just value, _) ->
+        AesonEncoding.pair key (toEncoding (accessor object))
+
+  optional name accessor (Encoder _name toEncoding) =
+    let
+      key = AesonKey.fromString name
+    in
+      Field $ \object ->
+        case accessor object of
+          Just value ->
             AesonEncoding.pair key (toEncoding value)
-          (Nothing, FC.EmitNull_AcceptNull) ->
-            AesonEncoding.pair key (Aeson.toEncoding Aeson.Null)
-          (Nothing, FC.OmitKey_AcceptNull) ->
+          Nothing ->
             mempty
-          (Nothing, FC.OmitKey_DelegateNull) ->
-            mempty
+
+  mapField _f encoder =
+    coerce encoder
 
   constructor _f =
     Object (\_ -> mempty)

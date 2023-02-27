@@ -23,6 +23,6 @@ astronomicalObjectBaseResponseSchema :: FC.Fleece schema => schema AstronomicalO
 astronomicalObjectBaseResponseSchema =
   FC.object $
     FC.constructor AstronomicalObjectBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "astronomicalObjects" astronomicalObjects (FC.list astronomicalObjectBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "astronomicalObjects" astronomicalObjects (FC.list astronomicalObjectBaseSchema)

@@ -22,6 +22,6 @@ contentRatingSchema :: FC.Fleece schema => schema ContentRating
 contentRatingSchema =
   FC.object $
     FC.constructor ContentRating
-      #+ FC.optionalField FC.OmitKey_DelegateNull "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "rating" rating FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "contentRatingSystem" contentRatingSystem contentRatingSystemSchema
+      #+ FC.optional "uid" uid FC.text
+      #+ FC.optional "rating" rating FC.text
+      #+ FC.optional "contentRatingSystem" contentRatingSystem contentRatingSystemSchema

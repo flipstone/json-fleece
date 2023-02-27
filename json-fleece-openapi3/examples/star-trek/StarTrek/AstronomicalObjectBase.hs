@@ -27,4 +27,4 @@ astronomicalObjectBaseSchema =
       #+ FC.required "astronomicalObjectType" astronomicalObjectType astronomicalObjectTypeSchema
       #+ FC.required "name" name FC.text
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "location" location astronomicalObjectHeaderSchema
+      #+ FC.optional "location" location astronomicalObjectHeaderSchema

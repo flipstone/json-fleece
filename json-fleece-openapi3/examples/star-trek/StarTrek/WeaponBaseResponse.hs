@@ -23,6 +23,6 @@ weaponBaseResponseSchema :: FC.Fleece schema => schema WeaponBaseResponse
 weaponBaseResponseSchema =
   FC.object $
     FC.constructor WeaponBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "weapons" weapons (FC.list weaponBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "weapons" weapons (FC.list weaponBaseSchema)
+      #+ FC.optional "page" page responsePageSchema

@@ -38,20 +38,20 @@ episodeBaseSchema :: FC.Fleece schema => schema EpisodeBase
 episodeBaseSchema =
   FC.object $
     FC.constructor EpisodeBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionSerialNumber" productionSerialNumber FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleJapanese" titleJapanese FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearFrom" yearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateTo" stardateTo FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "episodeNumber" episodeNumber FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleItalian" titleItalian FC.text
+      #+ FC.optional "productionSerialNumber" productionSerialNumber FC.text
+      #+ FC.optional "titleJapanese" titleJapanese FC.text
+      #+ FC.optional "yearFrom" yearFrom FC.integer
+      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "episodeNumber" episodeNumber FC.integer
+      #+ FC.optional "titleItalian" titleItalian FC.text
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "finalScriptDate" finalScriptDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateFrom" stardateFrom FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "usAirDate" usAirDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "featureLength" featureLength FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleGerman" titleGerman FC.text
+      #+ FC.optional "finalScriptDate" finalScriptDate FC.text
+      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "usAirDate" usAirDate FC.text
+      #+ FC.optional "featureLength" featureLength FC.boolean
+      #+ FC.optional "titleGerman" titleGerman FC.text
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearTo" yearTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "series" series seriesHeaderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "season" season seasonHeaderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "seasonNumber" seasonNumber FC.integer
+      #+ FC.optional "yearTo" yearTo FC.integer
+      #+ FC.optional "series" series seriesHeaderSchema
+      #+ FC.optional "season" season seasonHeaderSchema
+      #+ FC.optional "seasonNumber" seasonNumber FC.integer

@@ -95,77 +95,77 @@ staffFullSchema :: FC.Fleece schema => schema StaffFull
 staffFullSchema =
   FC.object $
     FC.constructor StaffFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "studioExecutive" studioExecutive FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "birthName" birthName FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "gameArtist" gameArtist FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "filmEditor" filmEditor FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "comicStripArtist" comicStripArtist FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "castingDepartment" castingDepartment FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "costumeDesigner" costumeDesigner FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "author" author FC.boolean
+      #+ FC.optional "studioExecutive" studioExecutive FC.boolean
+      #+ FC.optional "birthName" birthName FC.text
+      #+ FC.optional "gameArtist" gameArtist FC.boolean
+      #+ FC.optional "filmEditor" filmEditor FC.boolean
+      #+ FC.optional "comicStripArtist" comicStripArtist FC.boolean
+      #+ FC.optional "castingDepartment" castingDepartment FC.boolean
+      #+ FC.optional "costumeDesigner" costumeDesigner FC.boolean
+      #+ FC.optional "author" author FC.boolean
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "personalAssistant" personalAssistant FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "producedMovies" producedMovies (FC.list movieBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "assistantOrSecondUnitDirector" assistantOrSecondUnitDirector FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "gameAuthor" gameAuthor FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publicityArtist" publicityArtist FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "directedMovies" directedMovies (FC.list movieBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "teleplayAuthoredEpisodes" teleplayAuthoredEpisodes (FC.list episodeBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publicationStaff" publicationStaff FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "soundDepartment" soundDepartment FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "composer" composer FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publicationArtist" publicationArtist FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "referenceArtist" referenceArtist FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "writtenMovies" writtenMovies (FC.list movieBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "comicColorArtist" comicColorArtist FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "comicAuthor" comicAuthor FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "director" director FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "artDepartment" artDepartment FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "writtenEpisodes" writtenEpisodes (FC.list episodeBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publicationDesigner" publicationDesigner FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "comicInkArtist" comicInkArtist FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "comicArtist" comicArtist FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "referenceAuthor" referenceAuthor FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "cameraAndElectricalDepartment" cameraAndElectricalDepartment FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "exhibitAndAttractionStaff" exhibitAndAttractionStaff FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stuntDepartment" stuntDepartment FC.boolean
+      #+ FC.optional "personalAssistant" personalAssistant FC.boolean
+      #+ FC.optional "producedMovies" producedMovies (FC.list movieBaseSchema)
+      #+ FC.optional "assistantOrSecondUnitDirector" assistantOrSecondUnitDirector FC.boolean
+      #+ FC.optional "gameAuthor" gameAuthor FC.boolean
+      #+ FC.optional "publicityArtist" publicityArtist FC.boolean
+      #+ FC.optional "directedMovies" directedMovies (FC.list movieBaseSchema)
+      #+ FC.optional "teleplayAuthoredEpisodes" teleplayAuthoredEpisodes (FC.list episodeBaseSchema)
+      #+ FC.optional "publicationStaff" publicationStaff FC.boolean
+      #+ FC.optional "soundDepartment" soundDepartment FC.boolean
+      #+ FC.optional "composer" composer FC.boolean
+      #+ FC.optional "publicationArtist" publicationArtist FC.boolean
+      #+ FC.optional "referenceArtist" referenceArtist FC.boolean
+      #+ FC.optional "writtenMovies" writtenMovies (FC.list movieBaseSchema)
+      #+ FC.optional "comicColorArtist" comicColorArtist FC.boolean
+      #+ FC.optional "comicAuthor" comicAuthor FC.boolean
+      #+ FC.optional "director" director FC.boolean
+      #+ FC.optional "artDepartment" artDepartment FC.boolean
+      #+ FC.optional "writtenEpisodes" writtenEpisodes (FC.list episodeBaseSchema)
+      #+ FC.optional "publicationDesigner" publicationDesigner FC.boolean
+      #+ FC.optional "comicInkArtist" comicInkArtist FC.boolean
+      #+ FC.optional "comicArtist" comicArtist FC.boolean
+      #+ FC.optional "referenceAuthor" referenceAuthor FC.boolean
+      #+ FC.optional "cameraAndElectricalDepartment" cameraAndElectricalDepartment FC.boolean
+      #+ FC.optional "exhibitAndAttractionStaff" exhibitAndAttractionStaff FC.boolean
+      #+ FC.optional "stuntDepartment" stuntDepartment FC.boolean
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "writer" writer FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "audioAuthor" audioAuthor FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "episodes" episodes (FC.list episodeBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "transportationDepartment" transportationDepartment FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "screenplayAuthoredMovies" screenplayAuthoredMovies (FC.list movieBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "linguist" linguist FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "cinematographer" cinematographer FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "dateOfDeath" dateOfDeath FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "locationStaff" locationStaff FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "storyAuthoredMovies" storyAuthoredMovies (FC.list movieBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "calendarArtist" calendarArtist FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "costumeDepartment" costumeDepartment FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "novelArtist" novelArtist FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "artDirector" artDirector FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "directedEpisodes" directedEpisodes (FC.list episodeBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionAssociate" productionAssociate FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "cbsDigitalStaff" cbsDigitalStaff FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "storyEditor" storyEditor FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "comicInteriorArtist" comicInteriorArtist FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "specialFeaturesStaff" specialFeaturesStaff FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "scienceConsultant" scienceConsultant FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "gender" gender genderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "dateOfBirth" dateOfBirth FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publicationEditor" publicationEditor FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "placeOfDeath" placeOfDeath FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "novelAuthor" novelAuthor FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "ilmProductionStaff" ilmProductionStaff FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "producer" producer FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "musicDepartment" musicDepartment FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "comicPencilArtist" comicPencilArtist FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "specialAndVisualEffectsStaff" specialAndVisualEffectsStaff FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "makeupStaff" makeupStaff FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "movies" movies (FC.list movieBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "storyAuthoredEpisodes" storyAuthoredEpisodes (FC.list episodeBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "comicLetterArtist" comicLetterArtist FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "placeOfBirth" placeOfBirth FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionDesigner" productionDesigner FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "videoGameProductionStaff" videoGameProductionStaff FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionStaff" productionStaff FC.boolean
+      #+ FC.optional "writer" writer FC.boolean
+      #+ FC.optional "audioAuthor" audioAuthor FC.boolean
+      #+ FC.optional "episodes" episodes (FC.list episodeBaseSchema)
+      #+ FC.optional "transportationDepartment" transportationDepartment FC.boolean
+      #+ FC.optional "screenplayAuthoredMovies" screenplayAuthoredMovies (FC.list movieBaseSchema)
+      #+ FC.optional "linguist" linguist FC.boolean
+      #+ FC.optional "cinematographer" cinematographer FC.boolean
+      #+ FC.optional "dateOfDeath" dateOfDeath FC.text
+      #+ FC.optional "locationStaff" locationStaff FC.boolean
+      #+ FC.optional "storyAuthoredMovies" storyAuthoredMovies (FC.list movieBaseSchema)
+      #+ FC.optional "calendarArtist" calendarArtist FC.boolean
+      #+ FC.optional "costumeDepartment" costumeDepartment FC.boolean
+      #+ FC.optional "novelArtist" novelArtist FC.boolean
+      #+ FC.optional "artDirector" artDirector FC.boolean
+      #+ FC.optional "directedEpisodes" directedEpisodes (FC.list episodeBaseSchema)
+      #+ FC.optional "productionAssociate" productionAssociate FC.boolean
+      #+ FC.optional "cbsDigitalStaff" cbsDigitalStaff FC.boolean
+      #+ FC.optional "storyEditor" storyEditor FC.boolean
+      #+ FC.optional "comicInteriorArtist" comicInteriorArtist FC.boolean
+      #+ FC.optional "specialFeaturesStaff" specialFeaturesStaff FC.boolean
+      #+ FC.optional "scienceConsultant" scienceConsultant FC.boolean
+      #+ FC.optional "gender" gender genderSchema
+      #+ FC.optional "dateOfBirth" dateOfBirth FC.text
+      #+ FC.optional "publicationEditor" publicationEditor FC.boolean
+      #+ FC.optional "placeOfDeath" placeOfDeath FC.text
+      #+ FC.optional "novelAuthor" novelAuthor FC.boolean
+      #+ FC.optional "ilmProductionStaff" ilmProductionStaff FC.boolean
+      #+ FC.optional "producer" producer FC.boolean
+      #+ FC.optional "musicDepartment" musicDepartment FC.boolean
+      #+ FC.optional "comicPencilArtist" comicPencilArtist FC.boolean
+      #+ FC.optional "specialAndVisualEffectsStaff" specialAndVisualEffectsStaff FC.boolean
+      #+ FC.optional "makeupStaff" makeupStaff FC.boolean
+      #+ FC.optional "movies" movies (FC.list movieBaseSchema)
+      #+ FC.optional "storyAuthoredEpisodes" storyAuthoredEpisodes (FC.list episodeBaseSchema)
+      #+ FC.optional "comicLetterArtist" comicLetterArtist FC.boolean
+      #+ FC.optional "placeOfBirth" placeOfBirth FC.text
+      #+ FC.optional "productionDesigner" productionDesigner FC.boolean
+      #+ FC.optional "videoGameProductionStaff" videoGameProductionStaff FC.boolean
+      #+ FC.optional "productionStaff" productionStaff FC.boolean

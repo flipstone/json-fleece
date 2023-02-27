@@ -32,17 +32,17 @@ organizationBaseSchema :: FC.Fleece schema => schema OrganizationBase
 organizationBaseSchema =
   FC.object $
     FC.constructor OrganizationBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "alternateReality" alternateReality FC.boolean
+      #+ FC.optional "alternateReality" alternateReality FC.boolean
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "militaryOrganization" militaryOrganization FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "prisonOrPenalColony" prisonOrPenalColony FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "intergovernmentalOrganization" intergovernmentalOrganization FC.boolean
+      #+ FC.optional "militaryOrganization" militaryOrganization FC.boolean
+      #+ FC.optional "prisonOrPenalColony" prisonOrPenalColony FC.boolean
+      #+ FC.optional "intergovernmentalOrganization" intergovernmentalOrganization FC.boolean
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "governmentAgency" governmentAgency FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "mirror" mirror FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "militaryUnit" militaryUnit FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "researchOrganization" researchOrganization FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "government" government FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "lawEnforcementAgency" lawEnforcementAgency FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sportOrganization" sportOrganization FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "medicalOrganization" medicalOrganization FC.boolean
+      #+ FC.optional "governmentAgency" governmentAgency FC.boolean
+      #+ FC.optional "mirror" mirror FC.boolean
+      #+ FC.optional "militaryUnit" militaryUnit FC.boolean
+      #+ FC.optional "researchOrganization" researchOrganization FC.boolean
+      #+ FC.optional "government" government FC.boolean
+      #+ FC.optional "lawEnforcementAgency" lawEnforcementAgency FC.boolean
+      #+ FC.optional "sportOrganization" sportOrganization FC.boolean
+      #+ FC.optional "medicalOrganization" medicalOrganization FC.boolean

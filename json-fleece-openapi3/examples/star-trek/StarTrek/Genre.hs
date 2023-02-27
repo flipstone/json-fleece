@@ -20,5 +20,5 @@ genreSchema :: FC.Fleece schema => schema Genre
 genreSchema =
   FC.object $
     FC.constructor Genre
-      #+ FC.optionalField FC.OmitKey_DelegateNull "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "uid" uid FC.text
+      #+ FC.optional "name" name FC.text
+      #+ FC.optional "uid" uid FC.text

@@ -50,31 +50,31 @@ movieFullSchema :: FC.Fleece schema => schema MovieFull
 movieFullSchema =
   FC.object $
     FC.constructor MovieFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleJapanese" titleJapanese FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "directors" directors (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearFrom" yearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateTo" stardateTo FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "standInPerformers" standInPerformers (FC.list performerBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleItalian" titleItalian FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "performers" performers (FC.list performerBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleBulgarian" titleBulgarian FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "usReleaseDate" usReleaseDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stuntPerformers" stuntPerformers (FC.list performerBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titlePolish" titlePolish FC.text
+      #+ FC.optional "titleJapanese" titleJapanese FC.text
+      #+ FC.optional "directors" directors (FC.list staffBaseSchema)
+      #+ FC.optional "yearFrom" yearFrom FC.integer
+      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "standInPerformers" standInPerformers (FC.list performerBaseSchema)
+      #+ FC.optional "titleItalian" titleItalian FC.text
+      #+ FC.optional "performers" performers (FC.list performerBaseSchema)
+      #+ FC.optional "titleBulgarian" titleBulgarian FC.text
+      #+ FC.optional "usReleaseDate" usReleaseDate FC.text
+      #+ FC.optional "stuntPerformers" stuntPerformers (FC.list performerBaseSchema)
+      #+ FC.optional "titlePolish" titlePolish FC.text
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "storyAuthors" storyAuthors (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateFrom" stardateFrom FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleSpanish" titleSpanish FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "characters" characters (FC.list characterBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleCatalan" titleCatalan FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleRussian" titleRussian FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleGerman" titleGerman FC.text
+      #+ FC.optional "storyAuthors" storyAuthors (FC.list staffBaseSchema)
+      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "titleSpanish" titleSpanish FC.text
+      #+ FC.optional "characters" characters (FC.list characterBaseSchema)
+      #+ FC.optional "titleCatalan" titleCatalan FC.text
+      #+ FC.optional "titleRussian" titleRussian FC.text
+      #+ FC.optional "titleGerman" titleGerman FC.text
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "producers" producers (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearTo" yearTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "staff" staff (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleSerbian" titleSerbian FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleChineseTraditional" titleChineseTraditional FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "screenplayAuthors" screenplayAuthors (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "writers" writers (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "mainDirector" mainDirector staffBaseSchema
+      #+ FC.optional "producers" producers (FC.list staffBaseSchema)
+      #+ FC.optional "yearTo" yearTo FC.integer
+      #+ FC.optional "staff" staff (FC.list staffBaseSchema)
+      #+ FC.optional "titleSerbian" titleSerbian FC.text
+      #+ FC.optional "titleChineseTraditional" titleChineseTraditional FC.text
+      #+ FC.optional "screenplayAuthors" screenplayAuthors (FC.list staffBaseSchema)
+      #+ FC.optional "writers" writers (FC.list staffBaseSchema)
+      #+ FC.optional "mainDirector" mainDirector staffBaseSchema

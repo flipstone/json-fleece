@@ -24,10 +24,10 @@ responsePageSchema :: FC.Fleece schema => schema ResponsePage
 responsePageSchema =
   FC.object $
     FC.constructor ResponsePage
-      #+ FC.optionalField FC.OmitKey_DelegateNull "totalElements" totalElements FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfElements" numberOfElements FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "pageNumber" pageNumber FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "totalPages" totalPages FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "pageSize" pageSize FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "firstPage" firstPage FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "lastPage" lastPage FC.boolean
+      #+ FC.optional "totalElements" totalElements FC.integer
+      #+ FC.optional "numberOfElements" numberOfElements FC.integer
+      #+ FC.optional "pageNumber" pageNumber FC.integer
+      #+ FC.optional "totalPages" totalPages FC.integer
+      #+ FC.optional "pageSize" pageSize FC.integer
+      #+ FC.optional "firstPage" firstPage FC.boolean
+      #+ FC.optional "lastPage" lastPage FC.boolean

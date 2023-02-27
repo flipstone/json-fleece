@@ -31,11 +31,11 @@ spacecraftFullSchema =
   FC.object $
     FC.constructor SpacecraftFull
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "registry" registry FC.text
+      #+ FC.optional "registry" registry FC.text
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "status" status FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "owner" owner organizationBaseSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "operator" operator organizationBaseSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "spacecraftClass" spacecraftClass spacecraftClassBaseSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "dateStatus" dateStatus FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "spacecraftTypes" spacecraftTypes (FC.list spacecraftTypeSchema)
+      #+ FC.optional "status" status FC.text
+      #+ FC.optional "owner" owner organizationBaseSchema
+      #+ FC.optional "operator" operator organizationBaseSchema
+      #+ FC.optional "spacecraftClass" spacecraftClass spacecraftClassBaseSchema
+      #+ FC.optional "dateStatus" dateStatus FC.text
+      #+ FC.optional "spacecraftTypes" spacecraftTypes (FC.list spacecraftTypeSchema)

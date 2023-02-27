@@ -25,10 +25,10 @@ magazineSeriesBaseSchema :: FC.Fleece schema => schema MagazineSeriesBase
 magazineSeriesBaseSchema =
   FC.object $
     FC.constructor MagazineSeriesBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonthFrom" publishedMonthFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYearTo" publishedYearTo FC.integer
+      #+ FC.optional "publishedMonthFrom" publishedMonthFrom FC.integer
+      #+ FC.optional "publishedYearTo" publishedYearTo FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfIssues" numberOfIssues FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYearFrom" publishedYearFrom FC.integer
+      #+ FC.optional "numberOfIssues" numberOfIssues FC.integer
+      #+ FC.optional "publishedYearFrom" publishedYearFrom FC.integer
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonthTo" publishedMonthTo FC.integer
+      #+ FC.optional "publishedMonthTo" publishedMonthTo FC.integer

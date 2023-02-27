@@ -31,15 +31,15 @@ seriesBaseSchema :: FC.Fleece schema => schema SeriesBase
 seriesBaseSchema =
   FC.object $
     FC.constructor SeriesBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionCompany" productionCompany companyHeaderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "originalRunStartDate" originalRunStartDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "originalBroadcaster" originalBroadcaster companyHeaderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionStartYear" productionStartYear FC.integer
+      #+ FC.optional "productionCompany" productionCompany companyHeaderSchema
+      #+ FC.optional "originalRunStartDate" originalRunStartDate FC.text
+      #+ FC.optional "originalBroadcaster" originalBroadcaster companyHeaderSchema
+      #+ FC.optional "productionStartYear" productionStartYear FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "episodesCount" episodesCount FC.integer
+      #+ FC.optional "episodesCount" episodesCount FC.integer
       #+ FC.required "abbreviation" abbreviation FC.text
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "seasonsCount" seasonsCount FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "featureLengthEpisodesCount" featureLengthEpisodesCount FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionEndYear" productionEndYear FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "originalRunEndDate" originalRunEndDate FC.text
+      #+ FC.optional "seasonsCount" seasonsCount FC.integer
+      #+ FC.optional "featureLengthEpisodesCount" featureLengthEpisodesCount FC.integer
+      #+ FC.optional "productionEndYear" productionEndYear FC.integer
+      #+ FC.optional "originalRunEndDate" originalRunEndDate FC.text

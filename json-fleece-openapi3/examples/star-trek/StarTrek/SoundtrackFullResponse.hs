@@ -19,4 +19,4 @@ soundtrackFullResponseSchema :: FC.Fleece schema => schema SoundtrackFullRespons
 soundtrackFullResponseSchema =
   FC.object $
     FC.constructor SoundtrackFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "soundtrack" soundtrack soundtrackFullSchema
+      #+ FC.optional "soundtrack" soundtrack soundtrackFullSchema

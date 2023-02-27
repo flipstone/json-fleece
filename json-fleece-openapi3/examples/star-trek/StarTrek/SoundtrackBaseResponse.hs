@@ -23,6 +23,6 @@ soundtrackBaseResponseSchema :: FC.Fleece schema => schema SoundtrackBaseRespons
 soundtrackBaseResponseSchema =
   FC.object $
     FC.constructor SoundtrackBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "soundtracks" soundtracks (FC.list soundtrackBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "soundtracks" soundtracks (FC.list soundtrackBaseSchema)
+      #+ FC.optional "page" page responsePageSchema

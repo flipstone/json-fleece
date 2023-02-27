@@ -38,21 +38,21 @@ companyBaseSchema =
   FC.object $
     FC.constructor CompanyBase
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionCompany" productionCompany FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "makeUpEffectsStudio" makeUpEffectsStudio FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "recordLabel" recordLabel FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "postProductionCompany" postProductionCompany FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "conglomerate" conglomerate FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "videoGameCompany" videoGameCompany FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "tvAndFilmProductionCompany" tvAndFilmProductionCompany FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "broadcaster" broadcaster FC.boolean
+      #+ FC.optional "productionCompany" productionCompany FC.boolean
+      #+ FC.optional "makeUpEffectsStudio" makeUpEffectsStudio FC.boolean
+      #+ FC.optional "recordLabel" recordLabel FC.boolean
+      #+ FC.optional "postProductionCompany" postProductionCompany FC.boolean
+      #+ FC.optional "conglomerate" conglomerate FC.boolean
+      #+ FC.optional "videoGameCompany" videoGameCompany FC.boolean
+      #+ FC.optional "tvAndFilmProductionCompany" tvAndFilmProductionCompany FC.boolean
+      #+ FC.optional "broadcaster" broadcaster FC.boolean
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "mattePaintingCompany" mattePaintingCompany FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "modelAndMiniatureEffectsCompany" modelAndMiniatureEffectsCompany FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "specialEffectsCompany" specialEffectsCompany FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "gameCompany" gameCompany FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "distributor" distributor FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "propCompany" propCompany FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "digitalVisualEffectsCompany" digitalVisualEffectsCompany FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "collectibleCompany" collectibleCompany FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "filmEquipmentCompany" filmEquipmentCompany FC.boolean
+      #+ FC.optional "mattePaintingCompany" mattePaintingCompany FC.boolean
+      #+ FC.optional "modelAndMiniatureEffectsCompany" modelAndMiniatureEffectsCompany FC.boolean
+      #+ FC.optional "specialEffectsCompany" specialEffectsCompany FC.boolean
+      #+ FC.optional "gameCompany" gameCompany FC.boolean
+      #+ FC.optional "distributor" distributor FC.boolean
+      #+ FC.optional "propCompany" propCompany FC.boolean
+      #+ FC.optional "digitalVisualEffectsCompany" digitalVisualEffectsCompany FC.boolean
+      #+ FC.optional "collectibleCompany" collectibleCompany FC.boolean
+      #+ FC.optional "filmEquipmentCompany" filmEquipmentCompany FC.boolean

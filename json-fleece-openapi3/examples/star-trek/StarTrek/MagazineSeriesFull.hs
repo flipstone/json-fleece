@@ -31,13 +31,13 @@ magazineSeriesFullSchema :: FC.Fleece schema => schema MagazineSeriesFull
 magazineSeriesFullSchema =
   FC.object $
     FC.constructor MagazineSeriesFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishers" publishers (FC.list companyBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "magazines" magazines (FC.list magazineBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonthFrom" publishedMonthFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYearTo" publishedYearTo FC.integer
+      #+ FC.optional "publishers" publishers (FC.list companyBaseSchema)
+      #+ FC.optional "magazines" magazines (FC.list magazineBaseSchema)
+      #+ FC.optional "publishedMonthFrom" publishedMonthFrom FC.integer
+      #+ FC.optional "publishedYearTo" publishedYearTo FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfIssues" numberOfIssues FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYearFrom" publishedYearFrom FC.integer
+      #+ FC.optional "numberOfIssues" numberOfIssues FC.integer
+      #+ FC.optional "publishedYearFrom" publishedYearFrom FC.integer
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonthTo" publishedMonthTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "editors" editors (FC.list staffBaseSchema)
+      #+ FC.optional "publishedMonthTo" publishedMonthTo FC.integer
+      #+ FC.optional "editors" editors (FC.list staffBaseSchema)

@@ -23,6 +23,6 @@ staffBaseResponseSchema :: FC.Fleece schema => schema StaffBaseResponse
 staffBaseResponseSchema =
   FC.object $
     FC.constructor StaffBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "staff" staff (FC.list staffBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "staff" staff (FC.list staffBaseSchema)

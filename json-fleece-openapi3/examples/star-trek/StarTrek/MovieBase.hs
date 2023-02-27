@@ -38,21 +38,21 @@ movieBaseSchema :: FC.Fleece schema => schema MovieBase
 movieBaseSchema =
   FC.object $
     FC.constructor MovieBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleJapanese" titleJapanese FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearFrom" yearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateTo" stardateTo FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleItalian" titleItalian FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleBulgarian" titleBulgarian FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "usReleaseDate" usReleaseDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titlePolish" titlePolish FC.text
+      #+ FC.optional "titleJapanese" titleJapanese FC.text
+      #+ FC.optional "yearFrom" yearFrom FC.integer
+      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "titleItalian" titleItalian FC.text
+      #+ FC.optional "titleBulgarian" titleBulgarian FC.text
+      #+ FC.optional "usReleaseDate" usReleaseDate FC.text
+      #+ FC.optional "titlePolish" titlePolish FC.text
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateFrom" stardateFrom FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleSpanish" titleSpanish FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleCatalan" titleCatalan FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleRussian" titleRussian FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleGerman" titleGerman FC.text
+      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "titleSpanish" titleSpanish FC.text
+      #+ FC.optional "titleCatalan" titleCatalan FC.text
+      #+ FC.optional "titleRussian" titleRussian FC.text
+      #+ FC.optional "titleGerman" titleGerman FC.text
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearTo" yearTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleSerbian" titleSerbian FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleChineseTraditional" titleChineseTraditional FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "mainDirector" mainDirector staffHeaderSchema
+      #+ FC.optional "yearTo" yearTo FC.integer
+      #+ FC.optional "titleSerbian" titleSerbian FC.text
+      #+ FC.optional "titleChineseTraditional" titleChineseTraditional FC.text
+      #+ FC.optional "mainDirector" mainDirector staffHeaderSchema

@@ -23,4 +23,4 @@ medicalConditionFullSchema =
     FC.constructor MedicalConditionFull
       #+ FC.required "name" name FC.text
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "psychologicalCondition" psychologicalCondition FC.boolean
+      #+ FC.optional "psychologicalCondition" psychologicalCondition FC.boolean

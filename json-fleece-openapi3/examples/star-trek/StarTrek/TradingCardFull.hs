@@ -27,10 +27,10 @@ tradingCardFullSchema :: FC.Fleece schema => schema TradingCardFull
 tradingCardFullSchema =
   FC.object $
     FC.constructor TradingCardFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "number" number FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "tradingCardSet" tradingCardSet tradingCardSetBaseSchema
+      #+ FC.optional "number" number FC.text
+      #+ FC.optional "tradingCardSet" tradingCardSet tradingCardSetBaseSchema
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "releaseYear" releaseYear FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionRun" productionRun FC.integer
+      #+ FC.optional "releaseYear" releaseYear FC.integer
+      #+ FC.optional "productionRun" productionRun FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "tradingCardDeck" tradingCardDeck tradingCardDeckBaseSchema
+      #+ FC.optional "tradingCardDeck" tradingCardDeck tradingCardDeckBaseSchema

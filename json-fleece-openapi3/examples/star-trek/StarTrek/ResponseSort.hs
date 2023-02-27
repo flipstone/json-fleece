@@ -19,4 +19,4 @@ responseSortSchema :: FC.Fleece schema => schema ResponseSort
 responseSortSchema =
   FC.object $
     FC.constructor ResponseSort
-      #+ FC.optionalField FC.OmitKey_DelegateNull "clauses" clauses (FC.list responseSortClauseSchema)
+      #+ FC.optional "clauses" clauses (FC.list responseSortClauseSchema)

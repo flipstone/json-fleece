@@ -22,7 +22,7 @@ characterSpeciesSchema :: FC.Fleece schema => schema CharacterSpecies
 characterSpeciesSchema =
   FC.object $
     FC.constructor CharacterSpecies
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numerator" numerator FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "denominator" denominator FC.integer
+      #+ FC.optional "numerator" numerator FC.integer
+      #+ FC.optional "name" name FC.text
+      #+ FC.optional "uid" uid FC.text
+      #+ FC.optional "denominator" denominator FC.integer

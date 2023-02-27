@@ -23,6 +23,6 @@ elementBaseResponseSchema :: FC.Fleece schema => schema ElementBaseResponse
 elementBaseResponseSchema =
   FC.object $
     FC.constructor ElementBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "elements" elements (FC.list elementBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "elements" elements (FC.list elementBaseSchema)

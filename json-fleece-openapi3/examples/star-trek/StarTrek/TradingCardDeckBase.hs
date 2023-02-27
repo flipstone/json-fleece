@@ -23,7 +23,7 @@ tradingCardDeckBaseSchema :: FC.Fleece schema => schema TradingCardDeckBase
 tradingCardDeckBaseSchema =
   FC.object $
     FC.constructor TradingCardDeckBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "tradingCardSet" tradingCardSet tradingCardSetHeaderSchema
+      #+ FC.optional "tradingCardSet" tradingCardSet tradingCardSetHeaderSchema
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "frequency" frequency FC.text
+      #+ FC.optional "frequency" frequency FC.text
       #+ FC.required "uid" uid FC.text

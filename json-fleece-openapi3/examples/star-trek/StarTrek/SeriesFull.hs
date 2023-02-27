@@ -35,17 +35,17 @@ seriesFullSchema :: FC.Fleece schema => schema SeriesFull
 seriesFullSchema =
   FC.object $
     FC.constructor SeriesFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionCompany" productionCompany companyBaseSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "originalRunStartDate" originalRunStartDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "originalBroadcaster" originalBroadcaster companyBaseSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionStartYear" productionStartYear FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "seasons" seasons (FC.list seasonBaseSchema)
+      #+ FC.optional "productionCompany" productionCompany companyBaseSchema
+      #+ FC.optional "originalRunStartDate" originalRunStartDate FC.text
+      #+ FC.optional "originalBroadcaster" originalBroadcaster companyBaseSchema
+      #+ FC.optional "productionStartYear" productionStartYear FC.integer
+      #+ FC.optional "seasons" seasons (FC.list seasonBaseSchema)
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "episodesCount" episodesCount FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "episodes" episodes (FC.list episodeBaseSchema)
+      #+ FC.optional "episodesCount" episodesCount FC.integer
+      #+ FC.optional "episodes" episodes (FC.list episodeBaseSchema)
       #+ FC.required "abbreviation" abbreviation FC.text
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "seasonsCount" seasonsCount FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "featureLengthEpisodesCount" featureLengthEpisodesCount FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionEndYear" productionEndYear FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "originalRunEndDate" originalRunEndDate FC.text
+      #+ FC.optional "seasonsCount" seasonsCount FC.integer
+      #+ FC.optional "featureLengthEpisodesCount" featureLengthEpisodesCount FC.integer
+      #+ FC.optional "productionEndYear" productionEndYear FC.integer
+      #+ FC.optional "originalRunEndDate" originalRunEndDate FC.text

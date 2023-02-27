@@ -19,4 +19,4 @@ companyFullResponseSchema :: FC.Fleece schema => schema CompanyFullResponse
 companyFullResponseSchema =
   FC.object $
     FC.constructor CompanyFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "company" company companyFullSchema
+      #+ FC.optional "company" company companyFullSchema

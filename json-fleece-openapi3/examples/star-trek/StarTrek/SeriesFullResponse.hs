@@ -19,4 +19,4 @@ seriesFullResponseSchema :: FC.Fleece schema => schema SeriesFullResponse
 seriesFullResponseSchema =
   FC.object $
     FC.constructor SeriesFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "series" series seriesFullSchema
+      #+ FC.optional "series" series seriesFullSchema

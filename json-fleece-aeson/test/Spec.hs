@@ -47,15 +47,10 @@ tests =
   , ("prop_encode_validate", prop_encode_validate)
   , ("prop_decode_validate", prop_decode_validate)
   , ("prop_decode_nullableField_Failure", prop_decode_nullableField_Failure)
-  , ("prop_decode_optionalField_EmitNull_AcceptNull", prop_decode_optionalField_EmitNull_AcceptNull)
-  , ("prop_encode_optionalField_EmitNull_AcceptNull", prop_encode_optionalField_EmitNull_AcceptNull)
-  , ("prop_decode_optionalField_OmitKey_AcceptNull", prop_decode_optionalField_OmitKey_AcceptNull)
-  , ("prop_encode_optionalField_OmitKey_AcceptNull", prop_encode_optionalField_OmitKey_AcceptNull)
-  , ("prop_decode_optionalField_OmitKey_DelegateNull", prop_decode_optionalField_OmitKey_DelegateNull)
-  , ("prop_encode_optionalField_OmitKey_DelegateNull", prop_encode_optionalField_OmitKey_DelegateNull)
-  , ("prop_decode_optionalField_OmitKey_DelegateNull_Failure", prop_decode_optionalField_OmitKey_DelegateNull_Failure)
-  , ("prop_encode_optionalField_OmitKey_DelegateNull_Nullable", prop_encode_optionalField_OmitKey_DelegateNull_Nullable)
-  , ("prop_decode_optionalField_OmitKey_DelegateNull_Nullable", prop_decode_optionalField_OmitKey_DelegateNull_Nullable)
+  , ("prop_decode_optionalNullableFieldEmitNull", prop_decode_optionalNullableFieldEmitNull)
+  , ("prop_encode_optionalNullableFieldEmitNull", prop_encode_optionalNullableFieldEmitNull)
+  , ("prop_decode_optionalNullableFieldOmitKey", prop_decode_optionalNullableFieldOmitKey)
+  , ("prop_encode_optionalNullableFieldOmitKey", prop_encode_optionalNullableFieldOmitKey)
   , ("prop_decode_embeddedObject", prop_decode_embeddedObject)
   , ("prop_encode_embeddedObject", prop_encode_embeddedObject)
   ]
@@ -248,29 +243,29 @@ prop_encode_boundedEnum =
 prop_encode_nullableField :: HH.Property
 prop_encode_nullableField =
   HH.property $ do
-    mbText <- HH.forAll (Gen.maybe genText)
+    nullOrText <- HH.forAll (Gen.either (pure FC.Null) genText)
 
     let
       encoded =
         FA.encode
           Examples.nullableFieldSchema
-          (Examples.NullableField mbText)
+          (Examples.NullableField nullOrText)
 
       expected =
         encodeTestObject
-          ["nullableField" .= mbText]
+          ["nullableField" .= either (const Aeson.Null) Aeson.String nullOrText]
 
     encoded === expected
 
 prop_decode_nullableField :: HH.Property
 prop_decode_nullableField =
   HH.property $ do
-    mbText <- HH.forAll (Gen.maybe genText)
+    nullOrText <- HH.forAll (Gen.either (pure FC.Null) genText)
 
     let
       testInput =
         encodeTestObject
-          ["nullableField" .= mbText]
+          ["nullableField" .= either (const Aeson.Null) Aeson.String nullOrText]
 
       decoded =
         FA.decode
@@ -280,7 +275,7 @@ prop_decode_nullableField =
       expected =
         Right
           . Examples.NullableField
-          $ mbText
+          $ nullOrText
 
     decoded === expected
 
@@ -338,25 +333,25 @@ prop_decode_nullableField_Failure =
 
     decoded === expected
 
-prop_encode_optionalField_EmitNull_AcceptNull :: HH.Property
-prop_encode_optionalField_EmitNull_AcceptNull =
+prop_encode_optionalNullableFieldEmitNull :: HH.Property
+prop_encode_optionalNullableFieldEmitNull =
   HH.property $ do
     mbText <- HH.forAll (Gen.maybe genText)
 
     let
       encoded =
         FA.encode
-          Examples.optionalField_EmitNull_AcceptNullSchema
-          (Examples.OptionalField_EmitNull_AcceptNull mbText)
+          Examples.optionalNullableFieldEmitNullSchema
+          (Examples.OptionalNullableFieldEmitNull mbText)
 
       expected =
         encodeTestObject
-          ["optional_EmitNull_AcceptNull_Field" .= mbText]
+          ["optionalNullableField" .= mbText]
 
     encoded === expected
 
-prop_decode_optionalField_EmitNull_AcceptNull :: HH.Property
-prop_decode_optionalField_EmitNull_AcceptNull =
+prop_decode_optionalNullableFieldEmitNull :: HH.Property
+prop_decode_optionalNullableFieldEmitNull =
   HH.property $ do
     mbMbText <- HH.forAll (Gen.maybe (Gen.maybe genText))
 
@@ -364,43 +359,43 @@ prop_decode_optionalField_EmitNull_AcceptNull =
       testInput =
         encodeTestObject $
           case mbMbText of
-            Just mbText -> ["optional_EmitNull_AcceptNull_Field" .= mbText]
+            Just mbText -> ["optionalNullableField" .= mbText]
             Nothing -> []
 
       decoded =
         FA.decode
-          Examples.optionalField_EmitNull_AcceptNullSchema
+          Examples.optionalNullableFieldEmitNullSchema
           testInput
 
       expected =
         Right
-          . Examples.OptionalField_EmitNull_AcceptNull
+          . Examples.OptionalNullableFieldEmitNull
           . join
           $ mbMbText
 
     decoded === expected
 
-prop_encode_optionalField_OmitKey_AcceptNull :: HH.Property
-prop_encode_optionalField_OmitKey_AcceptNull =
+prop_encode_optionalNullableFieldOmitKey :: HH.Property
+prop_encode_optionalNullableFieldOmitKey =
   HH.property $ do
     mbText <- HH.forAll (Gen.maybe genText)
 
     let
       encoded =
         FA.encode
-          Examples.optionalField_OmitKey_AcceptNullSchema
-          (Examples.OptionalField_OmitKey_AcceptNull mbText)
+          Examples.optionalNullableFieldOmitKeySchema
+          (Examples.OptionalNullableFieldOmitKey mbText)
 
       expected =
         encodeTestObject $
           case mbText of
-            Just text -> ["optional_OmitKey_AcceptNull_Field" .= text]
+            Just text -> ["optionalNullableField" .= text]
             Nothing -> []
 
     encoded === expected
 
-prop_decode_optionalField_OmitKey_AcceptNull :: HH.Property
-prop_decode_optionalField_OmitKey_AcceptNull =
+prop_decode_optionalNullableFieldOmitKey :: HH.Property
+prop_decode_optionalNullableFieldOmitKey =
   HH.property $ do
     mbMbText <- HH.forAll (Gen.maybe (Gen.maybe genText))
 
@@ -408,123 +403,18 @@ prop_decode_optionalField_OmitKey_AcceptNull =
       testInput =
         encodeTestObject $
           case mbMbText of
-            Just mbText -> ["optional_OmitKey_AcceptNull_Field" .= mbText]
+            Just mbText -> ["optionalNullableField" .= mbText]
             Nothing -> []
 
       decoded =
         FA.decode
-          Examples.optionalField_OmitKey_AcceptNullSchema
+          Examples.optionalNullableFieldOmitKeySchema
           testInput
 
       expected =
         Right
-          . Examples.OptionalField_OmitKey_AcceptNull
+          . Examples.OptionalNullableFieldOmitKey
           . join
-          $ mbMbText
-
-    decoded === expected
-
-prop_encode_optionalField_OmitKey_DelegateNull :: HH.Property
-prop_encode_optionalField_OmitKey_DelegateNull =
-  HH.property $ do
-    mbText <- HH.forAll (Gen.maybe genText)
-
-    let
-      encoded =
-        FA.encode
-          Examples.optionalField_OmitKey_DelegateNullSchema
-          (Examples.OptionalField_OmitKey_DelegateNull mbText)
-
-      expected =
-        encodeTestObject $
-          case mbText of
-            Just text -> ["optional_OmitKey_DelegateNull_Field" .= text]
-            Nothing -> []
-
-    encoded === expected
-
-prop_decode_optionalField_OmitKey_DelegateNull :: HH.Property
-prop_decode_optionalField_OmitKey_DelegateNull =
-  HH.property $ do
-    mbText <- HH.forAll (Gen.maybe genText)
-
-    let
-      testInput =
-        encodeTestObject $
-          case mbText of
-            Just text -> ["optional_OmitKey_DelegateNull_Field" .= text]
-            Nothing -> []
-
-      decoded =
-        FA.decode
-          Examples.optionalField_OmitKey_DelegateNullSchema
-          testInput
-
-      expected =
-        Right
-          . Examples.OptionalField_OmitKey_DelegateNull
-          $ mbText
-
-    decoded === expected
-
-prop_decode_optionalField_OmitKey_DelegateNull_Failure :: HH.Property
-prop_decode_optionalField_OmitKey_DelegateNull_Failure =
-  HH.withTests 1 . HH.property $ do
-    let
-      testInput =
-        encodeTestObject
-          [ "optional_OmitKey_DelegateNull_Field" .= (Nothing :: Maybe T.Text)
-          ]
-
-      decoded =
-        FA.decode
-          Examples.optionalField_OmitKey_DelegateNullSchema
-          testInput
-
-      expected =
-        Left "Error in $['optional_OmitKey_DelegateNull_Field']: parsing text failed, expected String, but encountered Null"
-
-    decoded === expected
-
-prop_encode_optionalField_OmitKey_DelegateNull_Nullable :: HH.Property
-prop_encode_optionalField_OmitKey_DelegateNull_Nullable =
-  HH.property $ do
-    mbMbText <- HH.forAll (Gen.maybe (Gen.maybe genText))
-
-    let
-      encoded =
-        FA.encode
-          Examples.optionalField_OmitKey_DelegateNull_NullableSchema
-          (Examples.OptionalField_OmitKey_DelegateNull_Nullable mbMbText)
-
-      expected =
-        encodeTestObject $
-          case mbMbText of
-            Just mbText -> ["optional_OmitKey_DelegateNull_Nullable_Field" .= mbText]
-            Nothing -> []
-
-    encoded === expected
-
-prop_decode_optionalField_OmitKey_DelegateNull_Nullable :: HH.Property
-prop_decode_optionalField_OmitKey_DelegateNull_Nullable =
-  HH.property $ do
-    mbMbText <- HH.forAll (Gen.maybe (Gen.maybe genText))
-
-    let
-      testInput =
-        encodeTestObject $
-          case mbMbText of
-            Just mbText -> ["optional_OmitKey_DelegateNull_Nullable_Field" .= mbText]
-            Nothing -> []
-
-      decoded =
-        FA.decode
-          Examples.optionalField_OmitKey_DelegateNull_NullableSchema
-          testInput
-
-      expected =
-        Right
-          . Examples.OptionalField_OmitKey_DelegateNull_Nullable
           $ mbMbText
 
     decoded === expected

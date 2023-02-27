@@ -19,4 +19,4 @@ speciesFullResponseSchema :: FC.Fleece schema => schema SpeciesFullResponse
 speciesFullResponseSchema =
   FC.object $
     FC.constructor SpeciesFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "species" species speciesFullSchema
+      #+ FC.optional "species" species speciesFullSchema

@@ -57,36 +57,36 @@ videoReleaseFullSchema :: FC.Fleece schema => schema VideoReleaseFull
 videoReleaseFullSchema =
   FC.object $
     FC.constructor VideoReleaseFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "youTubeDigitalRelease" youTubeDigitalRelease FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfFeatureLengthEpisodes" numberOfFeatureLengthEpisodes FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "languagesSubtitles" languagesSubtitles (FC.list contentLanguageSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearFrom" yearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "iTunesDigitalRelease" iTunesDigitalRelease FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "format" format videoReleaseFormatSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "dailymotionDigitalRelease" dailymotionDigitalRelease FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "region1SlimlineReleaseDate" region1SlimlineReleaseDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "vuduDigitalRelease" vuduDigitalRelease FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "languagesDubbed" languagesDubbed (FC.list contentLanguageSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "amazonDigitalRelease" amazonDigitalRelease FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "region4AReleaseDate" region4AReleaseDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "runTime" runTime FC.integer
+      #+ FC.optional "youTubeDigitalRelease" youTubeDigitalRelease FC.boolean
+      #+ FC.optional "numberOfFeatureLengthEpisodes" numberOfFeatureLengthEpisodes FC.integer
+      #+ FC.optional "languagesSubtitles" languagesSubtitles (FC.list contentLanguageSchema)
+      #+ FC.optional "yearFrom" yearFrom FC.integer
+      #+ FC.optional "iTunesDigitalRelease" iTunesDigitalRelease FC.boolean
+      #+ FC.optional "format" format videoReleaseFormatSchema
+      #+ FC.optional "dailymotionDigitalRelease" dailymotionDigitalRelease FC.boolean
+      #+ FC.optional "region1SlimlineReleaseDate" region1SlimlineReleaseDate FC.text
+      #+ FC.optional "vuduDigitalRelease" vuduDigitalRelease FC.boolean
+      #+ FC.optional "languagesDubbed" languagesDubbed (FC.list contentLanguageSchema)
+      #+ FC.optional "amazonDigitalRelease" amazonDigitalRelease FC.boolean
+      #+ FC.optional "region4AReleaseDate" region4AReleaseDate FC.text
+      #+ FC.optional "runTime" runTime FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "ratings" ratings (FC.list contentRatingSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "vimeoDigitalRelease" vimeoDigitalRelease FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "region2SlimlineReleaseDate" region2SlimlineReleaseDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "googlePlayDigitalRelease" googlePlayDigitalRelease FC.boolean
+      #+ FC.optional "ratings" ratings (FC.list contentRatingSchema)
+      #+ FC.optional "vimeoDigitalRelease" vimeoDigitalRelease FC.boolean
+      #+ FC.optional "region2SlimlineReleaseDate" region2SlimlineReleaseDate FC.text
+      #+ FC.optional "googlePlayDigitalRelease" googlePlayDigitalRelease FC.boolean
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "region1AReleaseDate" region1AReleaseDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "xboxSmartGlassDigitalRelease" xboxSmartGlassDigitalRelease FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "references" references (FC.list referenceSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearTo" yearTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "ultraVioletDigitalRelease" ultraVioletDigitalRelease FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "series" series seriesBaseSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "region4SlimlineReleaseDate" region4SlimlineReleaseDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "languages" languages (FC.list contentLanguageSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "season" season seasonBaseSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "region2BReleaseDate" region2BReleaseDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "netflixDigitalRelease" netflixDigitalRelease FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfDataCarriers" numberOfDataCarriers FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "regionFreeReleaseDate" regionFreeReleaseDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfEpisodes" numberOfEpisodes FC.integer
+      #+ FC.optional "region1AReleaseDate" region1AReleaseDate FC.text
+      #+ FC.optional "xboxSmartGlassDigitalRelease" xboxSmartGlassDigitalRelease FC.boolean
+      #+ FC.optional "references" references (FC.list referenceSchema)
+      #+ FC.optional "yearTo" yearTo FC.integer
+      #+ FC.optional "ultraVioletDigitalRelease" ultraVioletDigitalRelease FC.boolean
+      #+ FC.optional "series" series seriesBaseSchema
+      #+ FC.optional "region4SlimlineReleaseDate" region4SlimlineReleaseDate FC.text
+      #+ FC.optional "languages" languages (FC.list contentLanguageSchema)
+      #+ FC.optional "season" season seasonBaseSchema
+      #+ FC.optional "region2BReleaseDate" region2BReleaseDate FC.text
+      #+ FC.optional "netflixDigitalRelease" netflixDigitalRelease FC.boolean
+      #+ FC.optional "numberOfDataCarriers" numberOfDataCarriers FC.integer
+      #+ FC.optional "regionFreeReleaseDate" regionFreeReleaseDate FC.text
+      #+ FC.optional "numberOfEpisodes" numberOfEpisodes FC.integer

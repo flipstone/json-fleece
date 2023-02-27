@@ -23,6 +23,6 @@ spacecraftBaseResponseSchema :: FC.Fleece schema => schema SpacecraftBaseRespons
 spacecraftBaseResponseSchema =
   FC.object $
     FC.constructor SpacecraftBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "spacecrafts" spacecrafts (FC.list spacecraftBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "spacecrafts" spacecrafts (FC.list spacecraftBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema

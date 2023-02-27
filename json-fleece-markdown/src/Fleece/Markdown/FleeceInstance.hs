@@ -5,6 +5,7 @@ module Fleece.Markdown.FleeceInstance
   , renderMarkdown
   ) where
 
+import Data.Coerce (coerce)
 import qualified Data.DList as DList
 import qualified Data.Map.Strict as Map
 import qualified Data.Text as T
@@ -83,10 +84,13 @@ instance FC.Fleece Markdown where
     markNullable
 
   required name _accessor fieldSchema =
-    Field (mkFieldDocs name Nothing fieldSchema)
+    Field (mkFieldDocs name True fieldSchema)
 
-  optionalField nullBehavior name _accessor fieldSchema =
-    Field (mkFieldDocs name (Just nullBehavior) fieldSchema)
+  optional name _accessor fieldSchema =
+    Field (mkFieldDocs name False fieldSchema)
+
+  mapField _f =
+    coerce
 
   constructor _f =
     Object mempty
@@ -146,7 +150,7 @@ primitiveMarkdown nameString =
         , schemaReferences = Map.empty
         }
 
-markNullable :: Markdown a -> Markdown (Maybe a)
+markNullable :: Markdown a -> Markdown (Either FC.Null a)
 markNullable (Markdown schemaDocs) =
   Markdown $
     SchemaDocumentation
@@ -159,27 +163,15 @@ markNullable (Markdown schemaDocs) =
 
 mkFieldDocs ::
   String ->
-  Maybe FC.NullBehavior ->
+  Bool ->
   Markdown a ->
   FieldDocumentation
-mkFieldDocs name mbNullBehavior (Markdown schemaDocs) =
+mkFieldDocs name required (Markdown schemaDocs) =
   let
-    doesSchemaAllowNull =
+    nullAllowed =
       case schemaNullability schemaDocs of
         NotNull -> False
         Nullable _notNullSchema -> True
-
-    required =
-      case mbNullBehavior of
-        Nothing -> True
-        Just _ -> False
-
-    nullAllowed =
-      case mbNullBehavior of
-        Nothing -> doesSchemaAllowNull
-        Just FC.EmitNull_AcceptNull -> True
-        Just FC.OmitKey_AcceptNull -> True
-        Just FC.OmitKey_DelegateNull -> doesSchemaAllowNull
   in
     FieldDocumentation
       { fieldName = T.pack name

@@ -23,6 +23,6 @@ literatureBaseResponseSchema :: FC.Fleece schema => schema LiteratureBaseRespons
 literatureBaseResponseSchema =
   FC.object $
     FC.constructor LiteratureBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "literature" literature (FC.list literatureBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "literature" literature (FC.list literatureBaseSchema)
+      #+ FC.optional "page" page responsePageSchema

@@ -34,16 +34,16 @@ magazineFullSchema :: FC.Fleece schema => schema MagazineFull
 magazineFullSchema =
   FC.object $
     FC.constructor MagazineFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "magazineSeries" magazineSeries (FC.list magazineSeriesBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishers" publishers (FC.list companyBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonth" publishedMonth FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYear" publishedYear FC.integer
+      #+ FC.optional "magazineSeries" magazineSeries (FC.list magazineSeriesBaseSchema)
+      #+ FC.optional "publishers" publishers (FC.list companyBaseSchema)
+      #+ FC.optional "publishedMonth" publishedMonth FC.integer
+      #+ FC.optional "publishedYear" publishedYear FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedDay" publishedDay FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "coverYear" coverYear FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "issueNumber" issueNumber FC.text
+      #+ FC.optional "publishedDay" publishedDay FC.integer
+      #+ FC.optional "coverYear" coverYear FC.integer
+      #+ FC.optional "issueNumber" issueNumber FC.text
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "coverDay" coverDay FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfPages" numberOfPages FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "coverMonth" coverMonth FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "editors" editors (FC.list staffBaseSchema)
+      #+ FC.optional "coverDay" coverDay FC.integer
+      #+ FC.optional "numberOfPages" numberOfPages FC.integer
+      #+ FC.optional "coverMonth" coverMonth FC.integer
+      #+ FC.optional "editors" editors (FC.list staffBaseSchema)

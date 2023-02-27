@@ -19,4 +19,4 @@ comicCollectionFullResponseSchema :: FC.Fleece schema => schema ComicCollectionF
 comicCollectionFullResponseSchema =
   FC.object $
     FC.constructor ComicCollectionFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "comicCollection" comicCollection comicCollectionFullSchema
+      #+ FC.optional "comicCollection" comicCollection comicCollectionFullSchema

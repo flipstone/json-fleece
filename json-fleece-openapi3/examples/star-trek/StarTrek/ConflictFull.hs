@@ -35,17 +35,17 @@ conflictFullSchema :: FC.Fleece schema => schema ConflictFull
 conflictFullSchema =
   FC.object $
     FC.constructor ConflictFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "alternateReality" alternateReality FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "firstSideCommanders" firstSideCommanders (FC.list characterBaseSchema)
+      #+ FC.optional "alternateReality" alternateReality FC.boolean
+      #+ FC.optional "firstSideCommanders" firstSideCommanders (FC.list characterBaseSchema)
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "secondSideCommanders" secondSideCommanders (FC.list characterBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearFrom" yearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "earthConflict" earthConflict FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "dominionWarBattle" dominionWarBattle FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "firstSideBelligerents" firstSideBelligerents (FC.list organizationBaseSchema)
+      #+ FC.optional "secondSideCommanders" secondSideCommanders (FC.list characterBaseSchema)
+      #+ FC.optional "yearFrom" yearFrom FC.integer
+      #+ FC.optional "earthConflict" earthConflict FC.boolean
+      #+ FC.optional "dominionWarBattle" dominionWarBattle FC.boolean
+      #+ FC.optional "firstSideBelligerents" firstSideBelligerents (FC.list organizationBaseSchema)
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "secondSideBelligerents" secondSideBelligerents (FC.list organizationBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "klingonWar" klingonWar FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "federationWar" federationWar FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearTo" yearTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "locations" locations (FC.list locationBaseSchema)
+      #+ FC.optional "secondSideBelligerents" secondSideBelligerents (FC.list organizationBaseSchema)
+      #+ FC.optional "klingonWar" klingonWar FC.boolean
+      #+ FC.optional "federationWar" federationWar FC.boolean
+      #+ FC.optional "yearTo" yearTo FC.integer
+      #+ FC.optional "locations" locations (FC.list locationBaseSchema)

@@ -27,11 +27,11 @@ titleFullSchema :: FC.Fleece schema => schema TitleFull
 titleFullSchema =
   FC.object $
     FC.constructor TitleFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "militaryRank" militaryRank FC.boolean
+      #+ FC.optional "militaryRank" militaryRank FC.boolean
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "religiousTitle" religiousTitle FC.boolean
+      #+ FC.optional "religiousTitle" religiousTitle FC.boolean
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "mirror" mirror FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "characters" characters (FC.list characterBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "fleetRank" fleetRank FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "position" position FC.boolean
+      #+ FC.optional "mirror" mirror FC.boolean
+      #+ FC.optional "characters" characters (FC.list characterBaseSchema)
+      #+ FC.optional "fleetRank" fleetRank FC.boolean
+      #+ FC.optional "position" position FC.boolean

@@ -23,6 +23,6 @@ comicStripBaseResponseSchema :: FC.Fleece schema => schema ComicStripBaseRespons
 comicStripBaseResponseSchema =
   FC.object $
     FC.constructor ComicStripBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "comicStrips" comicStrips (FC.list comicStripBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "comicStrips" comicStrips (FC.list comicStripBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema

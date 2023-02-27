@@ -23,6 +23,6 @@ performerBaseResponseSchema :: FC.Fleece schema => schema PerformerBaseResponse
 performerBaseResponseSchema =
   FC.object $
     FC.constructor PerformerBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "performers" performers (FC.list performerBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "performers" performers (FC.list performerBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema

@@ -61,35 +61,35 @@ characterFullSchema :: FC.Fleece schema => schema CharacterFull
 characterFullSchema =
   FC.object $
     FC.constructor CharacterFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "alternateReality" alternateReality FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "fictionalCharacter" fictionalCharacter FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearOfDeath" yearOfDeath FC.integer
+      #+ FC.optional "alternateReality" alternateReality FC.boolean
+      #+ FC.optional "fictionalCharacter" fictionalCharacter FC.boolean
+      #+ FC.optional "yearOfDeath" yearOfDeath FC.integer
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "deceased" deceased FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "maritalStatus" maritalStatus maritalStatusSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "dayOfBirth" dayOfBirth FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "performers" performers (FC.list performerBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "monthOfBirth" monthOfBirth FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "occupations" occupations (FC.list occupationBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "bloodType" bloodType bloodTypeSchema
+      #+ FC.optional "deceased" deceased FC.boolean
+      #+ FC.optional "maritalStatus" maritalStatus maritalStatusSchema
+      #+ FC.optional "dayOfBirth" dayOfBirth FC.integer
+      #+ FC.optional "performers" performers (FC.list performerBaseSchema)
+      #+ FC.optional "monthOfBirth" monthOfBirth FC.integer
+      #+ FC.optional "occupations" occupations (FC.list occupationBaseSchema)
+      #+ FC.optional "bloodType" bloodType bloodTypeSchema
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "monthOfDeath" monthOfDeath FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "episodes" episodes (FC.list episodeBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "mirror" mirror FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "hologramDateStatus" hologramDateStatus FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "hologram" hologram FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "gender" gender genderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "placeOfDeath" placeOfDeath FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "serialNumber" serialNumber FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "movies" movies (FC.list movieBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titles" titles (FC.list titleBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "characterRelations" characterRelations (FC.list characterRelationSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "weight" weight FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "dayOfDeath" dayOfDeath FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "organizations" organizations (FC.list organizationBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "characterSpecies" characterSpecies (FC.list characterSpeciesSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "hologramActivationDate" hologramActivationDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "placeOfBirth" placeOfBirth FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "height" height FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearOfBirth" yearOfBirth FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "hologramStatus" hologramStatus FC.text
+      #+ FC.optional "monthOfDeath" monthOfDeath FC.integer
+      #+ FC.optional "episodes" episodes (FC.list episodeBaseSchema)
+      #+ FC.optional "mirror" mirror FC.boolean
+      #+ FC.optional "hologramDateStatus" hologramDateStatus FC.text
+      #+ FC.optional "hologram" hologram FC.boolean
+      #+ FC.optional "gender" gender genderSchema
+      #+ FC.optional "placeOfDeath" placeOfDeath FC.text
+      #+ FC.optional "serialNumber" serialNumber FC.text
+      #+ FC.optional "movies" movies (FC.list movieBaseSchema)
+      #+ FC.optional "titles" titles (FC.list titleBaseSchema)
+      #+ FC.optional "characterRelations" characterRelations (FC.list characterRelationSchema)
+      #+ FC.optional "weight" weight FC.integer
+      #+ FC.optional "dayOfDeath" dayOfDeath FC.integer
+      #+ FC.optional "organizations" organizations (FC.list organizationBaseSchema)
+      #+ FC.optional "characterSpecies" characterSpecies (FC.list characterSpeciesSchema)
+      #+ FC.optional "hologramActivationDate" hologramActivationDate FC.text
+      #+ FC.optional "placeOfBirth" placeOfBirth FC.text
+      #+ FC.optional "height" height FC.integer
+      #+ FC.optional "yearOfBirth" yearOfBirth FC.integer
+      #+ FC.optional "hologramStatus" hologramStatus FC.text

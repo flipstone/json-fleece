@@ -19,4 +19,4 @@ medicalConditionFullResponseSchema :: FC.Fleece schema => schema MedicalConditio
 medicalConditionFullResponseSchema =
   FC.object $
     FC.constructor MedicalConditionFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "medicalCondition" medicalCondition medicalConditionFullSchema
+      #+ FC.optional "medicalCondition" medicalCondition medicalConditionFullSchema

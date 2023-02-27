@@ -19,4 +19,4 @@ videoGameFullResponseSchema :: FC.Fleece schema => schema VideoGameFullResponse
 videoGameFullResponseSchema =
   FC.object $
     FC.constructor VideoGameFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "videoGame" videoGame videoGameFullSchema
+      #+ FC.optional "videoGame" videoGame videoGameFullSchema

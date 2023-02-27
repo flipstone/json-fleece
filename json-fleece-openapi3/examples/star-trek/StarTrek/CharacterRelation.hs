@@ -22,6 +22,6 @@ characterRelationSchema :: FC.Fleece schema => schema CharacterRelation
 characterRelationSchema =
   FC.object $
     FC.constructor CharacterRelation
-      #+ FC.optionalField FC.OmitKey_DelegateNull "type" type_ FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "target" target characterHeaderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "source" source characterHeaderSchema
+      #+ FC.optional "type" type_ FC.text
+      #+ FC.optional "target" target characterHeaderSchema
+      #+ FC.optional "source" source characterHeaderSchema

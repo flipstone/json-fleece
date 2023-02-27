@@ -19,4 +19,4 @@ astronomicalObjectFullResponseSchema :: FC.Fleece schema => schema AstronomicalO
 astronomicalObjectFullResponseSchema =
   FC.object $
     FC.constructor AstronomicalObjectFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "astronomicalObject" astronomicalObject astronomicalObjectFullSchema
+      #+ FC.optional "astronomicalObject" astronomicalObject astronomicalObjectFullSchema

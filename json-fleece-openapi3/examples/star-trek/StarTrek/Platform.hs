@@ -20,5 +20,5 @@ platformSchema :: FC.Fleece schema => schema Platform
 platformSchema =
   FC.object $
     FC.constructor Platform
-      #+ FC.optionalField FC.OmitKey_DelegateNull "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "uid" uid FC.text
+      #+ FC.optional "name" name FC.text
+      #+ FC.optional "uid" uid FC.text

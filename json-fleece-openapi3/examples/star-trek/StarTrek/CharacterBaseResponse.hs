@@ -23,6 +23,6 @@ characterBaseResponseSchema :: FC.Fleece schema => schema CharacterBaseResponse
 characterBaseResponseSchema =
   FC.object $
     FC.constructor CharacterBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "characters" characters (FC.list characterBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "characters" characters (FC.list characterBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema

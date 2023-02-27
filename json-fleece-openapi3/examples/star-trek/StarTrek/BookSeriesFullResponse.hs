@@ -19,4 +19,4 @@ bookSeriesFullResponseSchema :: FC.Fleece schema => schema BookSeriesFullRespons
 bookSeriesFullResponseSchema =
   FC.object $
     FC.constructor BookSeriesFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "bookSeries" bookSeries bookSeriesFullSchema
+      #+ FC.optional "bookSeries" bookSeries bookSeriesFullSchema

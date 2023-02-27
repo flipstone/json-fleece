@@ -22,7 +22,7 @@ soundtrackBaseSchema :: FC.Fleece schema => schema SoundtrackBase
 soundtrackBaseSchema =
   FC.object $
     FC.constructor SoundtrackBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "releaseDate" releaseDate FC.text
+      #+ FC.optional "releaseDate" releaseDate FC.text
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "length" length FC.integer
+      #+ FC.optional "length" length FC.integer
       #+ FC.required "title" title FC.text

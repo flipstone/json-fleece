@@ -21,6 +21,6 @@ countrySchema :: FC.Fleece schema => schema Country
 countrySchema =
   FC.object $
     FC.constructor Country
-      #+ FC.optionalField FC.OmitKey_DelegateNull "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "iso31661Alpha2Code" iso31661Alpha2Code FC.text
+      #+ FC.optional "name" name FC.text
+      #+ FC.optional "uid" uid FC.text
+      #+ FC.optional "iso31661Alpha2Code" iso31661Alpha2Code FC.text

@@ -35,19 +35,19 @@ speciesBaseSchema :: FC.Fleece schema => schema SpeciesBase
 speciesBaseSchema =
   FC.object $
     FC.constructor SpeciesBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "spaceborneSpecies" spaceborneSpecies FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "extinctSpecies" extinctSpecies FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "alternateReality" alternateReality FC.boolean
+      #+ FC.optional "spaceborneSpecies" spaceborneSpecies FC.boolean
+      #+ FC.optional "extinctSpecies" extinctSpecies FC.boolean
+      #+ FC.optional "alternateReality" alternateReality FC.boolean
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "homeworld" homeworld astronomicalObjectHeaderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "extraGalacticSpecies" extraGalacticSpecies FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "unnamedSpecies" unnamedSpecies FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "shapeshiftingSpecies" shapeshiftingSpecies FC.boolean
+      #+ FC.optional "homeworld" homeworld astronomicalObjectHeaderSchema
+      #+ FC.optional "extraGalacticSpecies" extraGalacticSpecies FC.boolean
+      #+ FC.optional "unnamedSpecies" unnamedSpecies FC.boolean
+      #+ FC.optional "shapeshiftingSpecies" shapeshiftingSpecies FC.boolean
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "reptilianSpecies" reptilianSpecies FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "humanoidSpecies" humanoidSpecies FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "telepathicSpecies" telepathicSpecies FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "nonCorporealSpecies" nonCorporealSpecies FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "quadrant" quadrant astronomicalObjectHeaderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "transDimensionalSpecies" transDimensionalSpecies FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "warpCapableSpecies" warpCapableSpecies FC.boolean
+      #+ FC.optional "reptilianSpecies" reptilianSpecies FC.boolean
+      #+ FC.optional "humanoidSpecies" humanoidSpecies FC.boolean
+      #+ FC.optional "telepathicSpecies" telepathicSpecies FC.boolean
+      #+ FC.optional "nonCorporealSpecies" nonCorporealSpecies FC.boolean
+      #+ FC.optional "quadrant" quadrant astronomicalObjectHeaderSchema
+      #+ FC.optional "transDimensionalSpecies" transDimensionalSpecies FC.boolean
+      #+ FC.optional "warpCapableSpecies" warpCapableSpecies FC.boolean

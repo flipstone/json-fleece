@@ -19,4 +19,4 @@ episodeFullResponseSchema :: FC.Fleece schema => schema EpisodeFullResponse
 episodeFullResponseSchema =
   FC.object $
     FC.constructor EpisodeFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "episode" episode episodeFullSchema
+      #+ FC.optional "episode" episode episodeFullSchema

@@ -35,16 +35,16 @@ spacecraftClassFullSchema :: FC.Fleece schema => schema SpacecraftClassFull
 spacecraftClassFullSchema =
   FC.object $
     FC.constructor SpacecraftClassFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "alternateReality" alternateReality FC.boolean
+      #+ FC.optional "alternateReality" alternateReality FC.boolean
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "spacecrafts" spacecrafts (FC.list spacecraftBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "activeFrom" activeFrom FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "warpCapable" warpCapable FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfDecks" numberOfDecks FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "affiliation" affiliation organizationBaseSchema
+      #+ FC.optional "spacecrafts" spacecrafts (FC.list spacecraftBaseSchema)
+      #+ FC.optional "activeFrom" activeFrom FC.text
+      #+ FC.optional "warpCapable" warpCapable FC.boolean
+      #+ FC.optional "numberOfDecks" numberOfDecks FC.integer
+      #+ FC.optional "affiliation" affiliation organizationBaseSchema
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "owner" owner organizationBaseSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "species" species speciesHeaderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "activeTo" activeTo FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "operator" operator organizationBaseSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "spacecraftTypes" spacecraftTypes (FC.list spacecraftTypeSchema)
+      #+ FC.optional "owner" owner organizationBaseSchema
+      #+ FC.optional "species" species speciesHeaderSchema
+      #+ FC.optional "activeTo" activeTo FC.text
+      #+ FC.optional "operator" operator organizationBaseSchema
+      #+ FC.optional "spacecraftTypes" spacecraftTypes (FC.list spacecraftTypeSchema)

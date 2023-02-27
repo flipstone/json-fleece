@@ -23,6 +23,6 @@ locationBaseResponseSchema :: FC.Fleece schema => schema LocationBaseResponse
 locationBaseResponseSchema =
   FC.object $
     FC.constructor LocationBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "locations" locations (FC.list locationBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "locations" locations (FC.list locationBaseSchema)

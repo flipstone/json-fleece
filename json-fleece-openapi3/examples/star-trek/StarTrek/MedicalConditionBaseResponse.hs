@@ -23,6 +23,6 @@ medicalConditionBaseResponseSchema :: FC.Fleece schema => schema MedicalConditio
 medicalConditionBaseResponseSchema =
   FC.object $
     FC.constructor MedicalConditionBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "medicalConditions" medicalConditions (FC.list medicalConditionBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "medicalConditions" medicalConditions (FC.list medicalConditionBaseSchema)
+      #+ FC.optional "page" page responsePageSchema

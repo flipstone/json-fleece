@@ -23,6 +23,6 @@ magazineBaseResponseSchema :: FC.Fleece schema => schema MagazineBaseResponse
 magazineBaseResponseSchema =
   FC.object $
     FC.constructor MagazineBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "magazines" magazines (FC.list magazineBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "magazines" magazines (FC.list magazineBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema

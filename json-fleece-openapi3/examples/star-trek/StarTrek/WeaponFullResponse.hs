@@ -19,4 +19,4 @@ weaponFullResponseSchema :: FC.Fleece schema => schema WeaponFullResponse
 weaponFullResponseSchema =
   FC.object $
     FC.constructor WeaponFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "weapon" weapon weaponFullSchema
+      #+ FC.optional "weapon" weapon weaponFullSchema

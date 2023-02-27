@@ -20,5 +20,5 @@ errorSchema :: FC.Fleece schema => schema Error
 errorSchema =
   FC.object $
     FC.constructor Error
-      #+ FC.optionalField FC.OmitKey_DelegateNull "message" message FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "code" code FC.text
+      #+ FC.optional "message" message FC.text
+      #+ FC.optional "code" code FC.text

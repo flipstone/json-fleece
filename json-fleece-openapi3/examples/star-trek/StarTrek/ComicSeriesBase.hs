@@ -34,18 +34,18 @@ comicSeriesBaseSchema :: FC.Fleece schema => schema ComicSeriesBase
 comicSeriesBaseSchema =
   FC.object $
     FC.constructor ComicSeriesBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearFrom" yearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateTo" stardateTo FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonthFrom" publishedMonthFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYearTo" publishedYearTo FC.integer
+      #+ FC.optional "yearFrom" yearFrom FC.integer
+      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "publishedMonthFrom" publishedMonthFrom FC.integer
+      #+ FC.optional "publishedYearTo" publishedYearTo FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateFrom" stardateFrom FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfIssues" numberOfIssues FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYearFrom" publishedYearFrom FC.integer
+      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "numberOfIssues" numberOfIssues FC.integer
+      #+ FC.optional "publishedYearFrom" publishedYearFrom FC.integer
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonthTo" publishedMonthTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "photonovelSeries" photonovelSeries FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "miniseries" miniseries FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearTo" yearTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedDayTo" publishedDayTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedDayFrom" publishedDayFrom FC.integer
+      #+ FC.optional "publishedMonthTo" publishedMonthTo FC.integer
+      #+ FC.optional "photonovelSeries" photonovelSeries FC.boolean
+      #+ FC.optional "miniseries" miniseries FC.boolean
+      #+ FC.optional "yearTo" yearTo FC.integer
+      #+ FC.optional "publishedDayTo" publishedDayTo FC.integer
+      #+ FC.optional "publishedDayFrom" publishedDayFrom FC.integer

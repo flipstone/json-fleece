@@ -43,28 +43,28 @@ locationFullSchema :: FC.Fleece schema => schema LocationFull
 locationFullSchema =
   FC.object $
     FC.constructor LocationFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "bodyOfWater" bodyOfWater FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "establishment" establishment FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "alternateReality" alternateReality FC.boolean
+      #+ FC.optional "bodyOfWater" bodyOfWater FC.boolean
+      #+ FC.optional "establishment" establishment FC.boolean
+      #+ FC.optional "alternateReality" alternateReality FC.boolean
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "fictionalLocation" fictionalLocation FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "usSettlement" usSettlement FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "country" country FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "colony" colony FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "ds9Establishment" ds9Establishment FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "road" road FC.boolean
+      #+ FC.optional "fictionalLocation" fictionalLocation FC.boolean
+      #+ FC.optional "usSettlement" usSettlement FC.boolean
+      #+ FC.optional "country" country FC.boolean
+      #+ FC.optional "colony" colony FC.boolean
+      #+ FC.optional "ds9Establishment" ds9Establishment FC.boolean
+      #+ FC.optional "road" road FC.boolean
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "medicalEstablishment" medicalEstablishment FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "earthlyLocation" earthlyLocation FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "mirror" mirror FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "settlement" settlement FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "buildingInterior" buildingInterior FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "subnationalEntity" subnationalEntity FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "landform" landform FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "school" school FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "landmark" landmark FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "religiousLocation" religiousLocation FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "geographicalLocation" geographicalLocation FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "shipyard" shipyard FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "bajoranSettlement" bajoranSettlement FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "structure" structure FC.boolean
+      #+ FC.optional "medicalEstablishment" medicalEstablishment FC.boolean
+      #+ FC.optional "earthlyLocation" earthlyLocation FC.boolean
+      #+ FC.optional "mirror" mirror FC.boolean
+      #+ FC.optional "settlement" settlement FC.boolean
+      #+ FC.optional "buildingInterior" buildingInterior FC.boolean
+      #+ FC.optional "subnationalEntity" subnationalEntity FC.boolean
+      #+ FC.optional "landform" landform FC.boolean
+      #+ FC.optional "school" school FC.boolean
+      #+ FC.optional "landmark" landmark FC.boolean
+      #+ FC.optional "religiousLocation" religiousLocation FC.boolean
+      #+ FC.optional "geographicalLocation" geographicalLocation FC.boolean
+      #+ FC.optional "shipyard" shipyard FC.boolean
+      #+ FC.optional "bajoranSettlement" bajoranSettlement FC.boolean
+      #+ FC.optional "structure" structure FC.boolean

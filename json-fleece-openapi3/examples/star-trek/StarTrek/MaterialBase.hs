@@ -30,15 +30,15 @@ materialBaseSchema :: FC.Fleece schema => schema MaterialBase
 materialBaseSchema =
   FC.object $
     FC.constructor MaterialBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "mineral" mineral FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "fuel" fuel FC.boolean
+      #+ FC.optional "mineral" mineral FC.boolean
+      #+ FC.optional "fuel" fuel FC.boolean
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "preciousMaterial" preciousMaterial FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "explosive" explosive FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "chemicalCompound" chemicalCompound FC.boolean
+      #+ FC.optional "preciousMaterial" preciousMaterial FC.boolean
+      #+ FC.optional "explosive" explosive FC.boolean
+      #+ FC.optional "chemicalCompound" chemicalCompound FC.boolean
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "drug" drug FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "biochemicalCompound" biochemicalCompound FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "gemstone" gemstone FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "poisonousSubstance" poisonousSubstance FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "alloyOrComposite" alloyOrComposite FC.boolean
+      #+ FC.optional "drug" drug FC.boolean
+      #+ FC.optional "biochemicalCompound" biochemicalCompound FC.boolean
+      #+ FC.optional "gemstone" gemstone FC.boolean
+      #+ FC.optional "poisonousSubstance" poisonousSubstance FC.boolean
+      #+ FC.optional "alloyOrComposite" alloyOrComposite FC.boolean

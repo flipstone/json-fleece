@@ -21,6 +21,6 @@ contentLanguageSchema :: FC.Fleece schema => schema ContentLanguage
 contentLanguageSchema =
   FC.object $
     FC.constructor ContentLanguage
-      #+ FC.optionalField FC.OmitKey_DelegateNull "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "iso6391Code" iso6391Code FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "uid" uid FC.text
+      #+ FC.optional "name" name FC.text
+      #+ FC.optional "iso6391Code" iso6391Code FC.text
+      #+ FC.optional "uid" uid FC.text

@@ -23,6 +23,6 @@ foodBaseResponseSchema :: FC.Fleece schema => schema FoodBaseResponse
 foodBaseResponseSchema =
   FC.object $
     FC.constructor FoodBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "foods" foods (FC.list foodBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "foods" foods (FC.list foodBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema

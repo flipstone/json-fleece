@@ -41,22 +41,22 @@ comicSeriesFullSchema :: FC.Fleece schema => schema ComicSeriesFull
 comicSeriesFullSchema =
   FC.object $
     FC.constructor ComicSeriesFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearFrom" yearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateTo" stardateTo FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishers" publishers (FC.list companyBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonthFrom" publishedMonthFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYearTo" publishedYearTo FC.integer
+      #+ FC.optional "yearFrom" yearFrom FC.integer
+      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "publishers" publishers (FC.list companyBaseSchema)
+      #+ FC.optional "publishedMonthFrom" publishedMonthFrom FC.integer
+      #+ FC.optional "publishedYearTo" publishedYearTo FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateFrom" stardateFrom FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfIssues" numberOfIssues FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYearFrom" publishedYearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "parentSeries" parentSeries (FC.list comicSeriesBaseSchema)
+      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "numberOfIssues" numberOfIssues FC.integer
+      #+ FC.optional "publishedYearFrom" publishedYearFrom FC.integer
+      #+ FC.optional "parentSeries" parentSeries (FC.list comicSeriesBaseSchema)
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonthTo" publishedMonthTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "photonovelSeries" photonovelSeries FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "miniseries" miniseries FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearTo" yearTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "childSeries" childSeries (FC.list comicSeriesBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "comics" comics (FC.list comicsBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedDayTo" publishedDayTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedDayFrom" publishedDayFrom FC.integer
+      #+ FC.optional "publishedMonthTo" publishedMonthTo FC.integer
+      #+ FC.optional "photonovelSeries" photonovelSeries FC.boolean
+      #+ FC.optional "miniseries" miniseries FC.boolean
+      #+ FC.optional "yearTo" yearTo FC.integer
+      #+ FC.optional "childSeries" childSeries (FC.list comicSeriesBaseSchema)
+      #+ FC.optional "comics" comics (FC.list comicsBaseSchema)
+      #+ FC.optional "publishedDayTo" publishedDayTo FC.integer
+      #+ FC.optional "publishedDayFrom" publishedDayFrom FC.integer

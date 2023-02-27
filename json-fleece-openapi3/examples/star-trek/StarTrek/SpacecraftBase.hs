@@ -29,10 +29,10 @@ spacecraftBaseSchema =
   FC.object $
     FC.constructor SpacecraftBase
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "registry" registry FC.text
+      #+ FC.optional "registry" registry FC.text
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "status" status FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "owner" owner organizationHeaderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "operator" operator organizationHeaderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "spacecraftClass" spacecraftClass spacecraftClassHeaderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "dateStatus" dateStatus FC.text
+      #+ FC.optional "status" status FC.text
+      #+ FC.optional "owner" owner organizationHeaderSchema
+      #+ FC.optional "operator" operator organizationHeaderSchema
+      #+ FC.optional "spacecraftClass" spacecraftClass spacecraftClassHeaderSchema
+      #+ FC.optional "dateStatus" dateStatus FC.text

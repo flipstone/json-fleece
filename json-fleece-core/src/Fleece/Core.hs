@@ -12,7 +12,8 @@ module Fleece.Core
       , array
       , null
       , required
-      , optionalField
+      , optional
+      , mapField
       , objectNamed
       , constructor
       , nullable
@@ -22,7 +23,7 @@ module Fleece.Core
       , validateNamed
       , boundedEnumNamed
       )
-  , optional
+  , optionalNullable
   , object
   , boundedEnum
   , validate
@@ -62,11 +63,7 @@ module Fleece.Core
   , nameToString
   , annotateName
   , Null (Null)
-  , NullBehavior
-    ( EmitNull_AcceptNull
-    , OmitKey_AcceptNull
-    , OmitKey_DelegateNull
-    )
+  , NothingEncoding (EmitNull, OmitKey)
   ) where
 
 import Data.Coerce (Coercible, coerce)
@@ -160,7 +157,7 @@ class Fleece schema where
 
   null :: schema Null
 
-  nullable :: schema a -> schema (Maybe a)
+  nullable :: schema a -> schema (Either Null a)
 
   required ::
     String ->
@@ -168,12 +165,16 @@ class Fleece schema where
     schema a ->
     Field schema object a
 
-  optionalField ::
-    NullBehavior ->
+  optional ::
     String ->
     (object -> Maybe a) ->
     schema a ->
     Field schema object (Maybe a)
+
+  mapField ::
+    (a -> b) ->
+    Field schema object a ->
+    Field schema object b
 
   objectNamed ::
     Name ->
@@ -212,6 +213,9 @@ class Fleece schema where
     (a -> T.Text) ->
     schema a
 
+instance Fleece schema => Functor (Field schema object) where
+  fmap = mapField
+
 (#+) ::
   Fleece schema =>
   Object schema object (a -> b) ->
@@ -231,11 +235,6 @@ infixl 9 #+
   embed
 
 infixl 9 ##
-
-data NullBehavior
-  = EmitNull_AcceptNull
-  | OmitKey_AcceptNull
-  | OmitKey_DelegateNull
 
 object ::
   (Fleece schema, Typeable a) =>
@@ -329,13 +328,32 @@ coerceSchemaNamed ::
 coerceSchemaNamed name schemaB =
   transformNamed name coerce coerce schemaB
 
-optional ::
+data NothingEncoding
+  = EmitNull
+  | OmitKey
+
+optionalNullable ::
   Fleece schema =>
+  NothingEncoding ->
   String ->
   (object -> Maybe a) ->
   schema a ->
   Field schema object (Maybe a)
-optional = optionalField OmitKey_AcceptNull
+optionalNullable encoding name accessor schema =
+  let
+    nullableAccessor o =
+      case accessor o of
+        Just a -> Just (Right a)
+        Nothing ->
+          case encoding of
+            OmitKey -> Nothing
+            EmitNull -> Just (Left Null)
+
+    collapseNull mbNullOrA =
+      either (\Null -> Nothing) Just =<< mbNullOrA
+  in
+    fmap collapseNull $
+      optional name nullableAccessor (nullable schema)
 
 list :: Fleece schema => schema a -> schema [a]
 list itemSchema =

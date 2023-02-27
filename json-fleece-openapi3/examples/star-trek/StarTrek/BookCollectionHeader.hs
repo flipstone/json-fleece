@@ -20,5 +20,5 @@ bookCollectionHeaderSchema :: FC.Fleece schema => schema BookCollectionHeader
 bookCollectionHeaderSchema =
   FC.object $
     FC.constructor BookCollectionHeader
-      #+ FC.optionalField FC.OmitKey_DelegateNull "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "title" title FC.text
+      #+ FC.optional "uid" uid FC.text
+      #+ FC.optional "title" title FC.text

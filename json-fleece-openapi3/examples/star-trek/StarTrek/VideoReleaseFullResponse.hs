@@ -19,4 +19,4 @@ videoReleaseFullResponseSchema :: FC.Fleece schema => schema VideoReleaseFullRes
 videoReleaseFullResponseSchema =
   FC.object $
     FC.constructor VideoReleaseFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "videoRelease" videoRelease videoReleaseFullSchema
+      #+ FC.optional "videoRelease" videoRelease videoReleaseFullSchema

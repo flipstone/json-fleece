@@ -26,11 +26,11 @@ literatureFullSchema :: FC.Fleece schema => schema LiteratureFull
 literatureFullSchema =
   FC.object $
     FC.constructor LiteratureFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "scientificLiterature" scientificLiterature FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "shakespeareanWork" shakespeareanWork FC.boolean
+      #+ FC.optional "scientificLiterature" scientificLiterature FC.boolean
+      #+ FC.optional "shakespeareanWork" shakespeareanWork FC.boolean
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "religiousLiterature" religiousLiterature FC.boolean
+      #+ FC.optional "religiousLiterature" religiousLiterature FC.boolean
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "technicalManual" technicalManual FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "earthlyOrigin" earthlyOrigin FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "report" report FC.boolean
+      #+ FC.optional "technicalManual" technicalManual FC.boolean
+      #+ FC.optional "earthlyOrigin" earthlyOrigin FC.boolean
+      #+ FC.optional "report" report FC.boolean

@@ -23,6 +23,6 @@ videoGameBaseResponseSchema :: FC.Fleece schema => schema VideoGameBaseResponse
 videoGameBaseResponseSchema =
   FC.object $
     FC.constructor VideoGameBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "videoGames" videoGames (FC.list videoGameBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "videoGames" videoGames (FC.list videoGameBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema

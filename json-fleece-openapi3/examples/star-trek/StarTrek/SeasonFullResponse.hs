@@ -19,4 +19,4 @@ seasonFullResponseSchema :: FC.Fleece schema => schema SeasonFullResponse
 seasonFullResponseSchema =
   FC.object $
     FC.constructor SeasonFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "season" season seasonFullSchema
+      #+ FC.optional "season" season seasonFullSchema

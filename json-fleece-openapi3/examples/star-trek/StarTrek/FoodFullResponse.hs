@@ -19,4 +19,4 @@ foodFullResponseSchema :: FC.Fleece schema => schema FoodFullResponse
 foodFullResponseSchema =
   FC.object $
     FC.constructor FoodFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "food" food foodFullSchema
+      #+ FC.optional "food" food foodFullSchema

@@ -25,10 +25,10 @@ animalFullSchema :: FC.Fleece schema => schema AnimalFull
 animalFullSchema =
   FC.object $
     FC.constructor AnimalFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "earthAnimal" earthAnimal FC.boolean
+      #+ FC.optional "earthAnimal" earthAnimal FC.boolean
       #+ FC.required "name" name FC.text
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "canine" canine FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "earthInsect" earthInsect FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "avian" avian FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "feline" feline FC.boolean
+      #+ FC.optional "canine" canine FC.boolean
+      #+ FC.optional "earthInsect" earthInsect FC.boolean
+      #+ FC.optional "avian" avian FC.boolean
+      #+ FC.optional "feline" feline FC.boolean

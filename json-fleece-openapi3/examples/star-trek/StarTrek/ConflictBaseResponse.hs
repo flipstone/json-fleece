@@ -23,6 +23,6 @@ conflictBaseResponseSchema :: FC.Fleece schema => schema ConflictBaseResponse
 conflictBaseResponseSchema =
   FC.object $
     FC.constructor ConflictBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "conflicts" conflicts (FC.list conflictBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "conflicts" conflicts (FC.list conflictBaseSchema)
+      #+ FC.optional "page" page responsePageSchema

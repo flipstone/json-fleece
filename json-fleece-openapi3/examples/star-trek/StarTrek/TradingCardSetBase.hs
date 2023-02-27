@@ -32,15 +32,15 @@ tradingCardSetBaseSchema :: FC.Fleece schema => schema TradingCardSetBase
 tradingCardSetBaseSchema =
   FC.object $
     FC.constructor TradingCardSetBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "cardWidth" cardWidth FC.number
+      #+ FC.optional "cardWidth" cardWidth FC.number
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "packsPerBox" packsPerBox FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "releaseYear" releaseYear FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "cardsPerPack" cardsPerPack FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionRunUnit" productionRunUnit productionRunUnitSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionRun" productionRun FC.integer
+      #+ FC.optional "packsPerBox" packsPerBox FC.integer
+      #+ FC.optional "releaseYear" releaseYear FC.integer
+      #+ FC.optional "cardsPerPack" cardsPerPack FC.integer
+      #+ FC.optional "productionRunUnit" productionRunUnit productionRunUnitSchema
+      #+ FC.optional "productionRun" productionRun FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "releaseMonth" releaseMonth FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "boxesPerCase" boxesPerCase FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "cardHeight" cardHeight FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "releaseDay" releaseDay FC.integer
+      #+ FC.optional "releaseMonth" releaseMonth FC.integer
+      #+ FC.optional "boxesPerCase" boxesPerCase FC.integer
+      #+ FC.optional "cardHeight" cardHeight FC.number
+      #+ FC.optional "releaseDay" releaseDay FC.integer

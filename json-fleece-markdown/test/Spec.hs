@@ -6,6 +6,7 @@ module Main
 
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
+import GHC.Stack (withFrozenCallStack)
 import Hedgehog ((===))
 import qualified Hedgehog as HH
 import qualified Hedgehog.Main as HHM
@@ -25,10 +26,9 @@ tests =
   , ("prop_boundedEnum", prop_boundedEnum)
   , ("prop_nullableField", prop_nullableField)
   , ("prop_validate", prop_validate)
-  , ("prop_optionalField_EmitNull_AcceptNull", prop_optionalField_EmitNull_AcceptNull)
-  , ("prop_optionalField_OmitKey_AcceptNull", prop_optionalField_OmitKey_AcceptNull)
-  , ("prop_optionalField_OmitKey_DelegateNull", prop_optionalField_OmitKey_DelegateNull)
-  , ("prop_optionalField_OmitKey_DelegateNull_Nullable", prop_optionalField_OmitKey_DelegateNull_Nullable)
+  , ("prop_optional", prop_optional)
+  , ("prop_optionalNullableFieldEmitNull", prop_optionalNullableFieldEmitNull)
+  , ("prop_optionalNullableFieldOmitKey", prop_optionalNullableFieldOmitKey)
   , ("prop_embeddedObject", prop_embeddedObject)
   , ("prop_nestedObject", prop_nestedObject)
   , ("prop_nameDisambiguation", prop_nameDisambiguation)
@@ -37,152 +37,121 @@ tests =
 prop_object :: HH.Property
 prop_object =
   HH.withTests 1 . HH.property $
-    FM.renderMarkdown Examples.fooBarSchema
-      === LT.intercalate
-        "\n"
-        [ "# FooBar"
-        , ""
-        , "|Field|Key Required|Null Allowed|Type|"
-        , "|---|---|---|---|"
-        , "|foo|yes|no|string|"
-        , "|bar|yes|no|number|"
-        , ""
-        ]
+    assertMarkdownEquals
+      Examples.fooBarSchema
+      [ "# FooBar"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|foo|yes|no|string|"
+      , "|bar|yes|no|number|"
+      ]
 
 prop_boundedEnum :: HH.Property
 prop_boundedEnum =
   HH.withTests 1 . HH.property $
-    FM.renderMarkdown Examples.boundedEnumSchema
-      === LT.intercalate
-        "\n"
-        [ "# BoundedEnum"
-        , ""
-        , "Enum values:"
-        , ""
-        , "- apple"
-        , "- orange"
-        , "- kumquat"
-        , ""
-        ]
+    assertMarkdownEquals
+      Examples.boundedEnumSchema
+      [ "# BoundedEnum"
+      , ""
+      , "Enum values:"
+      , ""
+      , "- apple"
+      , "- orange"
+      , "- kumquat"
+      ]
 
 prop_nullableField :: HH.Property
 prop_nullableField =
   HH.withTests 1 . HH.property $
-    FM.renderMarkdown Examples.nullableFieldSchema
-      === LT.intercalate
-        "\n"
-        [ "# NullableField"
-        , ""
-        , "|Field|Key Required|Null Allowed|Type|"
-        , "|---|---|---|---|"
-        , "|nullableField|yes|yes|string|"
-        , ""
-        ]
+    assertMarkdownEquals
+      Examples.nullableFieldSchema
+      [ "# NullableField"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|nullableField|yes|yes|string|"
+      ]
 
 prop_validate :: HH.Property
 prop_validate =
   HH.withTests 1 . HH.property $
-    FM.renderMarkdown Examples.validationSchema
-      === LT.intercalate
-        "\n"
-        [ "# string"
-        , ""
-        , "string"
-        ]
+    assertMarkdownEquals
+      Examples.validationSchema
+      [ "# string"
+      , ""
+      , "string"
+      ]
 
-prop_optionalField_EmitNull_AcceptNull :: HH.Property
-prop_optionalField_EmitNull_AcceptNull =
+prop_optional :: HH.Property
+prop_optional =
   HH.withTests 1 . HH.property $
-    FM.renderMarkdown Examples.optionalField_EmitNull_AcceptNullSchema
-      === LT.intercalate
-        "\n"
-        [ "# OptionalField\\_EmitNull\\_AcceptNull"
-        , ""
-        , "|Field|Key Required|Null Allowed|Type|"
-        , "|---|---|---|---|"
-        , "|optional\\_EmitNull\\_AcceptNull\\_Field|no|yes|string|"
-        , ""
-        ]
+    assertMarkdownEquals
+      Examples.optionalFieldSchema
+      [ "# OptionalField"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|optionalField|no|no|string|"
+      ]
 
-prop_optionalField_OmitKey_AcceptNull :: HH.Property
-prop_optionalField_OmitKey_AcceptNull =
+prop_optionalNullableFieldEmitNull :: HH.Property
+prop_optionalNullableFieldEmitNull =
   HH.withTests 1 . HH.property $
-    FM.renderMarkdown Examples.optionalField_OmitKey_AcceptNullSchema
-      === LT.intercalate
-        "\n"
-        [ "# OptionalField\\_OmitKey\\_AcceptNull"
-        , ""
-        , "|Field|Key Required|Null Allowed|Type|"
-        , "|---|---|---|---|"
-        , "|optional\\_OmitKey\\_AcceptNull\\_Field|no|yes|string|"
-        , ""
-        ]
+    assertMarkdownEquals
+      Examples.optionalNullableFieldEmitNullSchema
+      [ "# OptionalNullableFieldEmitNull"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|optionalNullableField|no|yes|string|"
+      ]
 
-prop_optionalField_OmitKey_DelegateNull :: HH.Property
-prop_optionalField_OmitKey_DelegateNull =
+prop_optionalNullableFieldOmitKey :: HH.Property
+prop_optionalNullableFieldOmitKey =
   HH.withTests 1 . HH.property $
-    FM.renderMarkdown Examples.optionalField_OmitKey_DelegateNullSchema
-      === LT.intercalate
-        "\n"
-        [ "# OptionalField\\_OmitKey\\_DelegateNull"
-        , ""
-        , "|Field|Key Required|Null Allowed|Type|"
-        , "|---|---|---|---|"
-        , "|optional\\_OmitKey\\_DelegateNull\\_Field|no|no|string|"
-        , ""
-        ]
-
-prop_optionalField_OmitKey_DelegateNull_Nullable :: HH.Property
-prop_optionalField_OmitKey_DelegateNull_Nullable =
-  HH.withTests 1 . HH.property $
-    FM.renderMarkdown Examples.optionalField_OmitKey_DelegateNull_NullableSchema
-      === LT.intercalate
-        "\n"
-        [ "# OptionalField\\_OmitKey\\_DelegateNull\\_Nullable"
-        , ""
-        , "|Field|Key Required|Null Allowed|Type|"
-        , "|---|---|---|---|"
-        , "|optional\\_OmitKey\\_DelegateNull\\_Nullable\\_Field|no|yes|string|"
-        , ""
-        ]
+    assertMarkdownEquals
+      Examples.optionalNullableFieldOmitKeySchema
+      [ "# OptionalNullableFieldOmitKey"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|optionalNullableField|no|yes|string|"
+      ]
 
 prop_embeddedObject :: HH.Property
 prop_embeddedObject =
   HH.withTests 1 . HH.property $
-    FM.renderMarkdown Examples.embeddedObjectParentSchema
-      === LT.intercalate
-        "\n"
-        [ "# EmbeddedObjectParent"
-        , ""
-        , "|Field|Key Required|Null Allowed|Type|"
-        , "|---|---|---|---|"
-        , "|parentField|yes|no|string|"
-        , "|childField|yes|no|string|"
-        , ""
-        ]
+    assertMarkdownEquals
+      Examples.embeddedObjectParentSchema
+      [ "# EmbeddedObjectParent"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|parentField|yes|no|string|"
+      , "|childField|yes|no|string|"
+      ]
 
 prop_nestedObject :: HH.Property
 prop_nestedObject =
   HH.withTests 1 . HH.property $
-    FM.renderMarkdown parentSchema
-      === LT.intercalate
-        "\n"
-        [ "# Parent"
-        , ""
-        , "|Field|Key Required|Null Allowed|Type|"
-        , "|---|---|---|---|"
-        , "|field1|yes|no|string|"
-        , "|field2|yes|no|string|"
-        , "|nested|yes|no|NestedObject|"
-        , ""
-        , "# NestedObject"
-        , ""
-        , "|Field|Key Required|Null Allowed|Type|"
-        , "|---|---|---|---|"
-        , "|field1|yes|no|string|"
-        , "|field2|yes|no|string|"
-        , ""
-        ]
+    assertMarkdownEquals
+      parentSchema
+      [ "# Parent"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|field1|yes|no|string|"
+      , "|field2|yes|no|string|"
+      , "|nested|yes|no|NestedObject|"
+      , ""
+      , "# NestedObject"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|field1|yes|no|string|"
+      , "|field2|yes|no|string|"
+      ]
 
 data Parent = Parent
   { parentField1 :: T.Text
@@ -213,29 +182,27 @@ nestedObjectSchema =
 prop_nameDisambiguation :: HH.Property
 prop_nameDisambiguation =
   HH.withTests 1 . HH.property $
-    FM.renderMarkdown ambiguousNameParentSchema
-      === LT.intercalate
-        "\n"
-        [ "# AmbiguousNameParent"
-        , ""
-        , "|Field|Key Required|Null Allowed|Type|"
-        , "|---|---|---|---|"
-        , "|child1|yes|no|Child1.AmbiguousName|"
-        , "|child2|yes|no|Child2.AmbiguousName|"
-        , ""
-        , "# Child1.AmbiguousName"
-        , ""
-        , "|Field|Key Required|Null Allowed|Type|"
-        , "|---|---|---|---|"
-        , "|value|yes|no|string|"
-        , ""
-        , "# Child2.AmbiguousName"
-        , ""
-        , "|Field|Key Required|Null Allowed|Type|"
-        , "|---|---|---|---|"
-        , "|value|yes|no|string|"
-        , ""
-        ]
+    assertMarkdownEquals
+      ambiguousNameParentSchema
+      [ "# AmbiguousNameParent"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|child1|yes|no|Child1.AmbiguousName|"
+      , "|child2|yes|no|Child2.AmbiguousName|"
+      , ""
+      , "# Child1.AmbiguousName"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|value|yes|no|string|"
+      , ""
+      , "# Child2.AmbiguousName"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|value|yes|no|string|"
+      ]
 
 data AmbiguousNameParent = AmbiguousNameParent
   { ambiguousNameChild1 :: AmbiguousNameChild1
@@ -268,3 +235,8 @@ ambiguousNameChild2Schema =
   FC.objectNamed "Child2.AmbiguousName" $
     FC.constructor AmbiguousNameChild2
       #+ FC.required "value" ambiguousNameChild2Value FC.text
+
+assertMarkdownEquals :: FM.Markdown a -> [LT.Text] -> HH.PropertyT IO ()
+assertMarkdownEquals schema expected =
+  withFrozenCallStack $
+    LT.lines (FM.renderMarkdown schema) === expected

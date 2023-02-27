@@ -23,6 +23,6 @@ speciesBaseResponseSchema :: FC.Fleece schema => schema SpeciesBaseResponse
 speciesBaseResponseSchema =
   FC.object $
     FC.constructor SpeciesBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "species" species (FC.list speciesBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "species" species (FC.list speciesBaseSchema)
+      #+ FC.optional "page" page responsePageSchema

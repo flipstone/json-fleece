@@ -27,12 +27,12 @@ weaponFullSchema :: FC.Fleece schema => schema WeaponFull
 weaponFullSchema =
   FC.object $
     FC.constructor WeaponFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "alternateReality" alternateReality FC.boolean
+      #+ FC.optional "alternateReality" alternateReality FC.boolean
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "plasmaTechnology" plasmaTechnology FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "handHeldWeapon" handHeldWeapon FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "photonicTechnology" photonicTechnology FC.boolean
+      #+ FC.optional "plasmaTechnology" plasmaTechnology FC.boolean
+      #+ FC.optional "handHeldWeapon" handHeldWeapon FC.boolean
+      #+ FC.optional "photonicTechnology" photonicTechnology FC.boolean
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "mirror" mirror FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "phaserTechnology" phaserTechnology FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "laserTechnology" laserTechnology FC.boolean
+      #+ FC.optional "mirror" mirror FC.boolean
+      #+ FC.optional "phaserTechnology" phaserTechnology FC.boolean
+      #+ FC.optional "laserTechnology" laserTechnology FC.boolean

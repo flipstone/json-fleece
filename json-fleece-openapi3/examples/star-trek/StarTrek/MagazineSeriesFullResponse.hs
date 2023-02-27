@@ -19,4 +19,4 @@ magazineSeriesFullResponseSchema :: FC.Fleece schema => schema MagazineSeriesFul
 magazineSeriesFullResponseSchema =
   FC.object $
     FC.constructor MagazineSeriesFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "magazineSeries" magazineSeries magazineSeriesFullSchema
+      #+ FC.optional "magazineSeries" magazineSeries magazineSeriesFullSchema

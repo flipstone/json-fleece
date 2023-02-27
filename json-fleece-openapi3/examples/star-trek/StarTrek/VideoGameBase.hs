@@ -27,11 +27,11 @@ videoGameBaseSchema :: FC.Fleece schema => schema VideoGameBase
 videoGameBaseSchema =
   FC.object $
     FC.constructor VideoGameBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearFrom" yearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateTo" stardateTo FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "systemRequirements" systemRequirements FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "releaseDate" releaseDate FC.text
+      #+ FC.optional "yearFrom" yearFrom FC.integer
+      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "systemRequirements" systemRequirements FC.text
+      #+ FC.optional "releaseDate" releaseDate FC.text
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "stardateFrom" stardateFrom FC.number
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearTo" yearTo FC.integer
+      #+ FC.optional "yearTo" yearTo FC.integer

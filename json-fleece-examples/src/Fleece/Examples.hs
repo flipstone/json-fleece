@@ -7,14 +7,10 @@ module Fleece.Examples
   , validationSchema
   , OptionalField (..)
   , optionalFieldSchema
-  , OptionalField_EmitNull_AcceptNull (..)
-  , optionalField_EmitNull_AcceptNullSchema
-  , OptionalField_OmitKey_AcceptNull (..)
-  , optionalField_OmitKey_AcceptNullSchema
-  , OptionalField_OmitKey_DelegateNull (..)
-  , optionalField_OmitKey_DelegateNullSchema
-  , OptionalField_OmitKey_DelegateNull_Nullable (..)
-  , optionalField_OmitKey_DelegateNull_NullableSchema
+  , OptionalNullableFieldEmitNull (..)
+  , optionalNullableFieldEmitNullSchema
+  , OptionalNullableFieldOmitKey (..)
+  , optionalNullableFieldOmitKeySchema
   , BoundedEnum (..)
   , boundedEnumSchema
   , boundedEnumToText
@@ -28,7 +24,8 @@ import qualified Data.Text as T
 
 import Fleece.Core
   ( Fleece
-  , NullBehavior (EmitNull_AcceptNull, OmitKey_AcceptNull, OmitKey_DelegateNull)
+  , NothingEncoding (EmitNull, OmitKey)
+  , Null
   , Object
   , boundedEnum
   , constructor
@@ -37,7 +34,7 @@ import Fleece.Core
   , number
   , object
   , optional
-  , optionalField
+  , optionalNullable
   , required
   , text
   , validate
@@ -59,7 +56,7 @@ fooBarSchema =
       #+ required "bar" bar number
 
 data NullableField = NullableField
-  { exampleNullableField :: Maybe T.Text
+  { exampleNullableField :: Either Null T.Text
   }
   deriving (Eq, Show)
 
@@ -90,61 +87,31 @@ optionalFieldSchema =
     constructor OptionalField
       #+ optional "optionalField" exampleOptionalField text
 
-data OptionalField_EmitNull_AcceptNull = OptionalField_EmitNull_AcceptNull
-  { exampleOptional_EmitNull_AcceptNull_Field :: Maybe T.Text
+data OptionalNullableFieldEmitNull = OptionalNullableFieldEmitNull
+  { exampleOptionalNullableFieldEmitNullField :: Maybe T.Text
   }
   deriving (Eq, Show)
 
-optionalField_EmitNull_AcceptNullSchema ::
+optionalNullableFieldEmitNullSchema ::
   Fleece schema =>
-  schema OptionalField_EmitNull_AcceptNull
-optionalField_EmitNull_AcceptNullSchema =
+  schema OptionalNullableFieldEmitNull
+optionalNullableFieldEmitNullSchema =
   object $
-    constructor OptionalField_EmitNull_AcceptNull
-      #+ optionalField EmitNull_AcceptNull "optional_EmitNull_AcceptNull_Field" exampleOptional_EmitNull_AcceptNull_Field text
+    constructor OptionalNullableFieldEmitNull
+      #+ optionalNullable EmitNull "optionalNullableField" exampleOptionalNullableFieldEmitNullField text
 
-data OptionalField_OmitKey_AcceptNull = OptionalField_OmitKey_AcceptNull
-  { exampleOptional_OmitKey_AcceptNull_Field :: Maybe T.Text
+data OptionalNullableFieldOmitKey = OptionalNullableFieldOmitKey
+  { exampleOptionalNullableFieldOmitKeyField :: Maybe T.Text
   }
   deriving (Eq, Show)
 
-optionalField_OmitKey_AcceptNullSchema ::
+optionalNullableFieldOmitKeySchema ::
   Fleece schema =>
-  schema OptionalField_OmitKey_AcceptNull
-optionalField_OmitKey_AcceptNullSchema =
+  schema OptionalNullableFieldOmitKey
+optionalNullableFieldOmitKeySchema =
   object $
-    constructor OptionalField_OmitKey_AcceptNull
-      #+ optionalField OmitKey_AcceptNull "optional_OmitKey_AcceptNull_Field" exampleOptional_OmitKey_AcceptNull_Field text
-
-data OptionalField_OmitKey_DelegateNull = OptionalField_OmitKey_DelegateNull
-  { exampleOptional_OmitKey_DelegateNull_Field :: Maybe T.Text
-  }
-  deriving (Eq, Show)
-
-optionalField_OmitKey_DelegateNullSchema ::
-  Fleece schema =>
-  schema OptionalField_OmitKey_DelegateNull
-optionalField_OmitKey_DelegateNullSchema =
-  object $
-    constructor OptionalField_OmitKey_DelegateNull
-      #+ optionalField OmitKey_DelegateNull "optional_OmitKey_DelegateNull_Field" exampleOptional_OmitKey_DelegateNull_Field text
-
-data OptionalField_OmitKey_DelegateNull_Nullable = OptionalField_OmitKey_DelegateNull_Nullable
-  { exampleOptional_OmitKey_DelegateNull_NullableField :: Maybe (Maybe T.Text)
-  }
-  deriving (Eq, Show)
-
-optionalField_OmitKey_DelegateNull_NullableSchema ::
-  Fleece schema =>
-  schema OptionalField_OmitKey_DelegateNull_Nullable
-optionalField_OmitKey_DelegateNull_NullableSchema =
-  object $
-    constructor OptionalField_OmitKey_DelegateNull_Nullable
-      #+ optionalField
-        OmitKey_DelegateNull
-        "optional_OmitKey_DelegateNull_Nullable_Field"
-        exampleOptional_OmitKey_DelegateNull_NullableField
-        (nullable text)
+    constructor OptionalNullableFieldOmitKey
+      #+ optionalNullable OmitKey "optionalNullableField" exampleOptionalNullableFieldOmitKeyField text
 
 data BoundedEnum
   = Apple

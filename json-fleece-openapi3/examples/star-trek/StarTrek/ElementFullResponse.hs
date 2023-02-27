@@ -19,4 +19,4 @@ elementFullResponseSchema :: FC.Fleece schema => schema ElementFullResponse
 elementFullResponseSchema =
   FC.object $
     FC.constructor ElementFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "element" element elementFullSchema
+      #+ FC.optional "element" element elementFullSchema

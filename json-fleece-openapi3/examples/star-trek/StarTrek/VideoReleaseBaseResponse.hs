@@ -23,6 +23,6 @@ videoReleaseBaseResponseSchema :: FC.Fleece schema => schema VideoReleaseBaseRes
 videoReleaseBaseResponseSchema =
   FC.object $
     FC.constructor VideoReleaseBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "videoReleases" videoReleases (FC.list videoReleaseBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "videoReleases" videoReleases (FC.list videoReleaseBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema

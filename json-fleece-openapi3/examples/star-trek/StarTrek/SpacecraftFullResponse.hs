@@ -19,4 +19,4 @@ spacecraftFullResponseSchema :: FC.Fleece schema => schema SpacecraftFullRespons
 spacecraftFullResponseSchema =
   FC.object $
     FC.constructor SpacecraftFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "spacecraft" spacecraft spacecraftFullSchema
+      #+ FC.optional "spacecraft" spacecraft spacecraftFullSchema

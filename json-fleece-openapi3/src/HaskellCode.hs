@@ -29,6 +29,7 @@ module HaskellCode
   , varNameForType
   , listOf
   , maybeOf
+  , eitherOf
   , dollar
   , record
   , deriving_
@@ -286,6 +287,12 @@ maybeOf itemName =
   addReferences
     [TypeReference "Maybe"]
     (TypeName ("Maybe " <> toCode itemName))
+
+eitherOf :: TypeName -> TypeName -> TypeName
+eitherOf left right =
+  addReferences
+    [TypeReference "Either"]
+    (TypeName ("Either " <> toCode left <> " " <> toCode right))
 
 dollar :: HaskellCode
 dollar =

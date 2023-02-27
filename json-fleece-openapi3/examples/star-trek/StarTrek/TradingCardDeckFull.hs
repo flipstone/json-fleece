@@ -25,8 +25,8 @@ tradingCardDeckFullSchema :: FC.Fleece schema => schema TradingCardDeckFull
 tradingCardDeckFullSchema =
   FC.object $
     FC.constructor TradingCardDeckFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "tradingCardSet" tradingCardSet tradingCardSetHeaderSchema
+      #+ FC.optional "tradingCardSet" tradingCardSet tradingCardSetHeaderSchema
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "frequency" frequency FC.text
+      #+ FC.optional "frequency" frequency FC.text
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "tradingCards" tradingCards (FC.list tradingCardBaseSchema)
+      #+ FC.optional "tradingCards" tradingCards (FC.list tradingCardBaseSchema)

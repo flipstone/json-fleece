@@ -23,6 +23,6 @@ titleBaseResponseSchema :: FC.Fleece schema => schema TitleBaseResponse
 titleBaseResponseSchema =
   FC.object $
     FC.constructor TitleBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titles" titles (FC.list titleBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "titles" titles (FC.list titleBaseSchema)

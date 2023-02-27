@@ -19,4 +19,4 @@ movieFullResponseSchema :: FC.Fleece schema => schema MovieFullResponse
 movieFullResponseSchema =
   FC.object $
     FC.constructor MovieFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "movie" movie movieFullSchema
+      #+ FC.optional "movie" movie movieFullSchema

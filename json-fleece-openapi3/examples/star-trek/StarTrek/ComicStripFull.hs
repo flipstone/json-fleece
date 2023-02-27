@@ -37,19 +37,19 @@ comicStripFullSchema :: FC.Fleece schema => schema ComicStripFull
 comicStripFullSchema =
   FC.object $
     FC.constructor ComicStripFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearFrom" yearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonthFrom" publishedMonthFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYearTo" publishedYearTo FC.integer
+      #+ FC.optional "yearFrom" yearFrom FC.integer
+      #+ FC.optional "publishedMonthFrom" publishedMonthFrom FC.integer
+      #+ FC.optional "publishedYearTo" publishedYearTo FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "artists" artists (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "characters" characters (FC.list characterBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYearFrom" publishedYearFrom FC.integer
+      #+ FC.optional "artists" artists (FC.list staffBaseSchema)
+      #+ FC.optional "characters" characters (FC.list characterBaseSchema)
+      #+ FC.optional "publishedYearFrom" publishedYearFrom FC.integer
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonthTo" publishedMonthTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "comicSeries" comicSeries (FC.list comicSeriesBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearTo" yearTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "periodical" periodical FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedDayTo" publishedDayTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfPages" numberOfPages FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "writers" writers (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedDayFrom" publishedDayFrom FC.integer
+      #+ FC.optional "publishedMonthTo" publishedMonthTo FC.integer
+      #+ FC.optional "comicSeries" comicSeries (FC.list comicSeriesBaseSchema)
+      #+ FC.optional "yearTo" yearTo FC.integer
+      #+ FC.optional "periodical" periodical FC.text
+      #+ FC.optional "publishedDayTo" publishedDayTo FC.integer
+      #+ FC.optional "numberOfPages" numberOfPages FC.integer
+      #+ FC.optional "writers" writers (FC.list staffBaseSchema)
+      #+ FC.optional "publishedDayFrom" publishedDayFrom FC.integer

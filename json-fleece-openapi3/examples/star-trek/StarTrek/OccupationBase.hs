@@ -23,8 +23,8 @@ occupationBaseSchema :: FC.Fleece schema => schema OccupationBase
 occupationBaseSchema =
   FC.object $
     FC.constructor OccupationBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "medicalOccupation" medicalOccupation FC.boolean
+      #+ FC.optional "medicalOccupation" medicalOccupation FC.boolean
       #+ FC.required "name" name FC.text
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "legalOccupation" legalOccupation FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "scientificOccupation" scientificOccupation FC.boolean
+      #+ FC.optional "legalOccupation" legalOccupation FC.boolean
+      #+ FC.optional "scientificOccupation" scientificOccupation FC.boolean

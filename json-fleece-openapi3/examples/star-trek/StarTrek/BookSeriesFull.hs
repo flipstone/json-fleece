@@ -36,18 +36,18 @@ bookSeriesFullSchema :: FC.Fleece schema => schema BookSeriesFull
 bookSeriesFullSchema =
   FC.object $
     FC.constructor BookSeriesFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearFrom" yearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishers" publishers (FC.list companyBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfBooks" numberOfBooks FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonthFrom" publishedMonthFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "books" books (FC.list bookBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYearTo" publishedYearTo FC.integer
+      #+ FC.optional "yearFrom" yearFrom FC.integer
+      #+ FC.optional "publishers" publishers (FC.list companyBaseSchema)
+      #+ FC.optional "numberOfBooks" numberOfBooks FC.integer
+      #+ FC.optional "publishedMonthFrom" publishedMonthFrom FC.integer
+      #+ FC.optional "books" books (FC.list bookBaseSchema)
+      #+ FC.optional "publishedYearTo" publishedYearTo FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYearFrom" publishedYearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "parentSeries" parentSeries (FC.list bookSeriesBaseSchema)
+      #+ FC.optional "publishedYearFrom" publishedYearFrom FC.integer
+      #+ FC.optional "parentSeries" parentSeries (FC.list bookSeriesBaseSchema)
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonthTo" publishedMonthTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "miniseries" miniseries FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearTo" yearTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "childSeries" childSeries (FC.list bookSeriesBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "eBookSeries" eBookSeries FC.boolean
+      #+ FC.optional "publishedMonthTo" publishedMonthTo FC.integer
+      #+ FC.optional "miniseries" miniseries FC.boolean
+      #+ FC.optional "yearTo" yearTo FC.integer
+      #+ FC.optional "childSeries" childSeries (FC.list bookSeriesBaseSchema)
+      #+ FC.optional "eBookSeries" eBookSeries FC.boolean

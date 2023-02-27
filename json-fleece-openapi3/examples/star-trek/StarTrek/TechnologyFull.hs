@@ -41,24 +41,24 @@ technologyFullSchema =
   FC.object $
     FC.constructor TechnologyFull
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "identificationTechnology" identificationTechnology FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "fictionalTechnology" fictionalTechnology FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "subroutine" subroutine FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "communicationsTechnology" communicationsTechnology FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "computerTechnology" computerTechnology FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "borgComponent" borgComponent FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "engineeringTool" engineeringTool FC.boolean
+      #+ FC.optional "identificationTechnology" identificationTechnology FC.boolean
+      #+ FC.optional "fictionalTechnology" fictionalTechnology FC.boolean
+      #+ FC.optional "subroutine" subroutine FC.boolean
+      #+ FC.optional "communicationsTechnology" communicationsTechnology FC.boolean
+      #+ FC.optional "computerTechnology" computerTechnology FC.boolean
+      #+ FC.optional "borgComponent" borgComponent FC.boolean
+      #+ FC.optional "engineeringTool" engineeringTool FC.boolean
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "transporterTechnology" transporterTechnology FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "computerProgramming" computerProgramming FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "database" database FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "shieldTechnology" shieldTechnology FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "medicalEquipment" medicalEquipment FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "holographicTechnology" holographicTechnology FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "householdTool" householdTool FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "culinaryTool" culinaryTool FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "energyTechnology" energyTechnology FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "lifeSupportTechnology" lifeSupportTechnology FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "tool" tool FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "borgTechnology" borgTechnology FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sensorTechnology" sensorTechnology FC.boolean
+      #+ FC.optional "transporterTechnology" transporterTechnology FC.boolean
+      #+ FC.optional "computerProgramming" computerProgramming FC.boolean
+      #+ FC.optional "database" database FC.boolean
+      #+ FC.optional "shieldTechnology" shieldTechnology FC.boolean
+      #+ FC.optional "medicalEquipment" medicalEquipment FC.boolean
+      #+ FC.optional "holographicTechnology" holographicTechnology FC.boolean
+      #+ FC.optional "householdTool" householdTool FC.boolean
+      #+ FC.optional "culinaryTool" culinaryTool FC.boolean
+      #+ FC.optional "energyTechnology" energyTechnology FC.boolean
+      #+ FC.optional "lifeSupportTechnology" lifeSupportTechnology FC.boolean
+      #+ FC.optional "tool" tool FC.boolean
+      #+ FC.optional "borgTechnology" borgTechnology FC.boolean
+      #+ FC.optional "sensorTechnology" sensorTechnology FC.boolean

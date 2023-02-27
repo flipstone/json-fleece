@@ -27,8 +27,8 @@ seasonFullSchema =
   FC.object $
     FC.constructor SeasonFull
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "episodes" episodes (FC.list episodeBaseSchema)
+      #+ FC.optional "episodes" episodes (FC.list episodeBaseSchema)
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "series" series seriesBaseSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "seasonNumber" seasonNumber FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfEpisodes" numberOfEpisodes FC.integer
+      #+ FC.optional "series" series seriesBaseSchema
+      #+ FC.optional "seasonNumber" seasonNumber FC.integer
+      #+ FC.optional "numberOfEpisodes" numberOfEpisodes FC.integer

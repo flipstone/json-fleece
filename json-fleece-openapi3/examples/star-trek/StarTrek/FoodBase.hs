@@ -31,14 +31,14 @@ foodBaseSchema =
   FC.object $
     FC.constructor FoodBase
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "tea" tea FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "juice" juice FC.boolean
+      #+ FC.optional "tea" tea FC.boolean
+      #+ FC.optional "juice" juice FC.boolean
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "fruit" fruit FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "dessert" dessert FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "herbOrSpice" herbOrSpice FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "beverage" beverage FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "soup" soup FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "earthlyOrigin" earthlyOrigin FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sauce" sauce FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "alcoholicBeverage" alcoholicBeverage FC.boolean
+      #+ FC.optional "fruit" fruit FC.boolean
+      #+ FC.optional "dessert" dessert FC.boolean
+      #+ FC.optional "herbOrSpice" herbOrSpice FC.boolean
+      #+ FC.optional "beverage" beverage FC.boolean
+      #+ FC.optional "soup" soup FC.boolean
+      #+ FC.optional "earthlyOrigin" earthlyOrigin FC.boolean
+      #+ FC.optional "sauce" sauce FC.boolean
+      #+ FC.optional "alcoholicBeverage" alcoholicBeverage FC.boolean

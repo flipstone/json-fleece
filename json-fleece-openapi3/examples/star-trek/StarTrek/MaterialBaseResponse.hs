@@ -23,6 +23,6 @@ materialBaseResponseSchema :: FC.Fleece schema => schema MaterialBaseResponse
 materialBaseResponseSchema =
   FC.object $
     FC.constructor MaterialBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "materials" materials (FC.list materialBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "materials" materials (FC.list materialBaseSchema)
+      #+ FC.optional "page" page responsePageSchema

@@ -19,4 +19,4 @@ conflictFullResponseSchema :: FC.Fleece schema => schema ConflictFullResponse
 conflictFullResponseSchema =
   FC.object $
     FC.constructor ConflictFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "conflict" conflict conflictFullSchema
+      #+ FC.optional "conflict" conflict conflictFullSchema

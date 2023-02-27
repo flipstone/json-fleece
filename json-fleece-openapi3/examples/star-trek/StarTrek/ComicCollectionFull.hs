@@ -48,26 +48,26 @@ comicCollectionFullSchema :: FC.Fleece schema => schema ComicCollectionFull
 comicCollectionFullSchema =
   FC.object $
     FC.constructor ComicCollectionFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearFrom" yearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateTo" stardateTo FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishers" publishers (FC.list companyBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonth" publishedMonth FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYear" publishedYear FC.integer
+      #+ FC.optional "yearFrom" yearFrom FC.integer
+      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "publishers" publishers (FC.list companyBaseSchema)
+      #+ FC.optional "publishedMonth" publishedMonth FC.integer
+      #+ FC.optional "publishedYear" publishedYear FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateFrom" stardateFrom FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "artists" artists (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "characters" characters (FC.list characterBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedDay" publishedDay FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "photonovel" photonovel FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "coverYear" coverYear FC.integer
+      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "artists" artists (FC.list staffBaseSchema)
+      #+ FC.optional "characters" characters (FC.list characterBaseSchema)
+      #+ FC.optional "publishedDay" publishedDay FC.integer
+      #+ FC.optional "photonovel" photonovel FC.boolean
+      #+ FC.optional "coverYear" coverYear FC.integer
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "comicSeries" comicSeries (FC.list comicSeriesBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "coverDay" coverDay FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "references" references (FC.list referenceSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearTo" yearTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "staff" staff (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "comics" comics (FC.list comicsBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfPages" numberOfPages FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "writers" writers (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "coverMonth" coverMonth FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "editors" editors (FC.list staffBaseSchema)
+      #+ FC.optional "comicSeries" comicSeries (FC.list comicSeriesBaseSchema)
+      #+ FC.optional "coverDay" coverDay FC.integer
+      #+ FC.optional "references" references (FC.list referenceSchema)
+      #+ FC.optional "yearTo" yearTo FC.integer
+      #+ FC.optional "staff" staff (FC.list staffBaseSchema)
+      #+ FC.optional "comics" comics (FC.list comicsBaseSchema)
+      #+ FC.optional "numberOfPages" numberOfPages FC.integer
+      #+ FC.optional "writers" writers (FC.list staffBaseSchema)
+      #+ FC.optional "coverMonth" coverMonth FC.integer
+      #+ FC.optional "editors" editors (FC.list staffBaseSchema)

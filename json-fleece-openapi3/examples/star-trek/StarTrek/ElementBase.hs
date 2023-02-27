@@ -30,15 +30,15 @@ elementBaseSchema :: FC.Fleece schema => schema ElementBase
 elementBaseSchema =
   FC.object $
     FC.constructor ElementBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "hypersonicSeries" hypersonicSeries FC.boolean
+      #+ FC.optional "hypersonicSeries" hypersonicSeries FC.boolean
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "atomicNumber" atomicNumber FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "megaSeries" megaSeries FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "symbol" symbol FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "atomicWeight" atomicWeight FC.integer
+      #+ FC.optional "atomicNumber" atomicNumber FC.integer
+      #+ FC.optional "megaSeries" megaSeries FC.boolean
+      #+ FC.optional "symbol" symbol FC.text
+      #+ FC.optional "atomicWeight" atomicWeight FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "transonicSeries" transonicSeries FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "transuranium" transuranium FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "gammaSeries" gammaSeries FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "omegaSeries" omegaSeries FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "worldSeries" worldSeries FC.boolean
+      #+ FC.optional "transonicSeries" transonicSeries FC.boolean
+      #+ FC.optional "transuranium" transuranium FC.boolean
+      #+ FC.optional "gammaSeries" gammaSeries FC.boolean
+      #+ FC.optional "omegaSeries" omegaSeries FC.boolean
+      #+ FC.optional "worldSeries" worldSeries FC.boolean

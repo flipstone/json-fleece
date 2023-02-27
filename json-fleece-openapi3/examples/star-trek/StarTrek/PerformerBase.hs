@@ -40,24 +40,24 @@ performerBaseSchema :: FC.Fleece schema => schema PerformerBase
 performerBaseSchema =
   FC.object $
     FC.constructor PerformerBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "birthName" birthName FC.text
+      #+ FC.optional "birthName" birthName FC.text
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "tngPerformer" tngPerformer FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "animalPerformer" animalPerformer FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "standInPerformer" standInPerformer FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "tasPerformer" tasPerformer FC.boolean
+      #+ FC.optional "tngPerformer" tngPerformer FC.boolean
+      #+ FC.optional "animalPerformer" animalPerformer FC.boolean
+      #+ FC.optional "standInPerformer" standInPerformer FC.boolean
+      #+ FC.optional "tasPerformer" tasPerformer FC.boolean
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "dateOfDeath" dateOfDeath FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stuntPerformer" stuntPerformer FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "entPerformer" entPerformer FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "voicePerformer" voicePerformer FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "disPerformer" disPerformer FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "ds9Performer" ds9Performer FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "gender" gender genderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "dateOfBirth" dateOfBirth FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "placeOfDeath" placeOfDeath FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "tosPerformer" tosPerformer FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "videoGamePerformer" videoGamePerformer FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "filmPerformer" filmPerformer FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "placeOfBirth" placeOfBirth FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "voyPerformer" voyPerformer FC.boolean
+      #+ FC.optional "dateOfDeath" dateOfDeath FC.text
+      #+ FC.optional "stuntPerformer" stuntPerformer FC.boolean
+      #+ FC.optional "entPerformer" entPerformer FC.boolean
+      #+ FC.optional "voicePerformer" voicePerformer FC.boolean
+      #+ FC.optional "disPerformer" disPerformer FC.boolean
+      #+ FC.optional "ds9Performer" ds9Performer FC.boolean
+      #+ FC.optional "gender" gender genderSchema
+      #+ FC.optional "dateOfBirth" dateOfBirth FC.text
+      #+ FC.optional "placeOfDeath" placeOfDeath FC.text
+      #+ FC.optional "tosPerformer" tosPerformer FC.boolean
+      #+ FC.optional "videoGamePerformer" videoGamePerformer FC.boolean
+      #+ FC.optional "filmPerformer" filmPerformer FC.boolean
+      #+ FC.optional "placeOfBirth" placeOfBirth FC.text
+      #+ FC.optional "voyPerformer" voyPerformer FC.boolean

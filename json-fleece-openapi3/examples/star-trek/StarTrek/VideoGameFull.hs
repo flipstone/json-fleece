@@ -38,17 +38,17 @@ videoGameFullSchema :: FC.Fleece schema => schema VideoGameFull
 videoGameFullSchema =
   FC.object $
     FC.constructor VideoGameFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearFrom" yearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateTo" stardateTo FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishers" publishers (FC.list companyBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "systemRequirements" systemRequirements FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "releaseDate" releaseDate FC.text
+      #+ FC.optional "yearFrom" yearFrom FC.integer
+      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "publishers" publishers (FC.list companyBaseSchema)
+      #+ FC.optional "systemRequirements" systemRequirements FC.text
+      #+ FC.optional "releaseDate" releaseDate FC.text
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "ratings" ratings (FC.list contentRatingSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateFrom" stardateFrom FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "genres" genres (FC.list genreSchema)
+      #+ FC.optional "ratings" ratings (FC.list contentRatingSchema)
+      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "genres" genres (FC.list genreSchema)
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "references" references (FC.list referenceSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearTo" yearTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "developers" developers (FC.list companyBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "platforms" platforms (FC.list platformSchema)
+      #+ FC.optional "references" references (FC.list referenceSchema)
+      #+ FC.optional "yearTo" yearTo FC.integer
+      #+ FC.optional "developers" developers (FC.list companyBaseSchema)
+      #+ FC.optional "platforms" platforms (FC.list platformSchema)

@@ -23,6 +23,6 @@ organizationBaseResponseSchema :: FC.Fleece schema => schema OrganizationBaseRes
 organizationBaseResponseSchema =
   FC.object $
     FC.constructor OrganizationBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "organizations" organizations (FC.list organizationBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "organizations" organizations (FC.list organizationBaseSchema)

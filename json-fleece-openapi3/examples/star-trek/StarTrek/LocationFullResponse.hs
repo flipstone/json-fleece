@@ -19,4 +19,4 @@ locationFullResponseSchema :: FC.Fleece schema => schema LocationFullResponse
 locationFullResponseSchema =
   FC.object $
     FC.constructor LocationFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "location" location locationFullSchema
+      #+ FC.optional "location" location locationFullSchema

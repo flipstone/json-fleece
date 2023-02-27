@@ -49,28 +49,28 @@ episodeFullSchema :: FC.Fleece schema => schema EpisodeFull
 episodeFullSchema =
   FC.object $
     FC.constructor EpisodeFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionSerialNumber" productionSerialNumber FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleJapanese" titleJapanese FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "directors" directors (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearFrom" yearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateTo" stardateTo FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "episodeNumber" episodeNumber FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "standInPerformers" standInPerformers (FC.list performerBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleItalian" titleItalian FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "performers" performers (FC.list performerBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stuntPerformers" stuntPerformers (FC.list performerBaseSchema)
+      #+ FC.optional "productionSerialNumber" productionSerialNumber FC.text
+      #+ FC.optional "titleJapanese" titleJapanese FC.text
+      #+ FC.optional "directors" directors (FC.list staffBaseSchema)
+      #+ FC.optional "yearFrom" yearFrom FC.integer
+      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "episodeNumber" episodeNumber FC.integer
+      #+ FC.optional "standInPerformers" standInPerformers (FC.list performerBaseSchema)
+      #+ FC.optional "titleItalian" titleItalian FC.text
+      #+ FC.optional "performers" performers (FC.list performerBaseSchema)
+      #+ FC.optional "stuntPerformers" stuntPerformers (FC.list performerBaseSchema)
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "storyAuthors" storyAuthors (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "finalScriptDate" finalScriptDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateFrom" stardateFrom FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "usAirDate" usAirDate FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "characters" characters (FC.list characterBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "featureLength" featureLength FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "titleGerman" titleGerman FC.text
+      #+ FC.optional "storyAuthors" storyAuthors (FC.list staffBaseSchema)
+      #+ FC.optional "finalScriptDate" finalScriptDate FC.text
+      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "usAirDate" usAirDate FC.text
+      #+ FC.optional "characters" characters (FC.list characterBaseSchema)
+      #+ FC.optional "featureLength" featureLength FC.boolean
+      #+ FC.optional "titleGerman" titleGerman FC.text
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearTo" yearTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "series" series seriesBaseSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "season" season seasonBaseSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "writers" writers (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "seasonNumber" seasonNumber FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "teleplayAuthors" teleplayAuthors (FC.list staffBaseSchema)
+      #+ FC.optional "yearTo" yearTo FC.integer
+      #+ FC.optional "series" series seriesBaseSchema
+      #+ FC.optional "season" season seasonBaseSchema
+      #+ FC.optional "writers" writers (FC.list staffBaseSchema)
+      #+ FC.optional "seasonNumber" seasonNumber FC.integer
+      #+ FC.optional "teleplayAuthors" teleplayAuthors (FC.list staffBaseSchema)

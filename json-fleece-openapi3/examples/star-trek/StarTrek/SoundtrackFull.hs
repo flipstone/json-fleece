@@ -30,12 +30,12 @@ soundtrackFullSchema :: FC.Fleece schema => schema SoundtrackFull
 soundtrackFullSchema =
   FC.object $
     FC.constructor SoundtrackFull
-      #+ FC.optionalField FC.OmitKey_DelegateNull "releaseDate" releaseDate FC.text
+      #+ FC.optional "releaseDate" releaseDate FC.text
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "length" length FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "composers" composers (FC.list staffBaseSchema)
+      #+ FC.optional "length" length FC.integer
+      #+ FC.optional "composers" composers (FC.list staffBaseSchema)
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "labels" labels (FC.list companyBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "references" references (FC.list referenceSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "orchestrators" orchestrators (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "contributors" contributors (FC.list staffBaseSchema)
+      #+ FC.optional "labels" labels (FC.list companyBaseSchema)
+      #+ FC.optional "references" references (FC.list referenceSchema)
+      #+ FC.optional "orchestrators" orchestrators (FC.list staffBaseSchema)
+      #+ FC.optional "contributors" contributors (FC.list staffBaseSchema)

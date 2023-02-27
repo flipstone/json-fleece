@@ -19,4 +19,4 @@ materialFullResponseSchema :: FC.Fleece schema => schema MaterialFullResponse
 materialFullResponseSchema =
   FC.object $
     FC.constructor MaterialFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "material" material materialFullSchema
+      #+ FC.optional "material" material materialFullSchema

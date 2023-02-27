@@ -29,13 +29,13 @@ bookCollectionBaseSchema :: FC.Fleece schema => schema BookCollectionBase
 bookCollectionBaseSchema =
   FC.object $
     FC.constructor BookCollectionBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearFrom" yearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateTo" stardateTo FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonth" publishedMonth FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYear" publishedYear FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateFrom" stardateFrom FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedDay" publishedDay FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearTo" yearTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfPages" numberOfPages FC.integer
+      #+ FC.optional "yearFrom" yearFrom FC.integer
+      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "publishedMonth" publishedMonth FC.integer
+      #+ FC.optional "publishedYear" publishedYear FC.integer
+      #+ FC.optional "uid" uid FC.text
+      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "publishedDay" publishedDay FC.integer
+      #+ FC.optional "title" title FC.text
+      #+ FC.optional "yearTo" yearTo FC.integer
+      #+ FC.optional "numberOfPages" numberOfPages FC.integer

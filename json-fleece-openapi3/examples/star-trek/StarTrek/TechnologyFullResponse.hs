@@ -19,4 +19,4 @@ technologyFullResponseSchema :: FC.Fleece schema => schema TechnologyFullRespons
 technologyFullResponseSchema =
   FC.object $
     FC.constructor TechnologyFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "technology" technology technologyFullSchema
+      #+ FC.optional "technology" technology technologyFullSchema

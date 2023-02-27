@@ -23,6 +23,6 @@ tradingCardBaseResponseSchema :: FC.Fleece schema => schema TradingCardBaseRespo
 tradingCardBaseResponseSchema =
   FC.object $
     FC.constructor TradingCardBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "tradingCards" tradingCards (FC.list tradingCardBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "tradingCards" tradingCards (FC.list tradingCardBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema

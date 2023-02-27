@@ -19,4 +19,4 @@ comicStripFullResponseSchema :: FC.Fleece schema => schema ComicStripFullRespons
 comicStripFullResponseSchema =
   FC.object $
     FC.constructor ComicStripFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "comicStrip" comicStrip comicStripFullSchema
+      #+ FC.optional "comicStrip" comicStrip comicStripFullSchema

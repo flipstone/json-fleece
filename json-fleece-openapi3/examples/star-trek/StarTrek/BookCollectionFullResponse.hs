@@ -19,4 +19,4 @@ bookCollectionFullResponseSchema :: FC.Fleece schema => schema BookCollectionFul
 bookCollectionFullResponseSchema =
   FC.object $
     FC.constructor BookCollectionFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "bookCollection" bookCollection bookCollectionFullSchema
+      #+ FC.optional "bookCollection" bookCollection bookCollectionFullSchema

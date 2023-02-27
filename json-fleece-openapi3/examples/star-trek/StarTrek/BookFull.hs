@@ -61,37 +61,37 @@ bookFullSchema =
   FC.object $
     FC.constructor BookFull
       #+ FC.required "anthology" anthology FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "audiobookPublishers" audiobookPublishers (FC.list companyBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "authors" authors (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearFrom" yearFrom FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateTo" stardateTo FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "audiobookNarrators" audiobookNarrators (FC.list staffBaseSchema)
+      #+ FC.optional "audiobookPublishers" audiobookPublishers (FC.list companyBaseSchema)
+      #+ FC.optional "authors" authors (FC.list staffBaseSchema)
+      #+ FC.optional "yearFrom" yearFrom FC.integer
+      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "audiobookNarrators" audiobookNarrators (FC.list staffBaseSchema)
       #+ FC.required "audiobookAbridged" audiobookAbridged FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishers" publishers (FC.list companyBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "bookSeries" bookSeries (FC.list bookSeriesBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "audiobookPublishedDay" audiobookPublishedDay FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "productionNumber" productionNumber FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedMonth" publishedMonth FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedYear" publishedYear FC.integer
+      #+ FC.optional "publishers" publishers (FC.list companyBaseSchema)
+      #+ FC.optional "bookSeries" bookSeries (FC.list bookSeriesBaseSchema)
+      #+ FC.optional "audiobookPublishedDay" audiobookPublishedDay FC.integer
+      #+ FC.optional "productionNumber" productionNumber FC.text
+      #+ FC.optional "publishedMonth" publishedMonth FC.integer
+      #+ FC.optional "publishedYear" publishedYear FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "bookCollections" bookCollections (FC.list bookCollectionBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "stardateFrom" stardateFrom FC.number
-      #+ FC.optionalField FC.OmitKey_DelegateNull "artists" artists (FC.list staffBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "characters" characters (FC.list characterBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "publishedDay" publishedDay FC.integer
+      #+ FC.optional "bookCollections" bookCollections (FC.list bookCollectionBaseSchema)
+      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "artists" artists (FC.list staffBaseSchema)
+      #+ FC.optional "characters" characters (FC.list characterBaseSchema)
+      #+ FC.optional "publishedDay" publishedDay FC.integer
       #+ FC.required "novel" novel FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "audiobookRunTime" audiobookRunTime FC.integer
+      #+ FC.optional "audiobookRunTime" audiobookRunTime FC.integer
       #+ FC.required "title" title FC.text
       #+ FC.required "referenceBook" referenceBook FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "references" references (FC.list referenceSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "audiobookPublishedMonth" audiobookPublishedMonth FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "yearTo" yearTo FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "audiobookReferences" audiobookReferences (FC.list referenceSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "audiobookPublishedYear" audiobookPublishedYear FC.integer
+      #+ FC.optional "references" references (FC.list referenceSchema)
+      #+ FC.optional "audiobookPublishedMonth" audiobookPublishedMonth FC.integer
+      #+ FC.optional "yearTo" yearTo FC.integer
+      #+ FC.optional "audiobookReferences" audiobookReferences (FC.list referenceSchema)
+      #+ FC.optional "audiobookPublishedYear" audiobookPublishedYear FC.integer
       #+ FC.required "biographyBook" biographyBook FC.boolean
       #+ FC.required "rolePlayingBook" rolePlayingBook FC.boolean
       #+ FC.required "novelization" novelization FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfPages" numberOfPages FC.integer
+      #+ FC.optional "numberOfPages" numberOfPages FC.integer
       #+ FC.required "eBook" eBook FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "editors" editors (FC.list staffBaseSchema)
+      #+ FC.optional "editors" editors (FC.list staffBaseSchema)
       #+ FC.required "audiobook" audiobook FC.boolean

@@ -19,4 +19,4 @@ performerFullResponseSchema :: FC.Fleece schema => schema PerformerFullResponse
 performerFullResponseSchema =
   FC.object $
     FC.constructor PerformerFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "performer" performer performerFullSchema
+      #+ FC.optional "performer" performer performerFullSchema

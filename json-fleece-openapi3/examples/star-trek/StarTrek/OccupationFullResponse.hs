@@ -19,4 +19,4 @@ occupationFullResponseSchema :: FC.Fleece schema => schema OccupationFullRespons
 occupationFullResponseSchema =
   FC.object $
     FC.constructor OccupationFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "occupation" occupation occupationFullSchema
+      #+ FC.optional "occupation" occupation occupationFullSchema

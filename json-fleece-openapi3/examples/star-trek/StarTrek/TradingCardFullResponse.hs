@@ -19,4 +19,4 @@ tradingCardFullResponseSchema :: FC.Fleece schema => schema TradingCardFullRespo
 tradingCardFullResponseSchema =
   FC.object $
     FC.constructor TradingCardFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "tradingCard" tradingCard tradingCardFullSchema
+      #+ FC.optional "tradingCard" tradingCard tradingCardFullSchema

@@ -26,6 +26,6 @@ seasonBaseSchema =
     FC.constructor SeasonBase
       #+ FC.required "uid" uid FC.text
       #+ FC.required "title" title FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "series" series seriesHeaderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "seasonNumber" seasonNumber FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfEpisodes" numberOfEpisodes FC.integer
+      #+ FC.optional "series" series seriesHeaderSchema
+      #+ FC.optional "seasonNumber" seasonNumber FC.integer
+      #+ FC.optional "numberOfEpisodes" numberOfEpisodes FC.integer

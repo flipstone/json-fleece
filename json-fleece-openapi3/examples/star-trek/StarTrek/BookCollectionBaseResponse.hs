@@ -23,6 +23,6 @@ bookCollectionBaseResponseSchema :: FC.Fleece schema => schema BookCollectionBas
 bookCollectionBaseResponseSchema =
   FC.object $
     FC.constructor BookCollectionBaseResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "bookCollections" bookCollections (FC.list bookCollectionBaseSchema)
-      #+ FC.optionalField FC.OmitKey_DelegateNull "sort" sort responseSortSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "page" page responsePageSchema
+      #+ FC.optional "bookCollections" bookCollections (FC.list bookCollectionBaseSchema)
+      #+ FC.optional "sort" sort responseSortSchema
+      #+ FC.optional "page" page responsePageSchema

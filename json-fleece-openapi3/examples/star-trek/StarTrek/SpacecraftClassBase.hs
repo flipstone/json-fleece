@@ -31,14 +31,14 @@ spacecraftClassBaseSchema :: FC.Fleece schema => schema SpacecraftClassBase
 spacecraftClassBaseSchema =
   FC.object $
     FC.constructor SpacecraftClassBase
-      #+ FC.optionalField FC.OmitKey_DelegateNull "alternateReality" alternateReality FC.boolean
+      #+ FC.optional "alternateReality" alternateReality FC.boolean
       #+ FC.required "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "activeFrom" activeFrom FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "warpCapable" warpCapable FC.boolean
-      #+ FC.optionalField FC.OmitKey_DelegateNull "numberOfDecks" numberOfDecks FC.integer
-      #+ FC.optionalField FC.OmitKey_DelegateNull "affiliation" affiliation organizationHeaderSchema
+      #+ FC.optional "activeFrom" activeFrom FC.text
+      #+ FC.optional "warpCapable" warpCapable FC.boolean
+      #+ FC.optional "numberOfDecks" numberOfDecks FC.integer
+      #+ FC.optional "affiliation" affiliation organizationHeaderSchema
       #+ FC.required "uid" uid FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "owner" owner organizationHeaderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "species" species speciesHeaderSchema
-      #+ FC.optionalField FC.OmitKey_DelegateNull "activeTo" activeTo FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "operator" operator organizationHeaderSchema
+      #+ FC.optional "owner" owner organizationHeaderSchema
+      #+ FC.optional "species" species speciesHeaderSchema
+      #+ FC.optional "activeTo" activeTo FC.text
+      #+ FC.optional "operator" operator organizationHeaderSchema

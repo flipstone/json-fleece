@@ -20,5 +20,5 @@ spacecraftTypeSchema :: FC.Fleece schema => schema SpacecraftType
 spacecraftTypeSchema =
   FC.object $
     FC.constructor SpacecraftType
-      #+ FC.optionalField FC.OmitKey_DelegateNull "name" name FC.text
-      #+ FC.optionalField FC.OmitKey_DelegateNull "uid" uid FC.text
+      #+ FC.optional "name" name FC.text
+      #+ FC.optional "uid" uid FC.text

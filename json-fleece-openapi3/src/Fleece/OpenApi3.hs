@@ -160,6 +160,7 @@ importDeclarations options thisModuleName code =
                   "Enum" -> "Prelude"
                   "Bounded" -> "Prelude"
                   "Maybe" -> "Prelude"
+                  "Either" -> "Prelude"
                   _ -> moduleBaseName options <> "." <> typeName
           in
             if moduleName == thisModuleName
@@ -311,9 +312,13 @@ data Field = Field
 
 fieldTypeName :: Field -> HC.TypeName
 fieldTypeName field =
-  if fieldRequired field && not (fieldNullable field)
-    then fieldBaseTypeName field
-    else HC.maybeOf (fieldBaseTypeName field)
+  case (fieldRequired field, fieldNullable field) of
+    (True, False) -> fieldBaseTypeName field
+    (True, True) -> HC.eitherOf "FC.Null" (fieldBaseTypeName field)
+    (False, False) -> HC.maybeOf (fieldBaseTypeName field)
+    (False, True) ->
+      HC.maybeOf $
+        "(" <> HC.eitherOf "FC.Null" (fieldBaseTypeName field) <> ")"
 
 fieldNullable :: Field -> Bool
 fieldNullable field =
@@ -331,10 +336,7 @@ fleeceFieldFunction :: Field -> HC.HaskellCode
 fleeceFieldFunction field =
   if fieldRequired field
     then "FC.required"
-    else
-      if fieldNullable field
-        then "FC.optional"
-        else "FC.optionalField FC.OmitKey_DelegateNull"
+    else "FC.optional"
 
 mkField ::
   HC.ModuleName ->

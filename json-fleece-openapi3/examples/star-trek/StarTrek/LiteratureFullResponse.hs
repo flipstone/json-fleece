@@ -19,4 +19,4 @@ literatureFullResponseSchema :: FC.Fleece schema => schema LiteratureFullRespons
 literatureFullResponseSchema =
   FC.object $
     FC.constructor LiteratureFullResponse
-      #+ FC.optionalField FC.OmitKey_DelegateNull "literature" literature literatureFullSchema
+      #+ FC.optional "literature" literature literatureFullSchema
