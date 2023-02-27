@@ -5,8 +5,8 @@ module StarTrek.OrganizationBaseResponse
   , organizationBaseResponseSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import StarTrek.OrganizationBase (OrganizationBase, organizationBaseSchema)
 import StarTrek.ResponsePage (ResponsePage, responsePageSchema)

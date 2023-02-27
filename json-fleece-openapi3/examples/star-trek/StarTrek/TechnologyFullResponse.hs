@@ -5,8 +5,8 @@ module StarTrek.TechnologyFullResponse
   , technologyFullResponseSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import StarTrek.TechnologyFull (TechnologyFull, technologyFullSchema)
 

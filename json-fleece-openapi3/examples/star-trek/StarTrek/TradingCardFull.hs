@@ -5,9 +5,9 @@ module StarTrek.TradingCardFull
   , tradingCardFullSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Eq, Integer, Maybe, Show)
 import StarTrek.TradingCardDeckBase (TradingCardDeckBase, tradingCardDeckBaseSchema)
 import StarTrek.TradingCardSetBase (TradingCardSetBase, tradingCardSetBaseSchema)

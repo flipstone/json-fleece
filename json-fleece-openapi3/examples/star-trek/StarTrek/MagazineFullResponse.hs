@@ -5,8 +5,8 @@ module StarTrek.MagazineFullResponse
   , magazineFullResponseSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import StarTrek.MagazineFull (MagazineFull, magazineFullSchema)
 

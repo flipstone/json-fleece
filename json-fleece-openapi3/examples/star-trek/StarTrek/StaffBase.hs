@@ -5,9 +5,10 @@ module StarTrek.StaffBase
   , staffBaseSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
+import Data.Time (Day)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Bool, Eq, Maybe, Show)
 import StarTrek.Gender (Gender, genderSchema)
 
@@ -47,7 +48,7 @@ data StaffBase = StaffBase
   , transportationDepartment :: Maybe Bool -- ^ Whether this person is from transportation department
   , linguist :: Maybe Bool -- ^ Whether this person is a linguist
   , cinematographer :: Maybe Bool -- ^ Whether this person is a cinematographer
-  , dateOfDeath :: Maybe Text -- ^ Date the staff died
+  , dateOfDeath :: Maybe Day -- ^ Date the staff died
   , locationStaff :: Maybe Bool -- ^ Whether this person is a location staff
   , calendarArtist :: Maybe Bool -- ^ Whether this person is a calendar artist
   , costumeDepartment :: Maybe Bool -- ^ Whether this person is from costume department
@@ -60,7 +61,7 @@ data StaffBase = StaffBase
   , specialFeaturesStaff :: Maybe Bool -- ^ Whether this person is a special features artist
   , scienceConsultant :: Maybe Bool -- ^ Whether this person is a science consultant
   , gender :: Maybe Gender -- ^ Gender
-  , dateOfBirth :: Maybe Text -- ^ Date the staff was born
+  , dateOfBirth :: Maybe Day -- ^ Date the staff was born
   , publicationEditor :: Maybe Bool -- ^ Whether this person is a publication editor
   , placeOfDeath :: Maybe Text -- ^ Place the staff died
   , novelAuthor :: Maybe Bool -- ^ Whether this person is a novel author
@@ -117,7 +118,7 @@ staffBaseSchema =
       #+ FC.optional "transportationDepartment" transportationDepartment FC.boolean
       #+ FC.optional "linguist" linguist FC.boolean
       #+ FC.optional "cinematographer" cinematographer FC.boolean
-      #+ FC.optional "dateOfDeath" dateOfDeath FC.text
+      #+ FC.optional "dateOfDeath" dateOfDeath FC.day
       #+ FC.optional "locationStaff" locationStaff FC.boolean
       #+ FC.optional "calendarArtist" calendarArtist FC.boolean
       #+ FC.optional "costumeDepartment" costumeDepartment FC.boolean
@@ -130,7 +131,7 @@ staffBaseSchema =
       #+ FC.optional "specialFeaturesStaff" specialFeaturesStaff FC.boolean
       #+ FC.optional "scienceConsultant" scienceConsultant FC.boolean
       #+ FC.optional "gender" gender genderSchema
-      #+ FC.optional "dateOfBirth" dateOfBirth FC.text
+      #+ FC.optional "dateOfBirth" dateOfBirth FC.day
       #+ FC.optional "publicationEditor" publicationEditor FC.boolean
       #+ FC.optional "placeOfDeath" placeOfDeath FC.text
       #+ FC.optional "novelAuthor" novelAuthor FC.boolean

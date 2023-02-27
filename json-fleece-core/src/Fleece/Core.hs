@@ -40,6 +40,10 @@ module Fleece.Core
   , word16
   , word32
   , word64
+  , double
+  , float
+  , realFloat
+  , realFloatNamed
   , string
   , utcTime
   , localTime
@@ -70,7 +74,7 @@ import Data.Coerce (Coercible, coerce)
 import qualified Data.Int as I
 import Data.Kind (Type)
 import qualified Data.List.NonEmpty as NEL
-import Data.Scientific (Scientific, floatingOrInteger, toBoundedInteger)
+import Data.Scientific (Scientific, floatingOrInteger, fromFloatDigits, toBoundedInteger, toRealFloat)
 import qualified Data.String as String
 import qualified Data.Text as T
 import qualified Data.Time as Time
@@ -484,6 +488,38 @@ word32 = boundedIntegralNumber
 
 word64 :: Fleece schema => schema W.Word64
 word64 = boundedIntegralNumber
+
+double :: Fleece schema => schema Double
+double =
+  realFloat
+
+float :: Fleece schema => schema Float
+float =
+  realFloat
+
+realFloat ::
+  (Fleece schema, RealFloat f, Typeable f) =>
+  schema f
+realFloat =
+  let
+    name =
+      defaultSchemaName schema
+
+    schema =
+      realFloatNamed name
+  in
+    schema
+
+realFloatNamed ::
+  (Fleece schema, RealFloat f) =>
+  Name ->
+  schema f
+realFloatNamed name =
+  transformNamed
+    name
+    fromFloatDigits
+    toRealFloat
+    number
 
 string :: Fleece schema => schema String
 string = transform T.pack T.unpack text

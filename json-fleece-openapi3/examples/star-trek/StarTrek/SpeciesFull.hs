@@ -5,9 +5,9 @@ module StarTrek.SpeciesFull
   , speciesFullSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Bool, Eq, Maybe, Show)
 import StarTrek.AstronomicalObjectBase (AstronomicalObjectBase, astronomicalObjectBaseSchema)
 import StarTrek.CharacterBase (CharacterBase, characterBaseSchema)

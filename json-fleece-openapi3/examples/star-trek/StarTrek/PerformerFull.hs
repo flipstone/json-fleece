@@ -5,9 +5,10 @@ module StarTrek.PerformerFull
   , performerFullSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
+import Data.Time (Day)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Bool, Eq, Maybe, Show)
 import StarTrek.CharacterBase (CharacterBase, characterBaseSchema)
 import StarTrek.EpisodeBase (EpisodeBase, episodeBaseSchema)
@@ -25,7 +26,7 @@ data PerformerFull = PerformerFull
   , tasPerformer :: Maybe Bool -- ^ Whether it's a performer that appeared in Star Trek: The Animated Series
   , uid :: Text -- ^ Performer unique ID
   , characters :: Maybe [CharacterBase] -- ^ Characters played by this performer
-  , dateOfDeath :: Maybe Text -- ^ Date the performer died
+  , dateOfDeath :: Maybe Day -- ^ Date the performer died
   , stuntPerformer :: Maybe Bool -- ^ Whether it's a stunt performer
   , moviesStuntPerformances :: Maybe [MovieBase] -- ^ Movies in which this person appeared as a stunt performer
   , entPerformer :: Maybe Bool -- ^ Whether it's a performer that appeared in Star Trek: Enterprise
@@ -34,7 +35,7 @@ data PerformerFull = PerformerFull
   , disPerformer :: Maybe Bool -- ^ Whether it's a performer that appeared in Star Trek: Discovery
   , ds9Performer :: Maybe Bool -- ^ Whether it's a performer that appeared in Star Trek: Deep Space Nine
   , gender :: Maybe Gender -- ^ Gender
-  , dateOfBirth :: Maybe Text -- ^ Date the performer was born
+  , dateOfBirth :: Maybe Day -- ^ Date the performer was born
   , moviesPerformances :: Maybe [MovieBase] -- ^ Movies in which this person appeared as a performer
   , placeOfDeath :: Maybe Text -- ^ Place the performer died
   , tosPerformer :: Maybe Bool -- ^ Whether it's a performer that appeared in Star Trek: The Original Series
@@ -60,7 +61,7 @@ performerFullSchema =
       #+ FC.optional "tasPerformer" tasPerformer FC.boolean
       #+ FC.required "uid" uid FC.text
       #+ FC.optional "characters" characters (FC.list characterBaseSchema)
-      #+ FC.optional "dateOfDeath" dateOfDeath FC.text
+      #+ FC.optional "dateOfDeath" dateOfDeath FC.day
       #+ FC.optional "stuntPerformer" stuntPerformer FC.boolean
       #+ FC.optional "moviesStuntPerformances" moviesStuntPerformances (FC.list movieBaseSchema)
       #+ FC.optional "entPerformer" entPerformer FC.boolean
@@ -69,7 +70,7 @@ performerFullSchema =
       #+ FC.optional "disPerformer" disPerformer FC.boolean
       #+ FC.optional "ds9Performer" ds9Performer FC.boolean
       #+ FC.optional "gender" gender genderSchema
-      #+ FC.optional "dateOfBirth" dateOfBirth FC.text
+      #+ FC.optional "dateOfBirth" dateOfBirth FC.day
       #+ FC.optional "moviesPerformances" moviesPerformances (FC.list movieBaseSchema)
       #+ FC.optional "placeOfDeath" placeOfDeath FC.text
       #+ FC.optional "tosPerformer" tosPerformer FC.boolean

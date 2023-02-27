@@ -5,9 +5,9 @@ module StarTrek.BookSeriesHeader
   , bookSeriesHeaderSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 
 data BookSeriesHeader = BookSeriesHeader

@@ -8,6 +8,7 @@ module HaskellCode
   , ConstructorName
   , VarName
   , ModuleName (..)
+  , moduleNameToText
   , ToCode (toCode)
   , FromCode (fromCode)
   , ExternalReference (..)
@@ -24,8 +25,11 @@ module HaskellCode
   , indent
   , declarations
   , toTypeName
+  , toQualifiedTypeName
   , toConstructorName
+  , toModuleName
   , toVarName
+  , toQualifiedVarName
   , varNameForType
   , listOf
   , maybeOf
@@ -37,6 +41,11 @@ module HaskellCode
   , typeAnnotate
   , stringLiteral
   , caseMatch
+  , eqClass
+  , showClass
+  , ordClass
+  , enumClass
+  , boundedClass
   ) where
 
 import Prelude hiding (lines)
@@ -77,8 +86,9 @@ data HaskellCode = HaskellCode
   }
 
 data ExternalReference
-  = TypeReference T.Text
+  = TypeReference ModuleName T.Text
   | VarReference ModuleName T.Text
+  | QualifierReference ModuleName T.Text
   deriving (Eq, Ord)
 
 type ExternalReferences =
@@ -115,25 +125,20 @@ newtype TypeName
   = TypeName HaskellCode
   deriving (ToCode, FromCode, Monoid, Semigroup)
 
-instance String.IsString TypeName where
-  fromString s =
-    let
-      codeWithoutRefs =
-        String.fromString s
-
-      typeName =
-        renderText codeWithoutRefs
-    in
-      addReferences
-        [TypeReference typeName]
-        (TypeName codeWithoutRefs)
-
 newtype ModuleName
   = ModuleName T.Text
-  deriving (Eq, Ord, Monoid, Semigroup, String.IsString)
+  deriving (Eq, Ord, Monoid, String.IsString)
+
+instance Semigroup ModuleName where
+  ModuleName left <> ModuleName right =
+    ModuleName (left <> "." <> right)
 
 instance ToCode ModuleName where
   toCode (ModuleName m) = fromText m
+
+moduleNameToText :: ModuleName -> T.Text
+moduleNameToText (ModuleName text) =
+  text
 
 newtype ConstructorName
   = ConstructorName HaskellCode
@@ -190,34 +195,65 @@ indent :: Int -> HaskellCode -> HaskellCode
 indent n code =
   fromText (T.replicate n " ") <> code
 
-toTypeName :: T.Text -> TypeName
-toTypeName t =
+toTypeName :: ModuleName -> T.Text -> TypeName
+toTypeName moduleName t =
   let
     pascalCased =
       Manip.toPascal t
   in
     addReferences
-      [TypeReference pascalCased]
+      [TypeReference moduleName pascalCased]
+      (fromText pascalCased)
+
+toQualifiedTypeName :: ModuleName -> T.Text -> T.Text -> TypeName
+toQualifiedTypeName moduleName qualifier t =
+  let
+    pascalCased =
+      qualifier
+        <> "."
+        <> Manip.toPascal t
+  in
+    addReferences
+      [QualifierReference moduleName qualifier]
       (fromText pascalCased)
 
 toConstructorName :: T.Text -> ConstructorName
 toConstructorName =
   ConstructorName . fromText . Manip.toPascal
 
+toModuleName :: T.Text -> ModuleName
+toModuleName =
+  ModuleName . Manip.toPascal
+
 toVarName :: ModuleName -> T.Text -> VarName
 toVarName moduleName t =
   let
     camelCased =
-      Manip.toCamel t
-
-    unreserved =
-      if Set.member camelCased reservedWords
-        then camelCased <> "_"
-        else camelCased
+      mkUnreservedVarName t
   in
     addReferences
       [VarReference moduleName camelCased]
-      (fromText unreserved)
+      (fromText camelCased)
+
+toQualifiedVarName :: ModuleName -> T.Text -> T.Text -> VarName
+toQualifiedVarName moduleName qualifier t =
+  let
+    camelCased =
+      qualifier <> "." <> mkUnreservedVarName t
+  in
+    addReferences
+      [QualifierReference moduleName qualifier]
+      (fromText camelCased)
+
+mkUnreservedVarName :: T.Text -> T.Text
+mkUnreservedVarName t =
+  let
+    camelCased =
+      Manip.toCamel t
+  in
+    if Set.member camelCased reservedWords
+      then camelCased <> "_"
+      else camelCased
 
 reservedWords :: Set.Set T.Text
 reservedWords =
@@ -267,7 +303,7 @@ record typeName fields =
       map mkField (zip [0 ..] fields)
 
     derivations =
-      deriving_ ["Eq", "Show"]
+      deriving_ [eqClass, showClass]
   in
     lines
       ( "data " <> toCode typeName <> " = " <> toCode typeName
@@ -284,15 +320,17 @@ listOf itemName =
 
 maybeOf :: TypeName -> TypeName
 maybeOf itemName =
-  addReferences
-    [TypeReference "Maybe"]
-    (TypeName ("Maybe " <> toCode itemName))
+  toTypeName "Prelude" "Maybe"
+    <> fromCode " "
+    <> itemName
 
 eitherOf :: TypeName -> TypeName -> TypeName
 eitherOf left right =
-  addReferences
-    [TypeReference "Either"]
-    (TypeName ("Either " <> toCode left <> " " <> toCode right))
+  toTypeName "Prelude" "Either"
+    <> fromCode " "
+    <> left
+    <> fromCode " "
+    <> right
 
 dollar :: HaskellCode
 dollar =
@@ -312,7 +350,7 @@ enum typeName constructors =
         prefix <> toCode conName
 
     derivations =
-      deriving_ ["Eq", "Show", "Ord", "Enum", "Bounded"]
+      deriving_ [eqClass, showClass, ordClass, enumClass, boundedClass]
   in
     lines
       ( "data " <> toCode typeName
@@ -326,3 +364,23 @@ stringLiteral text =
 caseMatch :: ConstructorName -> HaskellCode -> HaskellCode
 caseMatch constructor body =
   toCode constructor <> " -> " <> body
+
+eqClass :: TypeName
+eqClass =
+  toTypeName "Prelude" "Eq"
+
+showClass :: TypeName
+showClass =
+  toTypeName "Prelude" "Show"
+
+ordClass :: TypeName
+ordClass =
+  toTypeName "Prelude" "Ord"
+
+enumClass :: TypeName
+enumClass =
+  toTypeName "Prelude" "Enum"
+
+boundedClass :: TypeName
+boundedClass =
+  toTypeName "Prelude" "Bounded"

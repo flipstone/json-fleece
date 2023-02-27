@@ -5,23 +5,22 @@ module StarTrek.ComicSeriesFull
   , comicSeriesFullSchema
   ) where
 
-import qualified Fleece.Core as FC
-import Data.Scientific (Scientific)
 import Data.Text (Text)
 import Fleece.Core ((#+))
-import Prelude (($), Bool, Eq, Integer, Maybe, Show)
+import qualified Fleece.Core as FC
+import Prelude (($), Bool, Eq, Float, Integer, Maybe, Show)
 import StarTrek.ComicSeriesBase (ComicSeriesBase, comicSeriesBaseSchema)
 import StarTrek.ComicsBase (ComicsBase, comicsBaseSchema)
 import StarTrek.CompanyBase (CompanyBase, companyBaseSchema)
 
 data ComicSeriesFull = ComicSeriesFull
   { yearFrom :: Maybe Integer -- ^ Starting year of comic series stories
-  , stardateTo :: Maybe Scientific -- ^ Ending stardate of comic series stories
+  , stardateTo :: Maybe Float -- ^ Ending stardate of comic series stories
   , publishers :: Maybe [CompanyBase] -- ^ Companies that published this comic series
   , publishedMonthFrom :: Maybe Integer -- ^ Month from which the comic series was published
   , publishedYearTo :: Maybe Integer -- ^ Year to which the comic series was published
   , uid :: Text -- ^ Comic series unique ID
-  , stardateFrom :: Maybe Scientific -- ^ Starting stardate of comic series stories
+  , stardateFrom :: Maybe Float -- ^ Starting stardate of comic series stories
   , numberOfIssues :: Maybe Integer -- ^ Number of issues
   , publishedYearFrom :: Maybe Integer -- ^ Year from which the comic series was published
   , parentSeries :: Maybe [ComicSeriesBase] -- ^ Comic series this comic series is included in
@@ -42,12 +41,12 @@ comicSeriesFullSchema =
   FC.object $
     FC.constructor ComicSeriesFull
       #+ FC.optional "yearFrom" yearFrom FC.integer
-      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "stardateTo" stardateTo FC.float
       #+ FC.optional "publishers" publishers (FC.list companyBaseSchema)
       #+ FC.optional "publishedMonthFrom" publishedMonthFrom FC.integer
       #+ FC.optional "publishedYearTo" publishedYearTo FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "stardateFrom" stardateFrom FC.float
       #+ FC.optional "numberOfIssues" numberOfIssues FC.integer
       #+ FC.optional "publishedYearFrom" publishedYearFrom FC.integer
       #+ FC.optional "parentSeries" parentSeries (FC.list comicSeriesBaseSchema)

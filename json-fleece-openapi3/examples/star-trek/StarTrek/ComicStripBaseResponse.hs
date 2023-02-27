@@ -5,8 +5,8 @@ module StarTrek.ComicStripBaseResponse
   , comicStripBaseResponseSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import StarTrek.ComicStripBase (ComicStripBase, comicStripBaseSchema)
 import StarTrek.ResponsePage (ResponsePage, responsePageSchema)

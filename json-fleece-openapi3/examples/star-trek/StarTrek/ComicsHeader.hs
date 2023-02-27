@@ -5,9 +5,9 @@ module StarTrek.ComicsHeader
   , comicsHeaderSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
 
 data ComicsHeader = ComicsHeader

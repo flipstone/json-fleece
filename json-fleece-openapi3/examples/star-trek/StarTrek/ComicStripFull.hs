@@ -5,9 +5,9 @@ module StarTrek.ComicStripFull
   , comicStripFullSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Eq, Integer, Maybe, Show)
 import StarTrek.CharacterBase (CharacterBase, characterBaseSchema)
 import StarTrek.ComicSeriesBase (ComicSeriesBase, comicSeriesBaseSchema)

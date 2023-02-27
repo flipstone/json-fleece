@@ -5,16 +5,17 @@ module StarTrek.SoundtrackFull
   , soundtrackFullSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
+import Data.Time (Day)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Eq, Integer, Maybe, Show)
 import StarTrek.CompanyBase (CompanyBase, companyBaseSchema)
 import StarTrek.Reference (Reference, referenceSchema)
 import StarTrek.StaffBase (StaffBase, staffBaseSchema)
 
 data SoundtrackFull = SoundtrackFull
-  { releaseDate :: Maybe Text -- ^ Release date
+  { releaseDate :: Maybe Day -- ^ Release date
   , uid :: Text -- ^ Soundtrack unique ID
   , length :: Maybe Integer -- ^ Length, in seconds
   , composers :: Maybe [StaffBase] -- ^ Composers
@@ -30,7 +31,7 @@ soundtrackFullSchema :: FC.Fleece schema => schema SoundtrackFull
 soundtrackFullSchema =
   FC.object $
     FC.constructor SoundtrackFull
-      #+ FC.optional "releaseDate" releaseDate FC.text
+      #+ FC.optional "releaseDate" releaseDate FC.day
       #+ FC.required "uid" uid FC.text
       #+ FC.optional "length" length FC.integer
       #+ FC.optional "composers" composers (FC.list staffBaseSchema)

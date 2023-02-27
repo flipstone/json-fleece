@@ -5,8 +5,9 @@ module StarTrek.BloodType
   , bloodTypeSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text, pack)
+import Fleece.Core ()
+import qualified Fleece.Core as FC
 import Prelude (($), Bounded, Enum, Eq, Ord, Show)
 
 data BloodType

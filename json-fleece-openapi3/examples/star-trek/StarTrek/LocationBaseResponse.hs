@@ -5,8 +5,8 @@ module StarTrek.LocationBaseResponse
   , locationBaseResponseSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import StarTrek.LocationBase (LocationBase, locationBaseSchema)
 import StarTrek.ResponsePage (ResponsePage, responsePageSchema)

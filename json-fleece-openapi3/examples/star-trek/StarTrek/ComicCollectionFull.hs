@@ -5,11 +5,10 @@ module StarTrek.ComicCollectionFull
   , comicCollectionFullSchema
   ) where
 
-import qualified Fleece.Core as FC
-import Data.Scientific (Scientific)
 import Data.Text (Text)
 import Fleece.Core ((#+))
-import Prelude (($), Bool, Eq, Integer, Maybe, Show)
+import qualified Fleece.Core as FC
+import Prelude (($), Bool, Eq, Float, Integer, Maybe, Show)
 import StarTrek.CharacterBase (CharacterBase, characterBaseSchema)
 import StarTrek.ComicSeriesBase (ComicSeriesBase, comicSeriesBaseSchema)
 import StarTrek.ComicsBase (ComicsBase, comicsBaseSchema)
@@ -19,12 +18,12 @@ import StarTrek.StaffBase (StaffBase, staffBaseSchema)
 
 data ComicCollectionFull = ComicCollectionFull
   { yearFrom :: Maybe Integer -- ^ Starting year of comic collection stories
-  , stardateTo :: Maybe Scientific -- ^ Ending stardate of comic collection stories
+  , stardateTo :: Maybe Float -- ^ Ending stardate of comic collection stories
   , publishers :: Maybe [CompanyBase] -- ^ Comic collection publishers
   , publishedMonth :: Maybe Integer -- ^ Month the comic collection was published
   , publishedYear :: Maybe Integer -- ^ Year the comic collection was published
   , uid :: Text -- ^ Comic collection unique ID
-  , stardateFrom :: Maybe Scientific -- ^ Starting stardate of comic collection stories
+  , stardateFrom :: Maybe Float -- ^ Starting stardate of comic collection stories
   , artists :: Maybe [StaffBase] -- ^ Artists involved in the comic collection
   , characters :: Maybe [CharacterBase] -- ^ Characters appearing in the comic collection
   , publishedDay :: Maybe Integer -- ^ Day the comic collection was published
@@ -49,12 +48,12 @@ comicCollectionFullSchema =
   FC.object $
     FC.constructor ComicCollectionFull
       #+ FC.optional "yearFrom" yearFrom FC.integer
-      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "stardateTo" stardateTo FC.float
       #+ FC.optional "publishers" publishers (FC.list companyBaseSchema)
       #+ FC.optional "publishedMonth" publishedMonth FC.integer
       #+ FC.optional "publishedYear" publishedYear FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "stardateFrom" stardateFrom FC.float
       #+ FC.optional "artists" artists (FC.list staffBaseSchema)
       #+ FC.optional "characters" characters (FC.list characterBaseSchema)
       #+ FC.optional "publishedDay" publishedDay FC.integer

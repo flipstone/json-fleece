@@ -5,9 +5,9 @@ module StarTrek.CharacterBase
   , characterBaseSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Bool, Eq, Integer, Maybe, Show)
 import StarTrek.BloodType (BloodType, bloodTypeSchema)
 import StarTrek.Gender (Gender, genderSchema)

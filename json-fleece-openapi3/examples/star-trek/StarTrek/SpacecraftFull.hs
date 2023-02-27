@@ -5,9 +5,9 @@ module StarTrek.SpacecraftFull
   , spacecraftFullSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import StarTrek.OrganizationBase (OrganizationBase, organizationBaseSchema)
 import StarTrek.SpacecraftClassBase (SpacecraftClassBase, spacecraftClassBaseSchema)

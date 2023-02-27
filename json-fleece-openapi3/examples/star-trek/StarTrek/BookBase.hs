@@ -5,23 +5,22 @@ module StarTrek.BookBase
   , bookBaseSchema
   ) where
 
-import qualified Fleece.Core as FC
-import Data.Scientific (Scientific)
 import Data.Text (Text)
 import Fleece.Core ((#+))
-import Prelude (($), Bool, Eq, Integer, Maybe, Show)
+import qualified Fleece.Core as FC
+import Prelude (($), Bool, Eq, Float, Integer, Maybe, Show)
 
 data BookBase = BookBase
   { anthology :: Bool -- ^ Whether it's an anthology
   , yearFrom :: Maybe Integer -- ^ Starting year of book story
-  , stardateTo :: Maybe Scientific -- ^ Ending stardate of book story
+  , stardateTo :: Maybe Float -- ^ Ending stardate of book story
   , audiobookAbridged :: Bool -- ^ If it's an audiobook, whether it's been abridged
   , audiobookPublishedDay :: Maybe Integer -- ^ Day the audiobook was published
   , productionNumber :: Maybe Text -- ^ Book's production number
   , publishedMonth :: Maybe Integer -- ^ Month the book was published
   , publishedYear :: Maybe Integer -- ^ Year the book was published
   , uid :: Text -- ^ Book unique ID
-  , stardateFrom :: Maybe Scientific -- ^ Starting stardate of book story
+  , stardateFrom :: Maybe Float -- ^ Starting stardate of book story
   , publishedDay :: Maybe Integer -- ^ Day the book was published
   , novel :: Bool -- ^ Whether it's a novel
   , audiobookRunTime :: Maybe Integer -- ^ Audiobook run time, in minutes
@@ -45,14 +44,14 @@ bookBaseSchema =
     FC.constructor BookBase
       #+ FC.required "anthology" anthology FC.boolean
       #+ FC.optional "yearFrom" yearFrom FC.integer
-      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "stardateTo" stardateTo FC.float
       #+ FC.required "audiobookAbridged" audiobookAbridged FC.boolean
       #+ FC.optional "audiobookPublishedDay" audiobookPublishedDay FC.integer
       #+ FC.optional "productionNumber" productionNumber FC.text
       #+ FC.optional "publishedMonth" publishedMonth FC.integer
       #+ FC.optional "publishedYear" publishedYear FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "stardateFrom" stardateFrom FC.float
       #+ FC.optional "publishedDay" publishedDay FC.integer
       #+ FC.required "novel" novel FC.boolean
       #+ FC.optional "audiobookRunTime" audiobookRunTime FC.integer

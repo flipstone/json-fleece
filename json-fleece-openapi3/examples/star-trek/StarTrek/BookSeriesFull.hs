@@ -5,9 +5,9 @@ module StarTrek.BookSeriesFull
   , bookSeriesFullSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Bool, Eq, Integer, Maybe, Show)
 import StarTrek.BookBase (BookBase, bookBaseSchema)
 import StarTrek.BookSeriesBase (BookSeriesBase, bookSeriesBaseSchema)

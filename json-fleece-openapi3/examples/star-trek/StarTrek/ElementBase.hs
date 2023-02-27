@@ -5,9 +5,9 @@ module StarTrek.ElementBase
   , elementBaseSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Bool, Eq, Integer, Maybe, Show)
 
 data ElementBase = ElementBase

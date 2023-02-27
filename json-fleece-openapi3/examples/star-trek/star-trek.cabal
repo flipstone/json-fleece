@@ -248,4 +248,5 @@ library
     , json-fleece-core
     , scientific
     , text
+    , time
   default-language: Haskell2010

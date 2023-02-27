@@ -5,8 +5,8 @@ module StarTrek.BookSeriesBaseResponse
   , bookSeriesBaseResponseSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import StarTrek.BookSeriesBase (BookSeriesBase, bookSeriesBaseSchema)
 import StarTrek.ResponsePage (ResponsePage, responsePageSchema)

@@ -5,9 +5,9 @@ module StarTrek.MaterialBase
   , materialBaseSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Bool, Eq, Maybe, Show)
 
 data MaterialBase = MaterialBase

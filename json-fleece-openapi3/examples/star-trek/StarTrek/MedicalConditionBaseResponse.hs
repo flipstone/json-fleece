@@ -5,8 +5,8 @@ module StarTrek.MedicalConditionBaseResponse
   , medicalConditionBaseResponseSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import StarTrek.MedicalConditionBase (MedicalConditionBase, medicalConditionBaseSchema)
 import StarTrek.ResponsePage (ResponsePage, responsePageSchema)

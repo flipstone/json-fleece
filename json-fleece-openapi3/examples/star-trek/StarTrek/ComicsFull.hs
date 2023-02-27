@@ -5,11 +5,10 @@ module StarTrek.ComicsFull
   , comicsFullSchema
   ) where
 
-import qualified Fleece.Core as FC
-import Data.Scientific (Scientific)
 import Data.Text (Text)
 import Fleece.Core ((#+))
-import Prelude (($), Bool, Eq, Integer, Maybe, Show)
+import qualified Fleece.Core as FC
+import Prelude (($), Bool, Eq, Float, Integer, Maybe, Show)
 import StarTrek.CharacterBase (CharacterBase, characterBaseSchema)
 import StarTrek.ComicCollectionBase (ComicCollectionBase, comicCollectionBaseSchema)
 import StarTrek.ComicSeriesBase (ComicSeriesBase, comicSeriesBaseSchema)
@@ -20,13 +19,13 @@ import StarTrek.StaffBase (StaffBase, staffBaseSchema)
 data ComicsFull = ComicsFull
   { comicCollections :: Maybe [ComicCollectionBase] -- ^ Comic collections this comics is included in
   , yearFrom :: Maybe Integer -- ^ Starting year of comic  story
-  , stardateTo :: Maybe Scientific -- ^ Ending stardate of comic story
+  , stardateTo :: Maybe Float -- ^ Ending stardate of comic story
   , adaptation :: Maybe Bool -- ^ Whether it's an adaptation of an episode or a movie
   , publishers :: Maybe [CompanyBase] -- ^ Comics publishers
   , publishedMonth :: Maybe Integer -- ^ Month the comics was published
   , publishedYear :: Maybe Integer -- ^ Year the comics was published
   , uid :: Text -- ^ Comics unique ID
-  , stardateFrom :: Maybe Scientific -- ^ Starting stardate of comic story
+  , stardateFrom :: Maybe Float -- ^ Starting stardate of comic story
   , artists :: Maybe [StaffBase] -- ^ Artists involved in the comics
   , characters :: Maybe [CharacterBase] -- ^ Characters appearing in the comics
   , publishedDay :: Maybe Integer -- ^ Day the comics was published
@@ -51,13 +50,13 @@ comicsFullSchema =
     FC.constructor ComicsFull
       #+ FC.optional "comicCollections" comicCollections (FC.list comicCollectionBaseSchema)
       #+ FC.optional "yearFrom" yearFrom FC.integer
-      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "stardateTo" stardateTo FC.float
       #+ FC.optional "adaptation" adaptation FC.boolean
       #+ FC.optional "publishers" publishers (FC.list companyBaseSchema)
       #+ FC.optional "publishedMonth" publishedMonth FC.integer
       #+ FC.optional "publishedYear" publishedYear FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "stardateFrom" stardateFrom FC.float
       #+ FC.optional "artists" artists (FC.list staffBaseSchema)
       #+ FC.optional "characters" characters (FC.list characterBaseSchema)
       #+ FC.optional "publishedDay" publishedDay FC.integer

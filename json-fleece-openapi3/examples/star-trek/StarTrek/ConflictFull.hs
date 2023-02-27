@@ -5,9 +5,9 @@ module StarTrek.ConflictFull
   , conflictFullSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Bool, Eq, Integer, Maybe, Show)
 import StarTrek.CharacterBase (CharacterBase, characterBaseSchema)
 import StarTrek.LocationBase (LocationBase, locationBaseSchema)

@@ -5,9 +5,9 @@ module StarTrek.AstronomicalObjectBase
   , astronomicalObjectBaseSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import StarTrek.AstronomicalObjectHeader (AstronomicalObjectHeader, astronomicalObjectHeaderSchema)
 import StarTrek.AstronomicalObjectType (AstronomicalObjectType, astronomicalObjectTypeSchema)

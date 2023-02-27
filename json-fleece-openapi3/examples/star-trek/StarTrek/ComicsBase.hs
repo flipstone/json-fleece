@@ -5,20 +5,19 @@ module StarTrek.ComicsBase
   , comicsBaseSchema
   ) where
 
-import qualified Fleece.Core as FC
-import Data.Scientific (Scientific)
 import Data.Text (Text)
 import Fleece.Core ((#+))
-import Prelude (($), Bool, Eq, Integer, Maybe, Show)
+import qualified Fleece.Core as FC
+import Prelude (($), Bool, Eq, Float, Integer, Maybe, Show)
 
 data ComicsBase = ComicsBase
   { yearFrom :: Maybe Integer -- ^ Starting year of comic story
-  , stardateTo :: Maybe Scientific -- ^ Ending stardate of comic story
+  , stardateTo :: Maybe Float -- ^ Ending stardate of comic story
   , adaptation :: Maybe Bool -- ^ Whether it's an adaptation of an episode or a movie
   , publishedMonth :: Maybe Integer -- ^ Month the comics was published
   , publishedYear :: Maybe Integer -- ^ Year the comics was published
   , uid :: Text -- ^ Comics unique ID
-  , stardateFrom :: Maybe Scientific -- ^ Starting stardate of comic story
+  , stardateFrom :: Maybe Float -- ^ Starting stardate of comic story
   , publishedDay :: Maybe Integer -- ^ Day the comics was published
   , photonovel :: Maybe Bool -- ^ Whether it's a photonovel
   , coverYear :: Maybe Integer -- ^ Cover publication year
@@ -35,12 +34,12 @@ comicsBaseSchema =
   FC.object $
     FC.constructor ComicsBase
       #+ FC.optional "yearFrom" yearFrom FC.integer
-      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "stardateTo" stardateTo FC.float
       #+ FC.optional "adaptation" adaptation FC.boolean
       #+ FC.optional "publishedMonth" publishedMonth FC.integer
       #+ FC.optional "publishedYear" publishedYear FC.integer
       #+ FC.required "uid" uid FC.text
-      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "stardateFrom" stardateFrom FC.float
       #+ FC.optional "publishedDay" publishedDay FC.integer
       #+ FC.optional "photonovel" photonovel FC.boolean
       #+ FC.optional "coverYear" coverYear FC.integer

@@ -5,11 +5,10 @@ module StarTrek.BookFull
   , bookFullSchema
   ) where
 
-import qualified Fleece.Core as FC
-import Data.Scientific (Scientific)
 import Data.Text (Text)
 import Fleece.Core ((#+))
-import Prelude (($), Bool, Eq, Integer, Maybe, Show)
+import qualified Fleece.Core as FC
+import Prelude (($), Bool, Eq, Float, Integer, Maybe, Show)
 import StarTrek.BookCollectionBase (BookCollectionBase, bookCollectionBaseSchema)
 import StarTrek.BookSeriesBase (BookSeriesBase, bookSeriesBaseSchema)
 import StarTrek.CharacterBase (CharacterBase, characterBaseSchema)
@@ -22,7 +21,7 @@ data BookFull = BookFull
   , audiobookPublishers :: Maybe [CompanyBase] -- ^ Audiobook publishers
   , authors :: Maybe [StaffBase] -- ^ Authors of the book
   , yearFrom :: Maybe Integer -- ^ Starting year of book story
-  , stardateTo :: Maybe Scientific -- ^ Ending stardate of book story
+  , stardateTo :: Maybe Float -- ^ Ending stardate of book story
   , audiobookNarrators :: Maybe [StaffBase] -- ^ Audiobook narrators
   , audiobookAbridged :: Bool -- ^ If it's an audiobook, whether it's been abridged
   , publishers :: Maybe [CompanyBase] -- ^ Book publishers
@@ -33,7 +32,7 @@ data BookFull = BookFull
   , publishedYear :: Maybe Integer -- ^ Year the book was published
   , uid :: Text -- ^ Book unique ID
   , bookCollections :: Maybe [BookCollectionBase] -- ^ Book collections this book is included in
-  , stardateFrom :: Maybe Scientific -- ^ Starting stardate of book story
+  , stardateFrom :: Maybe Float -- ^ Starting stardate of book story
   , artists :: Maybe [StaffBase] -- ^ Artists involved in the book
   , characters :: Maybe [CharacterBase] -- ^ Characters appearing the book
   , publishedDay :: Maybe Integer -- ^ Day the book was published
@@ -64,7 +63,7 @@ bookFullSchema =
       #+ FC.optional "audiobookPublishers" audiobookPublishers (FC.list companyBaseSchema)
       #+ FC.optional "authors" authors (FC.list staffBaseSchema)
       #+ FC.optional "yearFrom" yearFrom FC.integer
-      #+ FC.optional "stardateTo" stardateTo FC.number
+      #+ FC.optional "stardateTo" stardateTo FC.float
       #+ FC.optional "audiobookNarrators" audiobookNarrators (FC.list staffBaseSchema)
       #+ FC.required "audiobookAbridged" audiobookAbridged FC.boolean
       #+ FC.optional "publishers" publishers (FC.list companyBaseSchema)
@@ -75,7 +74,7 @@ bookFullSchema =
       #+ FC.optional "publishedYear" publishedYear FC.integer
       #+ FC.required "uid" uid FC.text
       #+ FC.optional "bookCollections" bookCollections (FC.list bookCollectionBaseSchema)
-      #+ FC.optional "stardateFrom" stardateFrom FC.number
+      #+ FC.optional "stardateFrom" stardateFrom FC.float
       #+ FC.optional "artists" artists (FC.list staffBaseSchema)
       #+ FC.optional "characters" characters (FC.list characterBaseSchema)
       #+ FC.optional "publishedDay" publishedDay FC.integer

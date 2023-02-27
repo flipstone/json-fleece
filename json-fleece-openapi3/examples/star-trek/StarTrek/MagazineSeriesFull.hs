@@ -5,9 +5,9 @@ module StarTrek.MagazineSeriesFull
   , magazineSeriesFullSchema
   ) where
 
-import qualified Fleece.Core as FC
 import Data.Text (Text)
 import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
 import Prelude (($), Eq, Integer, Maybe, Show)
 import StarTrek.CompanyBase (CompanyBase, companyBaseSchema)
 import StarTrek.MagazineBase (MagazineBase, magazineBaseSchema)
