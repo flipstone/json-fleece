@@ -1,6 +1,6 @@
 name:                json-fleece-examples
-version:             0.1.1.0
-github:              "flipstone/json-fleece-examples"
+version:             0.1.3.0
+github:              "flipstone/json-fleece/json-fleece-examples"
 license:             BSD3
 author:              "Author name here"
 maintainer:          "example@example.com"

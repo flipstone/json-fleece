@@ -1,6 +1,6 @@
 name:                json-fleece-markdown
 version:             0.1.2.0
-github:              "flipstone/json-fleece-markdown"
+github:              "flipstone/json-fleece/json-fleece-markdown"
 license:             BSD3
 author:              "Author name here"
 maintainer:          "example@example.com"

@@ -5,10 +5,10 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-aeson
-version:        0.1.1.0
+version:        0.1.3.0
 description:    Please see the README on GitHub at <https://github.com/githubuser/json-fleece-aeson#readme>
-homepage:       https://github.com/githubuser/json-fleece-aeson#readme
-bug-reports:    https://github.com/githubuser/json-fleece-aeson/issues
+homepage:       https://github.com/flipstone/json-fleece#readme
+bug-reports:    https://github.com/flipstone/json-fleece/issues
 author:         Author name here
 maintainer:     example@example.com
 copyright:      2023 Author name here
@@ -17,7 +17,8 @@ build-type:     Simple
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/json-fleece-aeson
+  location: https://github.com/flipstone/json-fleece
+  subdir: json-fleece-aeson
 
 flag strict
   description: More strict ghc options used for development and ci, not intended for end-use.
