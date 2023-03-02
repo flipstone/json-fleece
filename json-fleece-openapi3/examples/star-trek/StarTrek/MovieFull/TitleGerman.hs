@@ -5,12 +5,11 @@ module StarTrek.MovieFull.TitleGerman
   , titleGermanSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype TitleGerman = TitleGerman Text
+newtype TitleGerman = TitleGerman T.Text
   deriving (Show, Eq)
 
 titleGermanSchema :: FC.Fleece schema => schema TitleGerman

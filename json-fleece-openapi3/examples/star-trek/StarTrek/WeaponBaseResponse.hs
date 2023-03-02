@@ -8,14 +8,14 @@ module StarTrek.WeaponBaseResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
-import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
-import StarTrek.WeaponBase (WeaponBase, weaponBaseSchema)
+import qualified StarTrek.ResponsePage as ResponsePage
+import qualified StarTrek.ResponseSort as ResponseSort
+import qualified StarTrek.WeaponBase as WeaponBase
 
 data WeaponBaseResponse = WeaponBaseResponse
-  { sort :: Maybe ResponseSort -- ^ Response sort
-  , weapons :: Maybe [WeaponBase] -- ^ Base weapon, returned in search results
-  , page :: Maybe ResponsePage -- ^ Object describing response page
+  { sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
+  , weapons :: Maybe [WeaponBase.WeaponBase] -- ^ Base weapon, returned in search results
+  , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ weaponBaseResponseSchema :: FC.Fleece schema => schema WeaponBaseResponse
 weaponBaseResponseSchema =
   FC.object $
     FC.constructor WeaponBaseResponse
-      #+ FC.optional "sort" sort responseSortSchema
-      #+ FC.optional "weapons" weapons (FC.list weaponBaseSchema)
-      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
+      #+ FC.optional "weapons" weapons (FC.list WeaponBase.weaponBaseSchema)
+      #+ FC.optional "page" page ResponsePage.responsePageSchema

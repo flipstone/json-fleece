@@ -8,56 +8,56 @@ module StarTrek.CharacterBase
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.BloodType (BloodType, bloodTypeSchema)
-import StarTrek.CharacterBase.AlternateReality (AlternateReality, alternateRealitySchema)
-import StarTrek.CharacterBase.DayOfBirth (DayOfBirth, dayOfBirthSchema)
-import StarTrek.CharacterBase.DayOfDeath (DayOfDeath, dayOfDeathSchema)
-import StarTrek.CharacterBase.Deceased (Deceased, deceasedSchema)
-import StarTrek.CharacterBase.FictionalCharacter (FictionalCharacter, fictionalCharacterSchema)
-import StarTrek.CharacterBase.Height (Height, heightSchema)
-import StarTrek.CharacterBase.Hologram (Hologram, hologramSchema)
-import StarTrek.CharacterBase.HologramActivationDate (HologramActivationDate, hologramActivationDateSchema)
-import StarTrek.CharacterBase.HologramDateStatus (HologramDateStatus, hologramDateStatusSchema)
-import StarTrek.CharacterBase.HologramStatus (HologramStatus, hologramStatusSchema)
-import StarTrek.CharacterBase.Mirror (Mirror, mirrorSchema)
-import StarTrek.CharacterBase.MonthOfBirth (MonthOfBirth, monthOfBirthSchema)
-import StarTrek.CharacterBase.MonthOfDeath (MonthOfDeath, monthOfDeathSchema)
-import StarTrek.CharacterBase.Name (Name, nameSchema)
-import StarTrek.CharacterBase.PlaceOfBirth (PlaceOfBirth, placeOfBirthSchema)
-import StarTrek.CharacterBase.PlaceOfDeath (PlaceOfDeath, placeOfDeathSchema)
-import StarTrek.CharacterBase.SerialNumber (SerialNumber, serialNumberSchema)
-import StarTrek.CharacterBase.Uid (Uid, uidSchema)
-import StarTrek.CharacterBase.Weight (Weight, weightSchema)
-import StarTrek.CharacterBase.YearOfBirth (YearOfBirth, yearOfBirthSchema)
-import StarTrek.CharacterBase.YearOfDeath (YearOfDeath, yearOfDeathSchema)
-import StarTrek.Gender (Gender, genderSchema)
-import StarTrek.MaritalStatus (MaritalStatus, maritalStatusSchema)
+import qualified StarTrek.BloodType as BloodType
+import qualified StarTrek.CharacterBase.AlternateReality as AlternateReality
+import qualified StarTrek.CharacterBase.DayOfBirth as DayOfBirth
+import qualified StarTrek.CharacterBase.DayOfDeath as DayOfDeath
+import qualified StarTrek.CharacterBase.Deceased as Deceased
+import qualified StarTrek.CharacterBase.FictionalCharacter as FictionalCharacter
+import qualified StarTrek.CharacterBase.Height as Height
+import qualified StarTrek.CharacterBase.Hologram as Hologram
+import qualified StarTrek.CharacterBase.HologramActivationDate as HologramActivationDate
+import qualified StarTrek.CharacterBase.HologramDateStatus as HologramDateStatus
+import qualified StarTrek.CharacterBase.HologramStatus as HologramStatus
+import qualified StarTrek.CharacterBase.Mirror as Mirror
+import qualified StarTrek.CharacterBase.MonthOfBirth as MonthOfBirth
+import qualified StarTrek.CharacterBase.MonthOfDeath as MonthOfDeath
+import qualified StarTrek.CharacterBase.Name as Name
+import qualified StarTrek.CharacterBase.PlaceOfBirth as PlaceOfBirth
+import qualified StarTrek.CharacterBase.PlaceOfDeath as PlaceOfDeath
+import qualified StarTrek.CharacterBase.SerialNumber as SerialNumber
+import qualified StarTrek.CharacterBase.Uid as Uid
+import qualified StarTrek.CharacterBase.Weight as Weight
+import qualified StarTrek.CharacterBase.YearOfBirth as YearOfBirth
+import qualified StarTrek.CharacterBase.YearOfDeath as YearOfDeath
+import qualified StarTrek.Gender as Gender
+import qualified StarTrek.MaritalStatus as MaritalStatus
 
 data CharacterBase = CharacterBase
-  { alternateReality :: Maybe AlternateReality -- ^ Whether this character is from alternate reality
-  , fictionalCharacter :: Maybe FictionalCharacter -- ^ Whether this character is a fictional character (from universe point of view)
-  , yearOfDeath :: Maybe YearOfDeath -- ^ Year the character died
-  , name :: Name -- ^ Character name
-  , deceased :: Maybe Deceased -- ^ Whether this character is deceased
-  , maritalStatus :: Maybe MaritalStatus -- ^ Marital status
-  , dayOfBirth :: Maybe DayOfBirth -- ^ Day the character was born
-  , monthOfBirth :: Maybe MonthOfBirth -- ^ Month the character was born
-  , bloodType :: Maybe BloodType -- ^ Blood type
-  , uid :: Uid -- ^ Character unique ID
-  , monthOfDeath :: Maybe MonthOfDeath -- ^ Month the character died
-  , mirror :: Maybe Mirror -- ^ Whether this character is from mirror universe
-  , hologramDateStatus :: Maybe HologramDateStatus -- ^ Hologram date status
-  , hologram :: Maybe Hologram -- ^ Whether this character is a hologram
-  , gender :: Maybe Gender -- ^ Gender
-  , placeOfDeath :: Maybe PlaceOfDeath -- ^ Place of death
-  , serialNumber :: Maybe SerialNumber -- ^ Serial number
-  , weight :: Maybe Weight -- ^ Weight in kilograms
-  , dayOfDeath :: Maybe DayOfDeath -- ^ Day the character died
-  , hologramActivationDate :: Maybe HologramActivationDate -- ^ Hologram activation date
-  , placeOfBirth :: Maybe PlaceOfBirth -- ^ Place of birth
-  , height :: Maybe Height -- ^ Height in centimeters
-  , yearOfBirth :: Maybe YearOfBirth -- ^ Year the character was born
-  , hologramStatus :: Maybe HologramStatus -- ^ Hologram status
+  { alternateReality :: Maybe AlternateReality.AlternateReality -- ^ Whether this character is from alternate reality
+  , fictionalCharacter :: Maybe FictionalCharacter.FictionalCharacter -- ^ Whether this character is a fictional character (from universe point of view)
+  , yearOfDeath :: Maybe YearOfDeath.YearOfDeath -- ^ Year the character died
+  , name :: Name.Name -- ^ Character name
+  , deceased :: Maybe Deceased.Deceased -- ^ Whether this character is deceased
+  , maritalStatus :: Maybe MaritalStatus.MaritalStatus -- ^ Marital status
+  , dayOfBirth :: Maybe DayOfBirth.DayOfBirth -- ^ Day the character was born
+  , monthOfBirth :: Maybe MonthOfBirth.MonthOfBirth -- ^ Month the character was born
+  , bloodType :: Maybe BloodType.BloodType -- ^ Blood type
+  , uid :: Uid.Uid -- ^ Character unique ID
+  , monthOfDeath :: Maybe MonthOfDeath.MonthOfDeath -- ^ Month the character died
+  , mirror :: Maybe Mirror.Mirror -- ^ Whether this character is from mirror universe
+  , hologramDateStatus :: Maybe HologramDateStatus.HologramDateStatus -- ^ Hologram date status
+  , hologram :: Maybe Hologram.Hologram -- ^ Whether this character is a hologram
+  , gender :: Maybe Gender.Gender -- ^ Gender
+  , placeOfDeath :: Maybe PlaceOfDeath.PlaceOfDeath -- ^ Place of death
+  , serialNumber :: Maybe SerialNumber.SerialNumber -- ^ Serial number
+  , weight :: Maybe Weight.Weight -- ^ Weight in kilograms
+  , dayOfDeath :: Maybe DayOfDeath.DayOfDeath -- ^ Day the character died
+  , hologramActivationDate :: Maybe HologramActivationDate.HologramActivationDate -- ^ Hologram activation date
+  , placeOfBirth :: Maybe PlaceOfBirth.PlaceOfBirth -- ^ Place of birth
+  , height :: Maybe Height.Height -- ^ Height in centimeters
+  , yearOfBirth :: Maybe YearOfBirth.YearOfBirth -- ^ Year the character was born
+  , hologramStatus :: Maybe HologramStatus.HologramStatus -- ^ Hologram status
   }
   deriving (Eq, Show)
 
@@ -65,27 +65,27 @@ characterBaseSchema :: FC.Fleece schema => schema CharacterBase
 characterBaseSchema =
   FC.object $
     FC.constructor CharacterBase
-      #+ FC.optional "alternateReality" alternateReality alternateRealitySchema
-      #+ FC.optional "fictionalCharacter" fictionalCharacter fictionalCharacterSchema
-      #+ FC.optional "yearOfDeath" yearOfDeath yearOfDeathSchema
-      #+ FC.required "name" name nameSchema
-      #+ FC.optional "deceased" deceased deceasedSchema
-      #+ FC.optional "maritalStatus" maritalStatus maritalStatusSchema
-      #+ FC.optional "dayOfBirth" dayOfBirth dayOfBirthSchema
-      #+ FC.optional "monthOfBirth" monthOfBirth monthOfBirthSchema
-      #+ FC.optional "bloodType" bloodType bloodTypeSchema
-      #+ FC.required "uid" uid uidSchema
-      #+ FC.optional "monthOfDeath" monthOfDeath monthOfDeathSchema
-      #+ FC.optional "mirror" mirror mirrorSchema
-      #+ FC.optional "hologramDateStatus" hologramDateStatus hologramDateStatusSchema
-      #+ FC.optional "hologram" hologram hologramSchema
-      #+ FC.optional "gender" gender genderSchema
-      #+ FC.optional "placeOfDeath" placeOfDeath placeOfDeathSchema
-      #+ FC.optional "serialNumber" serialNumber serialNumberSchema
-      #+ FC.optional "weight" weight weightSchema
-      #+ FC.optional "dayOfDeath" dayOfDeath dayOfDeathSchema
-      #+ FC.optional "hologramActivationDate" hologramActivationDate hologramActivationDateSchema
-      #+ FC.optional "placeOfBirth" placeOfBirth placeOfBirthSchema
-      #+ FC.optional "height" height heightSchema
-      #+ FC.optional "yearOfBirth" yearOfBirth yearOfBirthSchema
-      #+ FC.optional "hologramStatus" hologramStatus hologramStatusSchema
+      #+ FC.optional "alternateReality" alternateReality AlternateReality.alternateRealitySchema
+      #+ FC.optional "fictionalCharacter" fictionalCharacter FictionalCharacter.fictionalCharacterSchema
+      #+ FC.optional "yearOfDeath" yearOfDeath YearOfDeath.yearOfDeathSchema
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.optional "deceased" deceased Deceased.deceasedSchema
+      #+ FC.optional "maritalStatus" maritalStatus MaritalStatus.maritalStatusSchema
+      #+ FC.optional "dayOfBirth" dayOfBirth DayOfBirth.dayOfBirthSchema
+      #+ FC.optional "monthOfBirth" monthOfBirth MonthOfBirth.monthOfBirthSchema
+      #+ FC.optional "bloodType" bloodType BloodType.bloodTypeSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "monthOfDeath" monthOfDeath MonthOfDeath.monthOfDeathSchema
+      #+ FC.optional "mirror" mirror Mirror.mirrorSchema
+      #+ FC.optional "hologramDateStatus" hologramDateStatus HologramDateStatus.hologramDateStatusSchema
+      #+ FC.optional "hologram" hologram Hologram.hologramSchema
+      #+ FC.optional "gender" gender Gender.genderSchema
+      #+ FC.optional "placeOfDeath" placeOfDeath PlaceOfDeath.placeOfDeathSchema
+      #+ FC.optional "serialNumber" serialNumber SerialNumber.serialNumberSchema
+      #+ FC.optional "weight" weight Weight.weightSchema
+      #+ FC.optional "dayOfDeath" dayOfDeath DayOfDeath.dayOfDeathSchema
+      #+ FC.optional "hologramActivationDate" hologramActivationDate HologramActivationDate.hologramActivationDateSchema
+      #+ FC.optional "placeOfBirth" placeOfBirth PlaceOfBirth.placeOfBirthSchema
+      #+ FC.optional "height" height Height.heightSchema
+      #+ FC.optional "yearOfBirth" yearOfBirth YearOfBirth.yearOfBirthSchema
+      #+ FC.optional "hologramStatus" hologramStatus HologramStatus.hologramStatusSchema

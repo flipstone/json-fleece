@@ -5,12 +5,11 @@ module StarTrek.StaffFull.PlaceOfBirth
   , placeOfBirthSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype PlaceOfBirth = PlaceOfBirth Text
+newtype PlaceOfBirth = PlaceOfBirth T.Text
   deriving (Show, Eq)
 
 placeOfBirthSchema :: FC.Fleece schema => schema PlaceOfBirth

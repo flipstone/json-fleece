@@ -5,8 +5,7 @@ module StarTrek.VideoReleaseFormat
   , videoReleaseFormatSchema
   ) where
 
-import Data.Text (Text, pack)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (($), Bounded, Enum, Eq, Ord, Show)
 
@@ -27,9 +26,9 @@ data VideoReleaseFormat
   | DIGITALFORMAT
   deriving (Eq, Show, Ord, Enum, Bounded)
 
-videoReleaseFormatToText :: VideoReleaseFormat -> Text
+videoReleaseFormatToText :: VideoReleaseFormat -> T.Text
 videoReleaseFormatToText v =
-  pack $
+  T.pack $
     case v of
       SUPER8 -> "SUPER_8"
       BETAMAX -> "BETAMAX"

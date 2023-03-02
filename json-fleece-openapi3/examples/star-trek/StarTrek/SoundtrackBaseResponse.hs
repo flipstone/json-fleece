@@ -8,14 +8,14 @@ module StarTrek.SoundtrackBaseResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
-import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
-import StarTrek.SoundtrackBase (SoundtrackBase, soundtrackBaseSchema)
+import qualified StarTrek.ResponsePage as ResponsePage
+import qualified StarTrek.ResponseSort as ResponseSort
+import qualified StarTrek.SoundtrackBase as SoundtrackBase
 
 data SoundtrackBaseResponse = SoundtrackBaseResponse
-  { sort :: Maybe ResponseSort -- ^ Response sort
-  , soundtracks :: Maybe [SoundtrackBase] -- ^ Base soundtrack, returned in search results
-  , page :: Maybe ResponsePage -- ^ Object describing response page
+  { sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
+  , soundtracks :: Maybe [SoundtrackBase.SoundtrackBase] -- ^ Base soundtrack, returned in search results
+  , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ soundtrackBaseResponseSchema :: FC.Fleece schema => schema SoundtrackBaseRespons
 soundtrackBaseResponseSchema =
   FC.object $
     FC.constructor SoundtrackBaseResponse
-      #+ FC.optional "sort" sort responseSortSchema
-      #+ FC.optional "soundtracks" soundtracks (FC.list soundtrackBaseSchema)
-      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
+      #+ FC.optional "soundtracks" soundtracks (FC.list SoundtrackBase.soundtrackBaseSchema)
+      #+ FC.optional "page" page ResponsePage.responsePageSchema

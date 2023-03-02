@@ -5,12 +5,11 @@ module Uber.Product.Capacity
   , capacitySchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Capacity = Capacity Text
+newtype Capacity = Capacity T.Text
   deriving (Show, Eq)
 
 capacitySchema :: FC.Fleece schema => schema Capacity

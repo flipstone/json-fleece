@@ -5,8 +5,7 @@ module StarTrek.ResponseSortDirection
   , responseSortDirectionSchema
   ) where
 
-import Data.Text (Text, pack)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (($), Bounded, Enum, Eq, Ord, Show)
 
@@ -15,9 +14,9 @@ data ResponseSortDirection
   | DESC
   deriving (Eq, Show, Ord, Enum, Bounded)
 
-responseSortDirectionToText :: ResponseSortDirection -> Text
+responseSortDirectionToText :: ResponseSortDirection -> T.Text
 responseSortDirectionToText v =
-  pack $
+  T.pack $
     case v of
       ASC -> "ASC"
       DESC -> "DESC"

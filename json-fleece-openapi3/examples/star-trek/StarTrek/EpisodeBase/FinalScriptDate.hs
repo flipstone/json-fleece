@@ -5,12 +5,11 @@ module StarTrek.EpisodeBase.FinalScriptDate
   , finalScriptDateSchema
   ) where
 
-import Data.Time (Day)
-import Fleece.Core ()
+import qualified Data.Time as Time
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype FinalScriptDate = FinalScriptDate Day
+newtype FinalScriptDate = FinalScriptDate Time.Day
   deriving (Show, Eq)
 
 finalScriptDateSchema :: FC.Fleece schema => schema FinalScriptDate

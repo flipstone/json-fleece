@@ -8,10 +8,10 @@ module StarTrek.AstronomicalObjectFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.AstronomicalObjectFull (AstronomicalObjectFull, astronomicalObjectFullSchema)
+import qualified StarTrek.AstronomicalObjectFull as AstronomicalObjectFull
 
 data AstronomicalObjectFullResponse = AstronomicalObjectFullResponse
-  { astronomicalObject :: Maybe AstronomicalObjectFull -- ^ Full astronomical object, returned when queried using UID
+  { astronomicalObject :: Maybe AstronomicalObjectFull.AstronomicalObjectFull -- ^ Full astronomical object, returned when queried using UID
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ astronomicalObjectFullResponseSchema :: FC.Fleece schema => schema AstronomicalO
 astronomicalObjectFullResponseSchema =
   FC.object $
     FC.constructor AstronomicalObjectFullResponse
-      #+ FC.optional "astronomicalObject" astronomicalObject astronomicalObjectFullSchema
+      #+ FC.optional "astronomicalObject" astronomicalObject AstronomicalObjectFull.astronomicalObjectFullSchema

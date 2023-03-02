@@ -5,12 +5,11 @@ module StarTrek.TradingCardBase.Number
   , numberSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Number = Number Text
+newtype Number = Number T.Text
   deriving (Show, Eq)
 
 numberSchema :: FC.Fleece schema => schema Number

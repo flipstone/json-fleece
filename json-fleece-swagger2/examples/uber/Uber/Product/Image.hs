@@ -5,12 +5,11 @@ module Uber.Product.Image
   , imageSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Image = Image Text
+newtype Image = Image T.Text
   deriving (Show, Eq)
 
 imageSchema :: FC.Fleece schema => schema Image

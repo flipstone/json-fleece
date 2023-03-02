@@ -5,8 +5,7 @@ module StarTrek.AstronomicalObjectType
   , astronomicalObjectTypeSchema
   ) where
 
-import Data.Text (Text, pack)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (($), Bounded, Enum, Eq, Ord, Show)
 
@@ -40,9 +39,9 @@ data AstronomicalObjectType
   | REGION
   deriving (Eq, Show, Ord, Enum, Bounded)
 
-astronomicalObjectTypeToText :: AstronomicalObjectType -> Text
+astronomicalObjectTypeToText :: AstronomicalObjectType -> T.Text
 astronomicalObjectTypeToText v =
-  pack $
+  T.pack $
     case v of
       PLANET -> "PLANET"
       DCLASSPLANET -> "D_CLASS_PLANET"

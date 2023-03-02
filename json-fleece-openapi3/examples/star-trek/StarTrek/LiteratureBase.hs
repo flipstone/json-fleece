@@ -8,24 +8,24 @@ module StarTrek.LiteratureBase
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.LiteratureBase.EarthlyOrigin (EarthlyOrigin, earthlyOriginSchema)
-import StarTrek.LiteratureBase.ReligiousLiterature (ReligiousLiterature, religiousLiteratureSchema)
-import StarTrek.LiteratureBase.Report (Report, reportSchema)
-import StarTrek.LiteratureBase.ScientificLiterature (ScientificLiterature, scientificLiteratureSchema)
-import StarTrek.LiteratureBase.ShakespeareanWork (ShakespeareanWork, shakespeareanWorkSchema)
-import StarTrek.LiteratureBase.TechnicalManual (TechnicalManual, technicalManualSchema)
-import StarTrek.LiteratureBase.Title (Title, titleSchema)
-import StarTrek.LiteratureBase.Uid (Uid, uidSchema)
+import qualified StarTrek.LiteratureBase.EarthlyOrigin as EarthlyOrigin
+import qualified StarTrek.LiteratureBase.ReligiousLiterature as ReligiousLiterature
+import qualified StarTrek.LiteratureBase.Report as Report
+import qualified StarTrek.LiteratureBase.ScientificLiterature as ScientificLiterature
+import qualified StarTrek.LiteratureBase.ShakespeareanWork as ShakespeareanWork
+import qualified StarTrek.LiteratureBase.TechnicalManual as TechnicalManual
+import qualified StarTrek.LiteratureBase.Title as Title
+import qualified StarTrek.LiteratureBase.Uid as Uid
 
 data LiteratureBase = LiteratureBase
-  { scientificLiterature :: Maybe ScientificLiterature -- ^ Whether it's a scientific literature
-  , shakespeareanWork :: Maybe ShakespeareanWork -- ^ Whether it's a Shakespearean work
-  , uid :: Uid -- ^ Literature unique ID
-  , religiousLiterature :: Maybe ReligiousLiterature -- ^ Whether it's a religious literature
-  , title :: Title -- ^ Literature title
-  , technicalManual :: Maybe TechnicalManual -- ^ Whether it's a technical manual
-  , earthlyOrigin :: Maybe EarthlyOrigin -- ^ Whether it's of earthly origin
-  , report :: Maybe Report -- ^ Whether it's a report
+  { scientificLiterature :: Maybe ScientificLiterature.ScientificLiterature -- ^ Whether it's a scientific literature
+  , shakespeareanWork :: Maybe ShakespeareanWork.ShakespeareanWork -- ^ Whether it's a Shakespearean work
+  , uid :: Uid.Uid -- ^ Literature unique ID
+  , religiousLiterature :: Maybe ReligiousLiterature.ReligiousLiterature -- ^ Whether it's a religious literature
+  , title :: Title.Title -- ^ Literature title
+  , technicalManual :: Maybe TechnicalManual.TechnicalManual -- ^ Whether it's a technical manual
+  , earthlyOrigin :: Maybe EarthlyOrigin.EarthlyOrigin -- ^ Whether it's of earthly origin
+  , report :: Maybe Report.Report -- ^ Whether it's a report
   }
   deriving (Eq, Show)
 
@@ -33,11 +33,11 @@ literatureBaseSchema :: FC.Fleece schema => schema LiteratureBase
 literatureBaseSchema =
   FC.object $
     FC.constructor LiteratureBase
-      #+ FC.optional "scientificLiterature" scientificLiterature scientificLiteratureSchema
-      #+ FC.optional "shakespeareanWork" shakespeareanWork shakespeareanWorkSchema
-      #+ FC.required "uid" uid uidSchema
-      #+ FC.optional "religiousLiterature" religiousLiterature religiousLiteratureSchema
-      #+ FC.required "title" title titleSchema
-      #+ FC.optional "technicalManual" technicalManual technicalManualSchema
-      #+ FC.optional "earthlyOrigin" earthlyOrigin earthlyOriginSchema
-      #+ FC.optional "report" report reportSchema
+      #+ FC.optional "scientificLiterature" scientificLiterature ScientificLiterature.scientificLiteratureSchema
+      #+ FC.optional "shakespeareanWork" shakespeareanWork ShakespeareanWork.shakespeareanWorkSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "religiousLiterature" religiousLiterature ReligiousLiterature.religiousLiteratureSchema
+      #+ FC.required "title" title Title.titleSchema
+      #+ FC.optional "technicalManual" technicalManual TechnicalManual.technicalManualSchema
+      #+ FC.optional "earthlyOrigin" earthlyOrigin EarthlyOrigin.earthlyOriginSchema
+      #+ FC.optional "report" report Report.reportSchema

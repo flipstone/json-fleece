@@ -8,14 +8,14 @@ module StarTrek.SpacecraftClassBaseResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
-import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
-import StarTrek.SpacecraftClassBase (SpacecraftClassBase, spacecraftClassBaseSchema)
+import qualified StarTrek.ResponsePage as ResponsePage
+import qualified StarTrek.ResponseSort as ResponseSort
+import qualified StarTrek.SpacecraftClassBase as SpacecraftClassBase
 
 data SpacecraftClassBaseResponse = SpacecraftClassBaseResponse
-  { spacecraftClasses :: Maybe [SpacecraftClassBase] -- ^ Base spacecraft class, returned in search results
-  , sort :: Maybe ResponseSort -- ^ Response sort
-  , page :: Maybe ResponsePage -- ^ Object describing response page
+  { spacecraftClasses :: Maybe [SpacecraftClassBase.SpacecraftClassBase] -- ^ Base spacecraft class, returned in search results
+  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
+  , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ spacecraftClassBaseResponseSchema :: FC.Fleece schema => schema SpacecraftClassB
 spacecraftClassBaseResponseSchema =
   FC.object $
     FC.constructor SpacecraftClassBaseResponse
-      #+ FC.optional "spacecraftClasses" spacecraftClasses (FC.list spacecraftClassBaseSchema)
-      #+ FC.optional "sort" sort responseSortSchema
-      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "spacecraftClasses" spacecraftClasses (FC.list SpacecraftClassBase.spacecraftClassBaseSchema)
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
+      #+ FC.optional "page" page ResponsePage.responsePageSchema

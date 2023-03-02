@@ -5,12 +5,11 @@ module StarTrek.CharacterFull.HologramDateStatus
   , hologramDateStatusSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype HologramDateStatus = HologramDateStatus Text
+newtype HologramDateStatus = HologramDateStatus T.Text
   deriving (Show, Eq)
 
 hologramDateStatusSchema :: FC.Fleece schema => schema HologramDateStatus

@@ -5,12 +5,11 @@ module StarTrek.SeriesFull.OriginalRunEndDate
   , originalRunEndDateSchema
   ) where
 
-import Data.Time (Day)
-import Fleece.Core ()
+import qualified Data.Time as Time
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype OriginalRunEndDate = OriginalRunEndDate Day
+newtype OriginalRunEndDate = OriginalRunEndDate Time.Day
   deriving (Show, Eq)
 
 originalRunEndDateSchema :: FC.Fleece schema => schema OriginalRunEndDate

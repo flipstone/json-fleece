@@ -5,12 +5,11 @@ module StarTrek.VideoGameFull.SystemRequirements
   , systemRequirementsSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype SystemRequirements = SystemRequirements Text
+newtype SystemRequirements = SystemRequirements T.Text
   deriving (Show, Eq)
 
 systemRequirementsSchema :: FC.Fleece schema => schema SystemRequirements

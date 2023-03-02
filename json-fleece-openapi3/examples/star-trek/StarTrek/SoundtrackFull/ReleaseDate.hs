@@ -5,12 +5,11 @@ module StarTrek.SoundtrackFull.ReleaseDate
   , releaseDateSchema
   ) where
 
-import Data.Time (Day)
-import Fleece.Core ()
+import qualified Data.Time as Time
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype ReleaseDate = ReleaseDate Day
+newtype ReleaseDate = ReleaseDate Time.Day
   deriving (Show, Eq)
 
 releaseDateSchema :: FC.Fleece schema => schema ReleaseDate

@@ -5,7 +5,6 @@ module StarTrek.ComicStripBase.PublishedYearFrom
   , publishedYearFromSchema
   ) where
 
-import Fleece.Core ()
 import qualified Fleece.Core as FC
 import Prelude (Eq, Integer, Show)
 

@@ -8,10 +8,10 @@ module StarTrek.OccupationFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.OccupationFull (OccupationFull, occupationFullSchema)
+import qualified StarTrek.OccupationFull as OccupationFull
 
 data OccupationFullResponse = OccupationFullResponse
-  { occupation :: Maybe OccupationFull -- ^ Full occupation, returned when queried using UID
+  { occupation :: Maybe OccupationFull.OccupationFull -- ^ Full occupation, returned when queried using UID
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ occupationFullResponseSchema :: FC.Fleece schema => schema OccupationFullRespons
 occupationFullResponseSchema =
   FC.object $
     FC.constructor OccupationFullResponse
-      #+ FC.optional "occupation" occupation occupationFullSchema
+      #+ FC.optional "occupation" occupation OccupationFull.occupationFullSchema

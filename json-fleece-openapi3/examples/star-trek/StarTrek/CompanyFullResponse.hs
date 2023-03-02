@@ -8,10 +8,10 @@ module StarTrek.CompanyFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.CompanyFull (CompanyFull, companyFullSchema)
+import qualified StarTrek.CompanyFull as CompanyFull
 
 data CompanyFullResponse = CompanyFullResponse
-  { company :: Maybe CompanyFull -- ^ Full company, returned when queried using UID
+  { company :: Maybe CompanyFull.CompanyFull -- ^ Full company, returned when queried using UID
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ companyFullResponseSchema :: FC.Fleece schema => schema CompanyFullResponse
 companyFullResponseSchema =
   FC.object $
     FC.constructor CompanyFullResponse
-      #+ FC.optional "company" company companyFullSchema
+      #+ FC.optional "company" company CompanyFull.companyFullSchema

@@ -25,6 +25,32 @@ library
       TestCases.FieldTestCases.OptionalNullableField
       TestCases.FieldTestCases.RequiredField
       TestCases.FieldTestCases.RequiredNullableField
+      TestCases.NameConflicts
+      TestCases.NameConflicts.Case
+      TestCases.NameConflicts.Class
+      TestCases.NameConflicts.Data
+      TestCases.NameConflicts.Deriving
+      TestCases.NameConflicts.Do
+      TestCases.NameConflicts.Else
+      TestCases.NameConflicts.If
+      TestCases.NameConflicts.Import
+      TestCases.NameConflicts.In
+      TestCases.NameConflicts.Infix
+      TestCases.NameConflicts.Infixl
+      TestCases.NameConflicts.Infixr
+      TestCases.NameConflicts.Instance
+      TestCases.NameConflicts.Int32
+      TestCases.NameConflicts.Int64
+      TestCases.NameConflicts.Let
+      TestCases.NameConflicts.Module
+      TestCases.NameConflicts.NameConflicts
+      TestCases.NameConflicts.Newtype
+      TestCases.NameConflicts.Of
+      TestCases.NameConflicts.Scientific
+      TestCases.NameConflicts.Text
+      TestCases.NameConflicts.Then
+      TestCases.NameConflicts.Type
+      TestCases.NameConflicts.Where
       TestCases.TopLevelArray
       TestCases.TopLevelArray.TopLevelArrayItem
       TestCases.TopLevelArrayNullable

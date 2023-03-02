@@ -8,14 +8,14 @@ module StarTrek.VideoReleaseBaseResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
-import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
-import StarTrek.VideoReleaseBase (VideoReleaseBase, videoReleaseBaseSchema)
+import qualified StarTrek.ResponsePage as ResponsePage
+import qualified StarTrek.ResponseSort as ResponseSort
+import qualified StarTrek.VideoReleaseBase as VideoReleaseBase
 
 data VideoReleaseBaseResponse = VideoReleaseBaseResponse
-  { videoReleases :: Maybe [VideoReleaseBase] -- ^ Base video release, returned in search results
-  , sort :: Maybe ResponseSort -- ^ Response sort
-  , page :: Maybe ResponsePage -- ^ Object describing response page
+  { videoReleases :: Maybe [VideoReleaseBase.VideoReleaseBase] -- ^ Base video release, returned in search results
+  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
+  , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ videoReleaseBaseResponseSchema :: FC.Fleece schema => schema VideoReleaseBaseRes
 videoReleaseBaseResponseSchema =
   FC.object $
     FC.constructor VideoReleaseBaseResponse
-      #+ FC.optional "videoReleases" videoReleases (FC.list videoReleaseBaseSchema)
-      #+ FC.optional "sort" sort responseSortSchema
-      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "videoReleases" videoReleases (FC.list VideoReleaseBase.videoReleaseBaseSchema)
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
+      #+ FC.optional "page" page ResponsePage.responsePageSchema

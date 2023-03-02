@@ -8,14 +8,14 @@ module StarTrek.CharacterBaseResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.CharacterBase (CharacterBase, characterBaseSchema)
-import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
-import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
+import qualified StarTrek.CharacterBase as CharacterBase
+import qualified StarTrek.ResponsePage as ResponsePage
+import qualified StarTrek.ResponseSort as ResponseSort
 
 data CharacterBaseResponse = CharacterBaseResponse
-  { characters :: Maybe [CharacterBase] -- ^ Base character, returned in search results
-  , sort :: Maybe ResponseSort -- ^ Response sort
-  , page :: Maybe ResponsePage -- ^ Object describing response page
+  { characters :: Maybe [CharacterBase.CharacterBase] -- ^ Base character, returned in search results
+  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
+  , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ characterBaseResponseSchema :: FC.Fleece schema => schema CharacterBaseResponse
 characterBaseResponseSchema =
   FC.object $
     FC.constructor CharacterBaseResponse
-      #+ FC.optional "characters" characters (FC.list characterBaseSchema)
-      #+ FC.optional "sort" sort responseSortSchema
-      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "characters" characters (FC.list CharacterBase.characterBaseSchema)
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
+      #+ FC.optional "page" page ResponsePage.responsePageSchema

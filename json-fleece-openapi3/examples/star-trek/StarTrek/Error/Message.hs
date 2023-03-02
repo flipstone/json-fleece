@@ -5,12 +5,11 @@ module StarTrek.Error.Message
   , messageSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Message = Message Text
+newtype Message = Message T.Text
   deriving (Show, Eq)
 
 messageSchema :: FC.Fleece schema => schema Message

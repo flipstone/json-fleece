@@ -5,12 +5,11 @@ module Uber.PriceEstimate.LowEstimate
   , lowEstimateSchema
   ) where
 
-import Data.Scientific (Scientific)
-import Fleece.Core ()
+import qualified Data.Scientific as Sci
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype LowEstimate = LowEstimate Scientific
+newtype LowEstimate = LowEstimate Sci.Scientific
   deriving (Show, Eq)
 
 lowEstimateSchema :: FC.Fleece schema => schema LowEstimate

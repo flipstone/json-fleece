@@ -8,32 +8,32 @@ module StarTrek.ComicStripBase
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.ComicStripBase.NumberOfPages (NumberOfPages, numberOfPagesSchema)
-import StarTrek.ComicStripBase.Periodical (Periodical, periodicalSchema)
-import StarTrek.ComicStripBase.PublishedDayFrom (PublishedDayFrom, publishedDayFromSchema)
-import StarTrek.ComicStripBase.PublishedDayTo (PublishedDayTo, publishedDayToSchema)
-import StarTrek.ComicStripBase.PublishedMonthFrom (PublishedMonthFrom, publishedMonthFromSchema)
-import StarTrek.ComicStripBase.PublishedMonthTo (PublishedMonthTo, publishedMonthToSchema)
-import StarTrek.ComicStripBase.PublishedYearFrom (PublishedYearFrom, publishedYearFromSchema)
-import StarTrek.ComicStripBase.PublishedYearTo (PublishedYearTo, publishedYearToSchema)
-import StarTrek.ComicStripBase.Title (Title, titleSchema)
-import StarTrek.ComicStripBase.Uid (Uid, uidSchema)
-import StarTrek.ComicStripBase.YearFrom (YearFrom, yearFromSchema)
-import StarTrek.ComicStripBase.YearTo (YearTo, yearToSchema)
+import qualified StarTrek.ComicStripBase.NumberOfPages as NumberOfPages
+import qualified StarTrek.ComicStripBase.Periodical as Periodical
+import qualified StarTrek.ComicStripBase.PublishedDayFrom as PublishedDayFrom
+import qualified StarTrek.ComicStripBase.PublishedDayTo as PublishedDayTo
+import qualified StarTrek.ComicStripBase.PublishedMonthFrom as PublishedMonthFrom
+import qualified StarTrek.ComicStripBase.PublishedMonthTo as PublishedMonthTo
+import qualified StarTrek.ComicStripBase.PublishedYearFrom as PublishedYearFrom
+import qualified StarTrek.ComicStripBase.PublishedYearTo as PublishedYearTo
+import qualified StarTrek.ComicStripBase.Title as Title
+import qualified StarTrek.ComicStripBase.Uid as Uid
+import qualified StarTrek.ComicStripBase.YearFrom as YearFrom
+import qualified StarTrek.ComicStripBase.YearTo as YearTo
 
 data ComicStripBase = ComicStripBase
-  { yearFrom :: Maybe YearFrom -- ^ Starting year of comic strip story
-  , publishedMonthFrom :: Maybe PublishedMonthFrom -- ^ Month from which the comic strip was published
-  , publishedYearTo :: Maybe PublishedYearTo -- ^ Year to which the comic strip was published
-  , uid :: Uid -- ^ Comic strip unique ID
-  , publishedYearFrom :: Maybe PublishedYearFrom -- ^ Year from which the comic strip was published
-  , title :: Title -- ^ Comic strip title
-  , publishedMonthTo :: Maybe PublishedMonthTo -- ^ Month to which the comic strip was published
-  , yearTo :: Maybe YearTo -- ^ Ending year of comic strip story
-  , periodical :: Maybe Periodical -- ^ Title of the periodical the comic strip was published in
-  , publishedDayTo :: Maybe PublishedDayTo -- ^ Day to which the comic strip was published
-  , numberOfPages :: Maybe NumberOfPages -- ^ Number of pages
-  , publishedDayFrom :: Maybe PublishedDayFrom -- ^ Day from which the comic strip was published
+  { yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of comic strip story
+  , publishedMonthFrom :: Maybe PublishedMonthFrom.PublishedMonthFrom -- ^ Month from which the comic strip was published
+  , publishedYearTo :: Maybe PublishedYearTo.PublishedYearTo -- ^ Year to which the comic strip was published
+  , uid :: Uid.Uid -- ^ Comic strip unique ID
+  , publishedYearFrom :: Maybe PublishedYearFrom.PublishedYearFrom -- ^ Year from which the comic strip was published
+  , title :: Title.Title -- ^ Comic strip title
+  , publishedMonthTo :: Maybe PublishedMonthTo.PublishedMonthTo -- ^ Month to which the comic strip was published
+  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of comic strip story
+  , periodical :: Maybe Periodical.Periodical -- ^ Title of the periodical the comic strip was published in
+  , publishedDayTo :: Maybe PublishedDayTo.PublishedDayTo -- ^ Day to which the comic strip was published
+  , numberOfPages :: Maybe NumberOfPages.NumberOfPages -- ^ Number of pages
+  , publishedDayFrom :: Maybe PublishedDayFrom.PublishedDayFrom -- ^ Day from which the comic strip was published
   }
   deriving (Eq, Show)
 
@@ -41,15 +41,15 @@ comicStripBaseSchema :: FC.Fleece schema => schema ComicStripBase
 comicStripBaseSchema =
   FC.object $
     FC.constructor ComicStripBase
-      #+ FC.optional "yearFrom" yearFrom yearFromSchema
-      #+ FC.optional "publishedMonthFrom" publishedMonthFrom publishedMonthFromSchema
-      #+ FC.optional "publishedYearTo" publishedYearTo publishedYearToSchema
-      #+ FC.required "uid" uid uidSchema
-      #+ FC.optional "publishedYearFrom" publishedYearFrom publishedYearFromSchema
-      #+ FC.required "title" title titleSchema
-      #+ FC.optional "publishedMonthTo" publishedMonthTo publishedMonthToSchema
-      #+ FC.optional "yearTo" yearTo yearToSchema
-      #+ FC.optional "periodical" periodical periodicalSchema
-      #+ FC.optional "publishedDayTo" publishedDayTo publishedDayToSchema
-      #+ FC.optional "numberOfPages" numberOfPages numberOfPagesSchema
-      #+ FC.optional "publishedDayFrom" publishedDayFrom publishedDayFromSchema
+      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
+      #+ FC.optional "publishedMonthFrom" publishedMonthFrom PublishedMonthFrom.publishedMonthFromSchema
+      #+ FC.optional "publishedYearTo" publishedYearTo PublishedYearTo.publishedYearToSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "publishedYearFrom" publishedYearFrom PublishedYearFrom.publishedYearFromSchema
+      #+ FC.required "title" title Title.titleSchema
+      #+ FC.optional "publishedMonthTo" publishedMonthTo PublishedMonthTo.publishedMonthToSchema
+      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
+      #+ FC.optional "periodical" periodical Periodical.periodicalSchema
+      #+ FC.optional "publishedDayTo" publishedDayTo PublishedDayTo.publishedDayToSchema
+      #+ FC.optional "numberOfPages" numberOfPages NumberOfPages.numberOfPagesSchema
+      #+ FC.optional "publishedDayFrom" publishedDayFrom PublishedDayFrom.publishedDayFromSchema

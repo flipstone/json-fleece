@@ -8,12 +8,12 @@ module StarTrek.TitleHeader
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
-import StarTrek.TitleHeader.Name (Name, nameSchema)
-import StarTrek.TitleHeader.Uid (Uid, uidSchema)
+import qualified StarTrek.TitleHeader.Name as Name
+import qualified StarTrek.TitleHeader.Uid as Uid
 
 data TitleHeader = TitleHeader
-  { name :: Name -- ^ Title name
-  , uid :: Uid -- ^ Title unique ID
+  { name :: Name.Name -- ^ Title name
+  , uid :: Uid.Uid -- ^ Title unique ID
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ titleHeaderSchema :: FC.Fleece schema => schema TitleHeader
 titleHeaderSchema =
   FC.object $
     FC.constructor TitleHeader
-      #+ FC.required "name" name nameSchema
-      #+ FC.required "uid" uid uidSchema
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.required "uid" uid Uid.uidSchema

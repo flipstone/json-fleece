@@ -5,12 +5,11 @@ module StarTrek.MovieFull.TitleBulgarian
   , titleBulgarianSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype TitleBulgarian = TitleBulgarian Text
+newtype TitleBulgarian = TitleBulgarian T.Text
   deriving (Show, Eq)
 
 titleBulgarianSchema :: FC.Fleece schema => schema TitleBulgarian

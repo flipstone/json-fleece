@@ -8,18 +8,18 @@ module Uber.Profile
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import Uber.Profile.Email (Email, emailSchema)
-import Uber.Profile.FirstName (FirstName, firstNameSchema)
-import Uber.Profile.LastName (LastName, lastNameSchema)
-import Uber.Profile.Picture (Picture, pictureSchema)
-import Uber.Profile.PromoCode (PromoCode, promoCodeSchema)
+import qualified Uber.Profile.Email as Email
+import qualified Uber.Profile.FirstName as FirstName
+import qualified Uber.Profile.LastName as LastName
+import qualified Uber.Profile.Picture as Picture
+import qualified Uber.Profile.PromoCode as PromoCode
 
 data Profile = Profile
-  { lastName :: Maybe LastName -- ^ Last name of the Uber user.
-  , picture :: Maybe Picture -- ^ Image URL of the Uber user.
-  , promoCode :: Maybe PromoCode -- ^ Promo code of the Uber user.
-  , email :: Maybe Email -- ^ Email address of the Uber user
-  , firstName :: Maybe FirstName -- ^ First name of the Uber user.
+  { lastName :: Maybe LastName.LastName -- ^ Last name of the Uber user.
+  , picture :: Maybe Picture.Picture -- ^ Image URL of the Uber user.
+  , promoCode :: Maybe PromoCode.PromoCode -- ^ Promo code of the Uber user.
+  , email :: Maybe Email.Email -- ^ Email address of the Uber user
+  , firstName :: Maybe FirstName.FirstName -- ^ First name of the Uber user.
   }
   deriving (Eq, Show)
 
@@ -27,8 +27,8 @@ profileSchema :: FC.Fleece schema => schema Profile
 profileSchema =
   FC.object $
     FC.constructor Profile
-      #+ FC.optional "last_name" lastName lastNameSchema
-      #+ FC.optional "picture" picture pictureSchema
-      #+ FC.optional "promo_code" promoCode promoCodeSchema
-      #+ FC.optional "email" email emailSchema
-      #+ FC.optional "first_name" firstName firstNameSchema
+      #+ FC.optional "last_name" lastName LastName.lastNameSchema
+      #+ FC.optional "picture" picture Picture.pictureSchema
+      #+ FC.optional "promo_code" promoCode PromoCode.promoCodeSchema
+      #+ FC.optional "email" email Email.emailSchema
+      #+ FC.optional "first_name" firstName FirstName.firstNameSchema

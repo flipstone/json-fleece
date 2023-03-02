@@ -8,10 +8,10 @@ module StarTrek.MovieFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.MovieFull (MovieFull, movieFullSchema)
+import qualified StarTrek.MovieFull as MovieFull
 
 data MovieFullResponse = MovieFullResponse
-  { movie :: Maybe MovieFull -- ^ Full movie, returned when queried using UID
+  { movie :: Maybe MovieFull.MovieFull -- ^ Full movie, returned when queried using UID
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ movieFullResponseSchema :: FC.Fleece schema => schema MovieFullResponse
 movieFullResponseSchema =
   FC.object $
     FC.constructor MovieFullResponse
-      #+ FC.optional "movie" movie movieFullSchema
+      #+ FC.optional "movie" movie MovieFull.movieFullSchema

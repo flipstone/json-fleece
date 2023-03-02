@@ -5,12 +5,11 @@ module StarTrek.PerformerBase.DateOfDeath
   , dateOfDeathSchema
   ) where
 
-import Data.Time (Day)
-import Fleece.Core ()
+import qualified Data.Time as Time
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype DateOfDeath = DateOfDeath Day
+newtype DateOfDeath = DateOfDeath Time.Day
   deriving (Show, Eq)
 
 dateOfDeathSchema :: FC.Fleece schema => schema DateOfDeath

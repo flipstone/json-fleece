@@ -213,7 +213,6 @@ schemaArrayItemsToFieldType parentKey fieldName arrayItems =
       Just (OA.OpenApiItemsObject itemSchema) ->
         schemaRefToFieldType parentKey (fieldName <> "Item") itemSchema
       Just (OA.OpenApiItemsArray []) -> do
-        -- TODO this is a placeholder
         let
           key =
             fieldName <> "Item"

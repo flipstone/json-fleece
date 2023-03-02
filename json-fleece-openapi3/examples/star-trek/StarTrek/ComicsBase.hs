@@ -8,38 +8,38 @@ module StarTrek.ComicsBase
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.ComicsBase.Adaptation (Adaptation, adaptationSchema)
-import StarTrek.ComicsBase.CoverDay (CoverDay, coverDaySchema)
-import StarTrek.ComicsBase.CoverMonth (CoverMonth, coverMonthSchema)
-import StarTrek.ComicsBase.CoverYear (CoverYear, coverYearSchema)
-import StarTrek.ComicsBase.NumberOfPages (NumberOfPages, numberOfPagesSchema)
-import StarTrek.ComicsBase.Photonovel (Photonovel, photonovelSchema)
-import StarTrek.ComicsBase.PublishedDay (PublishedDay, publishedDaySchema)
-import StarTrek.ComicsBase.PublishedMonth (PublishedMonth, publishedMonthSchema)
-import StarTrek.ComicsBase.PublishedYear (PublishedYear, publishedYearSchema)
-import StarTrek.ComicsBase.StardateFrom (StardateFrom, stardateFromSchema)
-import StarTrek.ComicsBase.StardateTo (StardateTo, stardateToSchema)
-import StarTrek.ComicsBase.Title (Title, titleSchema)
-import StarTrek.ComicsBase.Uid (Uid, uidSchema)
-import StarTrek.ComicsBase.YearFrom (YearFrom, yearFromSchema)
-import StarTrek.ComicsBase.YearTo (YearTo, yearToSchema)
+import qualified StarTrek.ComicsBase.Adaptation as Adaptation
+import qualified StarTrek.ComicsBase.CoverDay as CoverDay
+import qualified StarTrek.ComicsBase.CoverMonth as CoverMonth
+import qualified StarTrek.ComicsBase.CoverYear as CoverYear
+import qualified StarTrek.ComicsBase.NumberOfPages as NumberOfPages
+import qualified StarTrek.ComicsBase.Photonovel as Photonovel
+import qualified StarTrek.ComicsBase.PublishedDay as PublishedDay
+import qualified StarTrek.ComicsBase.PublishedMonth as PublishedMonth
+import qualified StarTrek.ComicsBase.PublishedYear as PublishedYear
+import qualified StarTrek.ComicsBase.StardateFrom as StardateFrom
+import qualified StarTrek.ComicsBase.StardateTo as StardateTo
+import qualified StarTrek.ComicsBase.Title as Title
+import qualified StarTrek.ComicsBase.Uid as Uid
+import qualified StarTrek.ComicsBase.YearFrom as YearFrom
+import qualified StarTrek.ComicsBase.YearTo as YearTo
 
 data ComicsBase = ComicsBase
-  { yearFrom :: Maybe YearFrom -- ^ Starting year of comic story
-  , stardateTo :: Maybe StardateTo -- ^ Ending stardate of comic story
-  , adaptation :: Maybe Adaptation -- ^ Whether it's an adaptation of an episode or a movie
-  , publishedMonth :: Maybe PublishedMonth -- ^ Month the comics was published
-  , publishedYear :: Maybe PublishedYear -- ^ Year the comics was published
-  , uid :: Uid -- ^ Comics unique ID
-  , stardateFrom :: Maybe StardateFrom -- ^ Starting stardate of comic story
-  , publishedDay :: Maybe PublishedDay -- ^ Day the comics was published
-  , photonovel :: Maybe Photonovel -- ^ Whether it's a photonovel
-  , coverYear :: Maybe CoverYear -- ^ Cover publication year
-  , title :: Title -- ^ Comics title
-  , coverDay :: Maybe CoverDay -- ^ Cover publication day
-  , yearTo :: Maybe YearTo -- ^ Ending year of comic story
-  , numberOfPages :: Maybe NumberOfPages -- ^ Number of pages
-  , coverMonth :: Maybe CoverMonth -- ^ Cover publication month
+  { yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of comic story
+  , stardateTo :: Maybe StardateTo.StardateTo -- ^ Ending stardate of comic story
+  , adaptation :: Maybe Adaptation.Adaptation -- ^ Whether it's an adaptation of an episode or a movie
+  , publishedMonth :: Maybe PublishedMonth.PublishedMonth -- ^ Month the comics was published
+  , publishedYear :: Maybe PublishedYear.PublishedYear -- ^ Year the comics was published
+  , uid :: Uid.Uid -- ^ Comics unique ID
+  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of comic story
+  , publishedDay :: Maybe PublishedDay.PublishedDay -- ^ Day the comics was published
+  , photonovel :: Maybe Photonovel.Photonovel -- ^ Whether it's a photonovel
+  , coverYear :: Maybe CoverYear.CoverYear -- ^ Cover publication year
+  , title :: Title.Title -- ^ Comics title
+  , coverDay :: Maybe CoverDay.CoverDay -- ^ Cover publication day
+  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of comic story
+  , numberOfPages :: Maybe NumberOfPages.NumberOfPages -- ^ Number of pages
+  , coverMonth :: Maybe CoverMonth.CoverMonth -- ^ Cover publication month
   }
   deriving (Eq, Show)
 
@@ -47,18 +47,18 @@ comicsBaseSchema :: FC.Fleece schema => schema ComicsBase
 comicsBaseSchema =
   FC.object $
     FC.constructor ComicsBase
-      #+ FC.optional "yearFrom" yearFrom yearFromSchema
-      #+ FC.optional "stardateTo" stardateTo stardateToSchema
-      #+ FC.optional "adaptation" adaptation adaptationSchema
-      #+ FC.optional "publishedMonth" publishedMonth publishedMonthSchema
-      #+ FC.optional "publishedYear" publishedYear publishedYearSchema
-      #+ FC.required "uid" uid uidSchema
-      #+ FC.optional "stardateFrom" stardateFrom stardateFromSchema
-      #+ FC.optional "publishedDay" publishedDay publishedDaySchema
-      #+ FC.optional "photonovel" photonovel photonovelSchema
-      #+ FC.optional "coverYear" coverYear coverYearSchema
-      #+ FC.required "title" title titleSchema
-      #+ FC.optional "coverDay" coverDay coverDaySchema
-      #+ FC.optional "yearTo" yearTo yearToSchema
-      #+ FC.optional "numberOfPages" numberOfPages numberOfPagesSchema
-      #+ FC.optional "coverMonth" coverMonth coverMonthSchema
+      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
+      #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
+      #+ FC.optional "adaptation" adaptation Adaptation.adaptationSchema
+      #+ FC.optional "publishedMonth" publishedMonth PublishedMonth.publishedMonthSchema
+      #+ FC.optional "publishedYear" publishedYear PublishedYear.publishedYearSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
+      #+ FC.optional "publishedDay" publishedDay PublishedDay.publishedDaySchema
+      #+ FC.optional "photonovel" photonovel Photonovel.photonovelSchema
+      #+ FC.optional "coverYear" coverYear CoverYear.coverYearSchema
+      #+ FC.required "title" title Title.titleSchema
+      #+ FC.optional "coverDay" coverDay CoverDay.coverDaySchema
+      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
+      #+ FC.optional "numberOfPages" numberOfPages NumberOfPages.numberOfPagesSchema
+      #+ FC.optional "coverMonth" coverMonth CoverMonth.coverMonthSchema

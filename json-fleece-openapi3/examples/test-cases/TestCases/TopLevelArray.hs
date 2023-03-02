@@ -5,14 +5,13 @@ module TestCases.TopLevelArray
   , topLevelArraySchema
   ) where
 
-import Fleece.Core ()
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
-import TestCases.TopLevelArray.TopLevelArrayItem (TopLevelArrayItem, topLevelArrayItemSchema)
+import qualified TestCases.TopLevelArray.TopLevelArrayItem as TopLevelArrayItem
 
-newtype TopLevelArray = TopLevelArray [TopLevelArrayItem]
+newtype TopLevelArray = TopLevelArray [TopLevelArrayItem.TopLevelArrayItem]
   deriving (Show, Eq)
 
 topLevelArraySchema :: FC.Fleece schema => schema TopLevelArray
 topLevelArraySchema =
-  FC.coerceSchema (FC.list topLevelArrayItemSchema)
+  FC.coerceSchema (FC.list TopLevelArrayItem.topLevelArrayItemSchema)

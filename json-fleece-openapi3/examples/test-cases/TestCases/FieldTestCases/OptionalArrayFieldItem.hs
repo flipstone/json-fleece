@@ -5,12 +5,11 @@ module TestCases.FieldTestCases.OptionalArrayFieldItem
   , optionalArrayFieldItemSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype OptionalArrayFieldItem = OptionalArrayFieldItem Text
+newtype OptionalArrayFieldItem = OptionalArrayFieldItem T.Text
   deriving (Show, Eq)
 
 optionalArrayFieldItemSchema :: FC.Fleece schema => schema OptionalArrayFieldItem

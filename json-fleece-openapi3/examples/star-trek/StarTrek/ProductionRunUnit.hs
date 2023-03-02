@@ -5,8 +5,7 @@ module StarTrek.ProductionRunUnit
   , productionRunUnitSchema
   ) where
 
-import Data.Text (Text, pack)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (($), Bounded, Enum, Eq, Ord, Show)
 
@@ -15,9 +14,9 @@ data ProductionRunUnit
   | SET
   deriving (Eq, Show, Ord, Enum, Bounded)
 
-productionRunUnitToText :: ProductionRunUnit -> Text
+productionRunUnitToText :: ProductionRunUnit -> T.Text
 productionRunUnitToText v =
-  pack $
+  T.pack $
     case v of
       BOX -> "BOX"
       SET -> "SET"

@@ -5,12 +5,11 @@ module Uber.PriceEstimate.SurgeMultiplier
   , surgeMultiplierSchema
   ) where
 
-import Data.Scientific (Scientific)
-import Fleece.Core ()
+import qualified Data.Scientific as Sci
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype SurgeMultiplier = SurgeMultiplier Scientific
+newtype SurgeMultiplier = SurgeMultiplier Sci.Scientific
   deriving (Show, Eq)
 
 surgeMultiplierSchema :: FC.Fleece schema => schema SurgeMultiplier

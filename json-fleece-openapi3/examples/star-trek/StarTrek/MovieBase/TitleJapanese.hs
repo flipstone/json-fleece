@@ -5,12 +5,11 @@ module StarTrek.MovieBase.TitleJapanese
   , titleJapaneseSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype TitleJapanese = TitleJapanese Text
+newtype TitleJapanese = TitleJapanese T.Text
   deriving (Show, Eq)
 
 titleJapaneseSchema :: FC.Fleece schema => schema TitleJapanese

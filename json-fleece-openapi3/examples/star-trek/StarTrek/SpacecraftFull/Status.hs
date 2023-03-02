@@ -5,12 +5,11 @@ module StarTrek.SpacecraftFull.Status
   , statusSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Status = Status Text
+newtype Status = Status T.Text
   deriving (Show, Eq)
 
 statusSchema :: FC.Fleece schema => schema Status

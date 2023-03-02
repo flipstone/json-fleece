@@ -5,7 +5,6 @@ module StarTrek.OrganizationFull.MedicalOrganization
   , medicalOrganizationSchema
   ) where
 
-import Fleece.Core ()
 import qualified Fleece.Core as FC
 import Prelude (Bool, Eq, Show)
 

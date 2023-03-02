@@ -5,12 +5,11 @@ module Uber.Product.ProductId
   , productIdSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype ProductId = ProductId Text
+newtype ProductId = ProductId T.Text
   deriving (Show, Eq)
 
 productIdSchema :: FC.Fleece schema => schema ProductId

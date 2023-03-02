@@ -5,12 +5,11 @@ module StarTrek.SpacecraftBase.DateStatus
   , dateStatusSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype DateStatus = DateStatus Text
+newtype DateStatus = DateStatus T.Text
   deriving (Show, Eq)
 
 dateStatusSchema :: FC.Fleece schema => schema DateStatus

@@ -5,12 +5,11 @@ module StarTrek.SpacecraftBase.Registry
   , registrySchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Registry = Registry Text
+newtype Registry = Registry T.Text
   deriving (Show, Eq)
 
 registrySchema :: FC.Fleece schema => schema Registry

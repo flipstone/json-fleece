@@ -5,12 +5,11 @@ module StarTrek.ElementBase.Symbol
   , symbolSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Symbol = Symbol Text
+newtype Symbol = Symbol T.Text
   deriving (Show, Eq)
 
 symbolSchema :: FC.Fleece schema => schema Symbol

@@ -8,14 +8,14 @@ module StarTrek.BookSeriesBaseResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.BookSeriesBase (BookSeriesBase, bookSeriesBaseSchema)
-import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
-import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
+import qualified StarTrek.BookSeriesBase as BookSeriesBase
+import qualified StarTrek.ResponsePage as ResponsePage
+import qualified StarTrek.ResponseSort as ResponseSort
 
 data BookSeriesBaseResponse = BookSeriesBaseResponse
-  { bookSeries :: Maybe [BookSeriesBase] -- ^ Base book series, returned in search results
-  , sort :: Maybe ResponseSort -- ^ Response sort
-  , page :: Maybe ResponsePage -- ^ Object describing response page
+  { bookSeries :: Maybe [BookSeriesBase.BookSeriesBase] -- ^ Base book series, returned in search results
+  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
+  , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ bookSeriesBaseResponseSchema :: FC.Fleece schema => schema BookSeriesBaseRespons
 bookSeriesBaseResponseSchema =
   FC.object $
     FC.constructor BookSeriesBaseResponse
-      #+ FC.optional "bookSeries" bookSeries (FC.list bookSeriesBaseSchema)
-      #+ FC.optional "sort" sort responseSortSchema
-      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "bookSeries" bookSeries (FC.list BookSeriesBase.bookSeriesBaseSchema)
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
+      #+ FC.optional "page" page ResponsePage.responsePageSchema

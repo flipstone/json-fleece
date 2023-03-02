@@ -8,12 +8,12 @@ module StarTrek.MaterialHeader
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
-import StarTrek.MaterialHeader.Name (Name, nameSchema)
-import StarTrek.MaterialHeader.Uid (Uid, uidSchema)
+import qualified StarTrek.MaterialHeader.Name as Name
+import qualified StarTrek.MaterialHeader.Uid as Uid
 
 data MaterialHeader = MaterialHeader
-  { name :: Name -- ^ Material name
-  , uid :: Uid -- ^ Material unique ID
+  { name :: Name.Name -- ^ Material name
+  , uid :: Uid.Uid -- ^ Material unique ID
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ materialHeaderSchema :: FC.Fleece schema => schema MaterialHeader
 materialHeaderSchema =
   FC.object $
     FC.constructor MaterialHeader
-      #+ FC.required "name" name nameSchema
-      #+ FC.required "uid" uid uidSchema
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.required "uid" uid Uid.uidSchema

@@ -5,12 +5,11 @@ module StarTrek.Error.Code
   , codeSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Code = Code Text
+newtype Code = Code T.Text
   deriving (Show, Eq)
 
 codeSchema :: FC.Fleece schema => schema Code

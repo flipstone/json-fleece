@@ -5,12 +5,11 @@ module Uber.Profile.FirstName
   , firstNameSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype FirstName = FirstName Text
+newtype FirstName = FirstName T.Text
   deriving (Show, Eq)
 
 firstNameSchema :: FC.Fleece schema => schema FirstName

@@ -8,12 +8,12 @@ module StarTrek.SpacecraftType
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.SpacecraftType.Name (Name, nameSchema)
-import StarTrek.SpacecraftType.Uid (Uid, uidSchema)
+import qualified StarTrek.SpacecraftType.Name as Name
+import qualified StarTrek.SpacecraftType.Uid as Uid
 
 data SpacecraftType = SpacecraftType
-  { name :: Maybe Name -- ^ Spacecraft type name
-  , uid :: Maybe Uid -- ^ Spacecraft type unique ID
+  { name :: Maybe Name.Name -- ^ Spacecraft type name
+  , uid :: Maybe Uid.Uid -- ^ Spacecraft type unique ID
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ spacecraftTypeSchema :: FC.Fleece schema => schema SpacecraftType
 spacecraftTypeSchema =
   FC.object $
     FC.constructor SpacecraftType
-      #+ FC.optional "name" name nameSchema
-      #+ FC.optional "uid" uid uidSchema
+      #+ FC.optional "name" name Name.nameSchema
+      #+ FC.optional "uid" uid Uid.uidSchema

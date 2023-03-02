@@ -8,10 +8,10 @@ module StarTrek.MagazineFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.MagazineFull (MagazineFull, magazineFullSchema)
+import qualified StarTrek.MagazineFull as MagazineFull
 
 data MagazineFullResponse = MagazineFullResponse
-  { magazine :: Maybe MagazineFull -- ^ Full magazine, returned when queried using UID
+  { magazine :: Maybe MagazineFull.MagazineFull -- ^ Full magazine, returned when queried using UID
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ magazineFullResponseSchema :: FC.Fleece schema => schema MagazineFullResponse
 magazineFullResponseSchema =
   FC.object $
     FC.constructor MagazineFullResponse
-      #+ FC.optional "magazine" magazine magazineFullSchema
+      #+ FC.optional "magazine" magazine MagazineFull.magazineFullSchema

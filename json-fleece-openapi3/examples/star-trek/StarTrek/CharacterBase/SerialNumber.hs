@@ -5,12 +5,11 @@ module StarTrek.CharacterBase.SerialNumber
   , serialNumberSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype SerialNumber = SerialNumber Text
+newtype SerialNumber = SerialNumber T.Text
   deriving (Show, Eq)
 
 serialNumberSchema :: FC.Fleece schema => schema SerialNumber

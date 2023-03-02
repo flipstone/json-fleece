@@ -5,7 +5,6 @@ module StarTrek.LocationFull.Mirror
   , mirrorSchema
   ) where
 
-import Fleece.Core ()
 import qualified Fleece.Core as FC
 import Prelude (Bool, Eq, Show)
 

@@ -5,7 +5,6 @@ module StarTrek.ElementBase.Transuranium
   , transuraniumSchema
   ) where
 
-import Fleece.Core ()
 import qualified Fleece.Core as FC
 import Prelude (Bool, Eq, Show)
 

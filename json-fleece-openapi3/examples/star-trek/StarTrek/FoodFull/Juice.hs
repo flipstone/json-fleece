@@ -5,7 +5,6 @@ module StarTrek.FoodFull.Juice
   , juiceSchema
   ) where
 
-import Fleece.Core ()
 import qualified Fleece.Core as FC
 import Prelude (Bool, Eq, Show)
 

@@ -5,12 +5,11 @@ module StarTrek.SpacecraftClassBase.ActiveTo
   , activeToSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype ActiveTo = ActiveTo Text
+newtype ActiveTo = ActiveTo T.Text
   deriving (Show, Eq)
 
 activeToSchema :: FC.Fleece schema => schema ActiveTo

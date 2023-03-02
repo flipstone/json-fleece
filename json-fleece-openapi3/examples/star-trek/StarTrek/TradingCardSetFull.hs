@@ -8,40 +8,40 @@ module StarTrek.TradingCardSetFull
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.CompanyBase (CompanyBase, companyBaseSchema)
-import StarTrek.Country (Country, countrySchema)
-import StarTrek.ProductionRunUnit (ProductionRunUnit, productionRunUnitSchema)
-import StarTrek.TradingCardBase (TradingCardBase, tradingCardBaseSchema)
-import StarTrek.TradingCardDeckBase (TradingCardDeckBase, tradingCardDeckBaseSchema)
-import StarTrek.TradingCardSetFull.BoxesPerCase (BoxesPerCase, boxesPerCaseSchema)
-import StarTrek.TradingCardSetFull.CardHeight (CardHeight, cardHeightSchema)
-import StarTrek.TradingCardSetFull.CardWidth (CardWidth, cardWidthSchema)
-import StarTrek.TradingCardSetFull.CardsPerPack (CardsPerPack, cardsPerPackSchema)
-import StarTrek.TradingCardSetFull.Name (Name, nameSchema)
-import StarTrek.TradingCardSetFull.PacksPerBox (PacksPerBox, packsPerBoxSchema)
-import StarTrek.TradingCardSetFull.ProductionRun (ProductionRun, productionRunSchema)
-import StarTrek.TradingCardSetFull.ReleaseDay (ReleaseDay, releaseDaySchema)
-import StarTrek.TradingCardSetFull.ReleaseMonth (ReleaseMonth, releaseMonthSchema)
-import StarTrek.TradingCardSetFull.ReleaseYear (ReleaseYear, releaseYearSchema)
-import StarTrek.TradingCardSetFull.Uid (Uid, uidSchema)
+import qualified StarTrek.CompanyBase as CompanyBase
+import qualified StarTrek.Country as Country
+import qualified StarTrek.ProductionRunUnit as ProductionRunUnit
+import qualified StarTrek.TradingCardBase as TradingCardBase
+import qualified StarTrek.TradingCardDeckBase as TradingCardDeckBase
+import qualified StarTrek.TradingCardSetFull.BoxesPerCase as BoxesPerCase
+import qualified StarTrek.TradingCardSetFull.CardHeight as CardHeight
+import qualified StarTrek.TradingCardSetFull.CardWidth as CardWidth
+import qualified StarTrek.TradingCardSetFull.CardsPerPack as CardsPerPack
+import qualified StarTrek.TradingCardSetFull.Name as Name
+import qualified StarTrek.TradingCardSetFull.PacksPerBox as PacksPerBox
+import qualified StarTrek.TradingCardSetFull.ProductionRun as ProductionRun
+import qualified StarTrek.TradingCardSetFull.ReleaseDay as ReleaseDay
+import qualified StarTrek.TradingCardSetFull.ReleaseMonth as ReleaseMonth
+import qualified StarTrek.TradingCardSetFull.ReleaseYear as ReleaseYear
+import qualified StarTrek.TradingCardSetFull.Uid as Uid
 
 data TradingCardSetFull = TradingCardSetFull
-  { cardWidth :: Maybe CardWidth -- ^ Card width, in inches
-  , name :: Name -- ^ Trading card set name
-  , packsPerBox :: Maybe PacksPerBox -- ^ Packs per box
-  , releaseYear :: Maybe ReleaseYear -- ^ Release year
-  , tradingCardDecks :: Maybe [TradingCardDeckBase] -- ^ Base trading card deck, returned in search results
-  , cardsPerPack :: Maybe CardsPerPack -- ^ Cards per deck
-  , productionRunUnit :: Maybe ProductionRunUnit -- ^ Production run unit
-  , countriesOfOrigin :: Maybe [Country] -- ^ Real-world country
-  , productionRun :: Maybe ProductionRun -- ^ Production run
-  , uid :: Uid -- ^ Trading card set unique ID
-  , manufacturers :: Maybe [CompanyBase] -- ^ Base company, returned in search results
-  , tradingCards :: Maybe [TradingCardBase] -- ^ Base trading card, returned in search results
-  , releaseMonth :: Maybe ReleaseMonth -- ^ Release month
-  , boxesPerCase :: Maybe BoxesPerCase -- ^ Boxes per case
-  , cardHeight :: Maybe CardHeight -- ^ Card height, in inches
-  , releaseDay :: Maybe ReleaseDay -- ^ Release day
+  { cardWidth :: Maybe CardWidth.CardWidth -- ^ Card width, in inches
+  , name :: Name.Name -- ^ Trading card set name
+  , packsPerBox :: Maybe PacksPerBox.PacksPerBox -- ^ Packs per box
+  , releaseYear :: Maybe ReleaseYear.ReleaseYear -- ^ Release year
+  , tradingCardDecks :: Maybe [TradingCardDeckBase.TradingCardDeckBase] -- ^ Base trading card deck, returned in search results
+  , cardsPerPack :: Maybe CardsPerPack.CardsPerPack -- ^ Cards per deck
+  , productionRunUnit :: Maybe ProductionRunUnit.ProductionRunUnit -- ^ Production run unit
+  , countriesOfOrigin :: Maybe [Country.Country] -- ^ Real-world country
+  , productionRun :: Maybe ProductionRun.ProductionRun -- ^ Production run
+  , uid :: Uid.Uid -- ^ Trading card set unique ID
+  , manufacturers :: Maybe [CompanyBase.CompanyBase] -- ^ Base company, returned in search results
+  , tradingCards :: Maybe [TradingCardBase.TradingCardBase] -- ^ Base trading card, returned in search results
+  , releaseMonth :: Maybe ReleaseMonth.ReleaseMonth -- ^ Release month
+  , boxesPerCase :: Maybe BoxesPerCase.BoxesPerCase -- ^ Boxes per case
+  , cardHeight :: Maybe CardHeight.CardHeight -- ^ Card height, in inches
+  , releaseDay :: Maybe ReleaseDay.ReleaseDay -- ^ Release day
   }
   deriving (Eq, Show)
 
@@ -49,19 +49,19 @@ tradingCardSetFullSchema :: FC.Fleece schema => schema TradingCardSetFull
 tradingCardSetFullSchema =
   FC.object $
     FC.constructor TradingCardSetFull
-      #+ FC.optional "cardWidth" cardWidth cardWidthSchema
-      #+ FC.required "name" name nameSchema
-      #+ FC.optional "packsPerBox" packsPerBox packsPerBoxSchema
-      #+ FC.optional "releaseYear" releaseYear releaseYearSchema
-      #+ FC.optional "tradingCardDecks" tradingCardDecks (FC.list tradingCardDeckBaseSchema)
-      #+ FC.optional "cardsPerPack" cardsPerPack cardsPerPackSchema
-      #+ FC.optional "productionRunUnit" productionRunUnit productionRunUnitSchema
-      #+ FC.optional "countriesOfOrigin" countriesOfOrigin (FC.list countrySchema)
-      #+ FC.optional "productionRun" productionRun productionRunSchema
-      #+ FC.required "uid" uid uidSchema
-      #+ FC.optional "manufacturers" manufacturers (FC.list companyBaseSchema)
-      #+ FC.optional "tradingCards" tradingCards (FC.list tradingCardBaseSchema)
-      #+ FC.optional "releaseMonth" releaseMonth releaseMonthSchema
-      #+ FC.optional "boxesPerCase" boxesPerCase boxesPerCaseSchema
-      #+ FC.optional "cardHeight" cardHeight cardHeightSchema
-      #+ FC.optional "releaseDay" releaseDay releaseDaySchema
+      #+ FC.optional "cardWidth" cardWidth CardWidth.cardWidthSchema
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.optional "packsPerBox" packsPerBox PacksPerBox.packsPerBoxSchema
+      #+ FC.optional "releaseYear" releaseYear ReleaseYear.releaseYearSchema
+      #+ FC.optional "tradingCardDecks" tradingCardDecks (FC.list TradingCardDeckBase.tradingCardDeckBaseSchema)
+      #+ FC.optional "cardsPerPack" cardsPerPack CardsPerPack.cardsPerPackSchema
+      #+ FC.optional "productionRunUnit" productionRunUnit ProductionRunUnit.productionRunUnitSchema
+      #+ FC.optional "countriesOfOrigin" countriesOfOrigin (FC.list Country.countrySchema)
+      #+ FC.optional "productionRun" productionRun ProductionRun.productionRunSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "manufacturers" manufacturers (FC.list CompanyBase.companyBaseSchema)
+      #+ FC.optional "tradingCards" tradingCards (FC.list TradingCardBase.tradingCardBaseSchema)
+      #+ FC.optional "releaseMonth" releaseMonth ReleaseMonth.releaseMonthSchema
+      #+ FC.optional "boxesPerCase" boxesPerCase BoxesPerCase.boxesPerCaseSchema
+      #+ FC.optional "cardHeight" cardHeight CardHeight.cardHeightSchema
+      #+ FC.optional "releaseDay" releaseDay ReleaseDay.releaseDaySchema

@@ -5,12 +5,11 @@ module StarTrek.ComicStripFull.Periodical
   , periodicalSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Periodical = Periodical Text
+newtype Periodical = Periodical T.Text
   deriving (Show, Eq)
 
 periodicalSchema :: FC.Fleece schema => schema Periodical

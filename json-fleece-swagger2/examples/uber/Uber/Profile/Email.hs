@@ -5,12 +5,11 @@ module Uber.Profile.Email
   , emailSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Email = Email Text
+newtype Email = Email T.Text
   deriving (Show, Eq)
 
 emailSchema :: FC.Fleece schema => schema Email

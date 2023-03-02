@@ -5,8 +5,7 @@ module StarTrek.ContentRatingSystem
   , contentRatingSystemSchema
   ) where
 
-import Data.Text (Text, pack)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (($), Bounded, Enum, Eq, Ord, Show)
 
@@ -39,9 +38,9 @@ data ContentRatingSystem
   | ITUNES
   deriving (Eq, Show, Ord, Enum, Bounded)
 
-contentRatingSystemToText :: ContentRatingSystem -> Text
+contentRatingSystemToText :: ContentRatingSystem -> T.Text
 contentRatingSystemToText v =
-  pack $
+  T.pack $
     case v of
       BBFC -> "BBFC"
       OFLC -> "OFLC"

@@ -5,12 +5,11 @@ module StarTrek.ContentRating.Rating
   , ratingSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Rating = Rating Text
+newtype Rating = Rating T.Text
   deriving (Show, Eq)
 
 ratingSchema :: FC.Fleece schema => schema Rating

@@ -5,7 +5,6 @@ module StarTrek.PerformerBase.Ds9Performer
   , ds9PerformerSchema
   ) where
 
-import Fleece.Core ()
 import qualified Fleece.Core as FC
 import Prelude (Bool, Eq, Show)
 

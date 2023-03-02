@@ -8,14 +8,14 @@ module StarTrek.TradingCardBaseResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
-import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
-import StarTrek.TradingCardBase (TradingCardBase, tradingCardBaseSchema)
+import qualified StarTrek.ResponsePage as ResponsePage
+import qualified StarTrek.ResponseSort as ResponseSort
+import qualified StarTrek.TradingCardBase as TradingCardBase
 
 data TradingCardBaseResponse = TradingCardBaseResponse
-  { tradingCards :: Maybe [TradingCardBase] -- ^ Base trading card, returned in search results
-  , sort :: Maybe ResponseSort -- ^ Response sort
-  , page :: Maybe ResponsePage -- ^ Object describing response page
+  { tradingCards :: Maybe [TradingCardBase.TradingCardBase] -- ^ Base trading card, returned in search results
+  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
+  , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ tradingCardBaseResponseSchema :: FC.Fleece schema => schema TradingCardBaseRespo
 tradingCardBaseResponseSchema =
   FC.object $
     FC.constructor TradingCardBaseResponse
-      #+ FC.optional "tradingCards" tradingCards (FC.list tradingCardBaseSchema)
-      #+ FC.optional "sort" sort responseSortSchema
-      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "tradingCards" tradingCards (FC.list TradingCardBase.tradingCardBaseSchema)
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
+      #+ FC.optional "page" page ResponsePage.responsePageSchema

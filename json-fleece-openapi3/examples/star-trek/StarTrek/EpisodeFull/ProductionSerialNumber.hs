@@ -5,12 +5,11 @@ module StarTrek.EpisodeFull.ProductionSerialNumber
   , productionSerialNumberSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype ProductionSerialNumber = ProductionSerialNumber Text
+newtype ProductionSerialNumber = ProductionSerialNumber T.Text
   deriving (Show, Eq)
 
 productionSerialNumberSchema :: FC.Fleece schema => schema ProductionSerialNumber

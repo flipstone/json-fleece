@@ -8,10 +8,10 @@ module StarTrek.ConflictFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.ConflictFull (ConflictFull, conflictFullSchema)
+import qualified StarTrek.ConflictFull as ConflictFull
 
 data ConflictFullResponse = ConflictFullResponse
-  { conflict :: Maybe ConflictFull -- ^ Base conflict, returned in search results
+  { conflict :: Maybe ConflictFull.ConflictFull -- ^ Base conflict, returned in search results
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ conflictFullResponseSchema :: FC.Fleece schema => schema ConflictFullResponse
 conflictFullResponseSchema =
   FC.object $
     FC.constructor ConflictFullResponse
-      #+ FC.optional "conflict" conflict conflictFullSchema
+      #+ FC.optional "conflict" conflict ConflictFull.conflictFullSchema

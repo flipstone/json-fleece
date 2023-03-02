@@ -5,12 +5,11 @@ module Uber.Activities.Count
   , countSchema
   ) where
 
-import Data.Int (Int32)
-import Fleece.Core ()
+import qualified Data.Int as I
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Count = Count Int32
+newtype Count = Count I.Int32
   deriving (Show, Eq)
 
 countSchema :: FC.Fleece schema => schema Count

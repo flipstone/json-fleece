@@ -8,12 +8,12 @@ module StarTrek.Genre
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.Genre.Name (Name, nameSchema)
-import StarTrek.Genre.Uid (Uid, uidSchema)
+import qualified StarTrek.Genre.Name as Name
+import qualified StarTrek.Genre.Uid as Uid
 
 data Genre = Genre
-  { name :: Maybe Name -- ^ Genre name
-  , uid :: Maybe Uid -- ^ Genre unique ID
+  { name :: Maybe Name.Name -- ^ Genre name
+  , uid :: Maybe Uid.Uid -- ^ Genre unique ID
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ genreSchema :: FC.Fleece schema => schema Genre
 genreSchema =
   FC.object $
     FC.constructor Genre
-      #+ FC.optional "name" name nameSchema
-      #+ FC.optional "uid" uid uidSchema
+      #+ FC.optional "name" name Name.nameSchema
+      #+ FC.optional "uid" uid Uid.uidSchema

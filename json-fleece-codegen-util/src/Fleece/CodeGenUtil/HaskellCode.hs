@@ -5,8 +5,19 @@
 module Fleece.CodeGenUtil.HaskellCode
   ( HaskellCode
   , TypeName
+  , typeNameText
+  , typeNameModule
+  , typeNameSuggestedQualifier
+  , typeNameToCode
+  , typeNameToCodeDefaultQualification
+  , TypeExpression
   , ConstructorName
   , VarName
+  , varNameText
+  , varNameModule
+  , varNameSuggestedQualifier
+  , varNameToCode
+  , varNameToCodeDefaultQualification
   , ModuleName (..)
   , moduleNameToText
   , ToCode (toCode)
@@ -25,12 +36,9 @@ module Fleece.CodeGenUtil.HaskellCode
   , indent
   , declarations
   , toTypeName
-  , toQualifiedTypeName
   , toConstructorName
   , toModuleName
   , toVarName
-  , toQualifiedVarName
-  , varNameForType
   , listOf
   , maybeOf
   , eitherOf
@@ -46,13 +54,13 @@ module Fleece.CodeGenUtil.HaskellCode
   , ordClass
   , enumClass
   , boundedClass
+  , preludeType
   ) where
 
 -- import prelude explicitly since we want to define our own 'lines' function
-import Prelude (Eq ((==)), Foldable, Int, Maybe, Monoid (mempty), Ord (compare), Semigroup ((<>)), String, id, map, maybe, mconcat, show, zip, ($), (.))
+import Prelude (Eq ((==)), Foldable, Int, Maybe (Just, Nothing), Monoid (mempty), Ord, Semigroup ((<>)), String, fmap, id, map, maybe, mconcat, show, zip, ($), (.))
 
 import Data.Foldable (toList)
-import Data.Function (on)
 import qualified Data.List as List
 import qualified Data.Set as Set
 import qualified Data.String as String
@@ -87,9 +95,8 @@ data HaskellCode = HaskellCode
   }
 
 data ExternalReference
-  = TypeReference ModuleName T.Text
-  | VarReference ModuleName T.Text
-  | QualifierReference ModuleName T.Text
+  = TypeReference ModuleName (Maybe T.Text) T.Text
+  | VarReference ModuleName (Maybe T.Text) T.Text
   deriving (Eq, Ord)
 
 type ExternalReferences =
@@ -122,9 +129,37 @@ instance Monoid HaskellCode where
       , codeBuilder = mempty
       }
 
-newtype TypeName
-  = TypeName HaskellCode
-  deriving (ToCode, FromCode, Monoid, Semigroup)
+data TypeName = TypeName
+  { typeNameText :: T.Text
+  , typeNameModule :: ModuleName
+  , typeNameSuggestedQualifier :: Maybe T.Text
+  }
+
+typeNameToCode :: FromCode c => Maybe T.Text -> TypeName -> c
+typeNameToCode mbQualifier typeName =
+  let
+    nameText =
+      typeNameText typeName
+
+    moduleName =
+      typeNameModule typeName
+
+    code =
+      case mbQualifier of
+        Nothing -> fromText nameText
+        Just q -> fromText q <> "." <> fromText nameText
+  in
+    fromCode
+      . addReferences [TypeReference moduleName mbQualifier nameText]
+      $ code
+
+typeNameToCodeDefaultQualification :: FromCode c => TypeName -> c
+typeNameToCodeDefaultQualification typeName =
+  typeNameToCode (typeNameSuggestedQualifier typeName) typeName
+
+newtype TypeExpression
+  = TypeExpression HaskellCode
+  deriving (ToCode, FromCode, Monoid, Semigroup, String.IsString)
 
 newtype ModuleName
   = ModuleName T.Text
@@ -145,15 +180,34 @@ newtype ConstructorName
   = ConstructorName HaskellCode
   deriving (ToCode, FromCode, Monoid, Semigroup)
 
-newtype VarName
-  = VarName HaskellCode
-  deriving (ToCode, FromCode, Monoid, Semigroup)
+data VarName = VarName
+  { varNameText :: T.Text
+  , varNameModule :: ModuleName
+  , varNameSuggestedQualifier :: Maybe T.Text
+  }
+  deriving (Eq, Ord)
 
-instance Eq VarName where
-  (==) = (==) `on` renderText
+varNameToCode :: FromCode c => Maybe T.Text -> VarName -> c
+varNameToCode mbQualifier varName =
+  let
+    nameText =
+      varNameText varName
 
-instance Ord VarName where
-  compare = compare `on` renderText
+    moduleName =
+      varNameModule varName
+
+    code =
+      case mbQualifier of
+        Nothing -> fromText nameText
+        Just q -> fromText q <> "." <> fromText nameText
+  in
+    fromCode
+      . addReferences [VarReference moduleName mbQualifier nameText]
+      $ code
+
+varNameToCodeDefaultQualification :: FromCode c => VarName -> c
+varNameToCodeDefaultQualification varName =
+  varNameToCode (varNameSuggestedQualifier varName) varName
 
 fromText :: FromCode c => T.Text -> c
 fromText t =
@@ -188,35 +242,21 @@ lines = intercalate newline
 declarations :: Foldable f => f HaskellCode -> HaskellCode
 declarations = intercalate (newline <> newline)
 
-typeAnnotate :: ToCode ann => VarName -> ann -> HaskellCode
+typeAnnotate :: VarName -> TypeExpression -> HaskellCode
 typeAnnotate item annotation =
-  toCode item <> " :: " <> toCode annotation
+  varNameToCode Nothing item <> " :: " <> toCode annotation
 
 indent :: Int -> HaskellCode -> HaskellCode
 indent n code =
   fromText (T.replicate n " ") <> code
 
-toTypeName :: ModuleName -> T.Text -> TypeName
-toTypeName moduleName t =
-  let
-    pascalCased =
-      Manip.toPascal t
-  in
-    addReferences
-      [TypeReference moduleName pascalCased]
-      (fromText pascalCased)
-
-toQualifiedTypeName :: ModuleName -> T.Text -> T.Text -> TypeName
-toQualifiedTypeName moduleName qualifier t =
-  let
-    pascalCased =
-      qualifier
-        <> "."
-        <> Manip.toPascal t
-  in
-    addReferences
-      [QualifierReference moduleName qualifier]
-      (fromText pascalCased)
+toTypeName :: ModuleName -> Maybe T.Text -> T.Text -> TypeName
+toTypeName moduleName mbQualifier t =
+  TypeName
+    { typeNameText = Manip.toPascal t
+    , typeNameModule = moduleName
+    , typeNameSuggestedQualifier = fmap Manip.toPascal mbQualifier
+    }
 
 toConstructorName :: T.Text -> ConstructorName
 toConstructorName =
@@ -229,25 +269,13 @@ toModuleName =
     . map Manip.toPascal
     . T.splitOn "."
 
-toVarName :: ModuleName -> T.Text -> VarName
-toVarName moduleName t =
-  let
-    camelCased =
-      mkUnreservedVarName t
-  in
-    addReferences
-      [VarReference moduleName camelCased]
-      (fromText camelCased)
-
-toQualifiedVarName :: ModuleName -> T.Text -> T.Text -> VarName
-toQualifiedVarName moduleName qualifier t =
-  let
-    camelCased =
-      qualifier <> "." <> mkUnreservedVarName t
-  in
-    addReferences
-      [QualifierReference moduleName qualifier]
-      (fromText camelCased)
+toVarName :: ModuleName -> Maybe T.Text -> T.Text -> VarName
+toVarName moduleName mbQualifier t =
+  VarName
+    { varNameText = mkUnreservedVarName t
+    , varNameModule = moduleName
+    , varNameSuggestedQualifier = fmap Manip.toPascal mbQualifier
+    }
 
 mkUnreservedVarName :: T.Text -> T.Text
 mkUnreservedVarName t =
@@ -284,15 +312,11 @@ reservedWords =
     , "where"
     ]
 
-varNameForType :: TypeName -> VarName
-varNameForType =
-  fromCode . toCode
-
-record :: TypeName -> [(VarName, TypeName, Maybe T.Text)] -> HaskellCode
+record :: TypeName -> [(VarName, TypeExpression, Maybe T.Text)] -> HaskellCode
 record typeName fields =
   let
-    mkField :: (Int, (VarName, TypeName, Maybe T.Text)) -> HaskellCode
-    mkField (n, (fieldName, fieldTypeName, fieldDescription)) =
+    mkField :: (Int, (VarName, TypeExpression, Maybe T.Text)) -> HaskellCode
+    mkField (n, (fieldName, fieldType, fieldDescription)) =
       let
         prefix =
           if n == 0
@@ -300,7 +324,7 @@ record typeName fields =
             else ", "
       in
         prefix
-          <> typeAnnotate fieldName fieldTypeName
+          <> typeAnnotate fieldName fieldType
           <> maybe "" ((" -- ^ " <>) . fromText . T.replace "\n" " ") fieldDescription
 
     fieldLines =
@@ -310,33 +334,33 @@ record typeName fields =
       deriving_ [eqClass, showClass]
   in
     lines
-      ( "data " <> toCode typeName <> " = " <> toCode typeName
+      ( "data " <> typeNameToCode Nothing typeName <> " = " <> typeNameToCode Nothing typeName
           : map (indent 2) (fieldLines <> ["}"] <> [derivations])
       )
 
 deriving_ :: [TypeName] -> HaskellCode
 deriving_ classes =
-  "deriving (" <> intercalate ", " (map toCode classes) <> ")"
+  "deriving (" <> intercalate ", " (map (typeNameToCode Nothing) classes) <> ")"
 
-listOf :: TypeName -> TypeName
+listOf :: TypeExpression -> TypeExpression
 listOf itemName =
-  TypeName ("[" <> toCode itemName <> "]")
+  TypeExpression ("[" <> toCode itemName <> "]")
 
-maybeOf :: TypeName -> TypeName
+maybeOf :: TypeExpression -> TypeExpression
 maybeOf itemName =
-  toTypeName "Prelude" "Maybe"
+  typeNameToCode Nothing (preludeType "Maybe")
     <> fromCode " "
     <> guardParens itemName
 
-eitherOf :: TypeName -> TypeName -> TypeName
+eitherOf :: TypeExpression -> TypeExpression -> TypeExpression
 eitherOf left right =
-  toTypeName "Prelude" "Either"
+  typeNameToCode Nothing (preludeType "Either")
     <> fromCode " "
     <> guardParens left
     <> fromCode " "
     <> guardParens right
 
-guardParens :: TypeName -> TypeName
+guardParens :: TypeExpression -> TypeExpression
 guardParens name =
   let
     needsParens =
@@ -348,7 +372,7 @@ guardParens name =
 
 dollar :: HaskellCode
 dollar =
-  addReferences [VarReference "Prelude" "($)"] "$"
+  addReferences [VarReference "Prelude" Nothing "($)"] "$"
 
 enum :: TypeName -> [ConstructorName] -> HaskellCode
 enum typeName constructors =
@@ -367,7 +391,7 @@ enum typeName constructors =
       deriving_ [eqClass, showClass, ordClass, enumClass, boundedClass]
   in
     lines
-      ( "data " <> toCode typeName
+      ( "data " <> typeNameToCode Nothing typeName
           : map (indent 2) (map mkCon (zip [0 ..] constructors) <> [derivations])
       )
 
@@ -381,20 +405,24 @@ caseMatch constructor body =
 
 eqClass :: TypeName
 eqClass =
-  toTypeName "Prelude" "Eq"
+  preludeType "Eq"
 
 showClass :: TypeName
 showClass =
-  toTypeName "Prelude" "Show"
+  preludeType "Show"
 
 ordClass :: TypeName
 ordClass =
-  toTypeName "Prelude" "Ord"
+  preludeType "Ord"
 
 enumClass :: TypeName
 enumClass =
-  toTypeName "Prelude" "Enum"
+  preludeType "Enum"
 
 boundedClass :: TypeName
 boundedClass =
-  toTypeName "Prelude" "Bounded"
+  preludeType "Bounded"
+
+preludeType :: T.Text -> TypeName
+preludeType =
+  toTypeName "Prelude" Nothing

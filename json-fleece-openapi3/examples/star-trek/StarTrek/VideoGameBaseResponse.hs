@@ -8,14 +8,14 @@ module StarTrek.VideoGameBaseResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
-import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
-import StarTrek.VideoGameBase (VideoGameBase, videoGameBaseSchema)
+import qualified StarTrek.ResponsePage as ResponsePage
+import qualified StarTrek.ResponseSort as ResponseSort
+import qualified StarTrek.VideoGameBase as VideoGameBase
 
 data VideoGameBaseResponse = VideoGameBaseResponse
-  { videoGames :: Maybe [VideoGameBase] -- ^ Base video game, returned in search results
-  , sort :: Maybe ResponseSort -- ^ Response sort
-  , page :: Maybe ResponsePage -- ^ Object describing response page
+  { videoGames :: Maybe [VideoGameBase.VideoGameBase] -- ^ Base video game, returned in search results
+  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
+  , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ videoGameBaseResponseSchema :: FC.Fleece schema => schema VideoGameBaseResponse
 videoGameBaseResponseSchema =
   FC.object $
     FC.constructor VideoGameBaseResponse
-      #+ FC.optional "videoGames" videoGames (FC.list videoGameBaseSchema)
-      #+ FC.optional "sort" sort responseSortSchema
-      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "videoGames" videoGames (FC.list VideoGameBase.videoGameBaseSchema)
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
+      #+ FC.optional "page" page ResponsePage.responsePageSchema

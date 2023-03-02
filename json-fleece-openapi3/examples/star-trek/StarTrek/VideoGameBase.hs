@@ -8,24 +8,24 @@ module StarTrek.VideoGameBase
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.VideoGameBase.ReleaseDate (ReleaseDate, releaseDateSchema)
-import StarTrek.VideoGameBase.StardateFrom (StardateFrom, stardateFromSchema)
-import StarTrek.VideoGameBase.StardateTo (StardateTo, stardateToSchema)
-import StarTrek.VideoGameBase.SystemRequirements (SystemRequirements, systemRequirementsSchema)
-import StarTrek.VideoGameBase.Title (Title, titleSchema)
-import StarTrek.VideoGameBase.Uid (Uid, uidSchema)
-import StarTrek.VideoGameBase.YearFrom (YearFrom, yearFromSchema)
-import StarTrek.VideoGameBase.YearTo (YearTo, yearToSchema)
+import qualified StarTrek.VideoGameBase.ReleaseDate as ReleaseDate
+import qualified StarTrek.VideoGameBase.StardateFrom as StardateFrom
+import qualified StarTrek.VideoGameBase.StardateTo as StardateTo
+import qualified StarTrek.VideoGameBase.SystemRequirements as SystemRequirements
+import qualified StarTrek.VideoGameBase.Title as Title
+import qualified StarTrek.VideoGameBase.Uid as Uid
+import qualified StarTrek.VideoGameBase.YearFrom as YearFrom
+import qualified StarTrek.VideoGameBase.YearTo as YearTo
 
 data VideoGameBase = VideoGameBase
-  { yearFrom :: Maybe YearFrom -- ^ Starting year of video game story
-  , stardateTo :: Maybe StardateTo -- ^ Ending stardate of video game story
-  , systemRequirements :: Maybe SystemRequirements -- ^ System requirements
-  , releaseDate :: Maybe ReleaseDate -- ^ Release date
-  , uid :: Uid -- ^ Video game unique ID
-  , stardateFrom :: Maybe StardateFrom -- ^ Starting stardate of video game story
-  , title :: Title -- ^ Video game title
-  , yearTo :: Maybe YearTo -- ^ Ending year of video game story
+  { yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of video game story
+  , stardateTo :: Maybe StardateTo.StardateTo -- ^ Ending stardate of video game story
+  , systemRequirements :: Maybe SystemRequirements.SystemRequirements -- ^ System requirements
+  , releaseDate :: Maybe ReleaseDate.ReleaseDate -- ^ Release date
+  , uid :: Uid.Uid -- ^ Video game unique ID
+  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of video game story
+  , title :: Title.Title -- ^ Video game title
+  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of video game story
   }
   deriving (Eq, Show)
 
@@ -33,11 +33,11 @@ videoGameBaseSchema :: FC.Fleece schema => schema VideoGameBase
 videoGameBaseSchema =
   FC.object $
     FC.constructor VideoGameBase
-      #+ FC.optional "yearFrom" yearFrom yearFromSchema
-      #+ FC.optional "stardateTo" stardateTo stardateToSchema
-      #+ FC.optional "systemRequirements" systemRequirements systemRequirementsSchema
-      #+ FC.optional "releaseDate" releaseDate releaseDateSchema
-      #+ FC.required "uid" uid uidSchema
-      #+ FC.optional "stardateFrom" stardateFrom stardateFromSchema
-      #+ FC.required "title" title titleSchema
-      #+ FC.optional "yearTo" yearTo yearToSchema
+      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
+      #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
+      #+ FC.optional "systemRequirements" systemRequirements SystemRequirements.systemRequirementsSchema
+      #+ FC.optional "releaseDate" releaseDate ReleaseDate.releaseDateSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
+      #+ FC.required "title" title Title.titleSchema
+      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema

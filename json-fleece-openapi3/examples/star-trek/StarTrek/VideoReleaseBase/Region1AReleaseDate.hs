@@ -5,12 +5,11 @@ module StarTrek.VideoReleaseBase.Region1AReleaseDate
   , region1AReleaseDateSchema
   ) where
 
-import Data.Time (Day)
-import Fleece.Core ()
+import qualified Data.Time as Time
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Region1AReleaseDate = Region1AReleaseDate Day
+newtype Region1AReleaseDate = Region1AReleaseDate Time.Day
   deriving (Show, Eq)
 
 region1AReleaseDateSchema :: FC.Fleece schema => schema Region1AReleaseDate

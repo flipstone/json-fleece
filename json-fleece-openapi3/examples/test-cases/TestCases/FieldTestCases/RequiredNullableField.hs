@@ -5,12 +5,11 @@ module TestCases.FieldTestCases.RequiredNullableField
   , requiredNullableFieldSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype RequiredNullableField = RequiredNullableField Text
+newtype RequiredNullableField = RequiredNullableField T.Text
   deriving (Show, Eq)
 
 requiredNullableFieldSchema :: FC.Fleece schema => schema RequiredNullableField

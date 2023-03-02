@@ -8,12 +8,12 @@ module StarTrek.OccupationHeader
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
-import StarTrek.OccupationHeader.Name (Name, nameSchema)
-import StarTrek.OccupationHeader.Uid (Uid, uidSchema)
+import qualified StarTrek.OccupationHeader.Name as Name
+import qualified StarTrek.OccupationHeader.Uid as Uid
 
 data OccupationHeader = OccupationHeader
-  { name :: Name -- ^ Occupation name
-  , uid :: Uid -- ^ Occupation unique ID
+  { name :: Name.Name -- ^ Occupation name
+  , uid :: Uid.Uid -- ^ Occupation unique ID
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ occupationHeaderSchema :: FC.Fleece schema => schema OccupationHeader
 occupationHeaderSchema =
   FC.object $
     FC.constructor OccupationHeader
-      #+ FC.required "name" name nameSchema
-      #+ FC.required "uid" uid uidSchema
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.required "uid" uid Uid.uidSchema

@@ -5,12 +5,11 @@ module StarTrek.CharacterFull.PlaceOfDeath
   , placeOfDeathSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype PlaceOfDeath = PlaceOfDeath Text
+newtype PlaceOfDeath = PlaceOfDeath T.Text
   deriving (Show, Eq)
 
 placeOfDeathSchema :: FC.Fleece schema => schema PlaceOfDeath

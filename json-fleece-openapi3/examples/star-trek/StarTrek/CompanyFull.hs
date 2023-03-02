@@ -8,46 +8,46 @@ module StarTrek.CompanyFull
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.CompanyFull.Broadcaster (Broadcaster, broadcasterSchema)
-import StarTrek.CompanyFull.CollectibleCompany (CollectibleCompany, collectibleCompanySchema)
-import StarTrek.CompanyFull.Conglomerate (Conglomerate, conglomerateSchema)
-import StarTrek.CompanyFull.DigitalVisualEffectsCompany (DigitalVisualEffectsCompany, digitalVisualEffectsCompanySchema)
-import StarTrek.CompanyFull.Distributor (Distributor, distributorSchema)
-import StarTrek.CompanyFull.FilmEquipmentCompany (FilmEquipmentCompany, filmEquipmentCompanySchema)
-import StarTrek.CompanyFull.GameCompany (GameCompany, gameCompanySchema)
-import StarTrek.CompanyFull.MakeUpEffectsStudio (MakeUpEffectsStudio, makeUpEffectsStudioSchema)
-import StarTrek.CompanyFull.MattePaintingCompany (MattePaintingCompany, mattePaintingCompanySchema)
-import StarTrek.CompanyFull.ModelAndMiniatureEffectsCompany (ModelAndMiniatureEffectsCompany, modelAndMiniatureEffectsCompanySchema)
-import StarTrek.CompanyFull.Name (Name, nameSchema)
-import StarTrek.CompanyFull.PostProductionCompany (PostProductionCompany, postProductionCompanySchema)
-import StarTrek.CompanyFull.ProductionCompany (ProductionCompany, productionCompanySchema)
-import StarTrek.CompanyFull.PropCompany (PropCompany, propCompanySchema)
-import StarTrek.CompanyFull.RecordLabel (RecordLabel, recordLabelSchema)
-import StarTrek.CompanyFull.SpecialEffectsCompany (SpecialEffectsCompany, specialEffectsCompanySchema)
-import StarTrek.CompanyFull.TvAndFilmProductionCompany (TvAndFilmProductionCompany, tvAndFilmProductionCompanySchema)
-import StarTrek.CompanyFull.Uid (Uid, uidSchema)
-import StarTrek.CompanyFull.VideoGameCompany (VideoGameCompany, videoGameCompanySchema)
+import qualified StarTrek.CompanyFull.Broadcaster as Broadcaster
+import qualified StarTrek.CompanyFull.CollectibleCompany as CollectibleCompany
+import qualified StarTrek.CompanyFull.Conglomerate as Conglomerate
+import qualified StarTrek.CompanyFull.DigitalVisualEffectsCompany as DigitalVisualEffectsCompany
+import qualified StarTrek.CompanyFull.Distributor as Distributor
+import qualified StarTrek.CompanyFull.FilmEquipmentCompany as FilmEquipmentCompany
+import qualified StarTrek.CompanyFull.GameCompany as GameCompany
+import qualified StarTrek.CompanyFull.MakeUpEffectsStudio as MakeUpEffectsStudio
+import qualified StarTrek.CompanyFull.MattePaintingCompany as MattePaintingCompany
+import qualified StarTrek.CompanyFull.ModelAndMiniatureEffectsCompany as ModelAndMiniatureEffectsCompany
+import qualified StarTrek.CompanyFull.Name as Name
+import qualified StarTrek.CompanyFull.PostProductionCompany as PostProductionCompany
+import qualified StarTrek.CompanyFull.ProductionCompany as ProductionCompany
+import qualified StarTrek.CompanyFull.PropCompany as PropCompany
+import qualified StarTrek.CompanyFull.RecordLabel as RecordLabel
+import qualified StarTrek.CompanyFull.SpecialEffectsCompany as SpecialEffectsCompany
+import qualified StarTrek.CompanyFull.TvAndFilmProductionCompany as TvAndFilmProductionCompany
+import qualified StarTrek.CompanyFull.Uid as Uid
+import qualified StarTrek.CompanyFull.VideoGameCompany as VideoGameCompany
 
 data CompanyFull = CompanyFull
-  { name :: Name -- ^ Company name
-  , productionCompany :: Maybe ProductionCompany -- ^ Whether it's a production company
-  , makeUpEffectsStudio :: Maybe MakeUpEffectsStudio -- ^ Whether it's a make-up effects studio
-  , recordLabel :: Maybe RecordLabel -- ^ Whether it's a record label
-  , postProductionCompany :: Maybe PostProductionCompany -- ^ Whether it's a post-production company
-  , conglomerate :: Maybe Conglomerate -- ^ Whether it's a conglomerate
-  , videoGameCompany :: Maybe VideoGameCompany -- ^ Whether it's a video game company
-  , tvAndFilmProductionCompany :: Maybe TvAndFilmProductionCompany -- ^ Whether it's a TV and film production company
-  , broadcaster :: Maybe Broadcaster -- ^ Whether it's a broadcaster
-  , uid :: Uid -- ^ Company unique ID
-  , mattePaintingCompany :: Maybe MattePaintingCompany -- ^ Whether it's a matte painting company
-  , modelAndMiniatureEffectsCompany :: Maybe ModelAndMiniatureEffectsCompany -- ^ Whether it's a model and miniature effects company
-  , specialEffectsCompany :: Maybe SpecialEffectsCompany -- ^ Whether it's a special effects company
-  , gameCompany :: Maybe GameCompany -- ^ Whether it's a game company
-  , distributor :: Maybe Distributor -- ^ Whether it's a distributor
-  , propCompany :: Maybe PropCompany -- ^ Whether it's a prop company
-  , digitalVisualEffectsCompany :: Maybe DigitalVisualEffectsCompany -- ^ Whether it's a digital visual effects company
-  , collectibleCompany :: Maybe CollectibleCompany -- ^ Whether it's a collectible company
-  , filmEquipmentCompany :: Maybe FilmEquipmentCompany -- ^ Whether it's a film equipment company
+  { name :: Name.Name -- ^ Company name
+  , productionCompany :: Maybe ProductionCompany.ProductionCompany -- ^ Whether it's a production company
+  , makeUpEffectsStudio :: Maybe MakeUpEffectsStudio.MakeUpEffectsStudio -- ^ Whether it's a make-up effects studio
+  , recordLabel :: Maybe RecordLabel.RecordLabel -- ^ Whether it's a record label
+  , postProductionCompany :: Maybe PostProductionCompany.PostProductionCompany -- ^ Whether it's a post-production company
+  , conglomerate :: Maybe Conglomerate.Conglomerate -- ^ Whether it's a conglomerate
+  , videoGameCompany :: Maybe VideoGameCompany.VideoGameCompany -- ^ Whether it's a video game company
+  , tvAndFilmProductionCompany :: Maybe TvAndFilmProductionCompany.TvAndFilmProductionCompany -- ^ Whether it's a TV and film production company
+  , broadcaster :: Maybe Broadcaster.Broadcaster -- ^ Whether it's a broadcaster
+  , uid :: Uid.Uid -- ^ Company unique ID
+  , mattePaintingCompany :: Maybe MattePaintingCompany.MattePaintingCompany -- ^ Whether it's a matte painting company
+  , modelAndMiniatureEffectsCompany :: Maybe ModelAndMiniatureEffectsCompany.ModelAndMiniatureEffectsCompany -- ^ Whether it's a model and miniature effects company
+  , specialEffectsCompany :: Maybe SpecialEffectsCompany.SpecialEffectsCompany -- ^ Whether it's a special effects company
+  , gameCompany :: Maybe GameCompany.GameCompany -- ^ Whether it's a game company
+  , distributor :: Maybe Distributor.Distributor -- ^ Whether it's a distributor
+  , propCompany :: Maybe PropCompany.PropCompany -- ^ Whether it's a prop company
+  , digitalVisualEffectsCompany :: Maybe DigitalVisualEffectsCompany.DigitalVisualEffectsCompany -- ^ Whether it's a digital visual effects company
+  , collectibleCompany :: Maybe CollectibleCompany.CollectibleCompany -- ^ Whether it's a collectible company
+  , filmEquipmentCompany :: Maybe FilmEquipmentCompany.FilmEquipmentCompany -- ^ Whether it's a film equipment company
   }
   deriving (Eq, Show)
 
@@ -55,22 +55,22 @@ companyFullSchema :: FC.Fleece schema => schema CompanyFull
 companyFullSchema =
   FC.object $
     FC.constructor CompanyFull
-      #+ FC.required "name" name nameSchema
-      #+ FC.optional "productionCompany" productionCompany productionCompanySchema
-      #+ FC.optional "makeUpEffectsStudio" makeUpEffectsStudio makeUpEffectsStudioSchema
-      #+ FC.optional "recordLabel" recordLabel recordLabelSchema
-      #+ FC.optional "postProductionCompany" postProductionCompany postProductionCompanySchema
-      #+ FC.optional "conglomerate" conglomerate conglomerateSchema
-      #+ FC.optional "videoGameCompany" videoGameCompany videoGameCompanySchema
-      #+ FC.optional "tvAndFilmProductionCompany" tvAndFilmProductionCompany tvAndFilmProductionCompanySchema
-      #+ FC.optional "broadcaster" broadcaster broadcasterSchema
-      #+ FC.required "uid" uid uidSchema
-      #+ FC.optional "mattePaintingCompany" mattePaintingCompany mattePaintingCompanySchema
-      #+ FC.optional "modelAndMiniatureEffectsCompany" modelAndMiniatureEffectsCompany modelAndMiniatureEffectsCompanySchema
-      #+ FC.optional "specialEffectsCompany" specialEffectsCompany specialEffectsCompanySchema
-      #+ FC.optional "gameCompany" gameCompany gameCompanySchema
-      #+ FC.optional "distributor" distributor distributorSchema
-      #+ FC.optional "propCompany" propCompany propCompanySchema
-      #+ FC.optional "digitalVisualEffectsCompany" digitalVisualEffectsCompany digitalVisualEffectsCompanySchema
-      #+ FC.optional "collectibleCompany" collectibleCompany collectibleCompanySchema
-      #+ FC.optional "filmEquipmentCompany" filmEquipmentCompany filmEquipmentCompanySchema
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.optional "productionCompany" productionCompany ProductionCompany.productionCompanySchema
+      #+ FC.optional "makeUpEffectsStudio" makeUpEffectsStudio MakeUpEffectsStudio.makeUpEffectsStudioSchema
+      #+ FC.optional "recordLabel" recordLabel RecordLabel.recordLabelSchema
+      #+ FC.optional "postProductionCompany" postProductionCompany PostProductionCompany.postProductionCompanySchema
+      #+ FC.optional "conglomerate" conglomerate Conglomerate.conglomerateSchema
+      #+ FC.optional "videoGameCompany" videoGameCompany VideoGameCompany.videoGameCompanySchema
+      #+ FC.optional "tvAndFilmProductionCompany" tvAndFilmProductionCompany TvAndFilmProductionCompany.tvAndFilmProductionCompanySchema
+      #+ FC.optional "broadcaster" broadcaster Broadcaster.broadcasterSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "mattePaintingCompany" mattePaintingCompany MattePaintingCompany.mattePaintingCompanySchema
+      #+ FC.optional "modelAndMiniatureEffectsCompany" modelAndMiniatureEffectsCompany ModelAndMiniatureEffectsCompany.modelAndMiniatureEffectsCompanySchema
+      #+ FC.optional "specialEffectsCompany" specialEffectsCompany SpecialEffectsCompany.specialEffectsCompanySchema
+      #+ FC.optional "gameCompany" gameCompany GameCompany.gameCompanySchema
+      #+ FC.optional "distributor" distributor Distributor.distributorSchema
+      #+ FC.optional "propCompany" propCompany PropCompany.propCompanySchema
+      #+ FC.optional "digitalVisualEffectsCompany" digitalVisualEffectsCompany DigitalVisualEffectsCompany.digitalVisualEffectsCompanySchema
+      #+ FC.optional "collectibleCompany" collectibleCompany CollectibleCompany.collectibleCompanySchema
+      #+ FC.optional "filmEquipmentCompany" filmEquipmentCompany FilmEquipmentCompany.filmEquipmentCompanySchema

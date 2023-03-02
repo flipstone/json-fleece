@@ -5,12 +5,11 @@ module StarTrek.CharacterBase.HologramActivationDate
   , hologramActivationDateSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype HologramActivationDate = HologramActivationDate Text
+newtype HologramActivationDate = HologramActivationDate T.Text
   deriving (Show, Eq)
 
 hologramActivationDateSchema :: FC.Fleece schema => schema HologramActivationDate

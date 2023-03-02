@@ -5,8 +5,7 @@ module StarTrek.MaritalStatus
   , maritalStatusSchema
   ) where
 
-import Data.Text (Text, pack)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (($), Bounded, Enum, Eq, Ord, Show)
 
@@ -21,9 +20,9 @@ data MaritalStatus
   | CAPTAINSWOMAN
   deriving (Eq, Show, Ord, Enum, Bounded)
 
-maritalStatusToText :: MaritalStatus -> Text
+maritalStatusToText :: MaritalStatus -> T.Text
 maritalStatusToText v =
-  pack $
+  T.pack $
     case v of
       SINGLE -> "SINGLE"
       ENGAGED -> "ENGAGED"

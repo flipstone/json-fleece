@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.1.3.0
+version:        0.1.4.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -1397,6 +1397,32 @@ extra-source-files:
     examples/test-cases/TestCases/FieldTestCases/OptionalNullableField.hs
     examples/test-cases/TestCases/FieldTestCases/RequiredField.hs
     examples/test-cases/TestCases/FieldTestCases/RequiredNullableField.hs
+    examples/test-cases/TestCases/NameConflicts.hs
+    examples/test-cases/TestCases/NameConflicts/Case.hs
+    examples/test-cases/TestCases/NameConflicts/Class.hs
+    examples/test-cases/TestCases/NameConflicts/Data.hs
+    examples/test-cases/TestCases/NameConflicts/Deriving.hs
+    examples/test-cases/TestCases/NameConflicts/Do.hs
+    examples/test-cases/TestCases/NameConflicts/Else.hs
+    examples/test-cases/TestCases/NameConflicts/If.hs
+    examples/test-cases/TestCases/NameConflicts/Import.hs
+    examples/test-cases/TestCases/NameConflicts/In.hs
+    examples/test-cases/TestCases/NameConflicts/Infix.hs
+    examples/test-cases/TestCases/NameConflicts/Infixl.hs
+    examples/test-cases/TestCases/NameConflicts/Infixr.hs
+    examples/test-cases/TestCases/NameConflicts/Instance.hs
+    examples/test-cases/TestCases/NameConflicts/Int32.hs
+    examples/test-cases/TestCases/NameConflicts/Int64.hs
+    examples/test-cases/TestCases/NameConflicts/Let.hs
+    examples/test-cases/TestCases/NameConflicts/Module.hs
+    examples/test-cases/TestCases/NameConflicts/NameConflicts.hs
+    examples/test-cases/TestCases/NameConflicts/Newtype.hs
+    examples/test-cases/TestCases/NameConflicts/Of.hs
+    examples/test-cases/TestCases/NameConflicts/Scientific.hs
+    examples/test-cases/TestCases/NameConflicts/Text.hs
+    examples/test-cases/TestCases/NameConflicts/Then.hs
+    examples/test-cases/TestCases/NameConflicts/Type.hs
+    examples/test-cases/TestCases/NameConflicts/Where.hs
     examples/test-cases/TestCases/TopLevelArray.hs
     examples/test-cases/TestCases/TopLevelArray/TopLevelArrayItem.hs
     examples/test-cases/TestCases/TopLevelArrayNullable.hs
@@ -1424,7 +1450,7 @@ library
     , base >=4.7 && <5
     , containers ==0.6.*
     , insert-ordered-containers ==0.2.*
-    , json-fleece-codegen-util ==0.1.*
+    , json-fleece-codegen-util >=0.1.4 && <0.2
     , openapi3 ==3.2.*
     , text ==1.2.*
   default-language: Haskell2010

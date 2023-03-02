@@ -5,12 +5,11 @@ module Uber.Profile.PromoCode
   , promoCodeSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype PromoCode = PromoCode Text
+newtype PromoCode = PromoCode T.Text
   deriving (Show, Eq)
 
 promoCodeSchema :: FC.Fleece schema => schema PromoCode

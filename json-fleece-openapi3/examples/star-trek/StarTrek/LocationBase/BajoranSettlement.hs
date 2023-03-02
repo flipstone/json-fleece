@@ -5,7 +5,6 @@ module StarTrek.LocationBase.BajoranSettlement
   , bajoranSettlementSchema
   ) where
 
-import Fleece.Core ()
 import qualified Fleece.Core as FC
 import Prelude (Bool, Eq, Show)
 

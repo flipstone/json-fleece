@@ -5,12 +5,11 @@ module Uber.Activities.Offset
   , offsetSchema
   ) where
 
-import Data.Int (Int32)
-import Fleece.Core ()
+import qualified Data.Int as I
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Offset = Offset Int32
+newtype Offset = Offset I.Int32
   deriving (Show, Eq)
 
 offsetSchema :: FC.Fleece schema => schema Offset

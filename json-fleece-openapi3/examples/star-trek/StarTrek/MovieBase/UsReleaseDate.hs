@@ -5,12 +5,11 @@ module StarTrek.MovieBase.UsReleaseDate
   , usReleaseDateSchema
   ) where
 
-import Data.Time (Day)
-import Fleece.Core ()
+import qualified Data.Time as Time
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype UsReleaseDate = UsReleaseDate Day
+newtype UsReleaseDate = UsReleaseDate Time.Day
   deriving (Show, Eq)
 
 usReleaseDateSchema :: FC.Fleece schema => schema UsReleaseDate

@@ -5,7 +5,6 @@ module StarTrek.ComicsFull.NumberOfPages
   , numberOfPagesSchema
   ) where
 
-import Fleece.Core ()
 import qualified Fleece.Core as FC
 import Prelude (Eq, Integer, Show)
 

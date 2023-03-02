@@ -5,12 +5,11 @@ module TestCases.FieldTestCases.ArrayFieldItem
   , arrayFieldItemSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype ArrayFieldItem = ArrayFieldItem Text
+newtype ArrayFieldItem = ArrayFieldItem T.Text
   deriving (Show, Eq)
 
 arrayFieldItemSchema :: FC.Fleece schema => schema ArrayFieldItem

@@ -8,12 +8,12 @@ module StarTrek.PerformerHeader
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
-import StarTrek.PerformerHeader.Name (Name, nameSchema)
-import StarTrek.PerformerHeader.Uid (Uid, uidSchema)
+import qualified StarTrek.PerformerHeader.Name as Name
+import qualified StarTrek.PerformerHeader.Uid as Uid
 
 data PerformerHeader = PerformerHeader
-  { name :: Name -- ^ Performer name
-  , uid :: Uid -- ^ Performer unique ID
+  { name :: Name.Name -- ^ Performer name
+  , uid :: Uid.Uid -- ^ Performer unique ID
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ performerHeaderSchema :: FC.Fleece schema => schema PerformerHeader
 performerHeaderSchema =
   FC.object $
     FC.constructor PerformerHeader
-      #+ FC.required "name" name nameSchema
-      #+ FC.required "uid" uid uidSchema
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.required "uid" uid Uid.uidSchema

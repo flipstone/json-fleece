@@ -8,12 +8,12 @@ module StarTrek.Error
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.Error.Code (Code, codeSchema)
-import StarTrek.Error.Message (Message, messageSchema)
+import qualified StarTrek.Error.Code as Code
+import qualified StarTrek.Error.Message as Message
 
 data Error = Error
-  { message :: Maybe Message -- ^ Error message
-  , code :: Maybe Code -- ^ Error code
+  { message :: Maybe Message.Message -- ^ Error message
+  , code :: Maybe Code.Code -- ^ Error code
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ errorSchema :: FC.Fleece schema => schema Error
 errorSchema =
   FC.object $
     FC.constructor Error
-      #+ FC.optional "message" message messageSchema
-      #+ FC.optional "code" code codeSchema
+      #+ FC.optional "message" message Message.messageSchema
+      #+ FC.optional "code" code Code.codeSchema

@@ -5,12 +5,11 @@ module Uber.Product.Description
   , descriptionSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Description = Description Text
+newtype Description = Description T.Text
   deriving (Show, Eq)
 
 descriptionSchema :: FC.Fleece schema => schema Description

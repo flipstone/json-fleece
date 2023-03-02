@@ -5,12 +5,11 @@ module StarTrek.CharacterRelation.Type
   , typeSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Type = Type Text
+newtype Type = Type T.Text
   deriving (Show, Eq)
 
 typeSchema :: FC.Fleece schema => schema Type

@@ -5,12 +5,11 @@ module StarTrek.ResponsePage.PageSize
   , pageSizeSchema
   ) where
 
-import Data.Int (Int32)
-import Fleece.Core ()
+import qualified Data.Int as I
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype PageSize = PageSize Int32
+newtype PageSize = PageSize I.Int32
   deriving (Show, Eq)
 
 pageSizeSchema :: FC.Fleece schema => schema PageSize

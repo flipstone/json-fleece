@@ -8,10 +8,10 @@ module StarTrek.SoundtrackFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.SoundtrackFull (SoundtrackFull, soundtrackFullSchema)
+import qualified StarTrek.SoundtrackFull as SoundtrackFull
 
 data SoundtrackFullResponse = SoundtrackFullResponse
-  { soundtrack :: Maybe SoundtrackFull -- ^ Full soundtrack, returned when queried using UID
+  { soundtrack :: Maybe SoundtrackFull.SoundtrackFull -- ^ Full soundtrack, returned when queried using UID
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ soundtrackFullResponseSchema :: FC.Fleece schema => schema SoundtrackFullRespons
 soundtrackFullResponseSchema =
   FC.object $
     FC.constructor SoundtrackFullResponse
-      #+ FC.optional "soundtrack" soundtrack soundtrackFullSchema
+      #+ FC.optional "soundtrack" soundtrack SoundtrackFull.soundtrackFullSchema

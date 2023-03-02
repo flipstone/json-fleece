@@ -5,7 +5,6 @@ module StarTrek.AnimalBase.Canine
   , canineSchema
   ) where
 
-import Fleece.Core ()
 import qualified Fleece.Core as FC
 import Prelude (Bool, Eq, Show)
 

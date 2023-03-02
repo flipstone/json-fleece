@@ -8,16 +8,16 @@ module Uber.Activities
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import Uber.Activities.Count (Count, countSchema)
-import Uber.Activities.Limit (Limit, limitSchema)
-import Uber.Activities.Offset (Offset, offsetSchema)
-import Uber.Activity (Activity, activitySchema)
+import qualified Uber.Activities.Count as Count
+import qualified Uber.Activities.Limit as Limit
+import qualified Uber.Activities.Offset as Offset
+import qualified Uber.Activity as Activity
 
 data Activities = Activities
-  { offset :: Maybe Offset -- ^ Position in pagination.
-  , count :: Maybe Count -- ^ Total number of items available.
-  , limit :: Maybe Limit -- ^ Number of items to retrieve (100 max).
-  , history :: Maybe [Activity]
+  { offset :: Maybe Offset.Offset -- ^ Position in pagination.
+  , count :: Maybe Count.Count -- ^ Total number of items available.
+  , limit :: Maybe Limit.Limit -- ^ Number of items to retrieve (100 max).
+  , history :: Maybe [Activity.Activity]
   }
   deriving (Eq, Show)
 
@@ -25,7 +25,7 @@ activitiesSchema :: FC.Fleece schema => schema Activities
 activitiesSchema =
   FC.object $
     FC.constructor Activities
-      #+ FC.optional "offset" offset offsetSchema
-      #+ FC.optional "count" count countSchema
-      #+ FC.optional "limit" limit limitSchema
-      #+ FC.optional "history" history (FC.list activitySchema)
+      #+ FC.optional "offset" offset Offset.offsetSchema
+      #+ FC.optional "count" count Count.countSchema
+      #+ FC.optional "limit" limit Limit.limitSchema
+      #+ FC.optional "history" history (FC.list Activity.activitySchema)

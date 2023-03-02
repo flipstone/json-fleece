@@ -8,10 +8,10 @@ module StarTrek.LiteratureFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.LiteratureFull (LiteratureFull, literatureFullSchema)
+import qualified StarTrek.LiteratureFull as LiteratureFull
 
 data LiteratureFullResponse = LiteratureFullResponse
-  { literature :: Maybe LiteratureFull -- ^ Full literature, returned when queried using UID
+  { literature :: Maybe LiteratureFull.LiteratureFull -- ^ Full literature, returned when queried using UID
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ literatureFullResponseSchema :: FC.Fleece schema => schema LiteratureFullRespons
 literatureFullResponseSchema =
   FC.object $
     FC.constructor LiteratureFullResponse
-      #+ FC.optional "literature" literature literatureFullSchema
+      #+ FC.optional "literature" literature LiteratureFull.literatureFullSchema

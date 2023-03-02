@@ -8,32 +8,32 @@ module StarTrek.FoodBase
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.FoodBase.AlcoholicBeverage (AlcoholicBeverage, alcoholicBeverageSchema)
-import StarTrek.FoodBase.Beverage (Beverage, beverageSchema)
-import StarTrek.FoodBase.Dessert (Dessert, dessertSchema)
-import StarTrek.FoodBase.EarthlyOrigin (EarthlyOrigin, earthlyOriginSchema)
-import StarTrek.FoodBase.Fruit (Fruit, fruitSchema)
-import StarTrek.FoodBase.HerbOrSpice (HerbOrSpice, herbOrSpiceSchema)
-import StarTrek.FoodBase.Juice (Juice, juiceSchema)
-import StarTrek.FoodBase.Name (Name, nameSchema)
-import StarTrek.FoodBase.Sauce (Sauce, sauceSchema)
-import StarTrek.FoodBase.Soup (Soup, soupSchema)
-import StarTrek.FoodBase.Tea (Tea, teaSchema)
-import StarTrek.FoodBase.Uid (Uid, uidSchema)
+import qualified StarTrek.FoodBase.AlcoholicBeverage as AlcoholicBeverage
+import qualified StarTrek.FoodBase.Beverage as Beverage
+import qualified StarTrek.FoodBase.Dessert as Dessert
+import qualified StarTrek.FoodBase.EarthlyOrigin as EarthlyOrigin
+import qualified StarTrek.FoodBase.Fruit as Fruit
+import qualified StarTrek.FoodBase.HerbOrSpice as HerbOrSpice
+import qualified StarTrek.FoodBase.Juice as Juice
+import qualified StarTrek.FoodBase.Name as Name
+import qualified StarTrek.FoodBase.Sauce as Sauce
+import qualified StarTrek.FoodBase.Soup as Soup
+import qualified StarTrek.FoodBase.Tea as Tea
+import qualified StarTrek.FoodBase.Uid as Uid
 
 data FoodBase = FoodBase
-  { name :: Name -- ^ Food name
-  , tea :: Maybe Tea -- ^ Whether it's a tea
-  , juice :: Maybe Juice -- ^ Whether it's a juice
-  , uid :: Uid -- ^ Food unique ID
-  , fruit :: Maybe Fruit -- ^ Whether it's a fruit
-  , dessert :: Maybe Dessert -- ^ Whether it's a dessert
-  , herbOrSpice :: Maybe HerbOrSpice -- ^ Whether it's a herb or a spice
-  , beverage :: Maybe Beverage -- ^ Whether it's a beverage
-  , soup :: Maybe Soup -- ^ Whether it's a soup
-  , earthlyOrigin :: Maybe EarthlyOrigin -- ^ Whether it's of earthly origin
-  , sauce :: Maybe Sauce -- ^ Whether it's a sauce
-  , alcoholicBeverage :: Maybe AlcoholicBeverage -- ^ Whether it's an alcoholic beverage
+  { name :: Name.Name -- ^ Food name
+  , tea :: Maybe Tea.Tea -- ^ Whether it's a tea
+  , juice :: Maybe Juice.Juice -- ^ Whether it's a juice
+  , uid :: Uid.Uid -- ^ Food unique ID
+  , fruit :: Maybe Fruit.Fruit -- ^ Whether it's a fruit
+  , dessert :: Maybe Dessert.Dessert -- ^ Whether it's a dessert
+  , herbOrSpice :: Maybe HerbOrSpice.HerbOrSpice -- ^ Whether it's a herb or a spice
+  , beverage :: Maybe Beverage.Beverage -- ^ Whether it's a beverage
+  , soup :: Maybe Soup.Soup -- ^ Whether it's a soup
+  , earthlyOrigin :: Maybe EarthlyOrigin.EarthlyOrigin -- ^ Whether it's of earthly origin
+  , sauce :: Maybe Sauce.Sauce -- ^ Whether it's a sauce
+  , alcoholicBeverage :: Maybe AlcoholicBeverage.AlcoholicBeverage -- ^ Whether it's an alcoholic beverage
   }
   deriving (Eq, Show)
 
@@ -41,15 +41,15 @@ foodBaseSchema :: FC.Fleece schema => schema FoodBase
 foodBaseSchema =
   FC.object $
     FC.constructor FoodBase
-      #+ FC.required "name" name nameSchema
-      #+ FC.optional "tea" tea teaSchema
-      #+ FC.optional "juice" juice juiceSchema
-      #+ FC.required "uid" uid uidSchema
-      #+ FC.optional "fruit" fruit fruitSchema
-      #+ FC.optional "dessert" dessert dessertSchema
-      #+ FC.optional "herbOrSpice" herbOrSpice herbOrSpiceSchema
-      #+ FC.optional "beverage" beverage beverageSchema
-      #+ FC.optional "soup" soup soupSchema
-      #+ FC.optional "earthlyOrigin" earthlyOrigin earthlyOriginSchema
-      #+ FC.optional "sauce" sauce sauceSchema
-      #+ FC.optional "alcoholicBeverage" alcoholicBeverage alcoholicBeverageSchema
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.optional "tea" tea Tea.teaSchema
+      #+ FC.optional "juice" juice Juice.juiceSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "fruit" fruit Fruit.fruitSchema
+      #+ FC.optional "dessert" dessert Dessert.dessertSchema
+      #+ FC.optional "herbOrSpice" herbOrSpice HerbOrSpice.herbOrSpiceSchema
+      #+ FC.optional "beverage" beverage Beverage.beverageSchema
+      #+ FC.optional "soup" soup Soup.soupSchema
+      #+ FC.optional "earthlyOrigin" earthlyOrigin EarthlyOrigin.earthlyOriginSchema
+      #+ FC.optional "sauce" sauce Sauce.sauceSchema
+      #+ FC.optional "alcoholicBeverage" alcoholicBeverage AlcoholicBeverage.alcoholicBeverageSchema

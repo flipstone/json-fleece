@@ -5,8 +5,7 @@ module StarTrek.ReferenceType
   , referenceTypeSchema
   ) where
 
-import Data.Text (Text, pack)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (($), Bounded, Enum, Eq, Ord, Show)
 
@@ -15,9 +14,9 @@ data ReferenceType
   | ISBN
   deriving (Eq, Show, Ord, Enum, Bounded)
 
-referenceTypeToText :: ReferenceType -> Text
+referenceTypeToText :: ReferenceType -> T.Text
 referenceTypeToText v =
-  pack $
+  T.pack $
     case v of
       ASIN -> "ASIN"
       ISBN -> "ISBN"

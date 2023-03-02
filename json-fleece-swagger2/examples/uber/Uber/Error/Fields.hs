@@ -5,12 +5,11 @@ module Uber.Error.Fields
   , fieldsSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Fields = Fields Text
+newtype Fields = Fields T.Text
   deriving (Show, Eq)
 
 fieldsSchema :: FC.Fleece schema => schema Fields

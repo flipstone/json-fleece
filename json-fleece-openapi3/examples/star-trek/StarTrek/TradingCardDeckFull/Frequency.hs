@@ -5,12 +5,11 @@ module StarTrek.TradingCardDeckFull.Frequency
   , frequencySchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Frequency = Frequency Text
+newtype Frequency = Frequency T.Text
   deriving (Show, Eq)
 
 frequencySchema :: FC.Fleece schema => schema Frequency

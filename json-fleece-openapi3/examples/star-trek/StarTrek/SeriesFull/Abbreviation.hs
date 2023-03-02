@@ -5,12 +5,11 @@ module StarTrek.SeriesFull.Abbreviation
   , abbreviationSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Abbreviation = Abbreviation Text
+newtype Abbreviation = Abbreviation T.Text
   deriving (Show, Eq)
 
 abbreviationSchema :: FC.Fleece schema => schema Abbreviation

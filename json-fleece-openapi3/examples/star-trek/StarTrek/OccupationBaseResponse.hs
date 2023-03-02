@@ -8,14 +8,14 @@ module StarTrek.OccupationBaseResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.OccupationBase (OccupationBase, occupationBaseSchema)
-import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
-import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
+import qualified StarTrek.OccupationBase as OccupationBase
+import qualified StarTrek.ResponsePage as ResponsePage
+import qualified StarTrek.ResponseSort as ResponseSort
 
 data OccupationBaseResponse = OccupationBaseResponse
-  { occupations :: Maybe [OccupationBase] -- ^ Base occupations, returned in search results
-  , sort :: Maybe ResponseSort -- ^ Response sort
-  , page :: Maybe ResponsePage -- ^ Object describing response page
+  { occupations :: Maybe [OccupationBase.OccupationBase] -- ^ Base occupations, returned in search results
+  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
+  , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ occupationBaseResponseSchema :: FC.Fleece schema => schema OccupationBaseRespons
 occupationBaseResponseSchema =
   FC.object $
     FC.constructor OccupationBaseResponse
-      #+ FC.optional "occupations" occupations (FC.list occupationBaseSchema)
-      #+ FC.optional "sort" sort responseSortSchema
-      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "occupations" occupations (FC.list OccupationBase.occupationBaseSchema)
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
+      #+ FC.optional "page" page ResponsePage.responsePageSchema

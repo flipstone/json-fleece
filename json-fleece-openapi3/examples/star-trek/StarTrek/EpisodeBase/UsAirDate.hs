@@ -5,12 +5,11 @@ module StarTrek.EpisodeBase.UsAirDate
   , usAirDateSchema
   ) where
 
-import Data.Time (Day)
-import Fleece.Core ()
+import qualified Data.Time as Time
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype UsAirDate = UsAirDate Day
+newtype UsAirDate = UsAirDate Time.Day
   deriving (Show, Eq)
 
 usAirDateSchema :: FC.Fleece schema => schema UsAirDate

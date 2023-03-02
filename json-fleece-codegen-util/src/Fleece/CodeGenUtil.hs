@@ -42,7 +42,6 @@ module Fleece.CodeGenUtil
 import Control.Monad.Reader (ReaderT, ask, runReaderT)
 import Control.Monad.Trans (lift)
 import qualified Data.Map.Strict as Map
-import Data.Maybe (mapMaybe)
 import qualified Data.Set as Set
 import qualified Data.Text as T
 
@@ -138,82 +137,56 @@ resolveFieldDescription typeMap =
 dayFormat :: CodeGenDataFormat
 dayFormat =
   CodeGenNewType $
-    SchemaTypeInfo
-      { schemaTypeName = HC.toTypeName "Data.Time" "Day"
-      , schemaTypeSchema = fleeceCoreVar "day"
-      }
+    primitiveSchemaTypeInfo
+      (HC.toTypeName "Data.Time" (Just "Time") "Day")
+      (fleeceCoreVar "day")
 
 utcTimeFormat :: CodeGenDataFormat
 utcTimeFormat =
   CodeGenNewType $
-    SchemaTypeInfo
-      { schemaTypeName = HC.toTypeName "Data.Time" "UTCTime"
-      , schemaTypeSchema = fleeceCoreVar "utcTime"
-      }
+    primitiveSchemaTypeInfo
+      (HC.toTypeName "Data.Time" (Just "Time") "UTCTime")
+      (fleeceCoreVar "utcTime")
 
 textFormat :: CodeGenDataFormat
 textFormat =
   CodeGenNewType $
-    SchemaTypeInfo
-      { schemaTypeName = textType
-      , schemaTypeSchema = fleeceCoreVar "text"
-      }
+    primitiveSchemaTypeInfo textType (fleeceCoreVar "text")
 
 floatFormat :: CodeGenDataFormat
 floatFormat =
   CodeGenNewType $
-    SchemaTypeInfo
-      { schemaTypeName = floatType
-      , schemaTypeSchema = fleeceCoreVar "float"
-      }
+    primitiveSchemaTypeInfo floatType (fleeceCoreVar "float")
 
 doubleFormat :: CodeGenDataFormat
 doubleFormat =
   CodeGenNewType $
-    SchemaTypeInfo
-      { schemaTypeName = doubleType
-      , schemaTypeSchema = fleeceCoreVar "double"
-      }
+    primitiveSchemaTypeInfo doubleType (fleeceCoreVar "double")
 
 scientificFormat :: CodeGenDataFormat
 scientificFormat =
   CodeGenNewType $
-    SchemaTypeInfo
-      { schemaTypeName = scientificType
-      , schemaTypeSchema = fleeceCoreVar "number"
-      }
+    primitiveSchemaTypeInfo scientificType (fleeceCoreVar "number")
 
 int32Format :: CodeGenDataFormat
 int32Format =
   CodeGenNewType $
-    SchemaTypeInfo
-      { schemaTypeName = int32Type
-      , schemaTypeSchema = fleeceCoreVar "int32"
-      }
+    primitiveSchemaTypeInfo int32Type (fleeceCoreVar "int32")
 
 int64Format :: CodeGenDataFormat
 int64Format =
   CodeGenNewType $
-    SchemaTypeInfo
-      { schemaTypeName = int64Type
-      , schemaTypeSchema = fleeceCoreVar "int64"
-      }
+    primitiveSchemaTypeInfo int64Type (fleeceCoreVar "int64")
 
 integerFormat :: CodeGenDataFormat
 integerFormat =
   CodeGenNewType $
-    SchemaTypeInfo
-      { schemaTypeName = integerType
-      , schemaTypeSchema = fleeceCoreVar "integer"
-      }
+    primitiveSchemaTypeInfo integerType (fleeceCoreVar "integer")
 
 boolFormat :: CodeGenDataFormat
 boolFormat =
   CodeGenNewType $
-    SchemaTypeInfo
-      { schemaTypeName = boolType
-      , schemaTypeSchema = fleeceCoreVar "boolean"
-      }
+    primitiveSchemaTypeInfo boolType (fleeceCoreVar "boolean")
 
 enumFormat :: [T.Text] -> CodeGenDataFormat
 enumFormat =
@@ -222,15 +195,12 @@ enumFormat =
 nullFormat :: CodeGenDataFormat
 nullFormat =
   CodeGenNewType $
-    SchemaTypeInfo
-      { schemaTypeName = fleeceCoreType "Null"
-      , schemaTypeSchema = fleeceCoreVar "null"
-      }
+    primitiveSchemaTypeInfo (fleeceCoreType "Null") (fleeceCoreVar "null")
 
 arrayTypeInfo :: SchemaTypeInfo -> SchemaTypeInfo
 arrayTypeInfo itemInfo =
-  SchemaTypeInfo
-    { schemaTypeName = HC.listOf (schemaTypeName itemInfo)
+  itemInfo
+    { schemaTypeExpr = HC.listOf (schemaTypeExpr itemInfo)
     , schemaTypeSchema =
         "("
           <> fleeceCoreVar "list"
@@ -241,8 +211,11 @@ arrayTypeInfo itemInfo =
 
 nullableTypeInfo :: SchemaTypeInfo -> SchemaTypeInfo
 nullableTypeInfo itemInfo =
-  SchemaTypeInfo
-    { schemaTypeName = HC.eitherOf (fleeceCoreType "Null") (schemaTypeName itemInfo)
+  itemInfo
+    { schemaTypeExpr =
+        HC.eitherOf
+          (HC.typeNameToCodeDefaultQualification (fleeceCoreType "Null"))
+          (schemaTypeExpr itemInfo)
     , schemaTypeSchema =
         "("
           <> fleeceCoreVar "nullable"
@@ -270,21 +243,23 @@ generateSchemaCode typeMap codeGenType = do
     format =
       codeGenTypeDataFormat codeGenType
 
+    header =
+      moduleHeader moduleName typeName
+
   moduleBody <-
     case format of
       CodeGenNewType baseTypeInfo ->
-        generateHaskellNewtype
-          typeName
-          (schemaTypeName baseTypeInfo)
-          (schemaTypeSchema baseTypeInfo)
+        pure $
+          generateHaskellNewtype
+            typeName
+            (schemaTypeExpr baseTypeInfo)
+            (schemaTypeSchema baseTypeInfo)
       CodeGenEnum values ->
-        generateHaskellEnum typeName values
+        pure $ generateHaskellEnum typeName values
       CodeGenObject fields ->
         generateHaskellObject typeMap typeName fields
       CodeGenArray itemType ->
         generateHaskellArray typeMap typeName itemType
-
-  header <- moduleHeader moduleName typeName
 
   let
     code =
@@ -297,14 +272,16 @@ generateSchemaCode typeMap codeGenType = do
 
   pure (path, code)
 
-moduleHeader :: HC.ModuleName -> HC.TypeName -> CodeGen HC.HaskellCode
-moduleHeader moduleName typeName = do
-  schemaName <- fleeceSchemaNameForType typeName
-  pure $
+moduleHeader :: HC.ModuleName -> HC.TypeName -> HC.HaskellCode
+moduleHeader moduleName typeName =
+  let
+    schemaName =
+      fleeceSchemaNameForType typeName
+  in
     HC.lines
       [ "module " <> HC.toCode moduleName
-      , HC.indent 2 ("( " <> HC.toCode typeName <> "(..)")
-      , HC.indent 2 (", " <> HC.toCode schemaName)
+      , HC.indent 2 ("( " <> HC.typeNameToCode Nothing typeName <> "(..)")
+      , HC.indent 2 (", " <> HC.varNameToCode Nothing schemaName)
       , HC.indent 2 ") where"
       ]
 
@@ -343,16 +320,18 @@ importDeclarations thisModuleName code =
     mkImport :: HC.ExternalReference -> Map.Map HC.ModuleName ImportItems
     mkImport ref =
       case ref of
-        HC.TypeReference moduleName typeName ->
+        HC.TypeReference moduleName mbQualifier typeName ->
           if moduleName == thisModuleName
             then Map.empty
-            else Map.singleton moduleName (importName typeName)
-        HC.VarReference moduleName varName ->
+            else case mbQualifier of
+              Nothing -> Map.singleton moduleName (importName typeName)
+              Just qualifier -> Map.singleton moduleName (importQualifier qualifier)
+        HC.VarReference moduleName mbQualifier varName ->
           if moduleName == thisModuleName
             then Map.empty
-            else Map.singleton moduleName (importName varName)
-        HC.QualifierReference moduleName qualifier ->
-          Map.singleton moduleName (importQualifier qualifier)
+            else case mbQualifier of
+              Nothing -> Map.singleton moduleName (importName varName)
+              Just qualifier -> Map.singleton moduleName (importQualifier qualifier)
 
     imports =
       Map.unionsWith
@@ -360,11 +339,16 @@ importDeclarations thisModuleName code =
         (map mkImport . Set.toList . HC.references $ code)
 
     importNames moduleName names =
-      "import "
-        <> HC.toCode moduleName
-        <> " ("
-        <> HC.intercalate ", " (map HC.fromText (Set.toList names))
-        <> ")"
+      case Set.toList names of
+        [] ->
+          Nothing
+        nonEmptyNames ->
+          Just $
+            "import "
+              <> HC.toCode moduleName
+              <> " ("
+              <> HC.intercalate ", " (map HC.fromText nonEmptyNames)
+              <> ")"
 
     importQualifiedAs moduleName qualifier =
       "import qualified "
@@ -373,8 +357,15 @@ importDeclarations thisModuleName code =
         <> HC.fromText qualifier
 
     mkImportLines (moduleName, importItems) =
-      importNames moduleName (unqualifiedImports importItems)
-        : map (importQualifiedAs moduleName) (Set.toList (qualifiers importItems))
+      let
+        mbUnqualifiedLine =
+          importNames moduleName (unqualifiedImports importItems)
+        qualifiedLines =
+          map (importQualifiedAs moduleName) (Set.toList (qualifiers importItems))
+      in
+        case mbUnqualifiedLine of
+          Nothing -> qualifiedLines
+          Just qualifiedLine -> qualifiedLine : qualifiedLines
 
     importLines =
       foldMap mkImportLines (Map.toList imports)
@@ -383,35 +374,34 @@ importDeclarations thisModuleName code =
 
 generateHaskellNewtype ::
   HC.TypeName ->
-  HC.TypeName ->
+  HC.TypeExpression ->
   HC.HaskellCode ->
-  CodeGen HC.HaskellCode
-generateHaskellNewtype wrapperName baseName schemaName = do
+  HC.HaskellCode
+generateHaskellNewtype wrapperName baseType schemaName =
   let
     newtypeDecl =
       HC.lines
         [ "newtype "
-            <> HC.toCode wrapperName
+            <> HC.typeNameToCode Nothing wrapperName
             <> " = "
-            <> HC.toCode wrapperName
+            <> HC.typeNameToCode Nothing wrapperName
             <> " "
-            <> HC.toCode baseName
+            <> HC.toCode baseType
         , HC.indent 2 (HC.deriving_ [HC.showClass, HC.eqClass])
         ]
 
-  fleeceSchema <-
-    fleeceSchemaForType wrapperName $
-      [ fleeceCoreVar "coerceSchema" <> " " <> schemaName
-      ]
-
-  pure $
+    fleeceSchema =
+      fleeceSchemaForType wrapperName $
+        [ fleeceCoreVar "coerceSchema" <> " " <> schemaName
+        ]
+  in
     HC.declarations
       [ newtypeDecl
       , fleeceSchema
       ]
 
-generateHaskellEnum :: HC.TypeName -> [T.Text] -> CodeGen HC.HaskellCode
-generateHaskellEnum typeName enumValues = do
+generateHaskellEnum :: HC.TypeName -> [T.Text] -> HC.HaskellCode
+generateHaskellEnum typeName enumValues =
   let
     mkEnumItem t =
       (t, HC.toConstructorName t)
@@ -419,22 +409,28 @@ generateHaskellEnum typeName enumValues = do
     enumItems =
       map mkEnumItem enumValues
 
-  moduleName <- moduleNameForType typeName
+    moduleName =
+      HC.typeNameModule typeName
 
-  let
     enumDeclaration =
       HC.enum typeName (map snd enumItems)
 
     toTextName =
       HC.toVarName
         moduleName
-        (HC.renderText typeName <> "ToText")
+        Nothing
+        (HC.typeNameText typeName <> "ToText")
+
+    toTextType =
+      HC.typeNameToCode Nothing typeName
+        <> " -> "
+        <> HC.typeNameToCodeDefaultQualification textType
 
     toText =
       HC.lines
-        ( HC.typeAnnotate toTextName (HC.toCode typeName <> " -> " <> HC.toCode textType)
-            : HC.toCode toTextName <> " v ="
-            : HC.indent 2 (HC.toCode (HC.toVarName "Data.Text" "pack") <> " " <> HC.dollar)
+        ( HC.typeAnnotate toTextName toTextType
+            : HC.varNameToCode Nothing toTextName <> " v ="
+            : HC.indent 2 (HC.varNameToCodeDefaultQualification textPack <> " " <> HC.dollar)
             : HC.indent 4 "case v of"
             : map (HC.indent 6 . mkToTextCase) enumItems
         )
@@ -442,12 +438,11 @@ generateHaskellEnum typeName enumValues = do
     mkToTextCase (text, constructor) =
       HC.caseMatch constructor (HC.stringLiteral text)
 
-  fleeceSchema <-
-    fleeceSchemaForType typeName $
-      [ fleeceCoreVar "boundedEnum" <> " " <> HC.toCode toTextName
-      ]
-
-  pure $
+    fleeceSchema =
+      fleeceSchemaForType typeName $
+        [ fleeceCoreVar "boundedEnum" <> " " <> HC.varNameToCode Nothing toTextName
+        ]
+  in
     HC.declarations
       [ enumDeclaration
       , toText
@@ -460,7 +455,9 @@ generateHaskellObject ::
   [CodeGenObjectField] ->
   CodeGen HC.HaskellCode
 generateHaskellObject typeMap typeName codeGenFields = do
-  moduleName <- moduleNameForType typeName
+  let
+    moduleName =
+      HC.typeNameModule typeName
 
   fields <-
     traverse (mkFleeceSchemaField typeMap moduleName) codeGenFields
@@ -473,22 +470,22 @@ generateHaskellObject typeMap typeName codeGenFields = do
       HC.record typeName (map fieldNameAndType fields)
 
     fleeceField field =
-      HC.addReferences [HC.VarReference "Fleece.Core" "(#+)"] $
+      HC.addReferences [HC.VarReference "Fleece.Core" Nothing "(#+)"] $
         "#+ "
           <> fleeceFieldFunction field
           <> " "
           <> HC.stringLiteral (fieldJSONName field)
           <> " "
-          <> HC.toCode (fieldName field)
+          <> HC.varNameToCode Nothing (fieldName field)
           <> " "
           <> fieldFleeceSchemaCode field
 
-  fleeceSchema <-
-    fleeceSchemaForType typeName $
-      ( fleeceCoreVar "object" <> " " <> HC.dollar
-          : "  " <> fleeceCoreVar "constructor" <> " " <> HC.toCode typeName
-          : map (HC.indent 4 . fleeceField) fields
-      )
+    fleeceSchema =
+      fleeceSchemaForType typeName $
+        ( fleeceCoreVar "object" <> " " <> HC.dollar
+            : "  " <> fleeceCoreVar "constructor" <> " " <> HC.typeNameToCode Nothing typeName
+            : map (HC.indent 4 . fleeceField) fields
+        )
 
   pure $
     HC.declarations
@@ -503,10 +500,11 @@ generateHaskellArray ::
   CodeGen HC.HaskellCode
 generateHaskellArray typeMap typeName itemType = do
   typeInfo <- fmap arrayTypeInfo (resolveFieldTypeInfo typeMap itemType)
-  generateHaskellNewtype
-    typeName
-    (schemaTypeName typeInfo)
-    (schemaTypeSchema typeInfo)
+  pure $
+    generateHaskellNewtype
+      typeName
+      (schemaTypeExpr typeInfo)
+      (schemaTypeSchema typeInfo)
 
 data FleeceSchemaField = FleeceSchemaField
   { fieldName :: HC.VarName
@@ -520,15 +518,19 @@ fieldRequired :: FleeceSchemaField -> Bool
 fieldRequired =
   codeGenFieldRequired . fieldCodeGenField
 
-fieldBaseTypeName :: FleeceSchemaField -> HC.TypeName
-fieldBaseTypeName =
-  schemaTypeName . fieldBaseSchemaTypeInfo
+fieldBaseTypeExpr :: FleeceSchemaField -> HC.TypeExpression
+fieldBaseTypeExpr =
+  schemaTypeExpr . fieldBaseSchemaTypeInfo
 
-fieldTypeName :: FleeceSchemaField -> HC.TypeName
+fieldTypeName :: FleeceSchemaField -> HC.TypeExpression
 fieldTypeName field =
-  if fieldRequired field
-    then fieldBaseTypeName field
-    else HC.maybeOf (fieldBaseTypeName field)
+  let
+    baseTypeExpression =
+      fieldBaseTypeExpr field
+  in
+    if fieldRequired field
+      then baseTypeExpression
+      else HC.maybeOf baseTypeExpression
 
 fieldFleeceSchemaCode :: FleeceSchemaField -> HC.HaskellCode
 fieldFleeceSchemaCode =
@@ -557,7 +559,7 @@ mkFleeceSchemaField typeMap moduleName codeGenField = do
 
   pure $
     FleeceSchemaField
-      { fieldName = HC.toVarName moduleName name
+      { fieldName = HC.toVarName moduleName Nothing name
       , fieldCodeGenField = codeGenField
       , fieldBaseSchemaTypeInfo = typeInfo
       , fieldJSONName = name
@@ -565,20 +567,29 @@ mkFleeceSchemaField typeMap moduleName codeGenField = do
       }
 
 data SchemaTypeInfo = SchemaTypeInfo
-  { schemaTypeName :: HC.TypeName
+  { schemaTypeExpr :: HC.TypeExpression
   , schemaTypeSchema :: HC.HaskellCode
   }
+
+primitiveSchemaTypeInfo :: HC.TypeName -> HC.HaskellCode -> SchemaTypeInfo
+primitiveSchemaTypeInfo typeName schema =
+  SchemaTypeInfo
+    { schemaTypeExpr = HC.typeNameToCodeDefaultQualification typeName
+    , schemaTypeSchema = schema
+    }
 
 inferSchemaInfoForInputName :: T.Text -> CodeGen SchemaTypeInfo
 inferSchemaInfoForInputName name = do
   (_moduleName, typeName) <- inferTypeForInputName name
 
-  schema <- fleeceSchemaNameForType typeName
+  let
+    schema =
+      fleeceSchemaNameForType typeName
 
   pure $
     SchemaTypeInfo
-      { schemaTypeName = typeName
-      , schemaTypeSchema = HC.toCode schema
+      { schemaTypeExpr = HC.typeNameToCodeDefaultQualification typeName
+      , schemaTypeSchema = HC.varNameToCodeDefaultQualification schema
       }
 
 inferTypeForInputName :: T.Text -> (CodeGen (HC.ModuleName, HC.TypeName))
@@ -590,58 +601,35 @@ inferTypeForInputName inputName = do
     ("" : _) ->
       codeGenError $ "Unable to determine type name for: " <> show inputName
     (lastPart : _) ->
-      pure (moduleName, HC.toTypeName moduleName lastPart)
+      pure (moduleName, HC.toTypeName moduleName (Just lastPart) lastPart)
 
-fleeceSchemaNameForType :: HC.TypeName -> CodeGen HC.VarName
-fleeceSchemaNameForType typeName = do
-  moduleName <- moduleNameForType typeName
-  pure $
-    HC.toVarName
-      moduleName
-      (HC.renderText typeName <> "Schema")
+fleeceSchemaNameForType :: HC.TypeName -> HC.VarName
+fleeceSchemaNameForType typeName =
+  HC.toVarName
+    (HC.typeNameModule typeName)
+    (HC.typeNameSuggestedQualifier typeName)
+    (HC.typeNameText typeName <> "Schema")
 
-fleeceSchemaForType :: HC.TypeName -> [HC.HaskellCode] -> CodeGen HC.HaskellCode
-fleeceSchemaForType typeName bodyLines = do
-  schemaName <- fleeceSchemaNameForType typeName
-
+fleeceSchemaForType :: HC.TypeName -> [HC.HaskellCode] -> HC.HaskellCode
+fleeceSchemaForType typeName bodyLines =
   let
+    schemaName =
+      fleeceSchemaNameForType typeName
+
     declType =
       HC.typeAnnotate schemaName $
-        HC.toCode fleeceClass
+        HC.typeNameToCodeDefaultQualification fleeceClass
           <> " schema => schema "
-          <> HC.toCode typeName
+          <> HC.typeNameToCode Nothing typeName
 
     declImpl =
-      HC.toCode schemaName <> " ="
-
-  pure $
+      HC.varNameToCode Nothing schemaName <> " ="
+  in
     HC.lines
       ( declType
           : declImpl
           : map (HC.indent 2) bodyLines
       )
-
-moduleNameForType :: HC.TypeName -> CodeGen HC.ModuleName
-moduleNameForType typeName =
-  let
-    typeText =
-      HC.renderText typeName
-
-    refs =
-      HC.references typeName
-
-    matchingRefModuleName ref =
-      case ref of
-        HC.TypeReference moduleName referencedType ->
-          if typeText == referencedType
-            then Just moduleName
-            else Nothing
-        _ ->
-          Nothing
-  in
-    case mapMaybe matchingRefModuleName (Set.toList refs) of
-      (moduleName : _) -> pure moduleName
-      _ -> codeGenError $ "Unable to determine module for type: " <> show typeText
 
 generatedModuleName :: T.Text -> CodeGen HC.ModuleName
 generatedModuleName text = do
@@ -651,39 +639,39 @@ generatedModuleName text = do
 
 textType :: HC.TypeName
 textType =
-  HC.toTypeName "Data.Text" "Text"
+  HC.toTypeName "Data.Text" (Just "T") "Text"
+
+textPack :: HC.VarName
+textPack =
+  HC.toVarName "Data.Text" (Just "T") "pack"
 
 floatType :: HC.TypeName
 floatType =
-  preludeType "Float"
+  HC.preludeType "Float"
 
 doubleType :: HC.TypeName
 doubleType =
-  preludeType "Double"
+  HC.preludeType "Double"
 
 scientificType :: HC.TypeName
 scientificType =
-  HC.toTypeName "Data.Scientific" "Scientific"
+  HC.toTypeName "Data.Scientific" (Just "Sci") "Scientific"
 
 int32Type :: HC.TypeName
 int32Type =
-  HC.toTypeName "Data.Int" "Int32"
+  HC.toTypeName "Data.Int" (Just "I") "Int32"
 
 int64Type :: HC.TypeName
 int64Type =
-  HC.toTypeName "Data.Int" "Int64"
+  HC.toTypeName "Data.Int" (Just "I") "Int64"
 
 integerType :: HC.TypeName
 integerType =
-  preludeType "Integer"
+  HC.preludeType "Integer"
 
 boolType :: HC.TypeName
 boolType =
-  preludeType "Bool"
-
-preludeType :: T.Text -> HC.TypeName
-preludeType =
-  HC.toTypeName "Prelude"
+  HC.preludeType "Bool"
 
 fleeceClass :: HC.TypeName
 fleeceClass =
@@ -691,8 +679,10 @@ fleeceClass =
 
 fleeceCoreType :: T.Text -> HC.TypeName
 fleeceCoreType =
-  HC.toQualifiedTypeName "Fleece.Core" "FC"
+  HC.toTypeName "Fleece.Core" (Just "FC")
 
 fleeceCoreVar :: HC.FromCode c => T.Text -> c
 fleeceCoreVar =
-  HC.fromCode . HC.toCode . HC.toQualifiedVarName "Fleece.Core" "FC"
+  HC.fromCode
+    . HC.varNameToCodeDefaultQualification
+    . HC.toVarName "Fleece.Core" (Just "FC")

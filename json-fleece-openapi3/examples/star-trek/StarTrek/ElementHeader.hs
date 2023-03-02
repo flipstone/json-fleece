@@ -8,12 +8,12 @@ module StarTrek.ElementHeader
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
-import StarTrek.ElementHeader.Name (Name, nameSchema)
-import StarTrek.ElementHeader.Uid (Uid, uidSchema)
+import qualified StarTrek.ElementHeader.Name as Name
+import qualified StarTrek.ElementHeader.Uid as Uid
 
 data ElementHeader = ElementHeader
-  { name :: Name -- ^ Element name
-  , uid :: Uid -- ^ Element unique ID
+  { name :: Name.Name -- ^ Element name
+  , uid :: Uid.Uid -- ^ Element unique ID
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ elementHeaderSchema :: FC.Fleece schema => schema ElementHeader
 elementHeaderSchema =
   FC.object $
     FC.constructor ElementHeader
-      #+ FC.required "name" name nameSchema
-      #+ FC.required "uid" uid uidSchema
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.required "uid" uid Uid.uidSchema

@@ -5,12 +5,11 @@ module TestCases.FieldTestCases.OptionalNullableField
   , optionalNullableFieldSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype OptionalNullableField = OptionalNullableField Text
+newtype OptionalNullableField = OptionalNullableField T.Text
   deriving (Show, Eq)
 
 optionalNullableFieldSchema :: FC.Fleece schema => schema OptionalNullableField

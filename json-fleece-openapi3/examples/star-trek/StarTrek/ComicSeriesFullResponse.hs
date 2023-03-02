@@ -8,10 +8,10 @@ module StarTrek.ComicSeriesFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.ComicSeriesFull (ComicSeriesFull, comicSeriesFullSchema)
+import qualified StarTrek.ComicSeriesFull as ComicSeriesFull
 
 data ComicSeriesFullResponse = ComicSeriesFullResponse
-  { comicSeries :: Maybe ComicSeriesFull -- ^ Full comic series, returned when queried using UID
+  { comicSeries :: Maybe ComicSeriesFull.ComicSeriesFull -- ^ Full comic series, returned when queried using UID
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ comicSeriesFullResponseSchema :: FC.Fleece schema => schema ComicSeriesFullRespo
 comicSeriesFullResponseSchema =
   FC.object $
     FC.constructor ComicSeriesFullResponse
-      #+ FC.optional "comicSeries" comicSeries comicSeriesFullSchema
+      #+ FC.optional "comicSeries" comicSeries ComicSeriesFull.comicSeriesFullSchema

@@ -5,14 +5,13 @@ module TestCases.TopLevelArrayNullable
   , topLevelArrayNullableSchema
   ) where
 
-import Fleece.Core ()
 import qualified Fleece.Core as FC
 import Prelude (Either, Eq, Show)
-import TestCases.TopLevelArrayNullable.TopLevelArrayNullableItem (TopLevelArrayNullableItem, topLevelArrayNullableItemSchema)
+import qualified TestCases.TopLevelArrayNullable.TopLevelArrayNullableItem as TopLevelArrayNullableItem
 
-newtype TopLevelArrayNullable = TopLevelArrayNullable [Either FC.Null TopLevelArrayNullableItem]
+newtype TopLevelArrayNullable = TopLevelArrayNullable [Either FC.Null TopLevelArrayNullableItem.TopLevelArrayNullableItem]
   deriving (Show, Eq)
 
 topLevelArrayNullableSchema :: FC.Fleece schema => schema TopLevelArrayNullable
 topLevelArrayNullableSchema =
-  FC.coerceSchema (FC.list (FC.nullable topLevelArrayNullableItemSchema))
+  FC.coerceSchema (FC.list (FC.nullable TopLevelArrayNullableItem.topLevelArrayNullableItemSchema))

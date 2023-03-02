@@ -5,12 +5,11 @@ module Uber.PriceEstimate.Estimate
   , estimateSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Estimate = Estimate Text
+newtype Estimate = Estimate T.Text
   deriving (Show, Eq)
 
 estimateSchema :: FC.Fleece schema => schema Estimate

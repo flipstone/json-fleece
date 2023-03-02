@@ -8,10 +8,10 @@ module StarTrek.LocationFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.LocationFull (LocationFull, locationFullSchema)
+import qualified StarTrek.LocationFull as LocationFull
 
 data LocationFullResponse = LocationFullResponse
-  { location :: Maybe LocationFull -- ^ Full location, returned when queried using UID
+  { location :: Maybe LocationFull.LocationFull -- ^ Full location, returned when queried using UID
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ locationFullResponseSchema :: FC.Fleece schema => schema LocationFullResponse
 locationFullResponseSchema =
   FC.object $
     FC.constructor LocationFullResponse
-      #+ FC.optional "location" location locationFullSchema
+      #+ FC.optional "location" location LocationFull.locationFullSchema

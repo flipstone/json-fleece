@@ -5,12 +5,11 @@ module StarTrek.MovieBase.TitleChineseTraditional
   , titleChineseTraditionalSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype TitleChineseTraditional = TitleChineseTraditional Text
+newtype TitleChineseTraditional = TitleChineseTraditional T.Text
   deriving (Show, Eq)
 
 titleChineseTraditionalSchema :: FC.Fleece schema => schema TitleChineseTraditional

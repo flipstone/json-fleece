@@ -8,10 +8,10 @@ module StarTrek.SpacecraftFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.SpacecraftFull (SpacecraftFull, spacecraftFullSchema)
+import qualified StarTrek.SpacecraftFull as SpacecraftFull
 
 data SpacecraftFullResponse = SpacecraftFullResponse
-  { spacecraft :: Maybe SpacecraftFull -- ^ Full spacecraft, returned when queried using UID
+  { spacecraft :: Maybe SpacecraftFull.SpacecraftFull -- ^ Full spacecraft, returned when queried using UID
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ spacecraftFullResponseSchema :: FC.Fleece schema => schema SpacecraftFullRespons
 spacecraftFullResponseSchema =
   FC.object $
     FC.constructor SpacecraftFullResponse
-      #+ FC.optional "spacecraft" spacecraft spacecraftFullSchema
+      #+ FC.optional "spacecraft" spacecraft SpacecraftFull.spacecraftFullSchema

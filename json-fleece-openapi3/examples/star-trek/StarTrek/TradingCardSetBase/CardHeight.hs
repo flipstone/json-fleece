@@ -5,7 +5,6 @@ module StarTrek.TradingCardSetBase.CardHeight
   , cardHeightSchema
   ) where
 
-import Fleece.Core ()
 import qualified Fleece.Core as FC
 import Prelude (Double, Eq, Show)
 

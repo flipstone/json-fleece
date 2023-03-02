@@ -5,8 +5,7 @@ module StarTrek.Gender
   , genderSchema
   ) where
 
-import Data.Text (Text, pack)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (($), Bounded, Enum, Eq, Ord, Show)
 
@@ -15,9 +14,9 @@ data Gender
   | M
   deriving (Eq, Show, Ord, Enum, Bounded)
 
-genderToText :: Gender -> Text
+genderToText :: Gender -> T.Text
 genderToText v =
-  pack $
+  T.pack $
     case v of
       F -> "F"
       M -> "M"

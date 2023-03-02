@@ -8,12 +8,12 @@ module StarTrek.VideoReleaseHeader
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
-import StarTrek.VideoReleaseHeader.Title (Title, titleSchema)
-import StarTrek.VideoReleaseHeader.Uid (Uid, uidSchema)
+import qualified StarTrek.VideoReleaseHeader.Title as Title
+import qualified StarTrek.VideoReleaseHeader.Uid as Uid
 
 data VideoReleaseHeader = VideoReleaseHeader
-  { uid :: Uid -- ^ Video release unique ID
-  , title :: Title -- ^ Video release title
+  { uid :: Uid.Uid -- ^ Video release unique ID
+  , title :: Title.Title -- ^ Video release title
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ videoReleaseHeaderSchema :: FC.Fleece schema => schema VideoReleaseHeader
 videoReleaseHeaderSchema =
   FC.object $
     FC.constructor VideoReleaseHeader
-      #+ FC.required "uid" uid uidSchema
-      #+ FC.required "title" title titleSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.required "title" title Title.titleSchema

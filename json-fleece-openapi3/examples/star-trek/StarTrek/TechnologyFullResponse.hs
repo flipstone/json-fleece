@@ -8,10 +8,10 @@ module StarTrek.TechnologyFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.TechnologyFull (TechnologyFull, technologyFullSchema)
+import qualified StarTrek.TechnologyFull as TechnologyFull
 
 data TechnologyFullResponse = TechnologyFullResponse
-  { technology :: Maybe TechnologyFull -- ^ Full technology, returned when queried using UID
+  { technology :: Maybe TechnologyFull.TechnologyFull -- ^ Full technology, returned when queried using UID
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ technologyFullResponseSchema :: FC.Fleece schema => schema TechnologyFullRespons
 technologyFullResponseSchema =
   FC.object $
     FC.constructor TechnologyFullResponse
-      #+ FC.optional "technology" technology technologyFullSchema
+      #+ FC.optional "technology" technology TechnologyFull.technologyFullSchema

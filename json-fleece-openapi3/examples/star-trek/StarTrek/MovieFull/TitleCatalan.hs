@@ -5,12 +5,11 @@ module StarTrek.MovieFull.TitleCatalan
   , titleCatalanSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype TitleCatalan = TitleCatalan Text
+newtype TitleCatalan = TitleCatalan T.Text
   deriving (Show, Eq)
 
 titleCatalanSchema :: FC.Fleece schema => schema TitleCatalan

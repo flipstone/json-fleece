@@ -5,7 +5,6 @@ module StarTrek.ConflictFull.DominionWarBattle
   , dominionWarBattleSchema
   ) where
 
-import Fleece.Core ()
 import qualified Fleece.Core as FC
 import Prelude (Bool, Eq, Show)
 

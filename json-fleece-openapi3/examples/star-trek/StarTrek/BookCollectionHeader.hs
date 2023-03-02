@@ -8,12 +8,12 @@ module StarTrek.BookCollectionHeader
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.BookCollectionHeader.Title (Title, titleSchema)
-import StarTrek.BookCollectionHeader.Uid (Uid, uidSchema)
+import qualified StarTrek.BookCollectionHeader.Title as Title
+import qualified StarTrek.BookCollectionHeader.Uid as Uid
 
 data BookCollectionHeader = BookCollectionHeader
-  { uid :: Maybe Uid -- ^ Book collection unique ID
-  , title :: Maybe Title -- ^ Book collection title
+  { uid :: Maybe Uid.Uid -- ^ Book collection unique ID
+  , title :: Maybe Title.Title -- ^ Book collection title
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ bookCollectionHeaderSchema :: FC.Fleece schema => schema BookCollectionHeader
 bookCollectionHeaderSchema =
   FC.object $
     FC.constructor BookCollectionHeader
-      #+ FC.optional "uid" uid uidSchema
-      #+ FC.optional "title" title titleSchema
+      #+ FC.optional "uid" uid Uid.uidSchema
+      #+ FC.optional "title" title Title.titleSchema

@@ -8,10 +8,10 @@ module StarTrek.PerformerFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.PerformerFull (PerformerFull, performerFullSchema)
+import qualified StarTrek.PerformerFull as PerformerFull
 
 data PerformerFullResponse = PerformerFullResponse
-  { performer :: Maybe PerformerFull -- ^ Full performer, returned when queried using UID
+  { performer :: Maybe PerformerFull.PerformerFull -- ^ Full performer, returned when queried using UID
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ performerFullResponseSchema :: FC.Fleece schema => schema PerformerFullResponse
 performerFullResponseSchema =
   FC.object $
     FC.constructor PerformerFullResponse
-      #+ FC.optional "performer" performer performerFullSchema
+      #+ FC.optional "performer" performer PerformerFull.performerFullSchema

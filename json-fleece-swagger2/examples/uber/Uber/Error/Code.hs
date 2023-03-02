@@ -5,12 +5,11 @@ module Uber.Error.Code
   , codeSchema
   ) where
 
-import Data.Int (Int32)
-import Fleece.Core ()
+import qualified Data.Int as I
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype Code = Code Int32
+newtype Code = Code I.Int32
   deriving (Show, Eq)
 
 codeSchema :: FC.Fleece schema => schema Code

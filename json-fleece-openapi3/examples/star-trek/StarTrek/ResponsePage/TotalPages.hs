@@ -5,12 +5,11 @@ module StarTrek.ResponsePage.TotalPages
   , totalPagesSchema
   ) where
 
-import Data.Int (Int32)
-import Fleece.Core ()
+import qualified Data.Int as I
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype TotalPages = TotalPages Int32
+newtype TotalPages = TotalPages I.Int32
   deriving (Show, Eq)
 
 totalPagesSchema :: FC.Fleece schema => schema TotalPages

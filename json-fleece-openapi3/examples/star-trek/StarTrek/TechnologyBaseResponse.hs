@@ -8,14 +8,14 @@ module StarTrek.TechnologyBaseResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.ResponsePage (ResponsePage, responsePageSchema)
-import StarTrek.ResponseSort (ResponseSort, responseSortSchema)
-import StarTrek.TechnologyBase (TechnologyBase, technologyBaseSchema)
+import qualified StarTrek.ResponsePage as ResponsePage
+import qualified StarTrek.ResponseSort as ResponseSort
+import qualified StarTrek.TechnologyBase as TechnologyBase
 
 data TechnologyBaseResponse = TechnologyBaseResponse
-  { technology :: Maybe [TechnologyBase] -- ^ Base technology, returned in search results
-  , sort :: Maybe ResponseSort -- ^ Response sort
-  , page :: Maybe ResponsePage -- ^ Object describing response page
+  { technology :: Maybe [TechnologyBase.TechnologyBase] -- ^ Base technology, returned in search results
+  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
+  , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ technologyBaseResponseSchema :: FC.Fleece schema => schema TechnologyBaseRespons
 technologyBaseResponseSchema =
   FC.object $
     FC.constructor TechnologyBaseResponse
-      #+ FC.optional "technology" technology (FC.list technologyBaseSchema)
-      #+ FC.optional "sort" sort responseSortSchema
-      #+ FC.optional "page" page responsePageSchema
+      #+ FC.optional "technology" technology (FC.list TechnologyBase.technologyBaseSchema)
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
+      #+ FC.optional "page" page ResponsePage.responsePageSchema

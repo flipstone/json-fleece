@@ -5,12 +5,11 @@ module TestCases.FieldTestCases.NullableArrayFieldItem
   , nullableArrayFieldItemSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype NullableArrayFieldItem = NullableArrayFieldItem Text
+newtype NullableArrayFieldItem = NullableArrayFieldItem T.Text
   deriving (Show, Eq)
 
 nullableArrayFieldItemSchema :: FC.Fleece schema => schema NullableArrayFieldItem

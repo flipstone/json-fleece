@@ -5,12 +5,11 @@ module Uber.PriceEstimate.CurrencyCode
   , currencyCodeSchema
   ) where
 
-import Data.Text (Text)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype CurrencyCode = CurrencyCode Text
+newtype CurrencyCode = CurrencyCode T.Text
   deriving (Show, Eq)
 
 currencyCodeSchema :: FC.Fleece schema => schema CurrencyCode

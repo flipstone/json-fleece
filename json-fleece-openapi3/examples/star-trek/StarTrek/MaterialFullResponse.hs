@@ -8,10 +8,10 @@ module StarTrek.MaterialFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.MaterialFull (MaterialFull, materialFullSchema)
+import qualified StarTrek.MaterialFull as MaterialFull
 
 data MaterialFullResponse = MaterialFullResponse
-  { material :: Maybe MaterialFull -- ^ Full material, returned when queried using UID
+  { material :: Maybe MaterialFull.MaterialFull -- ^ Full material, returned when queried using UID
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ materialFullResponseSchema :: FC.Fleece schema => schema MaterialFullResponse
 materialFullResponseSchema =
   FC.object $
     FC.constructor MaterialFullResponse
-      #+ FC.optional "material" material materialFullSchema
+      #+ FC.optional "material" material MaterialFull.materialFullSchema

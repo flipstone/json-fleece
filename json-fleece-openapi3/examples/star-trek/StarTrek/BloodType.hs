@@ -5,8 +5,7 @@ module StarTrek.BloodType
   , bloodTypeSchema
   ) where
 
-import Data.Text (Text, pack)
-import Fleece.Core ()
+import qualified Data.Text as T
 import qualified Fleece.Core as FC
 import Prelude (($), Bounded, Enum, Eq, Ord, Show)
 
@@ -16,9 +15,9 @@ data BloodType
   | TNEGATIVE
   deriving (Eq, Show, Ord, Enum, Bounded)
 
-bloodTypeToText :: BloodType -> Text
+bloodTypeToText :: BloodType -> T.Text
 bloodTypeToText v =
-  pack $
+  T.pack $
     case v of
       BNEGATIVE -> "B_NEGATIVE"
       ONEGATIVE -> "O_NEGATIVE"

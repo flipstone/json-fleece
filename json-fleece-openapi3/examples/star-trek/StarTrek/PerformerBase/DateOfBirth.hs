@@ -5,12 +5,11 @@ module StarTrek.PerformerBase.DateOfBirth
   , dateOfBirthSchema
   ) where
 
-import Data.Time (Day)
-import Fleece.Core ()
+import qualified Data.Time as Time
 import qualified Fleece.Core as FC
 import Prelude (Eq, Show)
 
-newtype DateOfBirth = DateOfBirth Day
+newtype DateOfBirth = DateOfBirth Time.Day
   deriving (Show, Eq)
 
 dateOfBirthSchema :: FC.Fleece schema => schema DateOfBirth

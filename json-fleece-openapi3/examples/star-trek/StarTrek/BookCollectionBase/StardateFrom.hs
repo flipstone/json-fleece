@@ -5,7 +5,6 @@ module StarTrek.BookCollectionBase.StardateFrom
   , stardateFromSchema
   ) where
 
-import Fleece.Core ()
 import qualified Fleece.Core as FC
 import Prelude (Eq, Float, Show)
 

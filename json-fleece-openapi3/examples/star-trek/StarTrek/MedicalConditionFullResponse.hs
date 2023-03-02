@@ -8,10 +8,10 @@ module StarTrek.MedicalConditionFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.MedicalConditionFull (MedicalConditionFull, medicalConditionFullSchema)
+import qualified StarTrek.MedicalConditionFull as MedicalConditionFull
 
 data MedicalConditionFullResponse = MedicalConditionFullResponse
-  { medicalCondition :: Maybe MedicalConditionFull -- ^ Full medical condition, returned when queried using UID
+  { medicalCondition :: Maybe MedicalConditionFull.MedicalConditionFull -- ^ Full medical condition, returned when queried using UID
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ medicalConditionFullResponseSchema :: FC.Fleece schema => schema MedicalConditio
 medicalConditionFullResponseSchema =
   FC.object $
     FC.constructor MedicalConditionFullResponse
-      #+ FC.optional "medicalCondition" medicalCondition medicalConditionFullSchema
+      #+ FC.optional "medicalCondition" medicalCondition MedicalConditionFull.medicalConditionFullSchema

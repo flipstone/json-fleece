@@ -8,10 +8,10 @@ module StarTrek.TradingCardSetFullResponse
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
-import StarTrek.TradingCardSetFull (TradingCardSetFull, tradingCardSetFullSchema)
+import qualified StarTrek.TradingCardSetFull as TradingCardSetFull
 
 data TradingCardSetFullResponse = TradingCardSetFullResponse
-  { tradingCardSet :: Maybe TradingCardSetFull -- ^ Full trading card set, returned when queried using UID
+  { tradingCardSet :: Maybe TradingCardSetFull.TradingCardSetFull -- ^ Full trading card set, returned when queried using UID
   }
   deriving (Eq, Show)
 
@@ -19,4 +19,4 @@ tradingCardSetFullResponseSchema :: FC.Fleece schema => schema TradingCardSetFul
 tradingCardSetFullResponseSchema =
   FC.object $
     FC.constructor TradingCardSetFullResponse
-      #+ FC.optional "tradingCardSet" tradingCardSet tradingCardSetFullSchema
+      #+ FC.optional "tradingCardSet" tradingCardSet TradingCardSetFull.tradingCardSetFullSchema
