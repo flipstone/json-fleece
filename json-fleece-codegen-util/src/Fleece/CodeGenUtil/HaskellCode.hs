@@ -48,7 +48,8 @@ module Fleece.CodeGenUtil.HaskellCode
   , boundedClass
   ) where
 
-import Prelude hiding (lines)
+-- import prelude explicitly since we want to define our own 'lines' function
+import Prelude (Eq ((==)), Foldable, Int, Maybe, Monoid (mempty), Ord (compare), Semigroup ((<>)), String, id, map, maybe, mconcat, show, zip, ($), (.))
 
 import Data.Foldable (toList)
 import Data.Function (on)
@@ -310,7 +311,7 @@ record typeName fields =
   in
     lines
       ( "data " <> toCode typeName <> " = " <> toCode typeName
-          : map (indent 2) (fieldLines ++ ["}"] ++ [derivations])
+          : map (indent 2) (fieldLines <> ["}"] <> [derivations])
       )
 
 deriving_ :: [TypeName] -> HaskellCode
@@ -367,7 +368,7 @@ enum typeName constructors =
   in
     lines
       ( "data " <> toCode typeName
-          : map (indent 2) (map mkCon (zip [0 ..] constructors) ++ [derivations])
+          : map (indent 2) (map mkCon (zip [0 ..] constructors) <> [derivations])
       )
 
 stringLiteral :: T.Text -> HaskellCode

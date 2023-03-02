@@ -4,9 +4,9 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 
-name:           json-fleece-examples
+name:           json-fleece-http
 version:        0.1.3.0
-description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-examples#readme>
+description:    Please see the README on GitHub at <https://github.com/githubuser/json-fleece-http#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
 author:         Author name here
@@ -18,7 +18,7 @@ build-type:     Simple
 source-repository head
   type: git
   location: https://github.com/flipstone/json-fleece
-  subdir: json-fleece-examples
+  subdir: json-fleece-http
 
 flag strict
   description: More strict ghc options used for development and ci, not intended for end-use.
@@ -27,16 +27,21 @@ flag strict
 
 library
   exposed-modules:
-      Fleece.Examples
+      Fleece.HTTP
+      Fleece.HTTP.Body
+      Fleece.HTTP.HTTPEncoder
+      Fleece.HTTP.HTTPDecoder
+      Fleece.HTTP.HTTPRequest
+      Fleece.HTTP.RequestDefinition
   other-modules:
-      Paths_json_fleece_examples
+      Paths_json_fleece_http
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
-    , json-fleece-core ==0.1.*
-    , scientific >=0.3.7 && <0.4
-    , text ==1.2.*
+    , bytestring ==0.11.*
+    , http-client ==0.7.*
+    , http-types ==0.12.*
   default-language: Haskell2010
   if flag(strict)
     ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations

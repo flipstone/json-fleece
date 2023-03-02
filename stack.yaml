@@ -38,6 +38,7 @@ packages:
 - json-fleece-codegen-util
 - json-fleece-openapi3
 - json-fleece-swagger2
+- json-fleece-http
 # Dependency packages to be pulled from upstream that are not in the resolver.
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
@@ -69,6 +70,9 @@ flags:
     strict: true
 
   json-fleece-swagger2:
+    strict: true
+
+  json-fleece-http:
     strict: true
 
 # Extra package databases containing global packages

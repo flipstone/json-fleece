@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-missing-import-lists #-}
+
 module Fleece.Markdown
   ( module Export
   ) where

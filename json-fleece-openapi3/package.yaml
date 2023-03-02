@@ -29,7 +29,6 @@ when:
         - -Werror
         - -Wno-missing-local-signatures
         - -Wno-monomorphism-restriction
-        - -Wno-missing-import-lists
         - -Wno-missing-kind-signatures
         - -Wno-prepositive-qualified-module
         - -Wno-implicit-prelude
