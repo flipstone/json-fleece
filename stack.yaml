@@ -34,19 +34,14 @@ packages:
 - json-fleece-core
 - json-fleece-examples
 - json-fleece-aeson
+- json-fleece-aeson-beeline
 - json-fleece-markdown
 - json-fleece-codegen-util
 - json-fleece-openapi3
 - json-fleece-swagger2
-- json-fleece-http
 # Dependency packages to be pulled from upstream that are not in the resolver.
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
-#
-# extra-deps:
-# - acme-missiles-0.3
-# - git: https://github.com/commercialhaskell/stack.git
-#   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
 #
 
 # Override default flag values for local packages and extra-deps
@@ -58,6 +53,9 @@ flags:
     strict: true
 
   json-fleece-aeson:
+    strict: true
+
+  json-fleece-aeson-beeline:
     strict: true
 
   json-fleece-markdown:
@@ -72,8 +70,15 @@ flags:
   json-fleece-swagger2:
     strict: true
 
-  json-fleece-http:
-    strict: true
+extra-deps:
+  - git: https://github.com/flipstone/beeline
+    commit: 4199d1efb02b7d7b85aaceee86cc68cd0c523dc8
+    subdirs:
+      - beeline-routing
+      - beeline-http-client
+  - git: https://github.com/flipstone/shrubbery
+    commit: 4623b6cebe9ca78cd6505b8be57390949bbc2bb7
+
 
 # Extra package databases containing global packages
 # extra-package-dbs: []

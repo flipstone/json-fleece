@@ -6,4 +6,3 @@ module Fleece.Aeson
 
 import Fleece.Aeson.Decoder as Export
 import Fleece.Aeson.Encoder as Export
-import Fleece.Aeson.HTTP as Export
