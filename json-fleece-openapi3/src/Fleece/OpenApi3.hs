@@ -186,30 +186,11 @@ mkOperationParam _typeMap operationKey paramRef = do
             <> T.unpack operationKey
 
   paramType <-
-    case OA._schemaType schema of
-      Just OA.OpenApiString ->
-        pure CGU.ParamTypeString
-      Just OA.OpenApiInteger ->
-        case OA._schemaFormat schema of
-          Just "int8" -> pure CGU.ParamTypeInt8
-          Just "int16" -> pure CGU.ParamTypeInt16
-          Just "int32" -> pure CGU.ParamTypeInt32
-          Just "int64" -> pure CGU.ParamTypeInt64
-          _ -> pure CGU.ParamTypeInteger
-      Just otherType ->
-        CGU.codeGenError $
-          "Unsupported schema type found for param "
-            <> T.unpack paramName
-            <> " operation "
-            <> T.unpack operationKey
-            <> ": "
-            <> show otherType
-      Nothing ->
-        CGU.codeGenError $
-          "No schema type found for param "
-            <> T.unpack paramName
-            <> " of operation "
-            <> T.unpack operationKey
+    schemaTypeToParamType
+      paramName
+      (OA._paramIn param)
+      operationKey
+      schema
 
   pure $
     CGU.CodeGenOperationParam
@@ -217,6 +198,69 @@ mkOperationParam _typeMap operationKey paramRef = do
       , CGU.codeGenOperationParamTypeName = paramTypeName
       , CGU.codeGenOperationParamType = paramType
       }
+
+schemaTypeToParamType ::
+  T.Text ->
+  OA.ParamLocation ->
+  T.Text ->
+  OA.Schema ->
+  CGU.CodeGen CGU.OperationParamType
+schemaTypeToParamType paramName paramLocation operationKey schema =
+  case OA._schemaType schema of
+    Just OA.OpenApiString ->
+      pure CGU.ParamTypeString
+    Just OA.OpenApiInteger ->
+      case OA._schemaFormat schema of
+        Just "int8" -> pure CGU.ParamTypeInt8
+        Just "int16" -> pure CGU.ParamTypeInt16
+        Just "int32" -> pure CGU.ParamTypeInt32
+        Just "int64" -> pure CGU.ParamTypeInt64
+        _ -> pure CGU.ParamTypeInteger
+    Just OA.OpenApiArray ->
+      case paramLocation of
+        OA.ParamQuery ->
+          case OA._schemaItems schema of
+            Just (OA.OpenApiItemsObject itemSchemaRef) ->
+              case itemSchemaRef of
+                OA.Ref _ ->
+                  CGU.codeGenError "Schema refs not yet support in parameter arrays"
+                OA.Inline itemSchema ->
+                  CGU.ParamTypeArray
+                    <$> schemaTypeToParamType
+                      paramName
+                      paramLocation
+                      operationKey
+                      itemSchema
+            otherItemType ->
+              CGU.codeGenError $
+                "Unsupported schema arram item type found for param "
+                  <> T.unpack paramName
+                  <> " of operation "
+                  <> T.unpack operationKey
+                  <> ": "
+                  <> show otherItemType
+        otherLocation ->
+          CGU.codeGenError $
+            "Array parameters are not supported for "
+              <> show otherLocation
+              <> " paremeters. Parameter in question was "
+              <> T.unpack paramName
+              <> " of operation "
+              <> T.unpack operationKey
+    Just otherType ->
+      CGU.codeGenError $
+        "Unsupported schema type found for param "
+          <> T.unpack paramName
+          <> " of operation "
+          <> T.unpack operationKey
+          <> ": "
+          <> show otherType
+    Nothing ->
+      CGU.codeGenError $
+        "No schema type found for param "
+          <> T.unpack paramName
+          <> " of operation "
+          <> T.unpack operationKey
 
 mkSchemaTypeMap :: T.Text -> OA.Schema -> CGU.CodeGen CGU.TypeMap
 mkSchemaTypeMap schemaKey schema = do

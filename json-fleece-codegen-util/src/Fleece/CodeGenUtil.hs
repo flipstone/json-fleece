@@ -114,6 +114,7 @@ data OperationParamType
   | ParamTypeInt16
   | ParamTypeInt32
   | ParamTypeInt64
+  | ParamTypeArray OperationParamType
 
 data CodeGenDataFormat
   = CodeGenNewType SchemaTypeInfo
@@ -423,14 +424,8 @@ generateOperationParamCode codeGenOperationParam = do
       operationParamHeader moduleName typeName
 
     baseType =
-      case codeGenOperationParamType codeGenOperationParam of
-        ParamTypeString -> textType
-        ParamTypeInteger -> integerType
-        ParamTypeInt -> intType
-        ParamTypeInt8 -> int8Type
-        ParamTypeInt16 -> int16Type
-        ParamTypeInt32 -> int32Type
-        ParamTypeInt64 -> int64Type
+      paramTypeToBaseHaskellType
+        (codeGenOperationParamType codeGenOperationParam)
 
     typeDeclaration =
       HC.newtype_
@@ -438,14 +433,8 @@ generateOperationParamCode codeGenOperationParam = do
         (HC.fromCode (HC.typeNameToCodeDefaultQualification baseType))
 
     beelineBaseDef =
-      case codeGenOperationParamType codeGenOperationParam of
-        ParamTypeString -> beelineTextParam
-        ParamTypeInteger -> beelineIntegerParam
-        ParamTypeInt -> beelineIntParam
-        ParamTypeInt8 -> beelineInt8Param
-        ParamTypeInt16 -> beelineInt16Param
-        ParamTypeInt32 -> beelineInt32Param
-        ParamTypeInt64 -> beelineInt64Param
+      paramTypeToBaseBeelineType
+        (codeGenOperationParamType codeGenOperationParam)
 
     defDeclaration =
       HC.lines
@@ -469,6 +458,30 @@ generateOperationParamCode codeGenOperationParam = do
         ]
 
   pure (filePath, code)
+
+paramTypeToBaseHaskellType :: OperationParamType -> HC.TypeName
+paramTypeToBaseHaskellType paramType =
+  case paramType of
+    ParamTypeString -> textType
+    ParamTypeInteger -> integerType
+    ParamTypeInt -> intType
+    ParamTypeInt8 -> int8Type
+    ParamTypeInt16 -> int16Type
+    ParamTypeInt32 -> int32Type
+    ParamTypeInt64 -> int64Type
+    ParamTypeArray itemType -> paramTypeToBaseHaskellType itemType
+
+paramTypeToBaseBeelineType :: HC.FromCode c => OperationParamType -> c
+paramTypeToBaseBeelineType paramType =
+  case paramType of
+    ParamTypeString -> beelineTextParam
+    ParamTypeInteger -> beelineIntegerParam
+    ParamTypeInt -> beelineIntParam
+    ParamTypeInt8 -> beelineInt8Param
+    ParamTypeInt16 -> beelineInt16Param
+    ParamTypeInt32 -> beelineInt32Param
+    ParamTypeInt64 -> beelineInt64Param
+    ParamTypeArray itemType -> paramTypeToBaseBeelineType itemType
 
 operationParamHeader :: HC.ModuleName -> HC.TypeName -> HC.HaskellCode
 operationParamHeader moduleName typeName =

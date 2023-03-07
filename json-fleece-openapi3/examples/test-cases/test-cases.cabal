@@ -19,6 +19,9 @@ library
       TestCases.Operations.GetMultiplePathsParams
       TestCases.Operations.GetMultiplePathsParams.Param1
       TestCases.Operations.GetMultiplePathsParams.Param2
+      TestCases.Operations.TestCases.QueryParams
+      TestCases.Operations.TestCases.QueryParams.Param1
+      TestCases.Operations.TestCases.QueryParams.Param2
       TestCases.Types.FieldTestCases
       TestCases.Types.FieldTestCases.ArrayFieldItem
       TestCases.Types.FieldTestCases.NullableArrayFieldItem

@@ -25,6 +25,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FieldTestCases'
+  /test-cases/query-params:
+    get:
+      parameters:
+        - name: param1
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: param2
+          in: query
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: "Successful Get"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldTestCases'
 components:
   schemas:
     FieldTestCases:

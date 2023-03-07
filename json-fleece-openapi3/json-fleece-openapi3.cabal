@@ -1711,6 +1711,9 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param1.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param2.hs
+    examples/test-cases/TestCases/Operations/TestCases/QueryParams.hs
+    examples/test-cases/TestCases/Operations/TestCases/QueryParams/Param1.hs
+    examples/test-cases/TestCases/Operations/TestCases/QueryParams/Param2.hs
     examples/test-cases/TestCases/Types/FieldTestCases.hs
     examples/test-cases/TestCases/Types/FieldTestCases/ArrayFieldItem.hs
     examples/test-cases/TestCases/Types/FieldTestCases/NullableArrayFieldItem.hs
