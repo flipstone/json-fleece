@@ -277,6 +277,8 @@ schemaTypeToParamType schemaMap paramName paramLocation operationKey schema =
   case OA._schemaType schema of
     Just OA.OpenApiString ->
       pure (Nothing, CGU.ParamTypeString)
+    Just OA.OpenApiBoolean ->
+      pure (Nothing, CGU.ParamTypeBoolean)
     Just OA.OpenApiInteger ->
       case OA._schemaFormat schema of
         Just "int8" -> pure (Nothing, CGU.ParamTypeInt8)
@@ -298,7 +300,7 @@ schemaTypeToParamType schemaMap paramName paramLocation operationKey schema =
                   itemSchemaRef
             otherItemType ->
               CGU.codeGenError $
-                "Unsupported schema arram item type found for param "
+                "Unsupported schema array item type found for param "
                   <> T.unpack paramName
                   <> " of operation "
                   <> T.unpack operationKey

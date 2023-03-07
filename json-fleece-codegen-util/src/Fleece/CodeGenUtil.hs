@@ -111,6 +111,7 @@ data OperationPathPiece
 
 data OperationParamType
   = ParamTypeString
+  | ParamTypeBoolean
   | ParamTypeInteger
   | ParamTypeInt
   | ParamTypeInt8
@@ -468,6 +469,7 @@ paramTypeToBaseHaskellType :: OperationParamType -> HC.TypeName
 paramTypeToBaseHaskellType paramType =
   case paramType of
     ParamTypeString -> textType
+    ParamTypeBoolean -> boolType
     ParamTypeInteger -> integerType
     ParamTypeInt -> intType
     ParamTypeInt8 -> int8Type
@@ -480,6 +482,7 @@ paramTypeToBaseBeelineType :: HC.FromCode c => OperationParamType -> c
 paramTypeToBaseBeelineType paramType =
   case paramType of
     ParamTypeString -> beelineTextParam
+    ParamTypeBoolean -> beelineBooleanParam
     ParamTypeInteger -> beelineIntegerParam
     ParamTypeInt -> beelineIntParam
     ParamTypeInt8 -> beelineInt8Param
@@ -1031,6 +1034,10 @@ beelineCoerceParam =
 beelineTextParam :: HC.FromCode c => c
 beelineTextParam =
   beelineRoutingVar "textParam"
+
+beelineBooleanParam :: HC.FromCode c => c
+beelineBooleanParam =
+  beelineRoutingVar "booleanParam"
 
 beelineIntegerParam :: HC.FromCode c => c
 beelineIntegerParam =

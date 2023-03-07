@@ -28,12 +28,17 @@ paths:
   /test-cases/query-params:
     get:
       parameters:
-        - name: param1
+        - name: string-param
           in: query
           required: true
           schema:
             type: string
-        - name: param2
+        - name: boolean-param
+          in: query
+          required: true
+          schema:
+            type: boolean
+        - name: string-array-param
           in: query
           required: false
           explode: true
