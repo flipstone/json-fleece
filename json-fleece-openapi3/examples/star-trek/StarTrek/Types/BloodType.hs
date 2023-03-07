@@ -3,6 +3,7 @@
 module StarTrek.Types.BloodType
   ( BloodType(..)
   , bloodTypeSchema
+  , bloodTypeToText
   ) where
 
 import qualified Data.Text as T

@@ -3,6 +3,7 @@
 module StarTrek.Types.ResponseSortDirection
   ( ResponseSortDirection(..)
   , responseSortDirectionSchema
+  , responseSortDirectionToText
   ) where
 
 import qualified Data.Text as T

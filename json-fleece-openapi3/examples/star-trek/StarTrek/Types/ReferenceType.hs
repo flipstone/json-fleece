@@ -3,6 +3,7 @@
 module StarTrek.Types.ReferenceType
   ( ReferenceType(..)
   , referenceTypeSchema
+  , referenceTypeToText
   ) where
 
 import qualified Data.Text as T

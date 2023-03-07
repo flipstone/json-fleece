@@ -3,6 +3,7 @@
 module StarTrek.Types.AstronomicalObjectType
   ( AstronomicalObjectType(..)
   , astronomicalObjectTypeSchema
+  , astronomicalObjectTypeToText
   ) where
 
 import qualified Data.Text as T

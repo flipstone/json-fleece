@@ -7,6 +7,7 @@ module Fleece.OpenApi3
   , SchemaEntry (..)
   ) where
 
+import Control.Monad ((<=<))
 import qualified Data.Aeson as Aeson
 import qualified Data.HashMap.Strict.InsOrd as IOHM
 import qualified Data.Map.Strict as Map
@@ -276,7 +277,20 @@ schemaTypeToParamType ::
 schemaTypeToParamType schemaMap paramName paramLocation operationKey schema =
   case OA._schemaType schema of
     Just OA.OpenApiString ->
-      pure (Nothing, CGU.ParamTypeString)
+      case OA._schemaEnum schema of
+        Nothing ->
+          pure (Nothing, CGU.ParamTypeString)
+        Just enumValues -> do
+          let
+            rejectNull mbText =
+              case mbText of
+                Nothing -> CGU.codeGenError "null not supported as enum value in params"
+                Just text -> pure text
+
+          enumTexts <-
+            traverse (rejectNull <=< enumValueToText schema) enumValues
+
+          pure (Nothing, CGU.ParamTypeEnum enumTexts)
     Just OA.OpenApiBoolean ->
       pure (Nothing, CGU.ParamTypeBoolean)
     Just OA.OpenApiInteger ->
@@ -380,23 +394,25 @@ mkOpenApiStringFormat :: OA.Schema -> CGU.CodeGen CGU.CodeGenDataFormat
 mkOpenApiStringFormat schema =
   case OA._schemaEnum schema of
     Just enumValues ->
-      let
-        toText value =
-          case value of
-            Aeson.String text -> pure (Just text)
-            Aeson.Null ->
-              case OA._schemaNullable schema of
-                Just True -> pure Nothing
-                _ -> CGU.codeGenError "null listed as enum value in a non-nullable schema"
-            _ -> CGU.codeGenError "Non-string value found for enum"
-      in
-        fmap (CGU.enumFormat . catMaybes) (traverse toText enumValues)
+      fmap
+        (CGU.enumFormat . catMaybes)
+        (traverse (enumValueToText schema) enumValues)
     Nothing ->
       pure $
         case OA._schemaFormat schema of
           Just "date" -> CGU.dayFormat
           Just "date-time" -> CGU.utcTimeFormat
           _ -> CGU.textFormat
+
+enumValueToText :: OA.Schema -> Aeson.Value -> CGU.CodeGen (Maybe T.Text)
+enumValueToText schema value =
+  case value of
+    Aeson.String text -> pure (Just text)
+    Aeson.Null ->
+      case OA._schemaNullable schema of
+        Just True -> pure Nothing
+        _ -> CGU.codeGenError "null listed as enum value in a non-nullable schema"
+    _ -> CGU.codeGenError "Non-string value found for enum"
 
 mkOpenApiNumberFormat :: OA.Schema -> CGU.CodeGen CGU.CodeGenDataFormat
 mkOpenApiNumberFormat schema =

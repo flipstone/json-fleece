@@ -46,6 +46,14 @@ paths:
             type: array
             items:
               type: string
+        - name: inline-enum-param
+          in: query
+          schema:
+            type: string
+            enum:
+              - baz
+              - bat
+              - bax
       responses:
         '200':
           description: "Successful Get"
@@ -61,6 +69,10 @@ paths:
           in: path
           schema:
             $ref: '#/components/schemas/string-param'
+        - name: enum-param
+          in: query
+          schema:
+            $ref: '#/components/schemas/enum-param'
       responses:
         '200':
           description: "Successful Get"
@@ -89,6 +101,12 @@ components:
   schemas:
     string-param:
       type: string
+    enum-param:
+      type: string
+      enum:
+        - foo
+        - bar
+        - baz
     FieldTestCases:
       type: object
       description: A schema that contains test cases for each kind of field

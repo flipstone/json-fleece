@@ -3,6 +3,7 @@
 module StarTrek.Types.ProductionRunUnit
   ( ProductionRunUnit(..)
   , productionRunUnitSchema
+  , productionRunUnitToText
   ) where
 
 import qualified Data.Text as T

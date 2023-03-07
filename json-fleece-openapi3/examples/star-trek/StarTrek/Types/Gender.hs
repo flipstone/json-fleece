@@ -3,6 +3,7 @@
 module StarTrek.Types.Gender
   ( Gender(..)
   , genderSchema
+  , genderToText
   ) where
 
 import qualified Data.Text as T

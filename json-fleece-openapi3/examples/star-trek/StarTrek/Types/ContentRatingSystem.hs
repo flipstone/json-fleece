@@ -3,6 +3,7 @@
 module StarTrek.Types.ContentRatingSystem
   ( ContentRatingSystem(..)
   , contentRatingSystemSchema
+  , contentRatingSystemToText
   ) where
 
 import qualified Data.Text as T

@@ -112,6 +112,7 @@ data OperationPathPiece
 data OperationParamType
   = ParamTypeString
   | ParamTypeBoolean
+  | ParamTypeEnum [T.Text]
   | ParamTypeInteger
   | ParamTypeInt
   | ParamTypeInt8
@@ -419,15 +420,20 @@ generateOperationParamCode codeGenOperationParam = do
 
     typeDeclaration =
       if HC.typeNameModule typeName == moduleName
-        then
-          Just $
-            HC.newtype_
-              typeName
-              (HC.fromCode (HC.typeNameToCodeDefaultQualification baseType))
+        then case baseType of
+          Right haskellType ->
+            Just $
+              HC.newtype_
+                typeName
+                (HC.fromCode (HC.typeNameToCodeDefaultQualification haskellType))
+          Left enumValues ->
+            Just . snd $ generateEnum typeName enumValues
         else Nothing
 
     beelineBaseDef =
       paramTypeToBaseBeelineType
+        moduleName
+        typeName
         (codeGenOperationParamType codeGenOperationParam)
 
     defName =
@@ -465,31 +471,57 @@ generateOperationParamCode codeGenOperationParam = do
 
   pure (filePath, code)
 
-paramTypeToBaseHaskellType :: OperationParamType -> HC.TypeName
+paramTypeToBaseHaskellType :: OperationParamType -> Either [T.Text] HC.TypeName
 paramTypeToBaseHaskellType paramType =
   case paramType of
-    ParamTypeString -> textType
-    ParamTypeBoolean -> boolType
-    ParamTypeInteger -> integerType
-    ParamTypeInt -> intType
-    ParamTypeInt8 -> int8Type
-    ParamTypeInt16 -> int16Type
-    ParamTypeInt32 -> int32Type
-    ParamTypeInt64 -> int64Type
+    ParamTypeString -> Right textType
+    ParamTypeBoolean -> Right boolType
+    ParamTypeEnum enumValues -> Left enumValues
+    ParamTypeInteger -> Right integerType
+    ParamTypeInt -> Right intType
+    ParamTypeInt8 -> Right int8Type
+    ParamTypeInt16 -> Right int16Type
+    ParamTypeInt32 -> Right int32Type
+    ParamTypeInt64 -> Right int64Type
     ParamTypeArray itemType -> paramTypeToBaseHaskellType itemType
 
-paramTypeToBaseBeelineType :: HC.FromCode c => OperationParamType -> c
-paramTypeToBaseBeelineType paramType =
+paramTypeToBaseBeelineType ::
+  (HC.FromCode c, Semigroup c) =>
+  HC.ModuleName ->
+  HC.TypeName ->
+  OperationParamType ->
+  c
+paramTypeToBaseBeelineType moduleName typeName paramType =
   case paramType of
     ParamTypeString -> beelineTextParam
     ParamTypeBoolean -> beelineBooleanParam
+    ParamTypeEnum _ ->
+      let
+        typeNameText =
+          HC.typeNameText typeName
+
+        typeModuleName =
+          HC.typeNameModule typeName
+
+        qualifier =
+          if moduleName == typeModuleName
+            then Nothing
+            else Just typeNameText
+
+        toTextName =
+          HC.toVarName
+            typeModuleName
+            qualifier
+            (typeNameText <> "ToText")
+      in
+        beelineEnumParam toTextName
     ParamTypeInteger -> beelineIntegerParam
     ParamTypeInt -> beelineIntParam
     ParamTypeInt8 -> beelineInt8Param
     ParamTypeInt16 -> beelineInt16Param
     ParamTypeInt32 -> beelineInt32Param
     ParamTypeInt64 -> beelineInt64Param
-    ParamTypeArray itemType -> paramTypeToBaseBeelineType itemType
+    ParamTypeArray itemType -> paramTypeToBaseBeelineType moduleName typeName itemType
 
 operationParamHeader :: HC.ModuleName -> HC.TypeName -> HC.VarName -> HC.HaskellCode
 operationParamHeader moduleName typeName paramDef =
@@ -529,25 +561,25 @@ generateSchemaCode typeMap codeGenType = do
     format =
       codeGenTypeDataFormat codeGenType
 
-    header =
-      schemaTypeModuleHeader moduleName typeName
-
-  moduleBody <-
+  (extraExports, moduleBody) <-
     case format of
       CodeGenNewType baseTypeInfo ->
         pure $
-          generateHaskellNewtype
+          generateFleeceNewtype
             typeName
             (schemaTypeExpr baseTypeInfo)
             (schemaTypeSchema baseTypeInfo)
       CodeGenEnum values ->
-        pure $ generateHaskellEnum typeName values
+        pure $ generateFleeceEnum typeName values
       CodeGenObject fields ->
-        generateHaskellObject typeMap typeName fields
+        generateFleeceObject typeMap typeName fields
       CodeGenArray itemType ->
-        generateHaskellArray typeMap typeName itemType
+        generateFleeceArray typeMap typeName itemType
 
   let
+    header =
+      schemaTypeModuleHeader moduleName typeName extraExports
+
     code =
       HC.declarations $
         [ "{-# LANGUAGE NoImplicitPrelude #-}"
@@ -558,18 +590,26 @@ generateSchemaCode typeMap codeGenType = do
 
   pure (path, code)
 
-schemaTypeModuleHeader :: HC.ModuleName -> HC.TypeName -> HC.HaskellCode
-schemaTypeModuleHeader moduleName typeName =
+schemaTypeModuleHeader ::
+  HC.ModuleName -> HC.TypeName -> [HC.VarName] -> HC.HaskellCode
+schemaTypeModuleHeader moduleName typeName extraExports =
   let
     schemaName =
       fleeceSchemaNameForType typeName
+
+    exportLines =
+      HC.delimitLines
+        "( "
+        ", "
+        ( (HC.typeNameToCode Nothing typeName <> "(..)")
+            : HC.varNameToCode Nothing schemaName
+            : map (HC.varNameToCode Nothing) extraExports
+        )
   in
     HC.lines
-      [ "module " <> HC.toCode moduleName
-      , HC.indent 2 ("( " <> HC.typeNameToCode Nothing typeName <> "(..)")
-      , HC.indent 2 (", " <> HC.varNameToCode Nothing schemaName)
-      , HC.indent 2 ") where"
-      ]
+      ( "module " <> HC.toCode moduleName
+          : map (HC.indent 2) (exportLines <> [") where"])
+      )
 
 data ImportItems = ImportItems
   { unqualifiedImports :: Set.Set T.Text
@@ -658,12 +698,12 @@ importDeclarations thisModuleName code =
   in
     HC.lines importLines
 
-generateHaskellNewtype ::
+generateFleeceNewtype ::
   HC.TypeName ->
   HC.TypeExpression ->
   HC.HaskellCode ->
-  HC.HaskellCode
-generateHaskellNewtype wrapperName baseType schemaName =
+  ([HC.VarName], HC.HaskellCode)
+generateFleeceNewtype wrapperName baseType schemaName =
   let
     newtypeDecl =
       HC.newtype_ wrapperName baseType
@@ -672,67 +712,40 @@ generateHaskellNewtype wrapperName baseType schemaName =
       fleeceSchemaForType wrapperName $
         [ fleeceCoreVar "coerceSchema" <> " " <> schemaName
         ]
+
+    extraExports =
+      []
+
+    body =
+      HC.declarations
+        [ newtypeDecl
+        , fleeceSchema
+        ]
   in
-    HC.declarations
-      [ newtypeDecl
-      , fleeceSchema
-      ]
+    (extraExports, body)
 
-generateHaskellEnum :: HC.TypeName -> [T.Text] -> HC.HaskellCode
-generateHaskellEnum typeName enumValues =
+generateFleeceEnum ::
+  HC.TypeName ->
+  [T.Text] ->
+  ([HC.VarName], HC.HaskellCode)
+generateFleeceEnum typeName enumValues =
   let
-    mkEnumItem t =
-      (t, HC.toConstructorName t)
-
-    enumItems =
-      map mkEnumItem enumValues
-
-    moduleName =
-      HC.typeNameModule typeName
-
-    enumDeclaration =
-      HC.enum typeName (map snd enumItems)
-
-    toTextName =
-      HC.toVarName
-        moduleName
-        Nothing
-        (HC.typeNameText typeName <> "ToText")
-
-    toTextType =
-      HC.typeNameToCode Nothing typeName
-        <> " -> "
-        <> HC.typeNameToCodeDefaultQualification textType
-
-    toText =
-      HC.lines
-        ( HC.typeAnnotate toTextName toTextType
-            : HC.varNameToCode Nothing toTextName <> " v ="
-            : HC.indent 2 (HC.varNameToCodeDefaultQualification textPack <> " " <> HC.dollar)
-            : HC.indent 4 "case v of"
-            : map (HC.indent 6 . mkToTextCase) enumItems
-        )
-
-    mkToTextCase (text, constructor) =
-      HC.caseMatch constructor (HC.stringLiteral text)
+    (toTextName, enum) =
+      generateEnum typeName enumValues
 
     fleeceSchema =
       fleeceSchemaForType typeName $
         [ fleeceCoreVar "boundedEnum" <> " " <> HC.varNameToCode Nothing toTextName
         ]
   in
-    HC.declarations
-      [ enumDeclaration
-      , toText
-      , fleeceSchema
-      ]
+    ([toTextName], HC.declarations [enum, fleeceSchema])
 
-generateHaskellObject ::
+generateFleeceObject ::
   TypeMap ->
   HC.TypeName ->
   [CodeGenObjectField] ->
-  CodeGen HC.HaskellCode
-generateHaskellObject typeMap typeName codeGenFields = do
+  CodeGen ([HC.VarName], HC.HaskellCode)
+generateFleeceObject typeMap typeName codeGenFields = do
   let
     moduleName =
       HC.typeNameModule typeName
@@ -765,21 +778,26 @@ generateHaskellObject typeMap typeName codeGenFields = do
             : map (HC.indent 4 . fleeceField) fields
         )
 
-  pure $
-    HC.declarations
-      [ recordDecl
-      , fleeceSchema
-      ]
+    extraExports =
+      []
 
-generateHaskellArray ::
+    body =
+      HC.declarations
+        [ recordDecl
+        , fleeceSchema
+        ]
+
+  pure $ (extraExports, body)
+
+generateFleeceArray ::
   TypeMap ->
   HC.TypeName ->
   CodeGenObjectFieldType ->
-  CodeGen HC.HaskellCode
-generateHaskellArray typeMap typeName itemType = do
+  CodeGen ([HC.VarName], HC.HaskellCode)
+generateFleeceArray typeMap typeName itemType = do
   typeInfo <- fmap arrayTypeInfo (resolveFieldTypeInfo typeMap itemType)
   pure $
-    generateHaskellNewtype
+    generateFleeceNewtype
       typeName
       (schemaTypeExpr typeInfo)
       (schemaTypeSchema typeInfo)
@@ -908,6 +926,55 @@ fleeceSchemaForType typeName bodyLines =
           : declImpl
           : map (HC.indent 2) bodyLines
       )
+
+generateEnum ::
+  HC.TypeName ->
+  [T.Text] ->
+  (HC.VarName, HC.HaskellCode)
+generateEnum typeName enumValues =
+  let
+    mkEnumItem t =
+      (t, HC.toConstructorName t)
+
+    enumItems =
+      map mkEnumItem enumValues
+
+    moduleName =
+      HC.typeNameModule typeName
+
+    enumDeclaration =
+      HC.enum typeName (map snd enumItems)
+
+    toTextName =
+      HC.toVarName
+        moduleName
+        Nothing
+        (HC.typeNameText typeName <> "ToText")
+
+    toTextType =
+      HC.typeNameToCode Nothing typeName
+        <> " -> "
+        <> HC.typeNameToCodeDefaultQualification textType
+
+    toText =
+      HC.lines
+        ( HC.typeAnnotate toTextName toTextType
+            : HC.varNameToCode Nothing toTextName <> " v ="
+            : HC.indent 2 (HC.varNameToCodeDefaultQualification textPack <> " " <> HC.dollar)
+            : HC.indent 4 "case v of"
+            : map (HC.indent 6 . mkToTextCase) enumItems
+        )
+
+    mkToTextCase (text, constructor) =
+      HC.caseMatch constructor (HC.stringLiteral text)
+
+    body =
+      HC.declarations
+        [ enumDeclaration
+        , toText
+        ]
+  in
+    (toTextName, body)
 
 data CodeSection
   = Type
@@ -1038,6 +1105,12 @@ beelineTextParam =
 beelineBooleanParam :: HC.FromCode c => c
 beelineBooleanParam =
   beelineRoutingVar "booleanParam"
+
+beelineEnumParam :: (HC.FromCode c, Semigroup c) => HC.VarName -> c
+beelineEnumParam toTextName =
+  beelineRoutingVar "boundedEnumParam"
+    <> HC.fromText " "
+    <> HC.varNameToCodeDefaultQualification toTextName
 
 beelineIntegerParam :: HC.FromCode c => c
 beelineIntegerParam =

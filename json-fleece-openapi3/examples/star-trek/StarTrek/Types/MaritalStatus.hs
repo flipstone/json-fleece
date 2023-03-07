@@ -3,6 +3,7 @@
 module StarTrek.Types.MaritalStatus
   ( MaritalStatus(..)
   , maritalStatusSchema
+  , maritalStatusToText
   ) where
 
 import qualified Data.Text as T

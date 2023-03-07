@@ -3,6 +3,7 @@
 module StarTrek.Types.VideoReleaseFormat
   ( VideoReleaseFormat(..)
   , videoReleaseFormatSchema
+  , videoReleaseFormatToText
   ) where
 
 import qualified Data.Text as T

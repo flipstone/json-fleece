@@ -20,13 +20,16 @@ library
       TestCases.Operations.GetMultiplePathsParams.Param1
       TestCases.Operations.GetMultiplePathsParams.Param2
       TestCases.Operations.ParamSchemaReference
+      TestCases.Operations.ParamSchemaReference.EnumParam
       TestCases.Operations.ParamSchemaReference.StringParam
       TestCases.Operations.ParamSchemaReferenceArray
       TestCases.Operations.ParamSchemaReferenceArray.ArrayParam
       TestCases.Operations.TestCases.QueryParams
       TestCases.Operations.TestCases.QueryParams.BooleanParam
+      TestCases.Operations.TestCases.QueryParams.InlineEnumParam
       TestCases.Operations.TestCases.QueryParams.StringArrayParam
       TestCases.Operations.TestCases.QueryParams.StringParam
+      TestCases.Types.EnumParam
       TestCases.Types.FieldTestCases
       TestCases.Types.FieldTestCases.ArrayFieldItem
       TestCases.Types.FieldTestCases.NullableArrayFieldItem

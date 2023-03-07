@@ -1712,13 +1712,16 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param1.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param2.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReference.hs
+    examples/test-cases/TestCases/Operations/ParamSchemaReference/EnumParam.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReference/StringParam.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReferenceArray.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReferenceArray/ArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/BooleanParam.hs
+    examples/test-cases/TestCases/Operations/TestCases/QueryParams/InlineEnumParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/StringArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/StringParam.hs
+    examples/test-cases/TestCases/Types/EnumParam.hs
     examples/test-cases/TestCases/Types/FieldTestCases.hs
     examples/test-cases/TestCases/Types/FieldTestCases/ArrayFieldItem.hs
     examples/test-cases/TestCases/Types/FieldTestCases/NullableArrayFieldItem.hs
