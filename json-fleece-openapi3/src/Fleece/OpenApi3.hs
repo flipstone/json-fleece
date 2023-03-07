@@ -2,7 +2,9 @@
 
 module Fleece.OpenApi3
   ( generateOpenApiFleeceCode
-  , mkSchemaTypeMap
+  , mkSchemaMap
+  , SchemaMap
+  , SchemaEntry (..)
   ) where
 
 import qualified Data.Aeson as Aeson
@@ -13,6 +15,7 @@ import qualified Data.OpenApi as OA
 import qualified Data.Text as T
 
 import qualified Fleece.CodeGenUtil as CGU
+import qualified Fleece.CodeGenUtil.HaskellCode as HC
 
 generateOpenApiFleeceCode ::
   OA.OpenApi ->
@@ -21,11 +24,19 @@ generateOpenApiFleeceCode swagger = do
   typeMap <- mkCodeGenTypes swagger
   CGU.generateFleeceCode typeMap
 
+type SchemaMap =
+  Map.Map T.Text SchemaEntry
+
+data SchemaEntry = SchemaEntry
+  { schemaCodeGenType :: CGU.CodeGenType
+  , schemaOpenApiSchema :: OA.Schema
+  }
+
 mkCodeGenTypes :: OA.OpenApi -> CGU.CodeGen CGU.TypeMap
 mkCodeGenTypes openApi = do
-  typeMap <-
+  schemaMap <-
     fmap Map.unions
-      . traverse (uncurry mkSchemaTypeMap)
+      . traverse (uncurry mkSchemaMap)
       . IOHM.toList
       . OA._componentsSchemas
       . OA._openApiComponents
@@ -37,14 +48,17 @@ mkCodeGenTypes openApi = do
         . OA._openApiPaths
         $ openApi
 
-  pathTypes <- traverse (uncurry $ mkPathItem typeMap) pathItems
+    typeMap =
+      fmap (CGU.CodeGenItemType . schemaCodeGenType) schemaMap
+
+  pathTypes <- traverse (uncurry $ mkPathItem schemaMap) pathItems
   pure $ Map.unions (typeMap : pathTypes)
 
-mkPathItem :: CGU.TypeMap -> FilePath -> OA.PathItem -> CGU.CodeGen CGU.TypeMap
-mkPathItem typeMap filePath pathItem =
+mkPathItem :: SchemaMap -> FilePath -> OA.PathItem -> CGU.CodeGen CGU.TypeMap
+mkPathItem schemaMap filePath pathItem =
   fmap Map.unions $
     traverse
-      (uncurry $ mkOperation typeMap filePath pathItem)
+      (uncurry $ mkOperation schemaMap filePath pathItem)
       (pathItemOperations pathItem)
 
 pathItemOperations :: OA.PathItem -> [(T.Text, OA.Operation)]
@@ -68,13 +82,13 @@ pathItemOperations pathItem =
       ]
 
 mkOperation ::
-  CGU.TypeMap ->
+  SchemaMap ->
   FilePath ->
   OA.PathItem ->
   T.Text ->
   OA.Operation ->
   CGU.CodeGen CGU.TypeMap
-mkOperation typeMap filePath pathItem method operation = do
+mkOperation schemaMap filePath pathItem method operation = do
   let
     pathTextParts =
       filter (not . T.null)
@@ -88,13 +102,17 @@ mkOperation typeMap filePath pathItem method operation = do
         Nothing -> T.intercalate "." pathTextParts
 
   params <-
-    mkOperationParams typeMap operationKey pathItem operation
+    mkOperationParams schemaMap operationKey pathItem operation
 
   let
-    lookupParam name =
+    lookupParamRef name =
       case Map.lookup name params of
-        Just param ->
-          pure param
+        Just codeGenParam ->
+          pure $
+            CGU.PathParamRef
+              (CGU.codeGenOperationParamName codeGenParam)
+              (CGU.codeGenOperationParamTypeName codeGenParam)
+              (CGU.codeGenOperationParamDefName codeGenParam)
         Nothing ->
           CGU.codeGenError $
             "Parameter definition not found for "
@@ -106,7 +124,7 @@ mkOperation typeMap filePath pathItem method operation = do
 
     mkPiece text =
       if "{" `T.isPrefixOf` text && "}" `T.isSuffixOf` text
-        then CGU.PathParamRef <$> lookupParam (T.drop 1 . T.dropEnd 1 $ text)
+        then lookupParamRef (T.drop 1 . T.dropEnd 1 $ text)
         else pure (CGU.PathLiteral text)
 
   pathPieces <- traverse mkPiece pathTextParts
@@ -124,7 +142,7 @@ mkOperation typeMap filePath pathItem method operation = do
       , CGU.CodeGenItemOperationParam param
       )
 
-    paramTypes =
+    paramModules =
       Map.fromList
         . map mkParamEntry
         . Map.toList
@@ -132,18 +150,18 @@ mkOperation typeMap filePath pathItem method operation = do
 
   pure $
     Map.singleton operationKey (CGU.CodeGenItemOperation codeGenOperation)
-      <> paramTypes
+      <> paramModules
 
 mkOperationParams ::
-  CGU.TypeMap ->
+  SchemaMap ->
   T.Text ->
   OA.PathItem ->
   OA.Operation ->
   CGU.CodeGen (Map.Map T.Text CGU.CodeGenOperationParam)
-mkOperationParams typeMap operationKey pathItem operation = do
+mkOperationParams schemaMap operationKey pathItem operation = do
   paramList <-
     traverse
-      (mkOperationParam typeMap operationKey)
+      (mkOperationParam schemaMap operationKey)
       (OA._pathItemParameters pathItem <> OA._operationParameters operation)
 
   let
@@ -155,11 +173,11 @@ mkOperationParams typeMap operationKey pathItem operation = do
   pure paramMap
 
 mkOperationParam ::
-  CGU.TypeMap ->
+  SchemaMap ->
   T.Text ->
   OA.Referenced OA.Param ->
   CGU.CodeGen CGU.CodeGenOperationParam
-mkOperationParam _typeMap operationKey paramRef = do
+mkOperationParam schemaMap operationKey paramRef = do
   param <-
     case paramRef of
       OA.Ref _ -> CGU.codeGenError "Param refs not yet implemethed"
@@ -169,35 +187,70 @@ mkOperationParam _typeMap operationKey paramRef = do
     paramName =
       OA._paramName param
 
-  (_moduleName, paramTypeName) <-
+  (moduleName, paramTypeName) <-
     CGU.inferTypeForInputName CGU.Operation (operationKey <> "." <> paramName)
 
-  schema <-
-    case OA._paramSchema param of
-      Just (OA.Inline schema) ->
-        pure schema
-      Just (OA.Ref _) ->
-        CGU.codeGenError "Param schema refs not yet implemeted"
-      Nothing ->
-        CGU.codeGenError $
-          "No schema found for param "
-            <> T.unpack paramName
-            <> " of operation "
-            <> T.unpack operationKey
+  case OA._paramSchema param of
+    Just (OA.Inline schema) -> do
+      paramType <-
+        schemaTypeToParamType
+          paramName
+          (OA._paramIn param)
+          operationKey
+          schema
 
-  paramType <-
-    schemaTypeToParamType
-      paramName
-      (OA._paramIn param)
-      operationKey
-      schema
+      pure
+        CGU.CodeGenOperationParam
+          { CGU.codeGenOperationParamName = paramName
+          , CGU.codeGenOperationParamModuleName = moduleName
+          , CGU.codeGenOperationParamTypeName = paramTypeName
+          , CGU.codeGenOperationParamType = paramType
+          , CGU.codeGenOperationParamDefName =
+              HC.toVarName
+                moduleName
+                (Just (HC.typeNameText paramTypeName))
+                "paramDef"
+          }
+    Just (OA.Ref (OA.Reference refKey)) ->
+      case Map.lookup refKey schemaMap of
+        Just schemaEntry -> do
+          let
+            codeGenType =
+              schemaCodeGenType schemaEntry
 
-  pure $
-    CGU.CodeGenOperationParam
-      { CGU.codeGenOperationParamName = paramName
-      , CGU.codeGenOperationParamTypeName = paramTypeName
-      , CGU.codeGenOperationParamType = paramType
-      }
+          paramType <-
+            schemaTypeToParamType
+              paramName
+              (OA._paramIn param)
+              operationKey
+              (schemaOpenApiSchema schemaEntry)
+
+          pure
+            CGU.CodeGenOperationParam
+              { CGU.codeGenOperationParamName = paramName
+              , CGU.codeGenOperationParamModuleName = moduleName
+              , CGU.codeGenOperationParamTypeName = CGU.codeGenTypeName codeGenType
+              , CGU.codeGenOperationParamType = paramType
+              , CGU.codeGenOperationParamDefName =
+                  HC.toVarName
+                    moduleName
+                    (Just (HC.typeNameText paramTypeName))
+                    "paramDef"
+              }
+        Nothing ->
+          CGU.codeGenError $
+            "Schema reference "
+              <> show refKey
+              <> " not found for param "
+              <> T.unpack paramName
+              <> " of operation "
+              <> T.unpack operationKey
+    Nothing ->
+      CGU.codeGenError $
+        "No schema found for param "
+          <> T.unpack paramName
+          <> " of operation "
+          <> T.unpack operationKey
 
 schemaTypeToParamType ::
   T.Text ->
@@ -262,8 +315,9 @@ schemaTypeToParamType paramName paramLocation operationKey schema =
           <> " of operation "
           <> T.unpack operationKey
 
-mkSchemaTypeMap :: T.Text -> OA.Schema -> CGU.CodeGen CGU.TypeMap
-mkSchemaTypeMap schemaKey schema = do
+mkSchemaMap :: T.Text -> OA.Schema -> CGU.CodeGen SchemaMap
+mkSchemaMap schemaKey schema = do
+  (_moduleName, typeName) <- CGU.inferTypeForInputName CGU.Type schemaKey
   baseSchemaInfo <- CGU.inferSchemaInfoForInputName schemaKey
 
   (inlinedTypes, dataFormat) <- mkOpenApiDataFormat schemaKey schema
@@ -277,14 +331,21 @@ mkSchemaTypeMap schemaKey schema = do
     codeGenType =
       CGU.CodeGenType
         { CGU.codeGenTypeOriginalName = schemaKey
+        , CGU.codeGenTypeName = typeName
         , CGU.codeGenTypeSchemaInfo = schemaInfo
         , CGU.codeGenTypeDescription = OA._schemaDescription schema
         , CGU.codeGenTypeDataFormat = dataFormat
         }
 
-  pure $ Map.singleton schemaKey (CGU.CodeGenItemType codeGenType) <> inlinedTypes
+    schemaEntry =
+      SchemaEntry
+        { schemaOpenApiSchema = schema
+        , schemaCodeGenType = codeGenType
+        }
 
-mkOpenApiDataFormat :: T.Text -> OA.Schema -> CGU.CodeGen (CGU.TypeMap, CGU.CodeGenDataFormat)
+  pure $ Map.singleton schemaKey schemaEntry <> inlinedTypes
+
+mkOpenApiDataFormat :: T.Text -> OA.Schema -> CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
 mkOpenApiDataFormat typeName schema =
   let
     noRefs mkFormat = do
@@ -342,13 +403,13 @@ mkOpenApiIntegerFormat schema =
 mkOpenApiObjectFormat ::
   T.Text ->
   OA.Schema ->
-  CGU.CodeGen (CGU.TypeMap, CGU.CodeGenDataFormat)
+  CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
 mkOpenApiObjectFormat schemaKey schema = do
   let
     requiredParams =
       OA._schemaRequired schema
 
-  (typeMaps, fields) <-
+  (schemaMaps, fields) <-
     fmap unzip
       . traverse (uncurry $ propertyToCodeGenField schemaKey requiredParams)
       . filter (\(prop, _) -> not (prop `elem` unsupportedProperties))
@@ -356,7 +417,7 @@ mkOpenApiObjectFormat schemaKey schema = do
       . OA._schemaProperties
       $ schema
 
-  pure (Map.unions typeMaps, CGU.CodeGenObject fields)
+  pure (Map.unions schemaMaps, CGU.CodeGenObject fields)
 
 unsupportedProperties :: [T.Text]
 unsupportedProperties =
@@ -366,11 +427,12 @@ unsupportedProperties =
 mkOpenApiArrayFormat ::
   T.Text ->
   OA.Schema ->
-  CGU.CodeGen (CGU.TypeMap, CGU.CodeGenDataFormat)
+  CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
 mkOpenApiArrayFormat schemaKey schema = do
   fmap (fmap CGU.CodeGenArray) $
     schemaArrayItemsToFieldType
       schemaKey
+      schema
       schemaKey
       (OA._schemaItems schema)
 
@@ -379,9 +441,9 @@ propertyToCodeGenField ::
   [OA.ParamName] ->
   OA.ParamName ->
   OA.Referenced OA.Schema ->
-  CGU.CodeGen (CGU.TypeMap, CGU.CodeGenObjectField)
+  CGU.CodeGen (SchemaMap, CGU.CodeGenObjectField)
 propertyToCodeGenField parentSchemaKey requiredParams name schemaRef = do
-  (typeMap, codeGenFieldType) <-
+  (schemaMap, codeGenFieldType) <-
     schemaRefToFieldType parentSchemaKey name schemaRef
 
   let
@@ -392,13 +454,13 @@ propertyToCodeGenField parentSchemaKey requiredParams name schemaRef = do
         , CGU.codeGenFieldType = codeGenFieldType
         }
 
-  pure (typeMap, field)
+  pure (schemaMap, field)
 
 schemaRefToFieldType ::
   T.Text ->
   OA.ParamName ->
   OA.Referenced OA.Schema ->
-  CGU.CodeGen (CGU.TypeMap, CGU.CodeGenObjectFieldType)
+  CGU.CodeGen (SchemaMap, CGU.CodeGenObjectFieldType)
 schemaRefToFieldType parentKey fieldName schemaRef =
   case schemaRef of
     OA.Ref ref ->
@@ -413,6 +475,7 @@ schemaRefToFieldType parentKey fieldName schemaRef =
             fmap (fmap (CGU.CodeGenFieldArray nullable)) $
               schemaArrayItemsToFieldType
                 parentKey
+                inline
                 fieldName
                 (OA._schemaItems inline)
         _ -> do
@@ -423,15 +486,16 @@ schemaRefToFieldType parentKey fieldName schemaRef =
             childRef =
               CGU.TypeReference key
 
-          typeMap <- mkSchemaTypeMap key inline
-          pure (typeMap, childRef)
+          schemaMap <- mkSchemaMap key inline
+          pure (schemaMap, childRef)
 
 schemaArrayItemsToFieldType ::
   T.Text ->
+  OA.Schema ->
   OA.ParamName ->
   Maybe OA.OpenApiItems ->
-  CGU.CodeGen (CGU.TypeMap, CGU.CodeGenObjectFieldType)
-schemaArrayItemsToFieldType parentKey fieldName arrayItems =
+  CGU.CodeGen (SchemaMap, CGU.CodeGenObjectFieldType)
+schemaArrayItemsToFieldType parentKey schema fieldName arrayItems =
   let
     fieldError err =
       CGU.codeGenError $
@@ -453,20 +517,25 @@ schemaArrayItemsToFieldType parentKey fieldName arrayItems =
           fieldType =
             CGU.TypeReference key
 
+        (_moduleName, typeName) <- CGU.inferTypeForInputName CGU.Type key
         schemaTypeInfo <- CGU.inferSchemaInfoForInputName key
 
         let
-          typeMap =
+          schemaMap =
             Map.singleton key $
-              CGU.CodeGenItemType $
-                CGU.CodeGenType
-                  { CGU.codeGenTypeOriginalName = key
-                  , CGU.codeGenTypeSchemaInfo = schemaTypeInfo
-                  , CGU.codeGenTypeDescription = Nothing
-                  , CGU.codeGenTypeDataFormat = CGU.textFormat
-                  }
+              SchemaEntry
+                { schemaOpenApiSchema = schema
+                , schemaCodeGenType =
+                    CGU.CodeGenType
+                      { CGU.codeGenTypeOriginalName = key
+                      , CGU.codeGenTypeName = typeName
+                      , CGU.codeGenTypeSchemaInfo = schemaTypeInfo
+                      , CGU.codeGenTypeDescription = Nothing
+                      , CGU.codeGenTypeDataFormat = CGU.textFormat
+                      }
+                }
 
-        pure (typeMap, fieldType)
+        pure (schemaMap, fieldType)
       Just (OA.OpenApiItemsArray _itemSchemaRefs) ->
         fieldError "Heterogeneous arrays are not supported"
       Nothing ->

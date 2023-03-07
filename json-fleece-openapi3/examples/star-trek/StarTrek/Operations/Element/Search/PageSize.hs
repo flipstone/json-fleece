@@ -3,7 +3,7 @@
 
 module StarTrek.Operations.Element.Search.PageSize
   ( PageSize(..)
-  , def
+  , paramDef
   ) where
 
 import qualified Beeline.Routing as R
@@ -13,6 +13,6 @@ import Prelude (Eq, Show)
 newtype PageSize = PageSize I.Int32
   deriving (Show, Eq)
 
-def :: R.ParameterDefinition PageSize
-def =
+paramDef :: R.ParameterDefinition PageSize
+paramDef =
   R.coerceParam (R.int32Param "pageSize")

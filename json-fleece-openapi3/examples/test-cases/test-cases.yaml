@@ -48,8 +48,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FieldTestCases'
+  /test-cases/param-ref/{string-param}:
+    get:
+      operationId: ParamSchemaReference
+      parameters:
+        - name: string-param
+          in: path
+          schema:
+            $ref: '#/components/schemas/string-param'
+      responses:
+        '200':
+          description: "Successful Get"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldTestCases'
 components:
   schemas:
+    string-param:
+      type: string
     FieldTestCases:
       type: object
       description: A schema that contains test cases for each kind of field

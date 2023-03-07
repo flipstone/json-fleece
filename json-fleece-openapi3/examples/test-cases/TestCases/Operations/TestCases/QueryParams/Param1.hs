@@ -3,7 +3,7 @@
 
 module TestCases.Operations.TestCases.QueryParams.Param1
   ( Param1(..)
-  , def
+  , paramDef
   ) where
 
 import qualified Beeline.Routing as R
@@ -13,6 +13,6 @@ import Prelude (Eq, Show)
 newtype Param1 = Param1 T.Text
   deriving (Show, Eq)
 
-def :: R.ParameterDefinition Param1
-def =
+paramDef :: R.ParameterDefinition Param1
+paramDef =
   R.coerceParam (R.textParam "param1")

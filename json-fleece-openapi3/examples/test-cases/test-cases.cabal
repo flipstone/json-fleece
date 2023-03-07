@@ -19,6 +19,8 @@ library
       TestCases.Operations.GetMultiplePathsParams
       TestCases.Operations.GetMultiplePathsParams.Param1
       TestCases.Operations.GetMultiplePathsParams.Param2
+      TestCases.Operations.ParamSchemaReference
+      TestCases.Operations.ParamSchemaReference.StringParam
       TestCases.Operations.TestCases.QueryParams
       TestCases.Operations.TestCases.QueryParams.Param1
       TestCases.Operations.TestCases.QueryParams.Param2
@@ -57,6 +59,7 @@ library
       TestCases.Types.NameConflicts.Then
       TestCases.Types.NameConflicts.Type
       TestCases.Types.NameConflicts.Where
+      TestCases.Types.StringParam
       TestCases.Types.TopLevelArray
       TestCases.Types.TopLevelArray.TopLevelArrayItem
       TestCases.Types.TopLevelArrayNullable

@@ -23,6 +23,6 @@ route =
   R.get $
     R.make GetMultiplePathsParams
       /- "test-cases"
-      /+ R.Param Param1.def param1
+      /+ R.Param Param1.paramDef param1
       /- "multiple-path-params"
-      /+ R.Param Param2.def param2
+      /+ R.Param Param2.paramDef param2

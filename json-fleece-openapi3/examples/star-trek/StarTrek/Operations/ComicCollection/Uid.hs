@@ -3,7 +3,7 @@
 
 module StarTrek.Operations.ComicCollection.Uid
   ( Uid(..)
-  , def
+  , paramDef
   ) where
 
 import qualified Beeline.Routing as R
@@ -13,6 +13,6 @@ import Prelude (Eq, Show)
 newtype Uid = Uid T.Text
   deriving (Show, Eq)
 
-def :: R.ParameterDefinition Uid
-def =
+paramDef :: R.ParameterDefinition Uid
+paramDef =
   R.coerceParam (R.textParam "uid")

@@ -3,7 +3,7 @@
 
 module StarTrek.Operations.Series.Search.Sort
   ( Sort(..)
-  , def
+  , paramDef
   ) where
 
 import qualified Beeline.Routing as R
@@ -13,6 +13,6 @@ import Prelude (Eq, Show)
 newtype Sort = Sort T.Text
   deriving (Show, Eq)
 
-def :: R.ParameterDefinition Sort
-def =
+paramDef :: R.ParameterDefinition Sort
+paramDef =
   R.coerceParam (R.textParam "sort")

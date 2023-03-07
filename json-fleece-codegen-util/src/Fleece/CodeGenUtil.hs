@@ -49,7 +49,7 @@ module Fleece.CodeGenUtil
 import Control.Monad.Reader (ReaderT, ask, runReaderT)
 import Control.Monad.Trans (lift)
 import qualified Data.Map.Strict as Map
-import Data.Maybe (mapMaybe)
+import Data.Maybe (catMaybes, mapMaybe)
 import qualified Data.Set as Set
 import qualified Data.Text as T
 
@@ -85,6 +85,7 @@ data CodeGenItem
 
 data CodeGenType = CodeGenType
   { codeGenTypeOriginalName :: T.Text
+  , codeGenTypeName :: HC.TypeName
   , codeGenTypeSchemaInfo :: SchemaTypeInfo
   , codeGenTypeDescription :: Maybe T.Text
   , codeGenTypeDataFormat :: CodeGenDataFormat
@@ -98,13 +99,15 @@ data CodeGenOperation = CodeGenOperation
 
 data CodeGenOperationParam = CodeGenOperationParam
   { codeGenOperationParamName :: T.Text
+  , codeGenOperationParamModuleName :: HC.ModuleName
   , codeGenOperationParamTypeName :: HC.TypeName
+  , codeGenOperationParamDefName :: HC.VarName
   , codeGenOperationParamType :: OperationParamType
   }
 
 data OperationPathPiece
   = PathLiteral T.Text
-  | PathParamRef CodeGenOperationParam
+  | PathParamRef T.Text HC.TypeName HC.VarName
 
 data OperationParamType
   = ParamTypeString
@@ -319,10 +322,10 @@ generateOperationCode _typeMap codeGenOperation = do
 
     mkRouteField pathPiece =
       case pathPiece of
-        PathParamRef param ->
+        PathParamRef paramNameText paramTypeName _paramDefName ->
           Just
-            ( HC.toVarName moduleName Nothing (codeGenOperationParamName param)
-            , HC.typeNameToCodeDefaultQualification (codeGenOperationParamTypeName param)
+            ( HC.toVarName moduleName Nothing paramNameText
+            , HC.typeNameToCodeDefaultQualification paramTypeName
             , Nothing
             )
         PathLiteral _ -> Nothing
@@ -333,27 +336,16 @@ generateOperationCode _typeMap codeGenOperation = do
     mkPiece pathPiece =
       case pathPiece of
         PathLiteral text -> beelinePiece <> " " <> HC.stringLiteral text
-        PathParamRef param ->
+        PathParamRef paramNameText _paramTypeName paramDefName ->
           let
             paramName =
-              HC.toVarName moduleName Nothing
-                . codeGenOperationParamName
-                $ param
-
-            paramTypeName =
-              codeGenOperationParamTypeName param
-
-            paramDef =
-              HC.toVarName
-                (HC.typeNameModule paramTypeName)
-                (Just . HC.typeNameText $ paramTypeName)
-                "def"
+              HC.toVarName moduleName Nothing paramNameText
           in
             beelineParam
               <> " "
               <> beelineMkParam
               <> " "
-              <> HC.varNameToCodeDefaultQualification paramDef
+              <> HC.varNameToCodeDefaultQualification paramDefName
               <> " "
               <> HC.varNameToCode Nothing paramName
 
@@ -409,7 +401,7 @@ generateOperationParamCode codeGenOperationParam = do
       codeGenOperationParamTypeName codeGenOperationParam
 
     moduleName =
-      HC.typeNameModule typeName
+      codeGenOperationParamModuleName codeGenOperationParam
 
     filePath =
       T.unpack (T.replace "." "/" (HC.moduleNameToText moduleName) <> ".hs")
@@ -420,33 +412,46 @@ generateOperationParamCode codeGenOperationParam = do
         , "{-# LANGUAGE OverloadedStrings #-}"
         ]
 
-    header =
-      operationParamHeader moduleName typeName
-
     baseType =
       paramTypeToBaseHaskellType
         (codeGenOperationParamType codeGenOperationParam)
 
     typeDeclaration =
-      HC.newtype_
-        typeName
-        (HC.fromCode (HC.typeNameToCodeDefaultQualification baseType))
+      if HC.typeNameModule typeName == moduleName
+        then
+          Just $
+            HC.newtype_
+              typeName
+              (HC.fromCode (HC.typeNameToCodeDefaultQualification baseType))
+        else Nothing
 
     beelineBaseDef =
       paramTypeToBaseBeelineType
         (codeGenOperationParamType codeGenOperationParam)
 
+    defName =
+      codeGenOperationParamDefName $
+        codeGenOperationParam
+
+    typeNameReference =
+      if HC.typeNameModule typeName == moduleName
+        then HC.typeNameToCode Nothing typeName
+        else HC.typeNameToCodeDefaultQualification typeName
+
     defDeclaration =
       HC.lines
-        [ "def :: " <> beelineParamDef <> " " <> HC.typeNameToCode Nothing typeName
-        , "def ="
+        [ HC.typeAnnotate defName (beelineParamDef <> " " <> typeNameReference)
+        , HC.varNameToCode Nothing defName <> " ="
         , HC.indent 2 (beelineCoerceParam <> " (" <> beelineBaseDef <> " " <> HC.stringLiteral paramName <> ")")
         ]
 
+    header =
+      operationParamHeader moduleName typeName defName
+
     moduleBody =
-      HC.declarations
+      HC.declarations . catMaybes $
         [ typeDeclaration
-        , defDeclaration
+        , Just defDeclaration
         ]
 
     code =
@@ -483,14 +488,28 @@ paramTypeToBaseBeelineType paramType =
     ParamTypeInt64 -> beelineInt64Param
     ParamTypeArray itemType -> paramTypeToBaseBeelineType itemType
 
-operationParamHeader :: HC.ModuleName -> HC.TypeName -> HC.HaskellCode
-operationParamHeader moduleName typeName =
-  HC.lines
-    [ "module " <> HC.toCode moduleName
-    , HC.indent 2 ("( " <> HC.typeNameToCode Nothing typeName <> "(..)")
-    , HC.indent 2 (", def")
-    , HC.indent 2 ") where"
-    ]
+operationParamHeader :: HC.ModuleName -> HC.TypeName -> HC.VarName -> HC.HaskellCode
+operationParamHeader moduleName typeName paramDef =
+  let
+    typeExport =
+      if moduleName == HC.typeNameModule typeName
+        then Just (HC.typeNameToCode Nothing typeName <> "(..)")
+        else Nothing
+
+    paramExport =
+      HC.varNameToCode Nothing paramDef
+
+    exportLines =
+      HC.delimitLines "( " ", " $
+        catMaybes
+          [ typeExport
+          , Just paramExport
+          ]
+  in
+    HC.lines
+      ( "module " <> HC.toCode moduleName
+          : map (HC.indent 2) (exportLines <> [") where"])
+      )
 
 generateSchemaCode ::
   TypeMap ->

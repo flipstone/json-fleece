@@ -24,15 +24,20 @@ generateSwaggerFleeceCode swagger = do
   CGU.generateFleeceCode typeMap
 
 mkCodeGenTypes :: SW.Swagger -> CGU.CodeGen CGU.TypeMap
-mkCodeGenTypes =
-  fmap Map.unions
-    . traverse (uncurry mkSchemaTypeMap)
-    . IOHM.toList
-    . SW._swaggerDefinitions
+mkCodeGenTypes swagger = do
+  schemaMap <-
+    fmap Map.unions
+      . traverse (uncurry mkSchemaMap)
+      . IOHM.toList
+      . SW._swaggerDefinitions
+      $ swagger
 
-mkSchemaTypeMap :: T.Text -> SW.Schema -> CGU.CodeGen CGU.TypeMap
-mkSchemaTypeMap schemaKey schema =
-  FOA3.mkSchemaTypeMap schemaKey =<< swaggerSchemaToOpenApi schema
+  pure $
+    fmap (CGU.CodeGenItemType . FOA3.schemaCodeGenType) schemaMap
+
+mkSchemaMap :: T.Text -> SW.Schema -> CGU.CodeGen FOA3.SchemaMap
+mkSchemaMap schemaKey schema =
+  FOA3.mkSchemaMap schemaKey =<< swaggerSchemaToOpenApi schema
 
 swaggerSchemaToOpenApi :: SW.Schema -> CGU.CodeGen OA.Schema
 swaggerSchemaToOpenApi schema = do

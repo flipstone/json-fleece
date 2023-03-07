@@ -3,7 +3,7 @@
 
 module TestCases.Operations.GetMultiplePathsParams.Param2
   ( Param2(..)
-  , def
+  , paramDef
   ) where
 
 import qualified Beeline.Routing as R
@@ -13,6 +13,6 @@ import Prelude (Eq, Show)
 newtype Param2 = Param2 I.Int32
   deriving (Show, Eq)
 
-def :: R.ParameterDefinition Param2
-def =
+paramDef :: R.ParameterDefinition Param2
+paramDef =
   R.coerceParam (R.int32Param "param2")

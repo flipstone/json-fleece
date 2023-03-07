@@ -45,6 +45,7 @@ module Fleece.CodeGenUtil.HaskellCode
   , eitherOf
   , dollar
   , record
+  , delimitLines
   , newtype_
   , deriving_
   , enum
@@ -322,23 +323,30 @@ reservedWords =
     , "where"
     ]
 
+delimitLines :: Semigroup c => c -> c -> [c] -> [c]
+delimitLines beforeFirst separator =
+  let
+    mkLine (n, line) =
+      let
+        prefix =
+          if n == (0 :: Int)
+            then beforeFirst
+            else separator
+      in
+        prefix <> line
+  in
+    map mkLine . zip [0 ..]
+
 record :: TypeName -> [(VarName, TypeExpression, Maybe T.Text)] -> HaskellCode
 record typeName fields =
   let
-    mkField :: (Int, (VarName, TypeExpression, Maybe T.Text)) -> HaskellCode
-    mkField (n, (fieldName, fieldType, fieldDescription)) =
-      let
-        prefix =
-          if n == 0
-            then "{ "
-            else ", "
-      in
-        prefix
-          <> typeAnnotate fieldName fieldType
-          <> maybe "" ((" -- ^ " <>) . fromText . T.replace "\n" " ") fieldDescription
+    mkField :: (VarName, TypeExpression, Maybe T.Text) -> HaskellCode
+    mkField (fieldName, fieldType, fieldDescription) =
+      typeAnnotate fieldName fieldType
+        <> maybe "" ((" -- ^ " <>) . fromText . T.replace "\n" " ") fieldDescription
 
     fieldLines =
-      map mkField (zip [0 ..] fields)
+      delimitLines "{ " ", " (map mkField fields)
 
     derivations =
       deriving_ [eqClass, showClass]
@@ -404,22 +412,15 @@ dollar =
 enum :: TypeName -> [ConstructorName] -> HaskellCode
 enum typeName constructors =
   let
-    mkCon :: (Int, ConstructorName) -> HaskellCode
-    mkCon (n, conName) =
-      let
-        prefix =
-          if n == 0
-            then "= "
-            else "| "
-      in
-        prefix <> toCode conName
+    constructorLines =
+      delimitLines "= " "| " (map toCode constructors)
 
     derivations =
       deriving_ [eqClass, showClass, ordClass, enumClass, boundedClass]
   in
     lines
       ( "data " <> typeNameToCode Nothing typeName
-          : map (indent 2) (map mkCon (zip [0 ..] constructors) <> [derivations])
+          : map (indent 2) (constructorLines <> [derivations])
       )
 
 stringLiteral :: T.Text -> HaskellCode

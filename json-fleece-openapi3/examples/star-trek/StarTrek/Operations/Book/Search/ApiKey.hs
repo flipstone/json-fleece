@@ -3,7 +3,7 @@
 
 module StarTrek.Operations.Book.Search.ApiKey
   ( ApiKey(..)
-  , def
+  , paramDef
   ) where
 
 import qualified Beeline.Routing as R
@@ -13,6 +13,6 @@ import Prelude (Eq, Show)
 newtype ApiKey = ApiKey T.Text
   deriving (Show, Eq)
 
-def :: R.ParameterDefinition ApiKey
-def =
+paramDef :: R.ParameterDefinition ApiKey
+paramDef =
   R.coerceParam (R.textParam "apiKey")

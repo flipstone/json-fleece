@@ -1711,6 +1711,8 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param1.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param2.hs
+    examples/test-cases/TestCases/Operations/ParamSchemaReference.hs
+    examples/test-cases/TestCases/Operations/ParamSchemaReference/StringParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/Param1.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/Param2.hs
@@ -1749,6 +1751,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/NameConflicts/Then.hs
     examples/test-cases/TestCases/Types/NameConflicts/Type.hs
     examples/test-cases/TestCases/Types/NameConflicts/Where.hs
+    examples/test-cases/TestCases/Types/StringParam.hs
     examples/test-cases/TestCases/Types/TopLevelArray.hs
     examples/test-cases/TestCases/Types/TopLevelArray/TopLevelArrayItem.hs
     examples/test-cases/TestCases/Types/TopLevelArrayNullable.hs
