@@ -14,6 +14,7 @@ dependencies:
   - text
   - scientific
   - json-fleece-core
+  - beeline-routing
   - time
 
 ghc-options:

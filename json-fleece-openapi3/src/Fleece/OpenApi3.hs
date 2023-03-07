@@ -8,7 +8,7 @@ module Fleece.OpenApi3
 import qualified Data.Aeson as Aeson
 import qualified Data.HashMap.Strict.InsOrd as IOHM
 import qualified Data.Map.Strict as Map
-import Data.Maybe (catMaybes)
+import Data.Maybe (catMaybes, mapMaybe)
 import qualified Data.OpenApi as OA
 import qualified Data.Text as T
 
@@ -22,12 +22,201 @@ generateOpenApiFleeceCode swagger = do
   CGU.generateFleeceCode typeMap
 
 mkCodeGenTypes :: OA.OpenApi -> CGU.CodeGen CGU.TypeMap
-mkCodeGenTypes =
-  fmap Map.unions
-    . traverse (uncurry mkSchemaTypeMap)
-    . IOHM.toList
-    . OA._componentsSchemas
-    . OA._openApiComponents
+mkCodeGenTypes openApi = do
+  typeMap <-
+    fmap Map.unions
+      . traverse (uncurry mkSchemaTypeMap)
+      . IOHM.toList
+      . OA._componentsSchemas
+      . OA._openApiComponents
+      $ openApi
+
+  let
+    pathItems =
+      IOHM.toList
+        . OA._openApiPaths
+        $ openApi
+
+  pathTypes <- traverse (uncurry $ mkPathItem typeMap) pathItems
+  pure $ Map.unions (typeMap : pathTypes)
+
+mkPathItem :: CGU.TypeMap -> FilePath -> OA.PathItem -> CGU.CodeGen CGU.TypeMap
+mkPathItem typeMap filePath pathItem =
+  fmap Map.unions $
+    traverse
+      (uncurry $ mkOperation typeMap filePath pathItem)
+      (pathItemOperations pathItem)
+
+pathItemOperations :: OA.PathItem -> [(T.Text, OA.Operation)]
+pathItemOperations pathItem =
+  let
+    mkItem (method, accessor) =
+      case accessor pathItem of
+        Nothing -> Nothing
+        Just operation -> Just (method, operation)
+  in
+    mapMaybe
+      mkItem
+      [ ("GET", OA._pathItemGet)
+      , ("PUT", OA._pathItemPut)
+      , ("POST", OA._pathItemPost)
+      , ("DELETE", OA._pathItemDelete)
+      , ("OPTIONS", OA._pathItemOptions)
+      , ("HEAD", OA._pathItemHead)
+      , ("PATCH", OA._pathItemPatch)
+      , ("TRACE", OA._pathItemTrace)
+      ]
+
+mkOperation ::
+  CGU.TypeMap ->
+  FilePath ->
+  OA.PathItem ->
+  T.Text ->
+  OA.Operation ->
+  CGU.CodeGen CGU.TypeMap
+mkOperation typeMap filePath pathItem method operation = do
+  let
+    pathTextParts =
+      filter (not . T.null)
+        . T.splitOn "/"
+        . T.pack
+        $ filePath
+
+    operationKey =
+      case OA._operationOperationId operation of
+        Just operationId -> operationId
+        Nothing -> T.intercalate "." pathTextParts
+
+  params <-
+    mkOperationParams typeMap operationKey pathItem operation
+
+  let
+    lookupParam name =
+      case Map.lookup name params of
+        Just param ->
+          pure param
+        Nothing ->
+          CGU.codeGenError $
+            "Parameter definition not found for "
+              <> show name
+              <> " param of "
+              <> show method
+              <> " operation for "
+              <> filePath
+
+    mkPiece text =
+      if "{" `T.isPrefixOf` text && "}" `T.isSuffixOf` text
+        then CGU.PathParamRef <$> lookupParam (T.drop 1 . T.dropEnd 1 $ text)
+        else pure (CGU.PathLiteral text)
+
+  pathPieces <- traverse mkPiece pathTextParts
+
+  let
+    codeGenOperation =
+      CGU.CodeGenOperation
+        { CGU.codeGenOperationOriginalName = operationKey
+        , CGU.codeGenOperationMethod = method
+        , CGU.codeGenOperationPath = pathPieces
+        }
+
+    mkParamEntry (paramName, param) =
+      ( operationKey <> "." <> paramName
+      , CGU.CodeGenItemOperationParam param
+      )
+
+    paramTypes =
+      Map.fromList
+        . map mkParamEntry
+        . Map.toList
+        $ params
+
+  pure $
+    Map.singleton operationKey (CGU.CodeGenItemOperation codeGenOperation)
+      <> paramTypes
+
+mkOperationParams ::
+  CGU.TypeMap ->
+  T.Text ->
+  OA.PathItem ->
+  OA.Operation ->
+  CGU.CodeGen (Map.Map T.Text CGU.CodeGenOperationParam)
+mkOperationParams typeMap operationKey pathItem operation = do
+  paramList <-
+    traverse
+      (mkOperationParam typeMap operationKey)
+      (OA._pathItemParameters pathItem <> OA._operationParameters operation)
+
+  let
+    paramMap =
+      Map.fromList
+        . map (\param -> (CGU.codeGenOperationParamName param, param))
+        $ paramList
+
+  pure paramMap
+
+mkOperationParam ::
+  CGU.TypeMap ->
+  T.Text ->
+  OA.Referenced OA.Param ->
+  CGU.CodeGen CGU.CodeGenOperationParam
+mkOperationParam _typeMap operationKey paramRef = do
+  param <-
+    case paramRef of
+      OA.Ref _ -> CGU.codeGenError "Param refs not yet implemethed"
+      OA.Inline param -> pure param
+
+  let
+    paramName =
+      OA._paramName param
+
+  (_moduleName, paramTypeName) <-
+    CGU.inferTypeForInputName CGU.Operation (operationKey <> "." <> paramName)
+
+  schema <-
+    case OA._paramSchema param of
+      Just (OA.Inline schema) ->
+        pure schema
+      Just (OA.Ref _) ->
+        CGU.codeGenError "Param schema refs not yet implemeted"
+      Nothing ->
+        CGU.codeGenError $
+          "No schema found for param "
+            <> T.unpack paramName
+            <> " of operation "
+            <> T.unpack operationKey
+
+  paramType <-
+    case OA._schemaType schema of
+      Just OA.OpenApiString ->
+        pure CGU.ParamTypeString
+      Just OA.OpenApiInteger ->
+        case OA._schemaFormat schema of
+          Just "int8" -> pure CGU.ParamTypeInt8
+          Just "int16" -> pure CGU.ParamTypeInt16
+          Just "int32" -> pure CGU.ParamTypeInt32
+          Just "int64" -> pure CGU.ParamTypeInt64
+          _ -> pure CGU.ParamTypeInteger
+      Just otherType ->
+        CGU.codeGenError $
+          "Unsupported schema type found for param "
+            <> T.unpack paramName
+            <> " operation "
+            <> T.unpack operationKey
+            <> ": "
+            <> show otherType
+      Nothing ->
+        CGU.codeGenError $
+          "No schema type found for param "
+            <> T.unpack paramName
+            <> " of operation "
+            <> T.unpack operationKey
+
+  pure $
+    CGU.CodeGenOperationParam
+      { CGU.codeGenOperationParamName = paramName
+      , CGU.codeGenOperationParamTypeName = paramTypeName
+      , CGU.codeGenOperationParamType = paramType
+      }
 
 mkSchemaTypeMap :: T.Text -> OA.Schema -> CGU.CodeGen CGU.TypeMap
 mkSchemaTypeMap schemaKey schema = do
@@ -49,7 +238,7 @@ mkSchemaTypeMap schemaKey schema = do
         , CGU.codeGenTypeDataFormat = dataFormat
         }
 
-  pure $ Map.singleton schemaKey codeGenType <> inlinedTypes
+  pure $ Map.singleton schemaKey (CGU.CodeGenItemType codeGenType) <> inlinedTypes
 
 mkOpenApiDataFormat :: T.Text -> OA.Schema -> CGU.CodeGen (CGU.TypeMap, CGU.CodeGenDataFormat)
 mkOpenApiDataFormat typeName schema =
@@ -225,12 +414,13 @@ schemaArrayItemsToFieldType parentKey fieldName arrayItems =
         let
           typeMap =
             Map.singleton key $
-              CGU.CodeGenType
-                { CGU.codeGenTypeOriginalName = key
-                , CGU.codeGenTypeSchemaInfo = schemaTypeInfo
-                , CGU.codeGenTypeDescription = Nothing
-                , CGU.codeGenTypeDataFormat = CGU.textFormat
-                }
+              CGU.CodeGenItemType $
+                CGU.CodeGenType
+                  { CGU.codeGenTypeOriginalName = key
+                  , CGU.codeGenTypeSchemaInfo = schemaTypeInfo
+                  , CGU.codeGenTypeDescription = Nothing
+                  , CGU.codeGenTypeDataFormat = CGU.textFormat
+                  }
 
         pure (typeMap, fieldType)
       Just (OA.OpenApiItemsArray _itemSchemaRefs) ->

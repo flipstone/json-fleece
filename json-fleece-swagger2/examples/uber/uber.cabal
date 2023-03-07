@@ -16,36 +16,36 @@ build-type:     Simple
 
 library
   exposed-modules:
-      Uber.Activities
-      Uber.Activities.Count
-      Uber.Activities.Limit
-      Uber.Activities.Offset
-      Uber.Activity
-      Uber.Activity.Uuid
-      Uber.Error
-      Uber.Error.Code
-      Uber.Error.Fields
-      Uber.Error.Message
-      Uber.PriceEstimate
-      Uber.PriceEstimate.CurrencyCode
-      Uber.PriceEstimate.DisplayName
-      Uber.PriceEstimate.Estimate
-      Uber.PriceEstimate.HighEstimate
-      Uber.PriceEstimate.LowEstimate
-      Uber.PriceEstimate.ProductId
-      Uber.PriceEstimate.SurgeMultiplier
-      Uber.Product
-      Uber.Product.Capacity
-      Uber.Product.Description
-      Uber.Product.DisplayName
-      Uber.Product.Image
-      Uber.Product.ProductId
-      Uber.Profile
-      Uber.Profile.Email
-      Uber.Profile.FirstName
-      Uber.Profile.LastName
-      Uber.Profile.Picture
-      Uber.Profile.PromoCode
+      Uber.Types.Activities
+      Uber.Types.Activities.Count
+      Uber.Types.Activities.Limit
+      Uber.Types.Activities.Offset
+      Uber.Types.Activity
+      Uber.Types.Activity.Uuid
+      Uber.Types.Error
+      Uber.Types.Error.Code
+      Uber.Types.Error.Fields
+      Uber.Types.Error.Message
+      Uber.Types.PriceEstimate
+      Uber.Types.PriceEstimate.CurrencyCode
+      Uber.Types.PriceEstimate.DisplayName
+      Uber.Types.PriceEstimate.Estimate
+      Uber.Types.PriceEstimate.HighEstimate
+      Uber.Types.PriceEstimate.LowEstimate
+      Uber.Types.PriceEstimate.ProductId
+      Uber.Types.PriceEstimate.SurgeMultiplier
+      Uber.Types.Product
+      Uber.Types.Product.Capacity
+      Uber.Types.Product.Description
+      Uber.Types.Product.DisplayName
+      Uber.Types.Product.Image
+      Uber.Types.Product.ProductId
+      Uber.Types.Profile
+      Uber.Types.Profile.Email
+      Uber.Types.Profile.FirstName
+      Uber.Types.Profile.LastName
+      Uber.Types.Profile.Picture
+      Uber.Types.Profile.PromoCode
   other-modules:
       Paths_uber
   hs-source-dirs:

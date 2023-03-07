@@ -12,13 +12,20 @@ module Fleece.CodeGenUtil
   , codeGenError
   , CodeGenResult
   , CodeGenError
+  , CodeGenItem (..)
   , CodeGenType (..)
+  , CodeGenOperation (..)
+  , CodeGenOperationParam (..)
+  , OperationPathPiece (..)
+  , OperationParamType (..)
   , CodeGenDataFormat (..)
   , CodeGenObjectField (..)
   , CodeGenObjectFieldType (..)
   , TypeMap
   , SchemaTypeInfo (..)
+  , CodeSection (Type, Operation)
   , inferSchemaInfoForInputName
+  , inferTypeForInputName
   , arrayTypeInfo
   , nullableTypeInfo
   , textFormat
@@ -42,6 +49,7 @@ module Fleece.CodeGenUtil
 import Control.Monad.Reader (ReaderT, ask, runReaderT)
 import Control.Monad.Trans (lift)
 import qualified Data.Map.Strict as Map
+import Data.Maybe (mapMaybe)
 import qualified Data.Set as Set
 import qualified Data.Text as T
 
@@ -68,7 +76,12 @@ codeGenError :: String -> CodeGen a
 codeGenError = lift . Left . CodeGenError
 
 type TypeMap =
-  Map.Map T.Text CodeGenType
+  Map.Map T.Text CodeGenItem
+
+data CodeGenItem
+  = CodeGenItemType CodeGenType
+  | CodeGenItemOperation CodeGenOperation
+  | CodeGenItemOperationParam CodeGenOperationParam
 
 data CodeGenType = CodeGenType
   { codeGenTypeOriginalName :: T.Text
@@ -76,6 +89,31 @@ data CodeGenType = CodeGenType
   , codeGenTypeDescription :: Maybe T.Text
   , codeGenTypeDataFormat :: CodeGenDataFormat
   }
+
+data CodeGenOperation = CodeGenOperation
+  { codeGenOperationOriginalName :: T.Text
+  , codeGenOperationMethod :: T.Text
+  , codeGenOperationPath :: [OperationPathPiece]
+  }
+
+data CodeGenOperationParam = CodeGenOperationParam
+  { codeGenOperationParamName :: T.Text
+  , codeGenOperationParamTypeName :: HC.TypeName
+  , codeGenOperationParamType :: OperationParamType
+  }
+
+data OperationPathPiece
+  = PathLiteral T.Text
+  | PathParamRef CodeGenOperationParam
+
+data OperationParamType
+  = ParamTypeString
+  | ParamTypeInteger
+  | ParamTypeInt
+  | ParamTypeInt8
+  | ParamTypeInt16
+  | ParamTypeInt32
+  | ParamTypeInt64
 
 data CodeGenDataFormat
   = CodeGenNewType SchemaTypeInfo
@@ -106,8 +144,10 @@ resolveFieldTypeInfo typeMap =
       case fieldType of
         TypeReference ref ->
           case Map.lookup ref typeMap of
-            Nothing -> codeGenError $ "Type " <> show ref <> " not found"
-            Just codeGenType -> pure (codeGenTypeSchemaInfo codeGenType)
+            Just (CodeGenItemType codeGenType) ->
+              pure (codeGenTypeSchemaInfo codeGenType)
+            _ ->
+              codeGenError $ "Type " <> show ref <> " not found."
         CodeGenFieldArray nullable itemType ->
           let
             modifier =
@@ -128,7 +168,15 @@ resolveFieldDescription typeMap =
     go fieldType =
       case fieldType of
         TypeReference ref ->
-          codeGenTypeDescription =<< Map.lookup ref typeMap
+          case Map.lookup ref typeMap of
+            Just (CodeGenItemType codeGenType) ->
+              codeGenTypeDescription codeGenType
+            Just (CodeGenItemOperation _operation) ->
+              Nothing
+            Just (CodeGenItemOperationParam _param) ->
+              Nothing
+            Nothing ->
+              Nothing
         CodeGenFieldArray _nullable itemType ->
           go itemType
   in
@@ -226,7 +274,210 @@ nullableTypeInfo itemInfo =
 
 generateFleeceCode :: TypeMap -> CodeGen Modules
 generateFleeceCode typeMap =
-  traverse (generateSchemaCode typeMap) (Map.elems typeMap)
+  traverse (generateItem typeMap) (Map.elems typeMap)
+
+generateItem ::
+  TypeMap ->
+  CodeGenItem ->
+  CodeGen (FilePath, HC.HaskellCode)
+generateItem typeMap codeGenItem =
+  case codeGenItem of
+    CodeGenItemType codeGenType ->
+      generateSchemaCode typeMap codeGenType
+    CodeGenItemOperation codeGenOperation ->
+      generateOperationCode typeMap codeGenOperation
+    CodeGenItemOperationParam codeGenOperationParam ->
+      generateOperationParamCode codeGenOperationParam
+
+generateOperationCode ::
+  TypeMap ->
+  CodeGenOperation ->
+  CodeGen (FilePath, HC.HaskellCode)
+generateOperationCode _typeMap codeGenOperation = do
+  (moduleName, typeName) <-
+    inferTypeForInputName
+      Operation
+      (codeGenOperationOriginalName codeGenOperation)
+
+  beelineMethod <-
+    methodToBeelineFunction $
+      codeGenOperationMethod codeGenOperation
+
+  let
+    filePath =
+      T.unpack (T.replace "." "/" (HC.moduleNameToText moduleName) <> ".hs")
+
+    header =
+      operationModuleHeader moduleName typeName
+
+    urlPath =
+      codeGenOperationPath codeGenOperation
+
+    typeNameAsCode =
+      HC.typeNameToCode Nothing typeName
+
+    mkRouteField pathPiece =
+      case pathPiece of
+        PathParamRef param ->
+          Just
+            ( HC.toVarName moduleName Nothing (codeGenOperationParamName param)
+            , HC.typeNameToCodeDefaultQualification (codeGenOperationParamTypeName param)
+            , Nothing
+            )
+        PathLiteral _ -> Nothing
+
+    routeTypeDeclaration =
+      HC.record typeName (mapMaybe mkRouteField urlPath)
+
+    mkPiece pathPiece =
+      case pathPiece of
+        PathLiteral text -> beelinePiece <> " " <> HC.stringLiteral text
+        PathParamRef param ->
+          let
+            paramName =
+              HC.toVarName moduleName Nothing
+                . codeGenOperationParamName
+                $ param
+
+            paramTypeName =
+              codeGenOperationParamTypeName param
+
+            paramDef =
+              HC.toVarName
+                (HC.typeNameModule paramTypeName)
+                (Just . HC.typeNameText $ paramTypeName)
+                "def"
+          in
+            beelineParam
+              <> " "
+              <> beelineMkParam
+              <> " "
+              <> HC.varNameToCodeDefaultQualification paramDef
+              <> " "
+              <> HC.varNameToCode Nothing paramName
+
+    route =
+      HC.lines
+        ( "route :: " <> beelineRouter <> " r => r " <> typeNameAsCode
+            : "route ="
+            : HC.indent 2 (beelineMethod <> " " <> HC.dollar)
+            : HC.indent 4 (beelineMake <> " " <> typeNameAsCode)
+            : fmap (\piece -> HC.indent 6 (mkPiece piece)) urlPath
+        )
+
+    moduleBody =
+      HC.declarations
+        [ routeTypeDeclaration
+        , route
+        ]
+
+    pragmas =
+      HC.lines
+        [ "{-# LANGUAGE NoImplicitPrelude #-}"
+        , "{-# LANGUAGE OverloadedStrings #-}"
+        ]
+
+    code =
+      HC.declarations $
+        [ pragmas
+        , header
+        , importDeclarations moduleName moduleBody
+        , moduleBody
+        ]
+
+  pure (filePath, code)
+
+operationModuleHeader :: HC.ModuleName -> HC.TypeName -> HC.HaskellCode
+operationModuleHeader moduleName typeName =
+  HC.lines
+    [ "module " <> HC.toCode moduleName
+    , HC.indent 2 ("( " <> HC.typeNameToCode Nothing typeName <> "(..)")
+    , HC.indent 2 (", route")
+    , HC.indent 2 ") where"
+    ]
+
+generateOperationParamCode ::
+  CodeGenOperationParam ->
+  CodeGen (FilePath, HC.HaskellCode)
+generateOperationParamCode codeGenOperationParam = do
+  let
+    paramName =
+      codeGenOperationParamName codeGenOperationParam
+
+    typeName =
+      codeGenOperationParamTypeName codeGenOperationParam
+
+    moduleName =
+      HC.typeNameModule typeName
+
+    filePath =
+      T.unpack (T.replace "." "/" (HC.moduleNameToText moduleName) <> ".hs")
+
+    pragmas =
+      HC.lines
+        [ "{-# LANGUAGE NoImplicitPrelude #-}"
+        , "{-# LANGUAGE OverloadedStrings #-}"
+        ]
+
+    header =
+      operationParamHeader moduleName typeName
+
+    baseType =
+      case codeGenOperationParamType codeGenOperationParam of
+        ParamTypeString -> textType
+        ParamTypeInteger -> integerType
+        ParamTypeInt -> intType
+        ParamTypeInt8 -> int8Type
+        ParamTypeInt16 -> int16Type
+        ParamTypeInt32 -> int32Type
+        ParamTypeInt64 -> int64Type
+
+    typeDeclaration =
+      HC.newtype_
+        typeName
+        (HC.fromCode (HC.typeNameToCodeDefaultQualification baseType))
+
+    beelineBaseDef =
+      case codeGenOperationParamType codeGenOperationParam of
+        ParamTypeString -> beelineTextParam
+        ParamTypeInteger -> beelineIntegerParam
+        ParamTypeInt -> beelineIntParam
+        ParamTypeInt8 -> beelineInt8Param
+        ParamTypeInt16 -> beelineInt16Param
+        ParamTypeInt32 -> beelineInt32Param
+        ParamTypeInt64 -> beelineInt64Param
+
+    defDeclaration =
+      HC.lines
+        [ "def :: " <> beelineParamDef <> " " <> HC.typeNameToCode Nothing typeName
+        , "def ="
+        , HC.indent 2 (beelineCoerceParam <> " (" <> beelineBaseDef <> " " <> HC.stringLiteral paramName <> ")")
+        ]
+
+    moduleBody =
+      HC.declarations
+        [ typeDeclaration
+        , defDeclaration
+        ]
+
+    code =
+      HC.declarations $
+        [ pragmas
+        , header
+        , importDeclarations moduleName moduleBody
+        , moduleBody
+        ]
+
+  pure (filePath, code)
+
+operationParamHeader :: HC.ModuleName -> HC.TypeName -> HC.HaskellCode
+operationParamHeader moduleName typeName =
+  HC.lines
+    [ "module " <> HC.toCode moduleName
+    , HC.indent 2 ("( " <> HC.typeNameToCode Nothing typeName <> "(..)")
+    , HC.indent 2 (", def")
+    , HC.indent 2 ") where"
+    ]
 
 generateSchemaCode ::
   TypeMap ->
@@ -234,7 +485,7 @@ generateSchemaCode ::
   CodeGen (FilePath, HC.HaskellCode)
 generateSchemaCode typeMap codeGenType = do
   (moduleName, typeName) <-
-    inferTypeForInputName (codeGenTypeOriginalName codeGenType)
+    inferTypeForInputName Type (codeGenTypeOriginalName codeGenType)
 
   let
     path =
@@ -244,7 +495,7 @@ generateSchemaCode typeMap codeGenType = do
       codeGenTypeDataFormat codeGenType
 
     header =
-      moduleHeader moduleName typeName
+      schemaTypeModuleHeader moduleName typeName
 
   moduleBody <-
     case format of
@@ -267,13 +518,13 @@ generateSchemaCode typeMap codeGenType = do
         [ "{-# LANGUAGE NoImplicitPrelude #-}"
         , header
         , importDeclarations moduleName moduleBody
-        , (moduleBody)
+        , moduleBody
         ]
 
   pure (path, code)
 
-moduleHeader :: HC.ModuleName -> HC.TypeName -> HC.HaskellCode
-moduleHeader moduleName typeName =
+schemaTypeModuleHeader :: HC.ModuleName -> HC.TypeName -> HC.HaskellCode
+schemaTypeModuleHeader moduleName typeName =
   let
     schemaName =
       fleeceSchemaNameForType typeName
@@ -380,15 +631,7 @@ generateHaskellNewtype ::
 generateHaskellNewtype wrapperName baseType schemaName =
   let
     newtypeDecl =
-      HC.lines
-        [ "newtype "
-            <> HC.typeNameToCode Nothing wrapperName
-            <> " = "
-            <> HC.typeNameToCode Nothing wrapperName
-            <> " "
-            <> HC.toCode baseType
-        , HC.indent 2 (HC.deriving_ [HC.showClass, HC.eqClass])
-        ]
+      HC.newtype_ wrapperName baseType
 
     fleeceSchema =
       fleeceSchemaForType wrapperName $
@@ -580,7 +823,7 @@ primitiveSchemaTypeInfo typeName schema =
 
 inferSchemaInfoForInputName :: T.Text -> CodeGen SchemaTypeInfo
 inferSchemaInfoForInputName name = do
-  (_moduleName, typeName) <- inferTypeForInputName name
+  (_moduleName, typeName) <- inferTypeForInputName Type name
 
   let
     schema =
@@ -592,9 +835,9 @@ inferSchemaInfoForInputName name = do
       , schemaTypeSchema = HC.varNameToCodeDefaultQualification schema
       }
 
-inferTypeForInputName :: T.Text -> (CodeGen (HC.ModuleName, HC.TypeName))
-inferTypeForInputName inputName = do
-  moduleName <- generatedModuleName inputName
+inferTypeForInputName :: CodeSection -> T.Text -> (CodeGen (HC.ModuleName, HC.TypeName))
+inferTypeForInputName section inputName = do
+  moduleName <- generatedModuleName section inputName
   case reverse (T.splitOn "." inputName) of
     [] ->
       codeGenError $ "Unable to determine type name for: " <> show inputName
@@ -631,11 +874,23 @@ fleeceSchemaForType typeName bodyLines =
           : map (HC.indent 2) bodyLines
       )
 
-generatedModuleName :: T.Text -> CodeGen HC.ModuleName
-generatedModuleName text = do
+data CodeSection
+  = Type
+  | Operation
+
+sectionModule :: CodeSection -> HC.ModuleName
+sectionModule section =
+  case section of
+    Type -> HC.ModuleName "Types"
+    Operation -> HC.ModuleName "Operations"
+
+generatedModuleName :: CodeSection -> T.Text -> CodeGen HC.ModuleName
+generatedModuleName section text = do
   options <- ask
   pure $
-    HC.ModuleName (moduleBaseName options) <> HC.toModuleName text
+    HC.ModuleName (moduleBaseName options)
+      <> sectionModule section
+      <> HC.toModuleName text
 
 textType :: HC.TypeName
 textType =
@@ -656,6 +911,18 @@ doubleType =
 scientificType :: HC.TypeName
 scientificType =
   HC.toTypeName "Data.Scientific" (Just "Sci") "Scientific"
+
+intType :: HC.TypeName
+intType =
+  HC.preludeType "Int"
+
+int8Type :: HC.TypeName
+int8Type =
+  HC.toTypeName "Data.Int" (Just "I") "Int8"
+
+int16Type :: HC.TypeName
+int16Type =
+  HC.toTypeName "Data.Int" (Just "I") "Int16"
 
 int32Type :: HC.TypeName
 int32Type =
@@ -686,3 +953,97 @@ fleeceCoreVar =
   HC.fromCode
     . HC.varNameToCodeDefaultQualification
     . HC.toVarName "Fleece.Core" (Just "FC")
+
+methodToBeelineFunction :: HC.FromCode c => T.Text -> CodeGen c
+methodToBeelineFunction method =
+  fmap beelineRoutingVar $
+    case T.toLower method of
+      "get" -> pure "get"
+      "put" -> pure "put"
+      "post" -> pure "post"
+      "delete" -> pure "delete"
+      "options" -> pure "options"
+      "head" -> pure "trace"
+      "patch" -> pure "patch"
+      "trace" -> pure "trace"
+      _ -> codeGenError ("Unsupported operation method: " <> show method)
+
+beelineMake :: HC.FromCode c => c
+beelineMake =
+  beelineRoutingVar "make"
+
+beelineRouter :: HC.FromCode c => c
+beelineRouter =
+  beelineRoutingType "Router"
+
+beelinePiece :: (HC.FromCode c, HC.ToCode c) => c
+beelinePiece =
+  beelineRoutingOperator "/-"
+
+beelineParam :: (HC.FromCode c, HC.ToCode c) => c
+beelineParam =
+  beelineRoutingOperator "/+"
+
+beelineMkParam :: HC.FromCode c => c
+beelineMkParam =
+  beelineRoutingConstructor "Param"
+
+beelineParamDef :: HC.FromCode c => c
+beelineParamDef =
+  beelineRoutingType "ParameterDefinition"
+
+beelineCoerceParam :: HC.FromCode c => c
+beelineCoerceParam =
+  beelineRoutingVar "coerceParam"
+
+beelineTextParam :: HC.FromCode c => c
+beelineTextParam =
+  beelineRoutingVar "textParam"
+
+beelineIntegerParam :: HC.FromCode c => c
+beelineIntegerParam =
+  beelineRoutingVar "integerParam"
+
+beelineIntParam :: HC.FromCode c => c
+beelineIntParam =
+  beelineRoutingVar "intParam"
+
+beelineInt8Param :: HC.FromCode c => c
+beelineInt8Param =
+  beelineRoutingVar "int8Param"
+
+beelineInt16Param :: HC.FromCode c => c
+beelineInt16Param =
+  beelineRoutingVar "int16Param"
+
+beelineInt32Param :: HC.FromCode c => c
+beelineInt32Param =
+  beelineRoutingVar "int32Param"
+
+beelineInt64Param :: HC.FromCode c => c
+beelineInt64Param =
+  beelineRoutingVar "int32Param"
+
+beelineRoutingVar :: HC.FromCode c => T.Text -> c
+beelineRoutingVar =
+  HC.fromCode
+    . HC.varNameToCodeDefaultQualification
+    . HC.toVarName "Beeline.Routing" (Just "R")
+
+beelineRoutingConstructor :: HC.FromCode c => T.Text -> c
+beelineRoutingConstructor =
+  HC.fromCode
+    . HC.varNameToCodeDefaultQualification
+    . HC.toConstructorVarName "Beeline.Routing" (Just "R")
+
+beelineRoutingType :: HC.FromCode c => T.Text -> c
+beelineRoutingType =
+  HC.fromCode
+    . HC.typeNameToCodeDefaultQualification
+    . HC.toTypeName "Beeline.Routing" (Just "R")
+
+beelineRoutingOperator :: (HC.FromCode c, HC.ToCode c) => T.Text -> c
+beelineRoutingOperator op =
+  HC.addReferences
+    [HC.VarReference "Beeline.Routing" Nothing ("(" <> op <> ")")]
+    (HC.fromText op)

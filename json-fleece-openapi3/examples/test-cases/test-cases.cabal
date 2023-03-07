@@ -16,45 +16,48 @@ build-type:     Simple
 
 library
   exposed-modules:
-      TestCases.FieldTestCases
-      TestCases.FieldTestCases.ArrayFieldItem
-      TestCases.FieldTestCases.NullableArrayFieldItem
-      TestCases.FieldTestCases.OptionalArrayFieldItem
-      TestCases.FieldTestCases.OptionalField
-      TestCases.FieldTestCases.OptionalNullableArrayFieldItem
-      TestCases.FieldTestCases.OptionalNullableField
-      TestCases.FieldTestCases.RequiredField
-      TestCases.FieldTestCases.RequiredNullableField
-      TestCases.NameConflicts
-      TestCases.NameConflicts.Case
-      TestCases.NameConflicts.Class
-      TestCases.NameConflicts.Data
-      TestCases.NameConflicts.Deriving
-      TestCases.NameConflicts.Do
-      TestCases.NameConflicts.Else
-      TestCases.NameConflicts.If
-      TestCases.NameConflicts.Import
-      TestCases.NameConflicts.In
-      TestCases.NameConflicts.Infix
-      TestCases.NameConflicts.Infixl
-      TestCases.NameConflicts.Infixr
-      TestCases.NameConflicts.Instance
-      TestCases.NameConflicts.Int32
-      TestCases.NameConflicts.Int64
-      TestCases.NameConflicts.Let
-      TestCases.NameConflicts.Module
-      TestCases.NameConflicts.NameConflicts
-      TestCases.NameConflicts.Newtype
-      TestCases.NameConflicts.Of
-      TestCases.NameConflicts.Scientific
-      TestCases.NameConflicts.Text
-      TestCases.NameConflicts.Then
-      TestCases.NameConflicts.Type
-      TestCases.NameConflicts.Where
-      TestCases.TopLevelArray
-      TestCases.TopLevelArray.TopLevelArrayItem
-      TestCases.TopLevelArrayNullable
-      TestCases.TopLevelArrayNullable.TopLevelArrayNullableItem
+      TestCases.Operations.GetMultiplePathsParams
+      TestCases.Operations.GetMultiplePathsParams.Param1
+      TestCases.Operations.GetMultiplePathsParams.Param2
+      TestCases.Types.FieldTestCases
+      TestCases.Types.FieldTestCases.ArrayFieldItem
+      TestCases.Types.FieldTestCases.NullableArrayFieldItem
+      TestCases.Types.FieldTestCases.OptionalArrayFieldItem
+      TestCases.Types.FieldTestCases.OptionalField
+      TestCases.Types.FieldTestCases.OptionalNullableArrayFieldItem
+      TestCases.Types.FieldTestCases.OptionalNullableField
+      TestCases.Types.FieldTestCases.RequiredField
+      TestCases.Types.FieldTestCases.RequiredNullableField
+      TestCases.Types.NameConflicts
+      TestCases.Types.NameConflicts.Case
+      TestCases.Types.NameConflicts.Class
+      TestCases.Types.NameConflicts.Data
+      TestCases.Types.NameConflicts.Deriving
+      TestCases.Types.NameConflicts.Do
+      TestCases.Types.NameConflicts.Else
+      TestCases.Types.NameConflicts.If
+      TestCases.Types.NameConflicts.Import
+      TestCases.Types.NameConflicts.In
+      TestCases.Types.NameConflicts.Infix
+      TestCases.Types.NameConflicts.Infixl
+      TestCases.Types.NameConflicts.Infixr
+      TestCases.Types.NameConflicts.Instance
+      TestCases.Types.NameConflicts.Int32
+      TestCases.Types.NameConflicts.Int64
+      TestCases.Types.NameConflicts.Let
+      TestCases.Types.NameConflicts.Module
+      TestCases.Types.NameConflicts.NameConflicts
+      TestCases.Types.NameConflicts.Newtype
+      TestCases.Types.NameConflicts.Of
+      TestCases.Types.NameConflicts.Scientific
+      TestCases.Types.NameConflicts.Text
+      TestCases.Types.NameConflicts.Then
+      TestCases.Types.NameConflicts.Type
+      TestCases.Types.NameConflicts.Where
+      TestCases.Types.TopLevelArray
+      TestCases.Types.TopLevelArray.TopLevelArrayItem
+      TestCases.Types.TopLevelArrayNullable
+      TestCases.Types.TopLevelArrayNullable.TopLevelArrayNullableItem
   other-modules:
       Paths_test_cases
   hs-source-dirs:
@@ -62,6 +65,7 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , beeline-routing
     , json-fleece-core
     , scientific
     , text

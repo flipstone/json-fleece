@@ -39,11 +39,13 @@ module Fleece.CodeGenUtil.HaskellCode
   , toConstructorName
   , toModuleName
   , toVarName
+  , toConstructorVarName
   , listOf
   , maybeOf
   , eitherOf
   , dollar
   , record
+  , newtype_
   , deriving_
   , enum
   , typeAnnotate
@@ -277,6 +279,14 @@ toVarName moduleName mbQualifier t =
     , varNameSuggestedQualifier = fmap Manip.toPascal mbQualifier
     }
 
+toConstructorVarName :: ModuleName -> Maybe T.Text -> T.Text -> VarName
+toConstructorVarName moduleName mbQualifier t =
+  VarName
+    { varNameText = Manip.toPascal t
+    , varNameModule = moduleName
+    , varNameSuggestedQualifier = fmap Manip.toPascal mbQualifier
+    }
+
 mkUnreservedVarName :: T.Text -> T.Text
 mkUnreservedVarName t =
   let
@@ -332,11 +342,28 @@ record typeName fields =
 
     derivations =
       deriving_ [eqClass, showClass]
+
+    maybeClosingParen =
+      if List.null fieldLines
+        then []
+        else ["}"]
   in
     lines
       ( "data " <> typeNameToCode Nothing typeName <> " = " <> typeNameToCode Nothing typeName
-          : map (indent 2) (fieldLines <> ["}"] <> [derivations])
+          : map (indent 2) (fieldLines <> maybeClosingParen <> [derivations])
       )
+
+newtype_ :: TypeName -> TypeExpression -> HaskellCode
+newtype_ wrapperName baseType =
+  lines
+    [ "newtype "
+        <> typeNameToCode Nothing wrapperName
+        <> " = "
+        <> typeNameToCode Nothing wrapperName
+        <> " "
+        <> toCode baseType
+    , indent 2 (deriving_ [showClass, eqClass])
+    ]
 
 deriving_ :: [TypeName] -> HaskellCode
 deriving_ classes =
