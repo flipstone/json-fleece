@@ -63,6 +63,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FieldTestCases'
+  /test-cases/param-ref-array:
+    get:
+      operationId: ParamSchemaReferenceArray
+      parameters:
+        - name: array-param
+          in: query
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/string-param'
+      responses:
+        '200':
+          description: "Successful Get"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldTestCases'
 components:
   schemas:
     string-param:

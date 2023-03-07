@@ -1713,6 +1713,8 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param2.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReference.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReference/StringParam.hs
+    examples/test-cases/TestCases/Operations/ParamSchemaReferenceArray.hs
+    examples/test-cases/TestCases/Operations/ParamSchemaReferenceArray/ArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/Param1.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/Param2.hs

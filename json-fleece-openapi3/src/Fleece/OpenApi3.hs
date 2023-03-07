@@ -180,24 +180,31 @@ mkOperationParam ::
 mkOperationParam schemaMap operationKey paramRef = do
   param <-
     case paramRef of
-      OA.Ref _ -> CGU.codeGenError "Param refs not yet implemethed"
+      OA.Ref _ -> CGU.codeGenError "Param refs not yet implemeted"
       OA.Inline param -> pure param
 
   let
     paramName =
       OA._paramName param
 
-  (moduleName, paramTypeName) <-
+  (moduleName, defaultParamTypeName) <-
     CGU.inferTypeForInputName CGU.Operation (operationKey <> "." <> paramName)
 
   case OA._paramSchema param of
-    Just (OA.Inline schema) -> do
-      paramType <-
-        schemaTypeToParamType
+    Just schemaRef -> do
+      (mbTypeName, paramType) <-
+        schemaRefToParamType
+          schemaMap
           paramName
           (OA._paramIn param)
           operationKey
-          schema
+          schemaRef
+
+      let
+        paramTypeName =
+          case mbTypeName of
+            Nothing -> defaultParamTypeName
+            Just resolvedName -> resolvedName
 
       pure
         CGU.CodeGenOperationParam
@@ -211,32 +218,45 @@ mkOperationParam schemaMap operationKey paramRef = do
                 (Just (HC.typeNameText paramTypeName))
                 "paramDef"
           }
-    Just (OA.Ref (OA.Reference refKey)) ->
+    Nothing ->
+      CGU.codeGenError $
+        "No schema found for param "
+          <> T.unpack paramName
+          <> " of operation "
+          <> T.unpack operationKey
+
+schemaRefToParamType ::
+  SchemaMap ->
+  T.Text ->
+  OA.ParamLocation ->
+  T.Text ->
+  OA.Referenced OA.Schema ->
+  CGU.CodeGen (Maybe HC.TypeName, CGU.OperationParamType)
+schemaRefToParamType schemaMap paramName paramLocation operationKey schemaRef =
+  case schemaRef of
+    OA.Inline schema -> do
+      schemaTypeToParamType
+        schemaMap
+        paramName
+        paramLocation
+        operationKey
+        schema
+    OA.Ref (OA.Reference refKey) ->
       case Map.lookup refKey schemaMap of
         Just schemaEntry -> do
           let
             codeGenType =
               schemaCodeGenType schemaEntry
 
-          paramType <-
+          (_resolvedType, paramType) <-
             schemaTypeToParamType
+              schemaMap
               paramName
-              (OA._paramIn param)
+              paramLocation
               operationKey
               (schemaOpenApiSchema schemaEntry)
 
-          pure
-            CGU.CodeGenOperationParam
-              { CGU.codeGenOperationParamName = paramName
-              , CGU.codeGenOperationParamModuleName = moduleName
-              , CGU.codeGenOperationParamTypeName = CGU.codeGenTypeName codeGenType
-              , CGU.codeGenOperationParamType = paramType
-              , CGU.codeGenOperationParamDefName =
-                  HC.toVarName
-                    moduleName
-                    (Just (HC.typeNameText paramTypeName))
-                    "paramDef"
-              }
+          pure (Just (CGU.codeGenTypeName codeGenType), paramType)
         Nothing ->
           CGU.codeGenError $
             "Schema reference "
@@ -245,45 +265,37 @@ mkOperationParam schemaMap operationKey paramRef = do
               <> T.unpack paramName
               <> " of operation "
               <> T.unpack operationKey
-    Nothing ->
-      CGU.codeGenError $
-        "No schema found for param "
-          <> T.unpack paramName
-          <> " of operation "
-          <> T.unpack operationKey
 
 schemaTypeToParamType ::
+  SchemaMap ->
   T.Text ->
   OA.ParamLocation ->
   T.Text ->
   OA.Schema ->
-  CGU.CodeGen CGU.OperationParamType
-schemaTypeToParamType paramName paramLocation operationKey schema =
+  CGU.CodeGen (Maybe HC.TypeName, CGU.OperationParamType)
+schemaTypeToParamType schemaMap paramName paramLocation operationKey schema =
   case OA._schemaType schema of
     Just OA.OpenApiString ->
-      pure CGU.ParamTypeString
+      pure (Nothing, CGU.ParamTypeString)
     Just OA.OpenApiInteger ->
       case OA._schemaFormat schema of
-        Just "int8" -> pure CGU.ParamTypeInt8
-        Just "int16" -> pure CGU.ParamTypeInt16
-        Just "int32" -> pure CGU.ParamTypeInt32
-        Just "int64" -> pure CGU.ParamTypeInt64
-        _ -> pure CGU.ParamTypeInteger
+        Just "int8" -> pure (Nothing, CGU.ParamTypeInt8)
+        Just "int16" -> pure (Nothing, CGU.ParamTypeInt16)
+        Just "int32" -> pure (Nothing, CGU.ParamTypeInt32)
+        Just "int64" -> pure (Nothing, CGU.ParamTypeInt64)
+        _ -> pure (Nothing, CGU.ParamTypeInteger)
     Just OA.OpenApiArray ->
       case paramLocation of
         OA.ParamQuery ->
           case OA._schemaItems schema of
             Just (OA.OpenApiItemsObject itemSchemaRef) ->
-              case itemSchemaRef of
-                OA.Ref _ ->
-                  CGU.codeGenError "Schema refs not yet support in parameter arrays"
-                OA.Inline itemSchema ->
-                  CGU.ParamTypeArray
-                    <$> schemaTypeToParamType
-                      paramName
-                      paramLocation
-                      operationKey
-                      itemSchema
+              fmap (fmap CGU.ParamTypeArray) $
+                schemaRefToParamType
+                  schemaMap
+                  paramName
+                  paramLocation
+                  operationKey
+                  itemSchemaRef
             otherItemType ->
               CGU.codeGenError $
                 "Unsupported schema arram item type found for param "

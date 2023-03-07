@@ -21,6 +21,8 @@ library
       TestCases.Operations.GetMultiplePathsParams.Param2
       TestCases.Operations.ParamSchemaReference
       TestCases.Operations.ParamSchemaReference.StringParam
+      TestCases.Operations.ParamSchemaReferenceArray
+      TestCases.Operations.ParamSchemaReferenceArray.ArrayParam
       TestCases.Operations.TestCases.QueryParams
       TestCases.Operations.TestCases.QueryParams.Param1
       TestCases.Operations.TestCases.QueryParams.Param2
