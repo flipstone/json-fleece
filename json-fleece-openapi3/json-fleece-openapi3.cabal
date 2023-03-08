@@ -1717,6 +1717,7 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/ParamSchemaReferenceArray.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReferenceArray/ArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/InlineArrayResponse.hs
+    examples/test-cases/TestCases/Operations/TestCases/MultipleResponsesCodes.hs
     examples/test-cases/TestCases/Operations/TestCases/NoContentResponse.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/BooleanParam.hs

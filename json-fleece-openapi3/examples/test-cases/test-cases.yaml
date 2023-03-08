@@ -141,6 +141,18 @@ paths:
       responses:
         '201':
           description: "Successful Post"
+  /test-cases/multiple-responses-codes:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldTestCases'
+      responses:
+        '201':
+          description: "Successful Post"
+        '422':
+          description: "Invalid Post"
 components:
   schemas:
     string-param:

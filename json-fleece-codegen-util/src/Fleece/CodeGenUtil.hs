@@ -105,7 +105,7 @@ instance Ord ResponseStatus where
       -- Ensure that 'DefaultResponse' appears at the _bottom_ of the list
       -- so that any non-default responses have first crack at the processing
       -- the response
-      (ResponseStatusCode n, ResponseStatusCode m) -> compare m n
+      (ResponseStatusCode m, ResponseStatusCode n) -> compare m n
       (ResponseStatusCode _, DefaultResponse) -> LT
       (DefaultResponse, ResponseStatusCode _) -> GT
       (DefaultResponse, DefaultResponse) -> EQ
