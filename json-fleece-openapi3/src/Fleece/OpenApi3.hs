@@ -136,6 +136,7 @@ mkOperation schemaMap filePath pathItem method operation = do
         { CGU.codeGenOperationOriginalName = operationKey
         , CGU.codeGenOperationMethod = method
         , CGU.codeGenOperationPath = pathPieces
+        , CGU.codeGenOperationParams = Map.elems params
         }
 
     mkParamEntry (paramName, param) =
@@ -181,7 +182,7 @@ mkOperationParam ::
 mkOperationParam schemaMap operationKey paramRef = do
   param <-
     case paramRef of
-      OA.Ref _ -> CGU.codeGenError "Param refs not yet implemeted"
+      OA.Ref _ -> CGU.codeGenError "Param refs not yet implemeted."
       OA.Inline param -> pure param
 
   let
@@ -193,8 +194,8 @@ mkOperationParam schemaMap operationKey paramRef = do
 
   case OA._paramSchema param of
     Just schemaRef -> do
-      (mbTypeName, paramType) <-
-        schemaRefToParamType
+      paramInfo <-
+        schemaRefToParamInfo
           schemaMap
           paramName
           (OA._paramIn param)
@@ -203,16 +204,37 @@ mkOperationParam schemaMap operationKey paramRef = do
 
       let
         paramTypeName =
-          case mbTypeName of
+          case paramInfoTypeName paramInfo of
             Nothing -> defaultParamTypeName
             Just resolvedName -> resolvedName
+
+        paramRequired =
+          case OA._paramRequired param of
+            Nothing -> False
+            Just req -> req
+
+        arity =
+          case (paramRequired, paramInfoArray paramInfo) of
+            (True, False) -> CGU.ExactlyOne
+            (False, False) -> CGU.AtMostOne
+            (True, True) -> CGU.AtLeastOne
+            (False, True) -> CGU.AtLeastZero
+
+      paramLocation <-
+        case OA._paramIn param of
+          OA.ParamQuery -> pure CGU.ParamLocationQuery
+          OA.ParamPath -> pure CGU.ParamLocationPath
+          OA.ParamHeader -> pure CGU.ParamLocationHeader
+          OA.ParamCookie -> paramCodeGenError paramName operationKey "Cookie params not supported."
 
       pure
         CGU.CodeGenOperationParam
           { CGU.codeGenOperationParamName = paramName
+          , CGU.codeGenOperationParamArity = arity
           , CGU.codeGenOperationParamModuleName = moduleName
           , CGU.codeGenOperationParamTypeName = paramTypeName
-          , CGU.codeGenOperationParamType = paramType
+          , CGU.codeGenOperationParamFormat = paramInfoFormat paramInfo
+          , CGU.codeGenOperationParamLocation = paramLocation
           , CGU.codeGenOperationParamDefName =
               HC.toVarName
                 moduleName
@@ -220,23 +242,43 @@ mkOperationParam schemaMap operationKey paramRef = do
                 "paramDef"
           }
     Nothing ->
-      CGU.codeGenError $
-        "No schema found for param "
-          <> T.unpack paramName
-          <> " of operation "
-          <> T.unpack operationKey
+      paramCodeGenError paramName operationKey "No param schema found."
 
-schemaRefToParamType ::
+paramCodeGenError :: T.Text -> T.Text -> String -> CGU.CodeGen a
+paramCodeGenError paramName operationKey msg =
+  CGU.codeGenError $
+    "Error handing param "
+      <> T.unpack paramName
+      <> " of operation "
+      <> T.unpack operationKey
+      <> ": "
+      <> msg
+
+data ParamInfo = ParamInfo
+  { paramInfoTypeName :: Maybe HC.TypeName
+  , paramInfoArray :: Bool
+  , paramInfoFormat :: CGU.OperationParamFormat
+  }
+
+primitiveParamInfo :: CGU.OperationParamFormat -> ParamInfo
+primitiveParamInfo format =
+  ParamInfo
+    { paramInfoTypeName = Nothing
+    , paramInfoArray = False
+    , paramInfoFormat = format
+    }
+
+schemaRefToParamInfo ::
   SchemaMap ->
   T.Text ->
   OA.ParamLocation ->
   T.Text ->
   OA.Referenced OA.Schema ->
-  CGU.CodeGen (Maybe HC.TypeName, CGU.OperationParamType)
-schemaRefToParamType schemaMap paramName paramLocation operationKey schemaRef =
+  CGU.CodeGen ParamInfo
+schemaRefToParamInfo schemaMap paramName paramLocation operationKey schemaRef =
   case schemaRef of
     OA.Inline schema -> do
-      schemaTypeToParamType
+      schemaTypeToParamInfo
         schemaMap
         paramName
         paramLocation
@@ -249,37 +291,37 @@ schemaRefToParamType schemaMap paramName paramLocation operationKey schemaRef =
             codeGenType =
               schemaCodeGenType schemaEntry
 
-          (_resolvedType, paramType) <-
-            schemaTypeToParamType
+          paramInfo <-
+            schemaTypeToParamInfo
               schemaMap
               paramName
               paramLocation
               operationKey
               (schemaOpenApiSchema schemaEntry)
 
-          pure (Just (CGU.codeGenTypeName codeGenType), paramType)
+          pure $
+            paramInfo
+              { paramInfoTypeName = Just (CGU.codeGenTypeName codeGenType)
+              }
         Nothing ->
-          CGU.codeGenError $
+          paramCodeGenError paramName operationKey $
             "Schema reference "
               <> show refKey
-              <> " not found for param "
-              <> T.unpack paramName
-              <> " of operation "
-              <> T.unpack operationKey
+              <> " not found."
 
-schemaTypeToParamType ::
+schemaTypeToParamInfo ::
   SchemaMap ->
   T.Text ->
   OA.ParamLocation ->
   T.Text ->
   OA.Schema ->
-  CGU.CodeGen (Maybe HC.TypeName, CGU.OperationParamType)
-schemaTypeToParamType schemaMap paramName paramLocation operationKey schema =
+  CGU.CodeGen ParamInfo
+schemaTypeToParamInfo schemaMap paramName paramLocation operationKey schema =
   case OA._schemaType schema of
     Just OA.OpenApiString ->
       case OA._schemaEnum schema of
         Nothing ->
-          pure (Nothing, CGU.ParamTypeString)
+          pure (primitiveParamInfo CGU.ParamTypeString)
         Just enumValues -> do
           let
             rejectNull mbText =
@@ -290,58 +332,59 @@ schemaTypeToParamType schemaMap paramName paramLocation operationKey schema =
           enumTexts <-
             traverse (rejectNull <=< enumValueToText schema) enumValues
 
-          pure (Nothing, CGU.ParamTypeEnum enumTexts)
+          pure
+            . primitiveParamInfo
+            . CGU.ParamTypeEnum
+            $ enumTexts
     Just OA.OpenApiBoolean ->
-      pure (Nothing, CGU.ParamTypeBoolean)
+      pure (primitiveParamInfo CGU.ParamTypeBoolean)
     Just OA.OpenApiInteger ->
       case OA._schemaFormat schema of
-        Just "int8" -> pure (Nothing, CGU.ParamTypeInt8)
-        Just "int16" -> pure (Nothing, CGU.ParamTypeInt16)
-        Just "int32" -> pure (Nothing, CGU.ParamTypeInt32)
-        Just "int64" -> pure (Nothing, CGU.ParamTypeInt64)
-        _ -> pure (Nothing, CGU.ParamTypeInteger)
+        Just "int8" -> pure (primitiveParamInfo CGU.ParamTypeInt8)
+        Just "int16" -> pure (primitiveParamInfo CGU.ParamTypeInt16)
+        Just "int32" -> pure (primitiveParamInfo CGU.ParamTypeInt32)
+        Just "int64" -> pure (primitiveParamInfo CGU.ParamTypeInt64)
+        _ -> pure (primitiveParamInfo CGU.ParamTypeInteger)
     Just OA.OpenApiArray ->
       case paramLocation of
         OA.ParamQuery ->
           case OA._schemaItems schema of
-            Just (OA.OpenApiItemsObject itemSchemaRef) ->
-              fmap (fmap CGU.ParamTypeArray) $
-                schemaRefToParamType
+            Just (OA.OpenApiItemsObject itemSchemaRef) -> do
+              itemInfo <-
+                schemaRefToParamInfo
                   schemaMap
                   paramName
                   paramLocation
                   operationKey
                   itemSchemaRef
+
+              if paramInfoArray itemInfo
+                then
+                  paramCodeGenError
+                    paramName
+                    operationKey
+                    "Array of arrays not support for param"
+                else
+                  pure $
+                    itemInfo
+                      { paramInfoArray = True
+                      }
             otherItemType ->
-              CGU.codeGenError $
-                "Unsupported schema array item type found for param "
-                  <> T.unpack paramName
-                  <> " of operation "
-                  <> T.unpack operationKey
-                  <> ": "
+              paramCodeGenError paramName operationKey $
+                "Unsupported schema array item type found: "
                   <> show otherItemType
         otherLocation ->
-          CGU.codeGenError $
+          paramCodeGenError paramName operationKey $
             "Array parameters are not supported for "
               <> show otherLocation
-              <> " paremeters. Parameter in question was "
-              <> T.unpack paramName
-              <> " of operation "
-              <> T.unpack operationKey
+              <> " paremeters."
     Just otherType ->
-      CGU.codeGenError $
-        "Unsupported schema type found for param "
-          <> T.unpack paramName
-          <> " of operation "
-          <> T.unpack operationKey
-          <> ": "
+      paramCodeGenError paramName operationKey $
+        "Unsupported schema type found for param: "
           <> show otherType
     Nothing ->
-      CGU.codeGenError $
-        "No schema type found for param "
-          <> T.unpack paramName
-          <> " of operation "
-          <> T.unpack operationKey
+      paramCodeGenError paramName operationKey $
+        "No schema type found."
 
 mkSchemaMap :: T.Text -> OA.Schema -> CGU.CodeGen SchemaMap
 mkSchemaMap schemaKey schema = do

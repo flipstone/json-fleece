@@ -1719,7 +1719,8 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/TestCases/QueryParams.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/BooleanParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/InlineEnumParam.hs
-    examples/test-cases/TestCases/Operations/TestCases/QueryParams/StringArrayParam.hs
+    examples/test-cases/TestCases/Operations/TestCases/QueryParams/OptionalArrayParam.hs
+    examples/test-cases/TestCases/Operations/TestCases/QueryParams/RequiredArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/StringParam.hs
     examples/test-cases/TestCases/Types/EnumParam.hs
     examples/test-cases/TestCases/Types/FieldTestCases.hs

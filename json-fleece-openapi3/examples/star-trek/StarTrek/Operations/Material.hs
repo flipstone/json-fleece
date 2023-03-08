@@ -2,19 +2,37 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module StarTrek.Operations.Material
-  ( Material(..)
+  ( PathParams(..)
   , route
+  , QueryParams(..)
+  , queryParamsSchema
   ) where
 
+import Beeline.HTTP.Client ((?+))
+import qualified Beeline.HTTP.Client as H
 import Beeline.Routing ((/-))
 import qualified Beeline.Routing as R
-import Prelude (($), Eq, Show)
+import Prelude (($), Eq, Maybe, Show)
+import qualified StarTrek.Operations.Material.ApiKey as ApiKey
+import qualified StarTrek.Operations.Material.Uid as Uid
 
-data Material = Material
+data PathParams = PathParams
   deriving (Eq, Show)
 
-route :: R.Router r => r Material
+route :: R.Router r => r PathParams
 route =
   R.get $
-    R.make Material
+    R.make PathParams
       /- "material"
+
+data QueryParams = QueryParams
+  { apiKey :: Maybe ApiKey.ApiKey
+  , uid :: Uid.Uid
+  }
+  deriving (Eq, Show)
+
+queryParamsSchema :: H.QuerySchema q => q QueryParams QueryParams
+queryParamsSchema =
+  H.makeQuery QueryParams
+    ?+ H.optional apiKey ApiKey.paramDef
+    ?+ H.required uid Uid.paramDef

@@ -38,7 +38,15 @@ paths:
           required: true
           schema:
             type: boolean
-        - name: string-array-param
+        - name: required-array-param
+          in: query
+          required: true
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: optional-array-param
           in: query
           required: false
           explode: true
@@ -47,6 +55,7 @@ paths:
             items:
               type: string
         - name: inline-enum-param
+          required: false
           in: query
           schema:
             type: string
