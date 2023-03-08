@@ -220,7 +220,7 @@ lookupResponses ::
   T.Text ->
   SchemaMap ->
   OA.Responses ->
-  CGU.CodeGen (Map.Map CGU.ResponseStatus CGU.SchemaTypeInfo)
+  CGU.CodeGen (Map.Map CGU.ResponseStatus (Maybe CGU.SchemaTypeInfo))
 lookupResponses operationKey schemaMap responses =
   let
     statusCodeEntries =
@@ -236,10 +236,9 @@ lookupResponses operationKey schemaMap responses =
           Map.insert CGU.DefaultResponse defaultResponseRef statusCodeEntries
         Nothing -> statusCodeEntries
   in
-    fmap (Map.mapMaybe id) $
-      traverse
-        (lookupResponse operationKey schemaMap)
-        allEntries
+    traverse
+      (lookupResponse operationKey schemaMap)
+      allEntries
 
 lookupResponse ::
   T.Text ->

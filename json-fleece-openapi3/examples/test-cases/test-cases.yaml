@@ -131,6 +131,16 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/FieldTestCases'
+  /test-cases/no-content-response:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldTestCases'
+      responses:
+        '201':
+          description: "Successful Post"
 components:
   schemas:
     string-param:

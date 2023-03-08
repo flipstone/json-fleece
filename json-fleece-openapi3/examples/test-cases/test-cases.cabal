@@ -25,6 +25,7 @@ library
       TestCases.Operations.ParamSchemaReferenceArray
       TestCases.Operations.ParamSchemaReferenceArray.ArrayParam
       TestCases.Operations.TestCases.InlineArrayResponse
+      TestCases.Operations.TestCases.NoContentResponse
       TestCases.Operations.TestCases.QueryParams
       TestCases.Operations.TestCases.QueryParams.BooleanParam
       TestCases.Operations.TestCases.QueryParams.InlineEnumParam

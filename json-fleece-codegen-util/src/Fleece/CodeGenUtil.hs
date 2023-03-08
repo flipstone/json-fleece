@@ -116,7 +116,7 @@ data CodeGenOperation = CodeGenOperation
   , codeGenOperationPath :: [OperationPathPiece]
   , codeGenOperationParams :: [CodeGenOperationParam]
   , codeGenOperationRequestBody :: Maybe CodeGenType
-  , codeGenOperationResponses :: Map.Map ResponseStatus SchemaTypeInfo
+  , codeGenOperationResponses :: Map.Map ResponseStatus (Maybe SchemaTypeInfo)
   }
 
 data CodeGenOperationParam = CodeGenOperationParam
@@ -389,7 +389,7 @@ generateOperationCode _typeMap codeGenOperation = do
           , pathParamsTypeNameAsCode
           , queryParamsTypeNameAsCode
           , maybe
-              beelineNoRequestBody
+              beelineNoRequestBodyType
               HC.typeNameToCodeDefaultQualification
               mbRequestBodyTypeName
           , HC.typeNameToCode Nothing responsesTypeName
@@ -530,9 +530,9 @@ generateOperationCode _typeMap codeGenOperation = do
           DefaultResponse ->
             "OtherResponse"
 
-    mkResponseConstructor (responseStatus, schemaTypeInfo) =
+    mkResponseConstructor (responseStatus, mbSchemaTypeInfo) =
       ( responseConstructorName responseStatus
-      , schemaTypeExpr schemaTypeInfo
+      , maybe beelineNoResponseBodyType schemaTypeExpr mbSchemaTypeInfo
       )
 
     responses =
@@ -553,7 +553,14 @@ generateOperationCode _typeMap codeGenOperation = do
         DefaultResponse ->
           beelineAnyStatus
 
-    mkResponseSchema (responseStatus, schemaTypeInfo) =
+    schemaTypeResponse schemaTypeInfo =
+      beelineResponseBody
+        <> " "
+        <> fleeceJSON
+        <> " "
+        <> schemaTypeSchema schemaTypeInfo
+
+    mkResponseSchema (responseStatus, mbSchemaTypeInfo) =
       "("
         <> responseStatusMacher responseStatus
         <> ", "
@@ -561,11 +568,7 @@ generateOperationCode _typeMap codeGenOperation = do
         <> " "
         <> HC.toCode (responseConstructorName responseStatus)
         <> " ("
-        <> beelineResponseBody
-        <> " "
-        <> fleeceJSON
-        <> " "
-        <> schemaTypeSchema schemaTypeInfo
+        <> maybe beelineNoResponseBody schemaTypeResponse mbSchemaTypeInfo
         <> "))"
 
     responseSchemaLines =
@@ -1493,9 +1496,17 @@ beelineResponseBodySchema :: HC.FromCode c => c
 beelineResponseBodySchema =
   beelineHTTPType "ResponseBodySchema"
 
-beelineNoRequestBody :: HC.FromCode c => c
-beelineNoRequestBody =
-  beelineHTTPConstructor "NoRequestBody"
+beelineNoRequestBodyType :: HC.FromCode c => c
+beelineNoRequestBodyType =
+  beelineHTTPType "NoRequestBody"
+
+beelineNoResponseBodyType :: HC.FromCode c => c
+beelineNoResponseBodyType =
+  beelineHTTPType "NoResponseBody"
+
+beelineNoResponseBody :: HC.FromCode c => c
+beelineNoResponseBody =
+  beelineHTTPVar "noResponseBody"
 
 beelineHTTPVar :: HC.FromCode c => T.Text -> c
 beelineHTTPVar =
