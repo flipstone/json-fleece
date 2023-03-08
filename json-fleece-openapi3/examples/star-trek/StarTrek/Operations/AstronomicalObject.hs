@@ -2,7 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module StarTrek.Operations.AstronomicalObject
-  ( PathParams(..)
+  ( operation
+  , PathParams(..)
   , route
   , QueryParams(..)
   , queryParamsSchema
@@ -15,6 +16,19 @@ import qualified Beeline.Routing as R
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Operations.AstronomicalObject.ApiKey as ApiKey
 import qualified StarTrek.Operations.AstronomicalObject.Uid as Uid
+
+operation ::
+  H.Operation
+    H.ContentTypeDecodingError
+    PathParams
+    QueryParams
+    H.NoRequestBody
+    H.NoResponseBody
+operation =
+  H.defaultOperation
+    { H.requestRoute = route
+    , H.requestQuerySchema = queryParamsSchema
+    }
 
 data PathParams = PathParams
   deriving (Eq, Show)

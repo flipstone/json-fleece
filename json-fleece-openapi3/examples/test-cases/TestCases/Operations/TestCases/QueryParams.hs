@@ -2,7 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module TestCases.Operations.TestCases.QueryParams
-  ( PathParams(..)
+  ( operation
+  , PathParams(..)
   , route
   , QueryParams(..)
   , queryParamsSchema
@@ -19,6 +20,19 @@ import qualified TestCases.Operations.TestCases.QueryParams.InlineEnumParam as I
 import qualified TestCases.Operations.TestCases.QueryParams.OptionalArrayParam as OptionalArrayParam
 import qualified TestCases.Operations.TestCases.QueryParams.RequiredArrayParam as RequiredArrayParam
 import qualified TestCases.Operations.TestCases.QueryParams.StringParam as StringParam
+
+operation ::
+  H.Operation
+    H.ContentTypeDecodingError
+    PathParams
+    QueryParams
+    H.NoRequestBody
+    H.NoResponseBody
+operation =
+  H.defaultOperation
+    { H.requestRoute = route
+    , H.requestQuerySchema = queryParamsSchema
+    }
 
 data PathParams = PathParams
   deriving (Eq, Show)

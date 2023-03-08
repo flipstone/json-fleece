@@ -2,7 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module StarTrek.Operations.Location.Search
-  ( PathParams(..)
+  ( operation
+  , PathParams(..)
   , route
   , QueryParams(..)
   , queryParamsSchema
@@ -16,6 +17,19 @@ import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Operations.Location.Search.ApiKey as ApiKey
 import qualified StarTrek.Operations.Location.Search.PageNumber as PageNumber
 import qualified StarTrek.Operations.Location.Search.PageSize as PageSize
+
+operation ::
+  H.Operation
+    H.ContentTypeDecodingError
+    PathParams
+    QueryParams
+    H.NoRequestBody
+    H.NoResponseBody
+operation =
+  H.defaultOperation
+    { H.requestRoute = route
+    , H.requestQuerySchema = queryParamsSchema
+    }
 
 data PathParams = PathParams
   deriving (Eq, Show)

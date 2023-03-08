@@ -2,7 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module TestCases.Operations.ParamSchemaReferenceArray
-  ( PathParams(..)
+  ( operation
+  , PathParams(..)
   , route
   , QueryParams(..)
   , queryParamsSchema
@@ -15,6 +16,19 @@ import qualified Beeline.Routing as R
 import Prelude (($), Eq, Show)
 import qualified TestCases.Operations.ParamSchemaReferenceArray.ArrayParam as StringParam
 import qualified TestCases.Types.StringParam as StringParam
+
+operation ::
+  H.Operation
+    H.ContentTypeDecodingError
+    PathParams
+    QueryParams
+    H.NoRequestBody
+    H.NoResponseBody
+operation =
+  H.defaultOperation
+    { H.requestRoute = route
+    , H.requestQuerySchema = queryParamsSchema
+    }
 
 data PathParams = PathParams
   deriving (Eq, Show)

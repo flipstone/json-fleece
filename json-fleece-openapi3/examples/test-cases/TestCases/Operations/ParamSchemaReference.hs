@@ -2,7 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module TestCases.Operations.ParamSchemaReference
-  ( PathParams(..)
+  ( operation
+  , PathParams(..)
   , route
   , QueryParams(..)
   , queryParamsSchema
@@ -17,6 +18,19 @@ import qualified TestCases.Operations.ParamSchemaReference.EnumParam as EnumPara
 import qualified TestCases.Operations.ParamSchemaReference.StringParam as StringParam
 import qualified TestCases.Types.EnumParam as EnumParam
 import qualified TestCases.Types.StringParam as StringParam
+
+operation ::
+  H.Operation
+    H.ContentTypeDecodingError
+    PathParams
+    QueryParams
+    H.NoRequestBody
+    H.NoResponseBody
+operation =
+  H.defaultOperation
+    { H.requestRoute = route
+    , H.requestQuerySchema = queryParamsSchema
+    }
 
 data PathParams = PathParams
   { stringParam :: StringParam.StringParam

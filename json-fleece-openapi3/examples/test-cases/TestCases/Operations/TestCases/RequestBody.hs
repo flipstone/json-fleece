@@ -1,7 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module StarTrek.Operations.TradingCardDeck
+module TestCases.Operations.TestCases.RequestBody
   ( operation
   , PathParams(..)
   , route
@@ -9,25 +9,25 @@ module StarTrek.Operations.TradingCardDeck
   , queryParamsSchema
   ) where
 
-import Beeline.HTTP.Client ((?+))
 import qualified Beeline.HTTP.Client as H
 import Beeline.Routing ((/-))
 import qualified Beeline.Routing as R
-import Prelude (($), Eq, Maybe, Show)
-import qualified StarTrek.Operations.TradingCardDeck.ApiKey as ApiKey
-import qualified StarTrek.Operations.TradingCardDeck.Uid as Uid
+import qualified Fleece.Aeson.Beeline as FA
+import Prelude (($), Eq, Show)
+import qualified TestCases.Types.FieldTestCases as FieldTestCases
 
 operation ::
   H.Operation
     H.ContentTypeDecodingError
     PathParams
     QueryParams
-    H.NoRequestBody
+    FieldTestCases.FieldTestCases
     H.NoResponseBody
 operation =
   H.defaultOperation
     { H.requestRoute = route
     , H.requestQuerySchema = queryParamsSchema
+    , H.requestBodySchema = H.requestBody FA.JSON FieldTestCases.fieldTestCasesSchema
     }
 
 data PathParams = PathParams
@@ -35,18 +35,14 @@ data PathParams = PathParams
 
 route :: R.Router r => r PathParams
 route =
-  R.get $
+  R.post $
     R.make PathParams
-      /- "tradingCardDeck"
+      /- "test-cases"
+      /- "request-body"
 
 data QueryParams = QueryParams
-  { apiKey :: Maybe ApiKey.ApiKey
-  , uid :: Uid.Uid
-  }
   deriving (Eq, Show)
 
 queryParamsSchema :: H.QuerySchema q => q QueryParams QueryParams
 queryParamsSchema =
   H.makeQuery QueryParams
-    ?+ H.optional apiKey ApiKey.paramDef
-    ?+ H.required uid Uid.paramDef

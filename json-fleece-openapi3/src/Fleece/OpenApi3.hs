@@ -7,7 +7,7 @@ module Fleece.OpenApi3
   , SchemaEntry (..)
   ) where
 
-import Control.Monad ((<=<))
+import Control.Monad (join, (<=<))
 import qualified Data.Aeson as Aeson
 import qualified Data.HashMap.Strict.InsOrd as IOHM
 import qualified Data.Map.Strict as Map
@@ -130,6 +130,19 @@ mkOperation schemaMap filePath pathItem method operation = do
 
   pathPieces <- traverse mkPiece pathTextParts
 
+  mbRequestBody <- lookupRequestBody operationKey operation
+
+  let
+    mbJSONMedia =
+      IOHM.lookup "application/json"
+        . OA._requestBodyContent
+        =<< mbRequestBody
+
+  mbRequestBodySchema <-
+    fmap join
+      . traverse (lookupRequestBodySchema operationKey schemaMap)
+      $ mbJSONMedia
+
   let
     codeGenOperation =
       CGU.CodeGenOperation
@@ -137,6 +150,7 @@ mkOperation schemaMap filePath pathItem method operation = do
         , CGU.codeGenOperationMethod = method
         , CGU.codeGenOperationPath = pathPieces
         , CGU.codeGenOperationParams = Map.elems params
+        , CGU.codeGenOperationRequestBody = fmap schemaCodeGenType mbRequestBodySchema
         }
 
     mkParamEntry (paramName, param) =
@@ -153,6 +167,47 @@ mkOperation schemaMap filePath pathItem method operation = do
   pure $
     Map.singleton operationKey (CGU.CodeGenItemOperation codeGenOperation)
       <> paramModules
+
+lookupRequestBody ::
+  T.Text ->
+  OA.Operation ->
+  CGU.CodeGen (Maybe OA.RequestBody)
+lookupRequestBody operationKey operation =
+  case OA._operationRequestBody operation of
+    Just (OA.Ref _reference) ->
+      CGU.codeGenError $
+        "Error finding request body for operation "
+          <> show operationKey
+          <> ": request body references are not currently supported."
+    Just (OA.Inline body) ->
+      pure (Just body)
+    Nothing ->
+      pure Nothing
+
+lookupRequestBodySchema ::
+  T.Text ->
+  SchemaMap ->
+  OA.MediaTypeObject ->
+  CGU.CodeGen (Maybe SchemaEntry)
+lookupRequestBodySchema operationKey schemaMap mediaTypeObject =
+  case OA._mediaTypeObjectSchema mediaTypeObject of
+    Just (OA.Ref (OA.Reference refKey)) ->
+      case Map.lookup refKey schemaMap of
+        Just schemaEntry -> pure (Just schemaEntry)
+        Nothing ->
+          CGU.codeGenError $
+            "Error finding request body schema for operation "
+              <> show operationKey
+              <> ": unable to resolve schema reference "
+              <> show refKey
+              <> "."
+    Just (OA.Inline _schema) ->
+      CGU.codeGenError $
+        "Error finding request body schema for operation "
+          <> show operationKey
+          <> ": inline request body schemas are not currently supported."
+    Nothing ->
+      pure Nothing
 
 mkOperationParams ::
   SchemaMap ->

@@ -1722,6 +1722,7 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/OptionalArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/RequiredArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/StringParam.hs
+    examples/test-cases/TestCases/Operations/TestCases/RequestBody.hs
     examples/test-cases/TestCases/Types/EnumParam.hs
     examples/test-cases/TestCases/Types/FieldTestCases.hs
     examples/test-cases/TestCases/Types/FieldTestCases/ArrayFieldItem.hs

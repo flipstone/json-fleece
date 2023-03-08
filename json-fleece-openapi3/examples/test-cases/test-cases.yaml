@@ -106,6 +106,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FieldTestCases'
+  /test-cases/request-body:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldTestCases'
+      responses:
+        '201':
+          description: "Successful Post"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldTestCases'
 components:
   schemas:
     string-param:

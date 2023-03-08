@@ -98,6 +98,7 @@ data CodeGenOperation = CodeGenOperation
   , codeGenOperationMethod :: T.Text
   , codeGenOperationPath :: [OperationPathPiece]
   , codeGenOperationParams :: [CodeGenOperationParam]
+  , codeGenOperationRequestBody :: Maybe CodeGenType
   }
 
 data CodeGenOperationParam = CodeGenOperationParam
@@ -343,6 +344,56 @@ generateOperationCode _typeMap codeGenOperation = do
     pathParamsTypeNameAsCode =
       HC.typeNameToCode Nothing pathParamsTypeName
 
+    mbRequestBodyTypeName =
+      fmap
+        codeGenTypeName
+        (codeGenOperationRequestBody codeGenOperation)
+
+    mkRequestBody requestBodyTypeName =
+      let
+        requestBodySchemaName =
+          HC.varNameToCodeDefaultQualification
+            . fleeceSchemaNameForType
+            $ requestBodyTypeName
+      in
+        beelineRequestBodySchema
+          <> " = "
+          <> beelineRequestBody
+          <> " "
+          <> fleeceJSON
+          <> " "
+          <> requestBodySchemaName
+
+    operationType =
+      HC.lines . (HC.indent 2 beelineOperation :) $
+        fmap (HC.indent 4) $
+          [ beelineContentTypeDecodingError
+          , pathParamsTypeNameAsCode
+          , queryParamsTypeNameAsCode
+          , maybe
+              beelineNoRequestBody
+              HC.typeNameToCodeDefaultQualification
+              mbRequestBodyTypeName
+          , beelineNoResponseBody
+          ]
+
+    operationFields =
+      HC.delimitLines "{ " ", " $
+        catMaybes
+          [ Just (beelineRequestRoute <> " = route")
+          , Just (beelineRequestQuerySchema <> " = queryParamsSchema")
+          , fmap mkRequestBody mbRequestBodyTypeName
+          ]
+
+    operation =
+      HC.lines
+        ( "operation ::"
+            : operationType
+            : "operation ="
+            : HC.indent 2 beelineDefaultOperation
+            : map (HC.indent 4) (operationFields <> ["}"])
+        )
+
     mkRouteField pathPiece =
       case pathPiece of
         PathParamRef paramNameText paramTypeName _paramDefName ->
@@ -454,7 +505,8 @@ generateOperationCode _typeMap codeGenOperation = do
 
     moduleBody =
       HC.declarations
-        [ pathParamsDeclaration
+        [ operation
+        , pathParamsDeclaration
         , route
         , queryParamsDeclaration
         , queryParamsSchema
@@ -481,7 +533,8 @@ operationModuleHeader moduleName =
   let
     exports =
       HC.delimitLines "( " ", " $
-        [ "PathParams(..)"
+        [ "operation"
+        , "PathParams(..)"
         , "route"
         , "QueryParams(..)"
         , "queryParamsSchema"
@@ -1158,6 +1211,16 @@ fleeceCoreVar =
     . HC.varNameToCodeDefaultQualification
     . HC.toVarName "Fleece.Core" (Just "FC")
 
+fleeceJSON :: HC.FromCode c => c
+fleeceJSON =
+  fleeceAesonBeelineConstructor "JSON"
+
+fleeceAesonBeelineConstructor :: HC.FromCode c => T.Text -> c
+fleeceAesonBeelineConstructor =
+  HC.fromCode
+    . HC.varNameToCodeDefaultQualification
+    . HC.toConstructorVarName "Fleece.Aeson.Beeline" (Just "FA")
+
 methodToBeelineFunction :: HC.FromCode c => T.Text -> CodeGen c
 methodToBeelineFunction method =
   fmap beelineRoutingVar $
@@ -1264,7 +1327,7 @@ beelineRoutingOperator op =
 
 beelineQuerySchema :: HC.FromCode c => c
 beelineQuerySchema =
-  beelineHTTPClientType "QuerySchema"
+  beelineHTTPType "QuerySchema"
 
 beelineMakeQuery :: HC.FromCode c => c
 beelineMakeQuery =
@@ -1290,14 +1353,56 @@ beelineExplodedNonEmpty :: HC.FromCode c => c
 beelineExplodedNonEmpty =
   beelineHTTPVar "explodedNonEmpty"
 
+beelineOperation :: HC.FromCode c => c
+beelineOperation =
+  beelineHTTPType "Operation"
+
+beelineDefaultOperation :: HC.FromCode c => c
+beelineDefaultOperation =
+  beelineHTTPVar "defaultOperation"
+
+beelineRequestRoute :: HC.FromCode c => c
+beelineRequestRoute =
+  beelineHTTPVar "requestRoute"
+
+beelineRequestQuerySchema :: HC.FromCode c => c
+beelineRequestQuerySchema =
+  beelineHTTPVar "requestQuerySchema"
+
+beelineRequestBodySchema :: HC.FromCode c => c
+beelineRequestBodySchema =
+  beelineHTTPVar "requestBodySchema"
+
+beelineRequestBody :: HC.FromCode c => c
+beelineRequestBody =
+  beelineHTTPVar "requestBody"
+
+beelineContentTypeDecodingError :: HC.FromCode c => c
+beelineContentTypeDecodingError =
+  beelineHTTPConstructor "ContentTypeDecodingError"
+
+beelineNoRequestBody :: HC.FromCode c => c
+beelineNoRequestBody =
+  beelineHTTPConstructor "NoRequestBody"
+
+beelineNoResponseBody :: HC.FromCode c => c
+beelineNoResponseBody =
+  beelineHTTPConstructor "NoResponseBody"
+
 beelineHTTPVar :: HC.FromCode c => T.Text -> c
 beelineHTTPVar =
   HC.fromCode
     . HC.varNameToCodeDefaultQualification
     . HC.toVarName "Beeline.HTTP.Client" (Just "H")
 
-beelineHTTPClientType :: HC.FromCode c => T.Text -> c
-beelineHTTPClientType =
+beelineHTTPConstructor :: HC.FromCode c => T.Text -> c
+beelineHTTPConstructor =
+  HC.fromCode
+    . HC.varNameToCodeDefaultQualification
+    . HC.toConstructorVarName "Beeline.HTTP.Client" (Just "H")
+
+beelineHTTPType :: HC.FromCode c => T.Text -> c
+beelineHTTPType =
   HC.fromCode
     . HC.typeNameToCodeDefaultQualification
     . HC.toTypeName "Beeline.HTTP.Client" (Just "H")

@@ -2,7 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module TestCases.Operations.GetMultiplePathsParams
-  ( PathParams(..)
+  ( operation
+  , PathParams(..)
   , route
   , QueryParams(..)
   , queryParamsSchema
@@ -14,6 +15,19 @@ import qualified Beeline.Routing as R
 import Prelude (($), Eq, Show)
 import qualified TestCases.Operations.GetMultiplePathsParams.Param1 as Param1
 import qualified TestCases.Operations.GetMultiplePathsParams.Param2 as Param2
+
+operation ::
+  H.Operation
+    H.ContentTypeDecodingError
+    PathParams
+    QueryParams
+    H.NoRequestBody
+    H.NoResponseBody
+operation =
+  H.defaultOperation
+    { H.requestRoute = route
+    , H.requestQuerySchema = queryParamsSchema
+    }
 
 data PathParams = PathParams
   { param1 :: Param1.Param1
