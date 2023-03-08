@@ -430,11 +430,11 @@ enum typeName constructors =
           : map (indent 2) (constructorLines <> [derivations])
       )
 
-sumType :: TypeName -> [(ConstructorName, TypeName)] -> HaskellCode
+sumType :: TypeName -> [(ConstructorName, TypeExpression)] -> HaskellCode
 sumType typeName constructors =
   let
-    mkConstructor (conName, conArgTypeName) =
-      toCode conName <> " " <> typeNameToCodeDefaultQualification conArgTypeName
+    mkConstructor (conName, conArgType) =
+      toCode conName <> " " <> toCode conArgType
 
     constructorLines =
       delimitLines "= " "| " (map mkConstructor constructors)

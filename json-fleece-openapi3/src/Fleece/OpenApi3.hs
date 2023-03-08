@@ -220,7 +220,7 @@ lookupResponses ::
   T.Text ->
   SchemaMap ->
   OA.Responses ->
-  CGU.CodeGen (Map.Map CGU.ResponseStatus CGU.CodeGenType)
+  CGU.CodeGen (Map.Map CGU.ResponseStatus CGU.SchemaTypeInfo)
 lookupResponses operationKey schemaMap responses =
   let
     statusCodeEntries =
@@ -245,7 +245,7 @@ lookupResponse ::
   T.Text ->
   SchemaMap ->
   OA.Referenced OA.Response ->
-  CGU.CodeGen (Maybe CGU.CodeGenType)
+  CGU.CodeGen (Maybe CGU.SchemaTypeInfo)
 lookupResponse operationKey schemaMap responseRef =
   let
     responseError msg =
@@ -254,6 +254,16 @@ lookupResponse operationKey schemaMap responseRef =
           <> show operationKey
           <> ": "
           <> msg
+
+    lookupCodeGenType refKey =
+      case Map.lookup refKey schemaMap of
+        Just schemaEntry ->
+          pure . CGU.codeGenTypeSchemaInfo . schemaCodeGenType $ schemaEntry
+        Nothing ->
+          responseError $
+            "Unable to resolve schema reference "
+              <> show refKey
+              <> "."
   in
     case responseRef of
       OA.Ref _reference ->
@@ -264,16 +274,23 @@ lookupResponse operationKey schemaMap responseRef =
           Just mediaTypeObject ->
             case OA._mediaTypeObjectSchema mediaTypeObject of
               Just (OA.Ref (OA.Reference refKey)) ->
-                case Map.lookup refKey schemaMap of
-                  Just schemaEntry ->
-                    pure . Just . schemaCodeGenType $ schemaEntry
-                  Nothing ->
-                    responseError $
-                      "Unable to resolve schema reference "
-                        <> show refKey
-                        <> "."
-              Just (OA.Inline _schema) ->
-                responseError "Inline response schemas are not currently supported."
+                fmap Just (lookupCodeGenType refKey)
+              Just (OA.Inline schema) ->
+                case OA._schemaType schema of
+                  Just OA.OpenApiArray ->
+                    case OA._schemaItems schema of
+                      Just (OA.OpenApiItemsObject (OA.Ref (OA.Reference itemRefKey))) -> do
+                        itemSchemaInfo <- lookupCodeGenType itemRefKey
+                        pure . Just . CGU.arrayTypeInfo $ itemSchemaInfo
+                      Just (OA.OpenApiItemsObject (OA.Inline _schema)) -> do
+                        responseError $
+                          "Inline schemas for array items are not yet supported."
+                      otherItemType ->
+                        responseError $
+                          "Unsupported schema array item type found: "
+                            <> show otherItemType
+                  _ ->
+                    responseError "Inline response schemas are not currently supported (except for arrays)."
               Nothing ->
                 pure Nothing
 

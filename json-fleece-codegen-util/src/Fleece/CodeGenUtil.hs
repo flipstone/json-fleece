@@ -116,7 +116,7 @@ data CodeGenOperation = CodeGenOperation
   , codeGenOperationPath :: [OperationPathPiece]
   , codeGenOperationParams :: [CodeGenOperationParam]
   , codeGenOperationRequestBody :: Maybe CodeGenType
-  , codeGenOperationResponses :: Map.Map ResponseStatus CodeGenType
+  , codeGenOperationResponses :: Map.Map ResponseStatus SchemaTypeInfo
   }
 
 data CodeGenOperationParam = CodeGenOperationParam
@@ -530,9 +530,9 @@ generateOperationCode _typeMap codeGenOperation = do
           DefaultResponse ->
             "OtherResponse"
 
-    mkResponseConstructor (responseStatus, responseType) =
+    mkResponseConstructor (responseStatus, schemaTypeInfo) =
       ( responseConstructorName responseStatus
-      , codeGenTypeName responseType
+      , schemaTypeExpr schemaTypeInfo
       )
 
     responses =
@@ -553,7 +553,7 @@ generateOperationCode _typeMap codeGenOperation = do
         DefaultResponse ->
           beelineAnyStatus
 
-    mkResponseSchema (responseStatus, responseType) =
+    mkResponseSchema (responseStatus, schemaTypeInfo) =
       "("
         <> responseStatusMacher responseStatus
         <> ", "
@@ -565,7 +565,7 @@ generateOperationCode _typeMap codeGenOperation = do
         <> " "
         <> fleeceJSON
         <> " "
-        <> HC.varNameToCodeDefaultQualification (fleeceSchemaNameForType (codeGenTypeName responseType))
+        <> schemaTypeSchema schemaTypeInfo
         <> "))"
 
     responseSchemaLines =
