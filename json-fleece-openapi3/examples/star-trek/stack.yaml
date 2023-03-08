@@ -43,8 +43,10 @@ packages:
 #
 extra-deps:
   - ../../../json-fleece-core
+  - ../../../json-fleece-aeson
+  - ../../../json-fleece-aeson-beeline
   - git: https://github.com/flipstone/beeline
-    commit: 16b5267e0b8213947c2bfeb2eb6eeb48a6b0535b
+    commit: d9f0024cce28356dcc4ae27b583bc321c468c57d
     subdirs:
       - beeline-routing
       - beeline-http-client

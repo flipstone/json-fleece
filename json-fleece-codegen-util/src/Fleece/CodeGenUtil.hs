@@ -15,6 +15,7 @@ module Fleece.CodeGenUtil
   , CodeGenItem (..)
   , CodeGenType (..)
   , CodeGenOperation (..)
+  , ResponseStatus (..)
   , CodeGenOperationParam (..)
   , OperationPathPiece (..)
   , OperationParamArity (..)
@@ -93,12 +94,29 @@ data CodeGenType = CodeGenType
   , codeGenTypeDataFormat :: CodeGenDataFormat
   }
 
+data ResponseStatus
+  = ResponseStatusCode Int
+  | DefaultResponse
+  deriving (Eq)
+
+instance Ord ResponseStatus where
+  compare left right =
+    case (left, right) of
+      -- Ensure that 'DefaultResponse' appears at the _bottom_ of the list
+      -- so that any non-default responses have first crack at the processing
+      -- the response
+      (ResponseStatusCode n, ResponseStatusCode m) -> compare m n
+      (ResponseStatusCode _, DefaultResponse) -> LT
+      (DefaultResponse, ResponseStatusCode _) -> GT
+      (DefaultResponse, DefaultResponse) -> EQ
+
 data CodeGenOperation = CodeGenOperation
   { codeGenOperationOriginalName :: T.Text
   , codeGenOperationMethod :: T.Text
   , codeGenOperationPath :: [OperationPathPiece]
   , codeGenOperationParams :: [CodeGenOperationParam]
   , codeGenOperationRequestBody :: Maybe CodeGenType
+  , codeGenOperationResponses :: Map.Map ResponseStatus CodeGenType
   }
 
 data CodeGenOperationParam = CodeGenOperationParam
@@ -374,7 +392,7 @@ generateOperationCode _typeMap codeGenOperation = do
               beelineNoRequestBody
               HC.typeNameToCodeDefaultQualification
               mbRequestBodyTypeName
-          , beelineNoResponseBody
+          , HC.typeNameToCode Nothing responsesTypeName
           ]
 
     operationFields =
@@ -383,6 +401,7 @@ generateOperationCode _typeMap codeGenOperation = do
           [ Just (beelineRequestRoute <> " = route")
           , Just (beelineRequestQuerySchema <> " = queryParamsSchema")
           , fmap mkRequestBody mbRequestBodyTypeName
+          , Just (beelineResponseSchemas <> " = responseSchemas")
           ]
 
     operation =
@@ -503,6 +522,71 @@ generateOperationCode _typeMap codeGenOperation = do
             : map (HC.indent 4 . mkParamSchema) queryParams
         )
 
+    responseConstructorName responseStatus =
+      HC.toConstructorName $
+        case responseStatus of
+          ResponseStatusCode statusCode ->
+            "Response" <> T.pack (show statusCode)
+          DefaultResponse ->
+            "OtherResponse"
+
+    mkResponseConstructor (responseStatus, responseType) =
+      ( responseConstructorName responseStatus
+      , codeGenTypeName responseType
+      )
+
+    responses =
+      Map.toList
+        . codeGenOperationResponses
+        $ codeGenOperation
+
+    responsesTypeName =
+      HC.toTypeName moduleName Nothing "Responses"
+
+    responsesType =
+      HC.sumType responsesTypeName (map mkResponseConstructor responses)
+
+    responseStatusMacher responseStatus =
+      case responseStatus of
+        ResponseStatusCode statusCode ->
+          beelineStatus <> " " <> HC.intLiteral statusCode
+        DefaultResponse ->
+          beelineAnyStatus
+
+    mkResponseSchema (responseStatus, responseType) =
+      "("
+        <> responseStatusMacher responseStatus
+        <> ", "
+        <> HC.functorMap
+        <> " "
+        <> HC.toCode (responseConstructorName responseStatus)
+        <> " ("
+        <> beelineResponseBody
+        <> " "
+        <> fleeceJSON
+        <> " "
+        <> HC.varNameToCodeDefaultQualification (fleeceSchemaNameForType (codeGenTypeName responseType))
+        <> "))"
+
+    responseSchemaLines =
+      HC.delimitLines "[ " ", " $
+        map mkResponseSchema responses
+
+    responseSchemas =
+      HC.lines
+        ( "responseSchemas :: [("
+            <> beelineStatusRange
+            <> ", "
+            <> beelineResponseBodySchema
+            <> " "
+            <> beelineContentTypeDecodingError
+            <> " "
+            <> HC.typeNameToCode Nothing responsesTypeName
+            <> ")]"
+            : "responseSchemas ="
+            : map (HC.indent 2) (responseSchemaLines <> ["]"])
+        )
+
     moduleBody =
       HC.declarations
         [ operation
@@ -510,6 +594,8 @@ generateOperationCode _typeMap codeGenOperation = do
         , route
         , queryParamsDeclaration
         , queryParamsSchema
+        , responsesType
+        , responseSchemas
         ]
 
     pragmas =
@@ -538,6 +624,8 @@ operationModuleHeader moduleName =
         , "route"
         , "QueryParams(..)"
         , "queryParamsSchema"
+        , "Responses(..)"
+        , "responseSchemas"
         ]
   in
     HC.lines
@@ -1369,6 +1457,10 @@ beelineRequestQuerySchema :: HC.FromCode c => c
 beelineRequestQuerySchema =
   beelineHTTPVar "requestQuerySchema"
 
+beelineResponseSchemas :: HC.FromCode c => c
+beelineResponseSchemas =
+  beelineHTTPVar "responseSchemas"
+
 beelineRequestBodySchema :: HC.FromCode c => c
 beelineRequestBodySchema =
   beelineHTTPVar "requestBodySchema"
@@ -1377,17 +1469,33 @@ beelineRequestBody :: HC.FromCode c => c
 beelineRequestBody =
   beelineHTTPVar "requestBody"
 
+beelineResponseBody :: HC.FromCode c => c
+beelineResponseBody =
+  beelineHTTPVar "responseBody"
+
+beelineStatus :: HC.FromCode c => c
+beelineStatus =
+  beelineHTTPConstructor "Status"
+
+beelineAnyStatus :: HC.FromCode c => c
+beelineAnyStatus =
+  beelineHTTPConstructor "AnyStatus"
+
 beelineContentTypeDecodingError :: HC.FromCode c => c
 beelineContentTypeDecodingError =
   beelineHTTPConstructor "ContentTypeDecodingError"
 
+beelineStatusRange :: HC.FromCode c => c
+beelineStatusRange =
+  beelineHTTPType "StatusRange"
+
+beelineResponseBodySchema :: HC.FromCode c => c
+beelineResponseBodySchema =
+  beelineHTTPType "ResponseBodySchema"
+
 beelineNoRequestBody :: HC.FromCode c => c
 beelineNoRequestBody =
   beelineHTTPConstructor "NoRequestBody"
-
-beelineNoResponseBody :: HC.FromCode c => c
-beelineNoResponseBody =
-  beelineHTTPConstructor "NoResponseBody"
 
 beelineHTTPVar :: HC.FromCode c => T.Text -> c
 beelineHTTPVar =

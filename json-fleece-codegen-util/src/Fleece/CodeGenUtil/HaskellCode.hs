@@ -44,13 +44,16 @@ module Fleece.CodeGenUtil.HaskellCode
   , maybeOf
   , eitherOf
   , dollar
+  , functorMap
   , record
   , delimitLines
   , newtype_
   , deriving_
   , enum
+  , sumType
   , typeAnnotate
   , stringLiteral
+  , intLiteral
   , caseMatch
   , eqClass
   , showClass
@@ -409,6 +412,10 @@ dollar :: HaskellCode
 dollar =
   addReferences [VarReference "Prelude" Nothing "($)"] "$"
 
+functorMap :: HaskellCode
+functorMap =
+  addReferences [VarReference "Prelude" Nothing "fmap"] "fmap"
+
 enum :: TypeName -> [ConstructorName] -> HaskellCode
 enum typeName constructors =
   let
@@ -423,9 +430,30 @@ enum typeName constructors =
           : map (indent 2) (constructorLines <> [derivations])
       )
 
+sumType :: TypeName -> [(ConstructorName, TypeName)] -> HaskellCode
+sumType typeName constructors =
+  let
+    mkConstructor (conName, conArgTypeName) =
+      toCode conName <> " " <> typeNameToCodeDefaultQualification conArgTypeName
+
+    constructorLines =
+      delimitLines "= " "| " (map mkConstructor constructors)
+
+    derivations =
+      deriving_ [eqClass, showClass]
+  in
+    lines
+      ( "data " <> typeNameToCode Nothing typeName
+          : map (indent 2) (constructorLines <> [derivations])
+      )
+
 stringLiteral :: T.Text -> HaskellCode
 stringLiteral text =
   String.fromString (show text)
+
+intLiteral :: Int -> HaskellCode
+intLiteral n =
+  String.fromString (show n)
 
 caseMatch :: ConstructorName -> HaskellCode -> HaskellCode
 caseMatch constructor body =

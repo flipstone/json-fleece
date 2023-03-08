@@ -143,6 +143,12 @@ mkOperation schemaMap filePath pathItem method operation = do
       . traverse (lookupRequestBodySchema operationKey schemaMap)
       $ mbJSONMedia
 
+  responses <-
+    lookupResponses
+      operationKey
+      schemaMap
+      (OA._operationResponses operation)
+
   let
     codeGenOperation =
       CGU.CodeGenOperation
@@ -151,6 +157,7 @@ mkOperation schemaMap filePath pathItem method operation = do
         , CGU.codeGenOperationPath = pathPieces
         , CGU.codeGenOperationParams = Map.elems params
         , CGU.codeGenOperationRequestBody = fmap schemaCodeGenType mbRequestBodySchema
+        , CGU.codeGenOperationResponses = responses
         }
 
     mkParamEntry (paramName, param) =
@@ -208,6 +215,67 @@ lookupRequestBodySchema operationKey schemaMap mediaTypeObject =
           <> ": inline request body schemas are not currently supported."
     Nothing ->
       pure Nothing
+
+lookupResponses ::
+  T.Text ->
+  SchemaMap ->
+  OA.Responses ->
+  CGU.CodeGen (Map.Map CGU.ResponseStatus CGU.CodeGenType)
+lookupResponses operationKey schemaMap responses =
+  let
+    statusCodeEntries =
+      Map.fromList
+        . map (\(status, responseRef) -> (CGU.ResponseStatusCode status, responseRef))
+        . IOHM.toList
+        . OA._responsesResponses
+        $ responses
+
+    allEntries =
+      case OA._responsesDefault responses of
+        Just defaultResponseRef ->
+          Map.insert CGU.DefaultResponse defaultResponseRef statusCodeEntries
+        Nothing -> statusCodeEntries
+  in
+    fmap (Map.mapMaybe id) $
+      traverse
+        (lookupResponse operationKey schemaMap)
+        allEntries
+
+lookupResponse ::
+  T.Text ->
+  SchemaMap ->
+  OA.Referenced OA.Response ->
+  CGU.CodeGen (Maybe CGU.CodeGenType)
+lookupResponse operationKey schemaMap responseRef =
+  let
+    responseError msg =
+      CGU.codeGenError $
+        "Error looking up response for operation "
+          <> show operationKey
+          <> ": "
+          <> msg
+  in
+    case responseRef of
+      OA.Ref _reference ->
+        responseError "Response references are not yet supported."
+      OA.Inline response ->
+        case IOHM.lookup "application/json" (OA._responseContent response) of
+          Nothing -> pure Nothing
+          Just mediaTypeObject ->
+            case OA._mediaTypeObjectSchema mediaTypeObject of
+              Just (OA.Ref (OA.Reference refKey)) ->
+                case Map.lookup refKey schemaMap of
+                  Just schemaEntry ->
+                    pure . Just . schemaCodeGenType $ schemaEntry
+                  Nothing ->
+                    responseError $
+                      "Unable to resolve schema reference "
+                        <> show refKey
+                        <> "."
+              Just (OA.Inline _schema) ->
+                responseError "Inline response schemas are not currently supported."
+              Nothing ->
+                pure Nothing
 
 mkOperationParams ::
   SchemaMap ->

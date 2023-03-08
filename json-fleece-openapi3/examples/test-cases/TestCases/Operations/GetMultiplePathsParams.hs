@@ -7,14 +7,18 @@ module TestCases.Operations.GetMultiplePathsParams
   , route
   , QueryParams(..)
   , queryParamsSchema
+  , Responses(..)
+  , responseSchemas
   ) where
 
 import qualified Beeline.HTTP.Client as H
 import Beeline.Routing ((/+), (/-))
 import qualified Beeline.Routing as R
-import Prelude (($), Eq, Show)
+import qualified Fleece.Aeson.Beeline as FA
+import Prelude (($), Eq, Show, fmap)
 import qualified TestCases.Operations.GetMultiplePathsParams.Param1 as Param1
 import qualified TestCases.Operations.GetMultiplePathsParams.Param2 as Param2
+import qualified TestCases.Types.FieldTestCases as FieldTestCases
 
 operation ::
   H.Operation
@@ -22,11 +26,12 @@ operation ::
     PathParams
     QueryParams
     H.NoRequestBody
-    H.NoResponseBody
+    Responses
 operation =
   H.defaultOperation
     { H.requestRoute = route
     , H.requestQuerySchema = queryParamsSchema
+    , H.responseSchemas = responseSchemas
     }
 
 data PathParams = PathParams
@@ -50,3 +55,12 @@ data QueryParams = QueryParams
 queryParamsSchema :: H.QuerySchema q => q QueryParams QueryParams
 queryParamsSchema =
   H.makeQuery QueryParams
+
+data Responses
+  = Response200 FieldTestCases.FieldTestCases
+  deriving (Eq, Show)
+
+responseSchemas :: [(H.StatusRange, H.ResponseBodySchema H.ContentTypeDecodingError Responses)]
+responseSchemas =
+  [ (H.Status 200, fmap Response200 (H.responseBody FA.JSON FieldTestCases.fieldTestCasesSchema))
+  ]
