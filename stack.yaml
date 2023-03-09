@@ -72,7 +72,7 @@ flags:
 
 extra-deps:
   - git: https://github.com/flipstone/beeline
-    commit: d9f0024cce28356dcc4ae27b583bc321c468c57d
+    commit: aa27102f0e89fc518bdde8b5d3615433d32244a6
     subdirs:
       - beeline-routing
       - beeline-http-client

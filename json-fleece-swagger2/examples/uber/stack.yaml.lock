@@ -3,7 +3,44 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    commit: aa27102f0e89fc518bdde8b5d3615433d32244a6
+    git: https://github.com/flipstone/beeline
+    name: beeline-routing
+    pantry-tree:
+      sha256: dc5631fe4b75e8bd6a190984804f7d620bef9665d83cbf7fc5cd031c8c5ea1fe
+      size: 1174
+    subdir: beeline-routing
+    version: 0.2.4.0
+  original:
+    commit: aa27102f0e89fc518bdde8b5d3615433d32244a6
+    git: https://github.com/flipstone/beeline
+    subdir: beeline-routing
+- completed:
+    commit: aa27102f0e89fc518bdde8b5d3615433d32244a6
+    git: https://github.com/flipstone/beeline
+    name: beeline-http-client
+    pantry-tree:
+      sha256: 7ae764c6f20ced9909e4fab81c62a2b5c5566d82eb09dd64d5840238eda4660d
+      size: 628
+    subdir: beeline-http-client
+    version: 0.3.2.0
+  original:
+    commit: aa27102f0e89fc518bdde8b5d3615433d32244a6
+    git: https://github.com/flipstone/beeline
+    subdir: beeline-http-client
+- completed:
+    commit: 4623b6cebe9ca78cd6505b8be57390949bbc2bb7
+    git: https://github.com/flipstone/shrubbery
+    name: shrubbery
+    pantry-tree:
+      sha256: 71d1c39c32d465d45e11f0922f239045931a2affea0ba77cde71edab16ff1f14
+      size: 1094
+    version: 0.1.1.0
+  original:
+    commit: 4623b6cebe9ca78cd6505b8be57390949bbc2bb7
+    git: https://github.com/flipstone/shrubbery
 snapshots:
 - completed:
     sha256: adbc602422dde10cc330175da7de8609e70afc41449a7e2d6e8b1827aa0e5008

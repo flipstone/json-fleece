@@ -2,9 +2,6 @@
 
 module Fleece.OpenApi3
   ( generateOpenApiFleeceCode
-  , mkSchemaMap
-  , SchemaMap
-  , SchemaEntry (..)
   ) where
 
 import Control.Monad (join, (<=<))
@@ -484,6 +481,11 @@ schemaTypeToParamInfo schemaMap paramName paramLocation operationKey schema =
         Just "int32" -> pure (primitiveParamInfo CGU.ParamTypeInt32)
         Just "int64" -> pure (primitiveParamInfo CGU.ParamTypeInt64)
         _ -> pure (primitiveParamInfo CGU.ParamTypeInteger)
+    Just OA.OpenApiNumber ->
+      case OA._schemaFormat schema of
+        Just "double" -> pure (primitiveParamInfo CGU.ParamTypeDouble)
+        Just "float" -> pure (primitiveParamInfo CGU.ParamTypeFloat)
+        _ -> pure (primitiveParamInfo CGU.ParamTypeScientific)
     Just OA.OpenApiArray ->
       case paramLocation of
         OA.ParamQuery ->

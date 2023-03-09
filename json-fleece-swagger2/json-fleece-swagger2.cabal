@@ -34,7 +34,6 @@ library
       src
   build-depends:
       base >=4.7 && <5
-    , containers ==0.6.*
     , insert-ordered-containers ==0.2.*
     , json-fleece-codegen-util >=0.1.4 && <0.2
     , json-fleece-openapi3 ==0.1.*

@@ -150,6 +150,9 @@ data OperationParamFormat
   | ParamTypeInt16
   | ParamTypeInt32
   | ParamTypeInt64
+  | ParamTypeScientific
+  | ParamTypeDouble
+  | ParamTypeFloat
   deriving (Show, Eq)
 
 data OperationParamLocation
@@ -727,6 +730,9 @@ paramFormatToHaskellType format =
     ParamTypeInt16 -> Right int16Type
     ParamTypeInt32 -> Right int32Type
     ParamTypeInt64 -> Right int64Type
+    ParamTypeScientific -> Right scientificType
+    ParamTypeDouble -> Right doubleType
+    ParamTypeFloat -> Right floatType
 
 paramFormatToBeelineType ::
   (HC.FromCode c, Semigroup c) =>
@@ -764,6 +770,9 @@ paramFormatToBeelineType moduleName typeName format =
     ParamTypeInt16 -> beelineInt16Param
     ParamTypeInt32 -> beelineInt32Param
     ParamTypeInt64 -> beelineInt64Param
+    ParamTypeScientific -> beelineScientificParam
+    ParamTypeDouble -> beelineDoubleParam
+    ParamTypeFloat -> beelineFloatParam
 
 operationParamHeader :: HC.ModuleName -> HC.TypeName -> HC.VarName -> HC.HaskellCode
 operationParamHeader moduleName typeName paramDef =
@@ -1391,6 +1400,18 @@ beelineInt32Param =
 beelineInt64Param :: HC.FromCode c => c
 beelineInt64Param =
   beelineRoutingVar "int32Param"
+
+beelineScientificParam :: HC.FromCode c => c
+beelineScientificParam =
+  beelineRoutingVar "scientificParam"
+
+beelineDoubleParam :: HC.FromCode c => c
+beelineDoubleParam =
+  beelineRoutingVar "doubleParam"
+
+beelineFloatParam :: HC.FromCode c => c
+beelineFloatParam =
+  beelineRoutingVar "floatParam"
 
 beelineRoutingVar :: HC.FromCode c => T.Text -> c
 beelineRoutingVar =
