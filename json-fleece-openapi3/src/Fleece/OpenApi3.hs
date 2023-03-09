@@ -18,8 +18,8 @@ import qualified Fleece.CodeGenUtil.HaskellCode as HC
 generateOpenApiFleeceCode ::
   OA.OpenApi ->
   CGU.CodeGen CGU.Modules
-generateOpenApiFleeceCode swagger = do
-  typeMap <- mkCodeGenTypes swagger
+generateOpenApiFleeceCode openApi = do
+  typeMap <- mkCodeGenTypes openApi
   CGU.generateFleeceCode typeMap
 
 type SchemaMap =
@@ -285,8 +285,10 @@ lookupResponse operationKey schemaMap responseRef =
                         responseError $
                           "Unsupported schema array item type found: "
                             <> show otherItemType
+                  Just OA.OpenApiString ->
+                    pure . Just $ CGU.textSchemaTypeInfo
                   _ ->
-                    responseError "Inline response schemas are not currently supported (except for arrays)."
+                    responseError "Inline response schemas are not currently supported (except for arrays and strings)."
               Nothing ->
                 pure Nothing
 

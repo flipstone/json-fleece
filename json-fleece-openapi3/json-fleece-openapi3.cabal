@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.2.0.0
+version:        0.2.1.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -22,7 +22,6 @@ extra-source-files:
     examples/test-cases/stack.yaml
     examples/test-cases/test-cases.yaml
     examples/star-trek/.stack-work/dist/x86_64-linux/Cabal-3.6.3.0/build/autogen/Paths_star_trek.hs
-    examples/star-trek/.stack-work/dist/x86_64-linux/Cabal-3.6.3.0/build/star-trek/autogen/Paths_star_trek.hs
     examples/star-trek/StarTrek/Operations/Animal.hs
     examples/star-trek/StarTrek/Operations/Animal/ApiKey.hs
     examples/star-trek/StarTrek/Operations/Animal/Search.hs
@@ -1717,6 +1716,7 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/ParamSchemaReferenceArray.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReferenceArray/ArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/InlineArrayResponse.hs
+    examples/test-cases/TestCases/Operations/TestCases/InlineStringResponse.hs
     examples/test-cases/TestCases/Operations/TestCases/MultipleResponsesCodes.hs
     examples/test-cases/TestCases/Operations/TestCases/NoContentResponse.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams.hs

@@ -120,6 +120,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FieldTestCases'
+  /test-cases/inline-string-response:
+    get:
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: string
   /test-cases/inline-array-response:
     get:
       responses:

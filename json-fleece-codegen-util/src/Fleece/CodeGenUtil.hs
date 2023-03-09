@@ -32,6 +32,7 @@ module Fleece.CodeGenUtil
   , arrayTypeInfo
   , nullableTypeInfo
   , textFormat
+  , textSchemaTypeInfo
   , boolFormat
   , int32Format
   , int64Format
@@ -244,8 +245,11 @@ utcTimeFormat =
 
 textFormat :: CodeGenDataFormat
 textFormat =
-  CodeGenNewType $
-    primitiveSchemaTypeInfo textType (fleeceCoreVar "text")
+  CodeGenNewType textSchemaTypeInfo
+
+textSchemaTypeInfo :: SchemaTypeInfo
+textSchemaTypeInfo =
+  primitiveSchemaTypeInfo textType (fleeceCoreVar "text")
 
 floatFormat :: CodeGenDataFormat
 floatFormat =
