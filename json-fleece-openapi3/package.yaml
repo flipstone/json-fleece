@@ -1,5 +1,5 @@
 name:                json-fleece-openapi3
-version:             0.1.4.0
+version:             0.2.0.0
 github:              "flipstone/json-fleece/json-fleece-openapi3"
 license:             BSD3
 author:              "Author name here"
@@ -44,6 +44,7 @@ when:
 
 dependencies:
   - base >= 4.7 && < 5
+  - json-fleece-codegen-util >= 0.2 &&  < 0.3
 
 extra-source-files:
   - examples/**/*.yaml
@@ -54,7 +55,6 @@ library:
   exposed-modules:
     - Fleece.OpenApi3
   dependencies:
-    - json-fleece-codegen-util >= 0.1.4 &&  < 0.2
     - aeson >= 2.0 && < 2.1
     - insert-ordered-containers >= 0.2 && < 0.3
     - containers >= 0.6 && < 0.7
@@ -70,7 +70,6 @@ executables:
       - -threaded
     dependencies:
       - json-fleece-openapi3
-      - json-fleece-codegen-util >= 0.1 &&  < 0.2
 
 tests:
   json-fleece-openapi3-test:
@@ -82,7 +81,6 @@ tests:
       - -with-rtsopts=-N
     dependencies:
       - json-fleece-openapi3
-      - json-fleece-codegen-util >= 0.1 &&  < 0.2
       - hedgehog
       - bytestring >= 0.11 && < 0.12
       - file-embed >= 0.0.15 && < 0.0.16
