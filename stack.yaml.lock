@@ -5,7 +5,7 @@
 
 packages:
 - completed:
-    commit: aa27102f0e89fc518bdde8b5d3615433d32244a6
+    commit: 31dbe42da991e30250023056838adec0c22d3dec
     git: https://github.com/flipstone/beeline
     name: beeline-routing
     pantry-tree:
@@ -14,20 +14,20 @@ packages:
     subdir: beeline-routing
     version: 0.2.4.0
   original:
-    commit: aa27102f0e89fc518bdde8b5d3615433d32244a6
+    commit: 31dbe42da991e30250023056838adec0c22d3dec
     git: https://github.com/flipstone/beeline
     subdir: beeline-routing
 - completed:
-    commit: aa27102f0e89fc518bdde8b5d3615433d32244a6
+    commit: 31dbe42da991e30250023056838adec0c22d3dec
     git: https://github.com/flipstone/beeline
     name: beeline-http-client
     pantry-tree:
-      sha256: 7ae764c6f20ced9909e4fab81c62a2b5c5566d82eb09dd64d5840238eda4660d
+      sha256: b866ebd769710680ca783b0f000dd65018f78251471e9289371291a5d20d5db9
       size: 628
     subdir: beeline-http-client
-    version: 0.3.2.0
+    version: 0.4.0.0
   original:
-    commit: aa27102f0e89fc518bdde8b5d3615433d32244a6
+    commit: 31dbe42da991e30250023056838adec0c22d3dec
     git: https://github.com/flipstone/beeline
     subdir: beeline-http-client
 - completed:

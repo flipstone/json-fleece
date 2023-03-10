@@ -1,5 +1,5 @@
 name:                json-fleece-aeson-beeline
-version:             0.1.0.0
+version:             0.1.0.1
 github:              "flipstone/json-fleece/json-fleece-aeson-beeline"
 license:             BSD3
 author:              "Author name here"
@@ -49,7 +49,7 @@ library:
   source-dirs: src
   dependencies:
     - json-fleece-aeson >= 0.1 && < 0.2
-    - beeline-http-client >= 0.2 && < 0.4
+    - beeline-http-client >= 0.2 && < 0.5
     - bytestring >= 0.11 && < 0.12
     - http-client >= 0.7 && < 0.8
   exposed-modules:
