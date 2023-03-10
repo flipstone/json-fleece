@@ -5,8 +5,6 @@ module TestCases.Operations.GetMultiplePathsParams
   ( operation
   , PathParams(..)
   , route
-  , QueryParams(..)
-  , queryParamsSchema
   , Responses(..)
   , responseSchemas
   ) where
@@ -24,13 +22,12 @@ operation ::
   H.Operation
     H.ContentTypeDecodingError
     PathParams
-    QueryParams
+    H.NoQueryParams
     H.NoRequestBody
     Responses
 operation =
   H.defaultOperation
     { H.requestRoute = route
-    , H.requestQuerySchema = queryParamsSchema
     , H.responseSchemas = responseSchemas
     }
 
@@ -48,13 +45,6 @@ route =
       /+ R.Param Param1.paramDef param1
       /- "multiple-path-params"
       /+ R.Param Param2.paramDef param2
-
-data QueryParams = QueryParams
-  deriving (Eq, Show)
-
-queryParamsSchema :: H.QuerySchema q => q QueryParams QueryParams
-queryParamsSchema =
-  H.makeQuery QueryParams
 
 data Responses
   = Response200 FieldTestCases.FieldTestCases

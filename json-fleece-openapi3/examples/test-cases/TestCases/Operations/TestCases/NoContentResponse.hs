@@ -3,10 +3,7 @@
 
 module TestCases.Operations.TestCases.NoContentResponse
   ( operation
-  , PathParams(..)
   , route
-  , QueryParams(..)
-  , queryParamsSchema
   , Responses(..)
   , responseSchemas
   ) where
@@ -21,34 +18,23 @@ import qualified TestCases.Types.FieldTestCases as FieldTestCases
 operation ::
   H.Operation
     H.ContentTypeDecodingError
-    PathParams
-    QueryParams
+    H.NoPathParams
+    H.NoQueryParams
     FieldTestCases.FieldTestCases
     Responses
 operation =
   H.defaultOperation
     { H.requestRoute = route
-    , H.requestQuerySchema = queryParamsSchema
     , H.requestBodySchema = H.requestBody FA.JSON FieldTestCases.fieldTestCasesSchema
     , H.responseSchemas = responseSchemas
     }
 
-data PathParams = PathParams
-  deriving (Eq, Show)
-
-route :: R.Router r => r PathParams
+route :: R.Router r => r H.NoPathParams
 route =
   R.post $
-    R.make PathParams
+    R.make H.NoPathParams
       /- "test-cases"
       /- "no-content-response"
-
-data QueryParams = QueryParams
-  deriving (Eq, Show)
-
-queryParamsSchema :: H.QuerySchema q => q QueryParams QueryParams
-queryParamsSchema =
-  H.makeQuery QueryParams
 
 data Responses
   = Response201 H.NoResponseBody

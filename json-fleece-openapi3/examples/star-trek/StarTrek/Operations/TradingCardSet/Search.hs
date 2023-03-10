@@ -3,7 +3,6 @@
 
 module StarTrek.Operations.TradingCardSet.Search
   ( operation
-  , PathParams(..)
   , route
   , QueryParams(..)
   , queryParamsSchema
@@ -26,7 +25,7 @@ import qualified StarTrek.Types.TradingCardSetBaseResponse as TradingCardSetBase
 operation ::
   H.Operation
     H.ContentTypeDecodingError
-    PathParams
+    H.NoPathParams
     QueryParams
     H.NoRequestBody
     Responses
@@ -37,13 +36,10 @@ operation =
     , H.responseSchemas = responseSchemas
     }
 
-data PathParams = PathParams
-  deriving (Eq, Show)
-
-route :: R.Router r => r PathParams
+route :: R.Router r => r H.NoPathParams
 route =
   R.get $
-    R.make PathParams
+    R.make H.NoPathParams
       /- "tradingCardSet"
       /- "search"
 

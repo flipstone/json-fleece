@@ -3,7 +3,6 @@
 
 module StarTrek.Operations.Species
   ( operation
-  , PathParams(..)
   , route
   , QueryParams(..)
   , queryParamsSchema
@@ -25,7 +24,7 @@ import qualified StarTrek.Types.SpeciesFullResponse as SpeciesFullResponse
 operation ::
   H.Operation
     H.ContentTypeDecodingError
-    PathParams
+    H.NoPathParams
     QueryParams
     H.NoRequestBody
     Responses
@@ -36,13 +35,10 @@ operation =
     , H.responseSchemas = responseSchemas
     }
 
-data PathParams = PathParams
-  deriving (Eq, Show)
-
-route :: R.Router r => r PathParams
+route :: R.Router r => r H.NoPathParams
 route =
   R.get $
-    R.make PathParams
+    R.make H.NoPathParams
       /- "species"
 
 data QueryParams = QueryParams

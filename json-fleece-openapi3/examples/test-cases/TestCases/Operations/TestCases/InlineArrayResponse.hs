@@ -3,10 +3,7 @@
 
 module TestCases.Operations.TestCases.InlineArrayResponse
   ( operation
-  , PathParams(..)
   , route
-  , QueryParams(..)
-  , queryParamsSchema
   , Responses(..)
   , responseSchemas
   ) where
@@ -22,33 +19,22 @@ import qualified TestCases.Types.FieldTestCases as FieldTestCases
 operation ::
   H.Operation
     H.ContentTypeDecodingError
-    PathParams
-    QueryParams
+    H.NoPathParams
+    H.NoQueryParams
     H.NoRequestBody
     Responses
 operation =
   H.defaultOperation
     { H.requestRoute = route
-    , H.requestQuerySchema = queryParamsSchema
     , H.responseSchemas = responseSchemas
     }
 
-data PathParams = PathParams
-  deriving (Eq, Show)
-
-route :: R.Router r => r PathParams
+route :: R.Router r => r H.NoPathParams
 route =
   R.get $
-    R.make PathParams
+    R.make H.NoPathParams
       /- "test-cases"
       /- "inline-array-response"
-
-data QueryParams = QueryParams
-  deriving (Eq, Show)
-
-queryParamsSchema :: H.QuerySchema q => q QueryParams QueryParams
-queryParamsSchema =
-  H.makeQuery QueryParams
 
 data Responses
   = Response200 [FieldTestCases.FieldTestCases]
