@@ -1,5 +1,5 @@
 name:                json-fleece-openapi3
-version:             0.2.1.0
+version:             0.2.1.1
 github:              "flipstone/json-fleece/json-fleece-openapi3"
 license:             BSD3
 author:              "Author name here"
@@ -47,8 +47,10 @@ dependencies:
   - json-fleece-codegen-util >= 0.2 &&  < 0.3
 
 extra-source-files:
-  - examples/**/*.yaml
-  - examples/**/*.hs
+  - examples/star-trek/star-trek.yaml
+  - examples/star-trek/StarTrek/**/*.hs
+  - examples/test-cases/test-cases.yaml
+  - examples/test-cases/TestCases/**/*.hs
 
 library:
   source-dirs: src

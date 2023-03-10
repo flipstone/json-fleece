@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.2.1.0
+version:        0.2.1.1
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -15,13 +15,7 @@ copyright:      2023 Author name here
 license:        BSD3
 build-type:     Simple
 extra-source-files:
-    examples/star-trek/package.yaml
-    examples/star-trek/stack.yaml
     examples/star-trek/star-trek.yaml
-    examples/test-cases/package.yaml
-    examples/test-cases/stack.yaml
-    examples/test-cases/test-cases.yaml
-    examples/star-trek/.stack-work/dist/x86_64-linux/Cabal-3.6.3.0/build/autogen/Paths_star_trek.hs
     examples/star-trek/StarTrek/Operations/Animal.hs
     examples/star-trek/StarTrek/Operations/Animal/ApiKey.hs
     examples/star-trek/StarTrek/Operations/Animal/Search.hs
@@ -1706,7 +1700,7 @@ extra-source-files:
     examples/star-trek/StarTrek/Types/WeaponHeader.hs
     examples/star-trek/StarTrek/Types/WeaponHeader/Name.hs
     examples/star-trek/StarTrek/Types/WeaponHeader/Uid.hs
-    examples/test-cases/.stack-work/dist/x86_64-linux/Cabal-3.6.3.0/build/autogen/Paths_test_cases.hs
+    examples/test-cases/test-cases.yaml
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param1.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param2.hs

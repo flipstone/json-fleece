@@ -1,5 +1,5 @@
 name:                json-fleece-swagger2
-version:             0.2.0.0
+version:             0.2.0.1
 github:              "flipstone/json-fleece/json-fleece-swagger2"
 license:             BSD3
 author:              "Author name here"
@@ -45,6 +45,10 @@ when:
     else:
       ghc-options:
         - -Wall
+
+extra-source-files:
+  - examples/uber/uber.json
+  - examples/uber/Uber/**/*.hs
 
 library:
   source-dirs: src
