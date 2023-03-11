@@ -8,7 +8,9 @@ import Control.Monad (join)
 import Data.Aeson ((.=))
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Encoding as AesonEncoding
+import qualified Data.Aeson.Key as AesonKey
 import qualified Data.ByteString.Lazy as LBS
+import qualified Data.Map.Strict as Map
 import Data.Scientific (Scientific, scientific)
 import qualified Data.Text as T
 import qualified Data.Vector as V
@@ -51,8 +53,8 @@ tests =
   , ("prop_encode_optionalNullableFieldEmitNull", prop_encode_optionalNullableFieldEmitNull)
   , ("prop_decode_optionalNullableFieldOmitKey", prop_decode_optionalNullableFieldOmitKey)
   , ("prop_encode_optionalNullableFieldOmitKey", prop_encode_optionalNullableFieldOmitKey)
-  , ("prop_decode_embeddedObject", prop_decode_embeddedObject)
-  , ("prop_encode_embeddedObject", prop_encode_embeddedObject)
+  , ("prop_decode_additional", prop_decode_additional)
+  , ("prop_encode_additional", prop_encode_additional)
   ]
 
 prop_decode_number :: HH.Property
@@ -419,61 +421,75 @@ prop_decode_optionalNullableFieldOmitKey =
 
     decoded === expected
 
-prop_encode_embeddedObject :: HH.Property
-prop_encode_embeddedObject =
+prop_encode_additional :: HH.Property
+prop_encode_additional =
   HH.property $ do
-    parentText <- HH.forAll genText
-    childText <- HH.forAll genText
+    field1 <- HH.forAll genText
+    field2 <- HH.forAll genText
 
     let
-      parent =
-        Examples.EmbeddedObjectParent
-          { Examples.parentField = parentText
-          , Examples.child =
-              Examples.EmbeddedObjectChild
-                { Examples.childField = childText
-                }
+      genPair = do
+        name <- Gen.filter (\e -> not (elem e ["field1", "field2"])) genText
+        value <- genText
+        pure (name, value)
+
+    others <- HH.forAll (Gen.map (Range.linear 0 10) genPair)
+
+    let
+      input =
+        Examples.AdditionalFieldsExample
+          { Examples.field1 = field1
+          , Examples.field2 = field2
+          , Examples.otherFields = others
           }
 
       encoded =
         FA.encode
-          Examples.embeddedObjectParentSchema
-          parent
+          Examples.additionalFieldsExampleSchema
+          input
 
       expected =
         encodeTestObject $
-          [ "parentField" .= parentText
-          , "childField" .= childText
-          ]
+          ( "field1" .= field1
+              : "field2" .= field2
+              : map (\(k, v) -> AesonKey.fromText k .= v) (Map.toList others)
+          )
 
     encoded === expected
 
-prop_decode_embeddedObject :: HH.Property
-prop_decode_embeddedObject =
+prop_decode_additional :: HH.Property
+prop_decode_additional =
   HH.property $ do
-    parentText <- HH.forAll genText
-    childText <- HH.forAll genText
+    field1 <- HH.forAll genText
+    field2 <- HH.forAll genText
+
+    let
+      genPair = do
+        name <- Gen.filter (\e -> not (elem e ["field1", "field2"])) genText
+        value <- genText
+        pure (name, value)
+
+    others <- HH.forAll (Gen.map (Range.linear 0 10) genPair)
 
     let
       testInput =
         encodeTestObject $
-          [ "parentField" .= parentText
-          , "childField" .= childText
-          ]
+          ( "field1" .= field1
+              : "field2" .= field2
+              : map (\(k, v) -> AesonKey.fromText k .= v) (Map.toList others)
+          )
 
       decoded =
         FA.decode
-          Examples.embeddedObjectParentSchema
+          Examples.additionalFieldsExampleSchema
           testInput
 
       expected =
         Right $
-          Examples.EmbeddedObjectParent
-            { Examples.parentField = parentText
-            , Examples.child =
-                Examples.EmbeddedObjectChild
-                  { Examples.childField = childText
-                  }
+          Examples.AdditionalFieldsExample
+            { Examples.field1 = field1
+            , Examples.field2 = field2
+            , Examples.otherFields = others
             }
 
     decoded === expected

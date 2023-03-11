@@ -9,6 +9,7 @@ module Fleece.Aeson.Decoder
 import Control.Monad ((<=<))
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Key as AesonKey
+import qualified Data.Aeson.KeyMap as AesonKeyMap
 import qualified Data.Aeson.Types as AesonTypes
 import qualified Data.ByteString.Lazy as LBS
 import qualified Data.Map.Strict as Map
@@ -25,14 +26,19 @@ decode decoder =
   fromValue decoder <=< Aeson.eitherDecode
 
 instance FC.Fleece Decoder where
-  newtype Object Decoder _object a
-    = Object (Aeson.Object -> AesonTypes.Parser a)
+  data Object Decoder _object a = Object
+    { objectFields :: [AesonKey.Key]
+    , objectDecoder :: Aeson.Object -> AesonTypes.Parser a
+    }
 
-  newtype Field Decoder _object a
-    = Field (Aeson.Object -> AesonTypes.Parser a)
+  data Field Decoder _object a = Field
+    { fieldName :: AesonKey.Key
+    , fieldDecoder :: Aeson.Object -> AesonTypes.Parser a
+    }
 
-  newtype EmbeddedObject Decoder _object a
-    = EmbeddedObject (Aeson.Object -> AesonTypes.Parser a)
+  newtype AdditionalFields Decoder _object a = AdditionalFields
+    { additionalFieldsDecoder :: [AesonKey.Key] -> Aeson.Object -> AesonTypes.Parser a
+    }
 
   schemaName (Decoder name _parseValue) =
     name
@@ -66,35 +72,56 @@ instance FC.Fleece Decoder where
     let
       key = AesonKey.fromString name
     in
-      Field $ \object ->
+      Field key $ \object ->
         AesonTypes.explicitParseField parseValue object key
 
   optional name _accessor (Decoder _name parseValue) =
     let
       key = AesonKey.fromString name
     in
-      Field $ \object ->
+      Field key $ \object ->
         AesonTypes.explicitParseFieldMaybe' parseValue object key
 
-  mapField f (Field parseField) =
-    Field (fmap f . parseField)
+  additionalFields _accessor (Decoder _name parseValue) =
+    AdditionalFields $ \definedFields object ->
+      let
+        additionalKeysMap =
+          foldr
+            Map.delete
+            (AesonKeyMap.toMap object)
+            definedFields
+      in
+        fmap (Map.mapKeys AesonKey.toText)
+          . traverse parseValue
+          $ additionalKeysMap
+
+  mapField f (Field name parseField) =
+    Field name (fmap f . parseField)
 
   constructor f =
-    Object (\_object -> pure f)
+    Object [] (\_object -> pure f)
 
-  field (Object parseF) (Field parseField) =
-    Object (\object -> parseF object <*> parseField object)
+  field (Object fieldNames parseF) field =
+    Object
+      { objectFields = fieldName field : fieldNames
+      , objectDecoder =
+          \object ->
+            parseF object
+              <*> fieldDecoder field object
+      }
 
-  embed (Object parseF) (EmbeddedObject parseSubobject) =
-    Object (\object -> parseF object <*> parseSubobject object)
+  additional (Object fieldNames parseF) fields =
+    Object
+      { objectFields = fieldNames
+      , objectDecoder =
+          \object ->
+            parseF object
+              <*> additionalFieldsDecoder fields fieldNames object
+      }
 
-  embedded _accessor (Object parseObject) =
-    EmbeddedObject parseObject
-
-  objectNamed name (Object f) =
+  objectNamed name (Object _definedFields parseObject) =
     Decoder name $
-      Aeson.withObject (FC.nameToString name) $ \object ->
-        f object
+      Aeson.withObject (FC.nameToString name) parseObject
 
   boundedEnumNamed name toText =
     let

@@ -14,11 +14,11 @@ module Fleece.Examples
   , BoundedEnum (..)
   , boundedEnumSchema
   , boundedEnumToText
-  , EmbeddedObjectParent (..)
-  , embeddedObjectParentSchema
-  , EmbeddedObjectChild (..)
+  , AdditionalFieldsExample (..)
+  , additionalFieldsExampleSchema
   ) where
 
+import qualified Data.Map as Map
 import Data.Scientific (Scientific)
 import qualified Data.Text as T
 
@@ -26,10 +26,9 @@ import Fleece.Core
   ( Fleece
   , NothingEncoding (EmitNull, OmitKey)
   , Null
-  , Object
+  , additionalFields
   , boundedEnum
   , constructor
-  , embedded
   , nullable
   , number
   , object
@@ -38,7 +37,7 @@ import Fleece.Core
   , required
   , text
   , validate
-  , (##)
+  , (#*)
   , (#+)
   )
 
@@ -130,27 +129,17 @@ boundedEnumToText e =
     Orange -> T.pack "orange"
     Kumquat -> T.pack "kumquat"
 
-data EmbeddedObjectParent = EmbeddedObjectParent
-  { parentField :: T.Text
-  , child :: EmbeddedObjectChild
+data AdditionalFieldsExample = AdditionalFieldsExample
+  { field1 :: T.Text
+  , field2 :: T.Text
+  , otherFields :: Map.Map T.Text T.Text
   }
   deriving (Eq, Show)
 
-embeddedObjectParentSchema :: Fleece schema => schema EmbeddedObjectParent
-embeddedObjectParentSchema =
+additionalFieldsExampleSchema :: Fleece schema => schema AdditionalFieldsExample
+additionalFieldsExampleSchema =
   object $
-    constructor EmbeddedObjectParent
-      #+ required "parentField" parentField text
-      ## embedded child embeddedObjectChildObject
-
-embeddedObjectChildObject ::
-  Fleece schema =>
-  Object schema EmbeddedObjectChild EmbeddedObjectChild
-embeddedObjectChildObject =
-  constructor EmbeddedObjectChild
-    #+ required "childField" childField text
-
-data EmbeddedObjectChild = EmbeddedObjectChild
-  { childField :: T.Text
-  }
-  deriving (Eq, Show)
+    constructor AdditionalFieldsExample
+      #+ required "field1" field1 text
+      #+ required "field2" field2 text
+      #* additionalFields otherFields text

@@ -11,6 +11,7 @@ import qualified Data.Aeson.Key as AesonKey
 import qualified Data.Aeson.Types as AesonTypes
 import qualified Data.ByteString.Lazy as LBS
 import Data.Coerce (coerce)
+import qualified Data.Map.Strict as Map
 import qualified Data.Vector as V
 import qualified Fleece.Core as FC
 
@@ -28,8 +29,8 @@ instance FC.Fleece Encoder where
   newtype Field Encoder object _a
     = Field (object -> Aeson.Series)
 
-  newtype EmbeddedObject Encoder object _a
-    = EmbeddedObject (object -> Aeson.Series)
+  newtype AdditionalFields Encoder object _a
+    = AdditionalFields (object -> Aeson.Series)
 
   schemaName (Encoder name _toEncoding) =
     name
@@ -77,6 +78,12 @@ instance FC.Fleece Encoder where
           Nothing ->
             mempty
 
+  additionalFields accessor (Encoder _name toEncoding) =
+    AdditionalFields $ \object ->
+      Map.foldMapWithKey
+        (\key value -> AesonEncoding.pair (AesonKey.fromText key) (toEncoding value))
+        (accessor object)
+
   mapField _f encoder =
     coerce encoder
 
@@ -87,12 +94,9 @@ instance FC.Fleece Encoder where
     Object $ \object ->
       mkStart object <> mkNext object
 
-  embed (Object mkStart) (EmbeddedObject mkMore) =
+  additional (Object mkStart) (AdditionalFields mkRest) =
     Object $ \object ->
-      mkStart object <> mkMore object
-
-  embedded accessor (Object mkFields) =
-    EmbeddedObject (mkFields . accessor)
+      mkStart object <> mkRest object
 
   objectNamed name (Object toSeries) =
     Encoder name (Aeson.pairs . toSeries)

@@ -1,5 +1,5 @@
 name:                json-fleece-core
-version:             0.1.3.0
+version:             0.2.0.0
 github:              "flipstone/json-fleece/json-fleece-core"
 license:             BSD3
 author:              "Author name here"
@@ -54,4 +54,5 @@ library:
   dependencies:
     - vector >= 0.12 && < 0.13
     - time >= 1.11 && < 1.12
+    - containers >= 0.6 &&  < 0.7
 

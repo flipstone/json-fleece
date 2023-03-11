@@ -3,8 +3,8 @@
 module Fleece.Core
   ( Fleece
       ( Field
+      , AdditionalFields
       , Object
-      , EmbeddedObject
       , schemaName
       , text
       , number
@@ -14,12 +14,12 @@ module Fleece.Core
       , required
       , optional
       , mapField
+      , additionalFields
       , objectNamed
       , constructor
       , nullable
       , field
-      , embed
-      , embedded
+      , additional
       , validateNamed
       , boundedEnumNamed
       )
@@ -59,7 +59,7 @@ module Fleece.Core
   , coerceSchema
   , coerceSchemaNamed
   , (#+)
-  , (##)
+  , (#*)
   , Name (nameQualification, nameUnqualified)
   , unqualifiedName
   , qualifiedName
@@ -74,6 +74,7 @@ import Data.Coerce (Coercible, coerce)
 import qualified Data.Int as I
 import Data.Kind (Type)
 import qualified Data.List.NonEmpty as NEL
+import qualified Data.Map as Map
 import Data.Scientific (Scientific, floatingOrInteger, fromFloatDigits, toBoundedInteger, toRealFloat)
 import qualified Data.String as String
 import qualified Data.Text as T
@@ -147,7 +148,7 @@ nameToString name =
 class Fleece schema where
   data Object schema :: Type -> Type -> Type
   data Field schema :: Type -> Type -> Type
-  data EmbeddedObject schema :: Type -> Type -> Type
+  data AdditionalFields schema :: Type -> Type -> Type
 
   schemaName :: schema a -> Name
 
@@ -180,6 +181,11 @@ class Fleece schema where
     Field schema object a ->
     Field schema object b
 
+  additionalFields ::
+    (object -> Map.Map T.Text a) ->
+    schema a ->
+    AdditionalFields schema object (Map.Map T.Text a)
+
   objectNamed ::
     Name ->
     Object schema a a ->
@@ -194,15 +200,10 @@ class Fleece schema where
     Field schema object a ->
     Object schema object b
 
-  embed ::
-    Object schema object (a -> b) ->
-    EmbeddedObject schema object a ->
-    Object schema object b
-
-  embedded ::
-    (object -> subobject) ->
-    Object schema subobject subobject ->
-    EmbeddedObject schema object subobject
+  additional ::
+    Object schema object (a -> object) ->
+    AdditionalFields schema object a ->
+    Object schema object object
 
   validateNamed ::
     Name ->
@@ -230,15 +231,15 @@ instance Fleece schema => Functor (Field schema object) where
 
 infixl 9 #+
 
-(##) ::
+(#*) ::
   Fleece schema =>
-  Object schema object (a -> b) ->
-  EmbeddedObject schema object a ->
-  Object schema object b
-(##) =
-  embed
+  Object schema object (a -> object) ->
+  AdditionalFields schema object a ->
+  Object schema object object
+(#*) =
+  additional
 
-infixl 9 ##
+infixl 9 #*
 
 object ::
   (Fleece schema, Typeable a) =>

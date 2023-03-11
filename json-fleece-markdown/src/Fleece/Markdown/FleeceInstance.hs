@@ -48,8 +48,8 @@ instance FC.Fleece Markdown where
   newtype Field Markdown _object _a
     = Field FieldDocumentation
 
-  newtype EmbeddedObject Markdown _object _a
-    = EmbeddedObject FieldList
+  newtype AdditionalFields Markdown _object _a
+    = AdditionalFields FieldDocumentation
 
   schemaName (Markdown schemaDoc) =
     schemaName schemaDoc
@@ -92,17 +92,17 @@ instance FC.Fleece Markdown where
   mapField _f =
     coerce
 
+  additionalFields _accessor fieldSchema =
+    AdditionalFields (mkFieldDocs "All Other Keys" False fieldSchema)
+
   constructor _f =
     Object mempty
 
   field (Object fields) (Field fieldDocs) =
     Object (DList.snoc fields fieldDocs)
 
-  embed (Object fields) (EmbeddedObject embeddedFields) =
-    Object (fields <> embeddedFields)
-
-  embedded _accessor (Object fields) =
-    EmbeddedObject fields
+  additional (Object fields) (AdditionalFields fieldDocs) =
+    Object (DList.snoc fields fieldDocs)
 
   objectNamed name (Object fields) =
     let

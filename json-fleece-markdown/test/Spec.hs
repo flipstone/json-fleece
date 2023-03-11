@@ -29,7 +29,7 @@ tests =
   , ("prop_optional", prop_optional)
   , ("prop_optionalNullableFieldEmitNull", prop_optionalNullableFieldEmitNull)
   , ("prop_optionalNullableFieldOmitKey", prop_optionalNullableFieldOmitKey)
-  , ("prop_embeddedObject", prop_embeddedObject)
+  , ("prop_additional", prop_additional)
   , ("prop_nestedObject", prop_nestedObject)
   , ("prop_nameDisambiguation", prop_nameDisambiguation)
   ]
@@ -119,17 +119,18 @@ prop_optionalNullableFieldOmitKey =
       , "|optionalNullableField|no|yes|string|"
       ]
 
-prop_embeddedObject :: HH.Property
-prop_embeddedObject =
+prop_additional :: HH.Property
+prop_additional =
   HH.withTests 1 . HH.property $
     assertMarkdownEquals
-      Examples.embeddedObjectParentSchema
-      [ "# EmbeddedObjectParent"
+      Examples.additionalFieldsExampleSchema
+      [ "# AdditionalFieldsExample"
       , ""
       , "|Field|Key Required|Null Allowed|Type|"
       , "|---|---|---|---|"
-      , "|parentField|yes|no|string|"
-      , "|childField|yes|no|string|"
+      , "|field1|yes|no|string|"
+      , "|field2|yes|no|string|"
+      , "|All Other Keys|no|no|string|"
       ]
 
 prop_nestedObject :: HH.Property
