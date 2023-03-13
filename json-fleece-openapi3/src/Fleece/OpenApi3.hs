@@ -287,8 +287,12 @@ lookupResponse operationKey schemaMap responseRef =
                             <> show otherItemType
                   Just OA.OpenApiString ->
                     pure . Just $ CGU.textSchemaTypeInfo
-                  _ ->
-                    responseError "Inline response schemas are not currently supported (except for arrays and strings)."
+                  Just OA.OpenApiBoolean ->
+                    pure . Just $ CGU.boolSchemaTypeInfo
+                  Just s ->
+                    responseError $ "Inline " <> show s <> " response schemas are not currently supported."
+                  Nothing ->
+                    responseError "Inline response schema doesn't have a type."
               Nothing ->
                 pure Nothing
 

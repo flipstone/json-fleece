@@ -34,6 +34,7 @@ module Fleece.CodeGenUtil
   , textFormat
   , textSchemaTypeInfo
   , boolFormat
+  , boolSchemaTypeInfo
   , int32Format
   , int64Format
   , integerFormat
@@ -283,8 +284,11 @@ integerFormat =
 
 boolFormat :: CodeGenDataFormat
 boolFormat =
-  CodeGenNewType $
-    primitiveSchemaTypeInfo boolType (fleeceCoreVar "boolean")
+  CodeGenNewType boolSchemaTypeInfo
+
+boolSchemaTypeInfo :: SchemaTypeInfo
+boolSchemaTypeInfo =
+  primitiveSchemaTypeInfo boolType (fleeceCoreVar "boolean")
 
 enumFormat :: [T.Text] -> CodeGenDataFormat
 enumFormat =
