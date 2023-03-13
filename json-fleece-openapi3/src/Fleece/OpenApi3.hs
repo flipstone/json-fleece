@@ -289,6 +289,8 @@ lookupResponse operationKey schemaMap responseRef =
                     pure . Just $ CGU.textSchemaTypeInfo
                   Just OA.OpenApiBoolean ->
                     pure . Just $ CGU.boolSchemaTypeInfo
+                  Just OA.OpenApiInteger ->
+                    pure . Just $ CGU.integerSchemaTypeInfo
                   Just s ->
                     responseError $ "Inline " <> show s <> " response schemas are not currently supported."
                   Nothing ->

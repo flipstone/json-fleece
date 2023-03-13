@@ -38,6 +38,7 @@ module Fleece.CodeGenUtil
   , int32Format
   , int64Format
   , integerFormat
+  , integerSchemaTypeInfo
   , scientificFormat
   , floatFormat
   , doubleFormat
@@ -279,8 +280,11 @@ int64Format =
 
 integerFormat :: CodeGenDataFormat
 integerFormat =
-  CodeGenNewType $
-    primitiveSchemaTypeInfo integerType (fleeceCoreVar "integer")
+  CodeGenNewType integerSchemaTypeInfo
+
+integerSchemaTypeInfo :: SchemaTypeInfo
+integerSchemaTypeInfo =
+  primitiveSchemaTypeInfo integerType (fleeceCoreVar "integer")
 
 boolFormat :: CodeGenDataFormat
 boolFormat =
