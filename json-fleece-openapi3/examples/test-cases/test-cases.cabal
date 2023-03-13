@@ -26,6 +26,9 @@ library
       TestCases.Operations.ParamSchemaReferenceArray.ArrayParam
       TestCases.Operations.TestCases.InlineArrayResponse
       TestCases.Operations.TestCases.InlineBooleanResponse
+      TestCases.Operations.TestCases.InlineInt32Response
+      TestCases.Operations.TestCases.InlineInt64Response
+      TestCases.Operations.TestCases.InlineIntegerResponse
       TestCases.Operations.TestCases.InlineStringResponse
       TestCases.Operations.TestCases.MultipleResponsesCodes
       TestCases.Operations.TestCases.NoContentResponse

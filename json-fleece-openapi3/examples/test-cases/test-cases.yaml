@@ -138,6 +138,35 @@ paths:
             application/json:
               schema:
                 type: boolean
+  /test-cases/inline-int32-response:
+    get:
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+  /test-cases/inline-int64-response:
+    get:
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+  /test-cases/inline-integer-response:
+    get:
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: integer
   /test-cases/inline-array-response:
     get:
       responses:

@@ -290,7 +290,11 @@ lookupResponse operationKey schemaMap responseRef =
                   Just OA.OpenApiBoolean ->
                     pure . Just $ CGU.boolSchemaTypeInfo
                   Just OA.OpenApiInteger ->
-                    pure . Just $ CGU.integerSchemaTypeInfo
+                    case OA._schemaFormat schema of
+                      Just "int32" -> pure . Just $ CGU.int32SchemaTypeInfo
+                      Just "int64" -> pure . Just $ CGU.int64SchemaTypeInfo
+                      Just format -> responseError $ "Unknown integer schema format " <> T.unpack format <> "."
+                      Nothing -> pure . Just $ CGU.integerSchemaTypeInfo
                   Just s ->
                     responseError $ "Inline " <> show s <> " response schemas are not currently supported."
                   Nothing ->
