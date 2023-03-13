@@ -293,7 +293,7 @@ lookupResponse operationKey schemaMap responseRef =
                     case OA._schemaFormat schema of
                       Just "int32" -> pure . Just $ CGU.int32SchemaTypeInfo
                       Just "int64" -> pure . Just $ CGU.int64SchemaTypeInfo
-                      Just _ -> pure Nothing
+                      Just _ -> pure . Just $ CGU.integerSchemaTypeInfo
                       Nothing -> pure . Just $ CGU.integerSchemaTypeInfo
                   Just s ->
                     responseError $ "Inline " <> show s <> " response schemas are not currently supported."
