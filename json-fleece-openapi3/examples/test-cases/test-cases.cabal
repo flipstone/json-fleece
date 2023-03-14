@@ -30,6 +30,8 @@ library
       TestCases.Operations.TestCases.InlineInt32Response
       TestCases.Operations.TestCases.InlineInt64Response
       TestCases.Operations.TestCases.InlineIntegerResponse
+      TestCases.Operations.TestCases.InlineObjectAdditionalPropertiesJsonResponse
+      TestCases.Operations.TestCases.InlineObjectJsonResponse
       TestCases.Operations.TestCases.InlineObjectStringArrayResponse
       TestCases.Operations.TestCases.InlineObjectStringResponse
       TestCases.Operations.TestCases.InlineStringResponse

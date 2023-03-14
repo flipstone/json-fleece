@@ -178,6 +178,15 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/FieldTestCases'
+  /test-cases/inline-object-json-response:
+    get:
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
   /test-cases/inline-object-string-response:
     get:
       responses:
@@ -202,6 +211,16 @@ paths:
                   type: array
                   items:
                     type: string
+  /test-cases/inline-object-additional-properties-json-response:
+    get:
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
   /test-cases/no-content-response:
     get:
       responses:

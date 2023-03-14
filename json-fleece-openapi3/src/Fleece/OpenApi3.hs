@@ -290,11 +290,15 @@ lookupResponse operationKey schemaMap responseRef =
           if IOHM.null (OA._schemaProperties schema)
             then case OA._schemaAdditionalProperties schema of
               Nothing ->
-                responseError "Inline schemas for objects with no properties or additional properties are not yet supported."
+                -- No explicit properties nor additional properties are defined,
+                -- but the OpenAPI spec defines additional properties as
+                -- defaulting to True, so we handle this the same as if only
+                -- additional properties was defined as true.
+                pure . Just . CGU.mapTypeInfo $ CGU.anyJSONSchemaTypeInfo
+              Just (OA.AdditionalPropertiesAllowed True) ->
+                pure . Just . CGU.mapTypeInfo $ CGU.anyJSONSchemaTypeInfo
               Just (OA.AdditionalPropertiesAllowed False) ->
                 responseError "Inline schemas for objects with additional properties disallowed are not yet supported."
-              Just (OA.AdditionalPropertiesAllowed True) ->
-                responseError "Inline schemas for objects with additional properties allowed are not yet supported."
               Just (OA.AdditionalPropertiesSchema (OA.Ref (OA.Reference refKey))) -> do
                 itemSchemaInfo <- lookupCodeGenType refKey
                 pure . Just . CGU.mapTypeInfo $ itemSchemaInfo
