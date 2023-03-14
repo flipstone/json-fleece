@@ -48,7 +48,7 @@ when:
 library:
   source-dirs: src
   dependencies:
-    - json-fleece-aeson >= 0.1 && < 0.3
+    - json-fleece-aeson >= 0.1 && < 0.4
     - beeline-http-client >= 0.2 && < 0.5
     - bytestring >= 0.11 && < 0.12
     - http-client >= 0.7 && < 0.8

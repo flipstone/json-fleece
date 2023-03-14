@@ -25,6 +25,7 @@ tests =
   [ ("prop_object", prop_object)
   , ("prop_boundedEnum", prop_boundedEnum)
   , ("prop_nullableField", prop_nullableField)
+  , ("prop_anyJSON", prop_anyJSON)
   , ("prop_validate", prop_validate)
   , ("prop_optional", prop_optional)
   , ("prop_optionalNullableFieldEmitNull", prop_optionalNullableFieldEmitNull)
@@ -71,6 +72,29 @@ prop_nullableField =
       , "|Field|Key Required|Null Allowed|Type|"
       , "|---|---|---|---|"
       , "|nullableField|yes|yes|string|"
+      ]
+
+prop_anyJSON :: HH.Property
+prop_anyJSON =
+  HH.withTests 1 . HH.property $
+    assertMarkdownEquals
+      FC.anyJSON
+      [ "# AnyJSON"
+      , ""
+      , "Any one of the following"
+      , ""
+      , "- string"
+      , "- boolean"
+      , "- number"
+      , "- AnyJSON array"
+      , "- AnyJSON object"
+      , "- null"
+      , ""
+      , "# AnyJSON object"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|All Other Keys|no|no|AnyJSON|"
       ]
 
 prop_validate :: HH.Property

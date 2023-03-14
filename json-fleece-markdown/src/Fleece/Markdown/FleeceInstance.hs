@@ -22,7 +22,7 @@ import Fleece.Markdown.SchemaDocumentation
       , fieldSchemaDocs
       )
   , FieldList
-  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry)
+  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, UnionEntry)
   , SchemaDocumentation
     ( SchemaDocumentation
     , schemaExcludeFromRender
@@ -50,6 +50,9 @@ instance FC.Fleece Markdown where
 
   newtype AdditionalFields Markdown _object _a
     = AdditionalFields FieldDocumentation
+
+  data UnionMembers Markdown _allTypes _handledTypes
+    = UnionMembers (DList.DList SchemaDocumentation)
 
   schemaName (Markdown schemaDoc) =
     schemaName schemaDoc
@@ -134,6 +137,33 @@ instance FC.Fleece Markdown where
           , schemaMainEntry = EnumValues enumValues
           , schemaReferences = Map.empty
           }
+
+  unionNamed name (UnionMembers membersDList) =
+    Markdown $
+      let
+        members =
+          DList.toList membersDList
+      in
+        SchemaDocumentation
+          { schemaName = name
+          , schemaExcludeFromRender = False
+          , schemaNullability = NotNull
+          , schemaMainEntry = UnionEntry (map schemaName members)
+          , schemaReferences =
+              Map.fromList
+                . map (\docs -> (schemaName docs, docs))
+                $ members
+          }
+
+  unionMemberWithIndex _index markdown =
+    UnionMembers $
+      let
+        Markdown schemaDocs = markdown
+      in
+        DList.singleton schemaDocs
+
+  unionCombine (UnionMembers left) (UnionMembers right) =
+    UnionMembers (left <> right)
 
 primitiveMarkdown :: String -> Markdown a
 primitiveMarkdown nameString =

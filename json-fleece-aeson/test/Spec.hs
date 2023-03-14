@@ -55,6 +55,8 @@ tests =
   , ("prop_encode_optionalNullableFieldOmitKey", prop_encode_optionalNullableFieldOmitKey)
   , ("prop_decode_additional", prop_decode_additional)
   , ("prop_encode_additional", prop_encode_additional)
+  , ("prop_decode_anyJSON", prop_decode_anyJSON)
+  , ("prop_encode_anyJSON", prop_encode_anyJSON)
   ]
 
 prop_decode_number :: HH.Property
@@ -493,6 +495,45 @@ prop_decode_additional =
             }
 
     decoded === expected
+
+prop_decode_anyJSON :: HH.Property
+prop_decode_anyJSON =
+  HH.property $ do
+    expected <- HH.forAll genAnyJSON
+
+    let
+      encoded =
+        Aeson.encode (FA.anyJSONToValue expected)
+
+      decoded =
+        FA.decode FC.anyJSON encoded
+
+    Right expected === decoded
+
+prop_encode_anyJSON :: HH.Property
+prop_encode_anyJSON =
+  HH.property $ do
+    anyJSON <- HH.forAll genAnyJSON
+
+    let
+      expected =
+        Aeson.encode (FA.anyJSONToValue anyJSON)
+
+      encoded =
+        FA.encode FC.anyJSON anyJSON
+
+    expected === encoded
+
+genAnyJSON :: HH.Gen FC.AnyJSON
+genAnyJSON =
+  Gen.choice
+    [ fmap FC.mkJSONText genText
+    , fmap FC.mkJSONBool Gen.bool
+    , fmap FC.mkJSONNumber genScientific
+    , fmap FC.mkJSONArray (Gen.list (Range.linear 0 5) genAnyJSON)
+    , fmap FC.mkJSONObject (Gen.map (Range.linear 0 5) ((,) <$> genText <*> genAnyJSON))
+    , pure FC.mkJSONNull
+    ]
 
 encodeTestObject :: [AesonEncoding.Series] -> LBS.ByteString
 encodeTestObject =

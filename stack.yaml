@@ -77,7 +77,7 @@ extra-deps:
       - beeline-routing
       - beeline-http-client
   - git: https://github.com/flipstone/shrubbery
-    commit: 4623b6cebe9ca78cd6505b8be57390949bbc2bb7
+    commit: 94ae4dfe91fa03cf5863c6402c40a6d7967ac8b4
 
 
 # Extra package databases containing global packages

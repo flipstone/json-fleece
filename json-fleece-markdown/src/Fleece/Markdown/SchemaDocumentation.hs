@@ -9,7 +9,7 @@ module Fleece.Markdown.SchemaDocumentation
       )
   , schemaReferencesIncludingSelf
   , SchemaNullability (NotNull, Nullable)
-  , MainEntry (NameOnly, Fields, EnumValues, ArrayEntry, NullableEntry)
+  , MainEntry (NameOnly, Fields, EnumValues, ArrayEntry, NullableEntry, UnionEntry)
   , FieldDocumentation
     ( FieldDocumentation
     , fieldName
@@ -51,6 +51,7 @@ data MainEntry
   | EnumValues [T.Text]
   | ArrayEntry MainEntry
   | NullableEntry MainEntry
+  | UnionEntry [FC.Name]
 
 data FieldDocumentation = FieldDocumentation
   { fieldName :: T.Text

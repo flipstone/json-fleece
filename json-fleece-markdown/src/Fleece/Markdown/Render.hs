@@ -20,7 +20,7 @@ import Fleece.Markdown.SchemaDocumentation
       , fieldName
       , fieldSchemaDocs
       )
-  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry)
+  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, UnionEntry)
   , SchemaDocumentation
     ( schemaExcludeFromRender
     , schemaMainEntry
@@ -129,6 +129,11 @@ mainEntryDocs nameContext entry =
         <> newline
         <> markdownText "(This value may be null)"
         <> newline
+    UnionEntry memberNames ->
+      "Any one of the following"
+        <> newline
+        <> newline
+        <> foldMap (listItem . renderName nameContext) memberNames
 
 h1 :: LTB.Builder -> LTB.Builder
 h1 builder =

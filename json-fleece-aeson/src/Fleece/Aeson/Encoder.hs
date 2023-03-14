@@ -14,6 +14,7 @@ import Data.Coerce (coerce)
 import qualified Data.Map.Strict as Map
 import qualified Data.Vector as V
 import qualified Fleece.Core as FC
+import qualified Shrubbery as Shrubbery
 
 data Encoder a
   = Encoder FC.Name (a -> Aeson.Encoding)
@@ -31,6 +32,9 @@ instance FC.Fleece Encoder where
 
   newtype AdditionalFields Encoder object _a
     = AdditionalFields (object -> Aeson.Series)
+
+  data UnionMembers Encoder _allTypes handledTypes
+    = UnionMembers (Shrubbery.BranchBuilder handledTypes Aeson.Encoding)
 
   schemaName (Encoder name _toEncoding) =
     name
@@ -106,3 +110,23 @@ instance FC.Fleece Encoder where
 
   validateNamed name uncheck _check (Encoder _unvalidatedName toEncoding) =
     Encoder name (toEncoding . uncheck)
+
+  unionNamed name (UnionMembers builder) =
+    let
+      branches =
+        Shrubbery.branchBuild builder
+    in
+      Encoder name (Shrubbery.dissectUnion branches)
+
+  unionMemberWithIndex _index encoder =
+    UnionMembers $
+      let
+        -- It's important that this let is _inside_ the 'UnionMembers'
+        -- constructor so that it lazy enough to allow the recursive reference
+        -- of 'anyJSON' to itself within arrays.
+        Encoder _name toEncoding = encoder
+      in
+        Shrubbery.singleBranch toEncoding
+
+  unionCombine (UnionMembers left) (UnionMembers right) =
+    UnionMembers (Shrubbery.appendBranches left right)

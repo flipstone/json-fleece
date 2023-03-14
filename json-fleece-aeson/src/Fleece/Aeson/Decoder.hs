@@ -6,6 +6,7 @@ module Fleece.Aeson.Decoder
   , fromValue
   ) where
 
+import Control.Applicative ((<|>))
 import Control.Monad ((<=<))
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Key as AesonKey
@@ -13,6 +14,8 @@ import qualified Data.Aeson.KeyMap as AesonKeyMap
 import qualified Data.Aeson.Types as AesonTypes
 import qualified Data.ByteString.Lazy as LBS
 import qualified Data.Map.Strict as Map
+import qualified Shrubbery
+
 import qualified Fleece.Core as FC
 
 data Decoder a
@@ -39,6 +42,9 @@ instance FC.Fleece Decoder where
   newtype AdditionalFields Decoder _object a = AdditionalFields
     { additionalFieldsDecoder :: [AesonKey.Key] -> Aeson.Object -> AesonTypes.Parser a
     }
+
+  newtype UnionMembers Decoder allTypes _handledTypes
+    = UnionMembers (FC.Name -> Aeson.Value -> AesonTypes.Parser (Shrubbery.Union allTypes))
 
   schemaName (Decoder name _parseValue) =
     name
@@ -147,3 +153,15 @@ instance FC.Fleece Decoder where
       case check uncheckedValue of
         Right checkedValue -> pure checkedValue
         Left err -> fail $ "Error validating " <> FC.nameToString name <> ": " <> err
+
+  unionNamed name (UnionMembers parseMembers) =
+    Decoder name (parseMembers name)
+
+  unionMemberWithIndex index (Decoder _name parseMember) =
+    UnionMembers (\_name -> fmap (Shrubbery.unifyUnion index) . parseMember)
+
+  unionCombine (UnionMembers parseLeft) (UnionMembers parseRight) =
+    UnionMembers $ \name value ->
+      parseLeft name value
+        <|> parseRight name value
+        <|> fail ("All union parsing options for " <> FC.nameUnqualified name <> " failed.")

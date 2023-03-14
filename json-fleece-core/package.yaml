@@ -1,5 +1,5 @@
 name:                json-fleece-core
-version:             0.2.0.0
+version:             0.3.0.0
 github:              "flipstone/json-fleece/json-fleece-core"
 license:             BSD3
 author:              "Author name here"
@@ -17,8 +17,12 @@ description:         Please see the README on GitHub at <https://github.com/flip
 
 dependencies:
 - base >= 4.7 && < 5
+- containers >= 0.6 &&  < 0.7
 - scientific >= 0.3.7 && < 0.4
+- shrubbery >= 0.1.2 && < 0.2
 - text >= 1.2 && < 1.3
+- time >= 1.11 && < 1.12
+- vector >= 0.12 && < 0.13
 
 flags:
   strict:
@@ -51,8 +55,8 @@ library:
   source-dirs: src
   exposed-modules:
     - Fleece.Core
-  dependencies:
-    - vector >= 0.12 && < 0.13
-    - time >= 1.11 && < 1.12
-    - containers >= 0.6 &&  < 0.7
+    - Fleece.Core.AnyJSON
+    - Fleece.Core.Class
+    - Fleece.Core.Name
+    - Fleece.Core.Schemas
 
