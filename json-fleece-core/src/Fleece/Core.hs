@@ -46,6 +46,7 @@ module Fleece.Core
   , boundedEnum
   , boundedEnumNamed
   , list
+  , Fleece.Core.Schemas.map
   , nonEmpty
   , integer
   , int

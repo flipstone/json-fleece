@@ -178,6 +178,30 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/FieldTestCases'
+  /test-cases/inline-object-string-response:
+    get:
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+  /test-cases/inline-object-string-array-response:
+    get:
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
   /test-cases/no-content-response:
     post:
       requestBody:

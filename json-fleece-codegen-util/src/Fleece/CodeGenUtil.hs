@@ -30,6 +30,7 @@ module Fleece.CodeGenUtil
   , inferSchemaInfoForInputName
   , inferTypeForInputName
   , arrayTypeInfo
+  , mapTypeInfo
   , nullableTypeInfo
   , textFormat
   , textSchemaTypeInfo
@@ -318,6 +319,21 @@ arrayTypeInfo itemInfo =
     , schemaTypeSchema =
         "("
           <> fleeceCoreVar "list"
+          <> " "
+          <> schemaTypeSchema itemInfo
+          <> ")"
+    }
+
+mapTypeInfo :: SchemaTypeInfo -> SchemaTypeInfo
+mapTypeInfo itemInfo =
+  itemInfo
+    { schemaTypeExpr =
+        HC.mapOf
+          (HC.typeNameToCodeDefaultQualification textType)
+          (schemaTypeExpr itemInfo)
+    , schemaTypeSchema =
+        "("
+          <> fleeceCoreVar "map"
           <> " "
           <> schemaTypeSchema itemInfo
           <> ")"

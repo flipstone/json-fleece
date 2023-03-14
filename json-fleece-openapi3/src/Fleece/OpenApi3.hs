@@ -260,6 +260,52 @@ lookupResponse operationKey schemaMap responseRef =
             "Unable to resolve schema reference "
               <> show refKey
               <> "."
+
+    inlineSchema :: OA.Schema -> CGU.CodeGen (Maybe CGU.SchemaTypeInfo)
+    inlineSchema schema =
+      case OA._schemaType schema of
+        Just OA.OpenApiArray ->
+          case OA._schemaItems schema of
+            Just (OA.OpenApiItemsObject (OA.Ref (OA.Reference itemRefKey))) -> do
+              itemSchemaInfo <- lookupCodeGenType itemRefKey
+              pure . Just . CGU.arrayTypeInfo $ itemSchemaInfo
+            Just (OA.OpenApiItemsObject (OA.Inline innerSchema)) -> do
+              itemSchemaInfo <- inlineSchema innerSchema
+              pure $ CGU.arrayTypeInfo <$> itemSchemaInfo
+            otherItemType ->
+              responseError $
+                "Unsupported schema array item type found: "
+                  <> show otherItemType
+        Just OA.OpenApiString ->
+          pure . Just $ CGU.textSchemaTypeInfo
+        Just OA.OpenApiBoolean ->
+          pure . Just $ CGU.boolSchemaTypeInfo
+        Just OA.OpenApiInteger ->
+          case OA._schemaFormat schema of
+            Just "int32" -> pure . Just $ CGU.int32SchemaTypeInfo
+            Just "int64" -> pure . Just $ CGU.int64SchemaTypeInfo
+            Just _ -> pure . Just $ CGU.integerSchemaTypeInfo
+            Nothing -> pure . Just $ CGU.integerSchemaTypeInfo
+        Just OA.OpenApiObject ->
+          if IOHM.null (OA._schemaProperties schema)
+            then case OA._schemaAdditionalProperties schema of
+              Nothing ->
+                responseError "Inline schemas for objects with no properties or additional properties are not yet supported."
+              Just (OA.AdditionalPropertiesAllowed False) ->
+                responseError "Inline schemas for objects with additional properties disallowed are not yet supported."
+              Just (OA.AdditionalPropertiesAllowed True) ->
+                responseError "Inline schemas for objects with additional properties allowed are not yet supported."
+              Just (OA.AdditionalPropertiesSchema (OA.Ref (OA.Reference refKey))) -> do
+                itemSchemaInfo <- lookupCodeGenType refKey
+                pure . Just . CGU.mapTypeInfo $ itemSchemaInfo
+              Just (OA.AdditionalPropertiesSchema (OA.Inline innerSchema)) -> do
+                itemSchemaInfo <- inlineSchema innerSchema
+                pure $ CGU.mapTypeInfo <$> itemSchemaInfo
+            else responseError "Inline schemas for objects with properties are not yet supported."
+        Just s ->
+          responseError $ "Inline " <> show s <> " response schemas are not currently supported."
+        Nothing ->
+          responseError "Inline response schema doesn't have a type."
   in
     case responseRef of
       OA.Ref _reference ->
@@ -272,33 +318,7 @@ lookupResponse operationKey schemaMap responseRef =
               Just (OA.Ref (OA.Reference refKey)) ->
                 fmap Just (lookupCodeGenType refKey)
               Just (OA.Inline schema) ->
-                case OA._schemaType schema of
-                  Just OA.OpenApiArray ->
-                    case OA._schemaItems schema of
-                      Just (OA.OpenApiItemsObject (OA.Ref (OA.Reference itemRefKey))) -> do
-                        itemSchemaInfo <- lookupCodeGenType itemRefKey
-                        pure . Just . CGU.arrayTypeInfo $ itemSchemaInfo
-                      Just (OA.OpenApiItemsObject (OA.Inline _schema)) -> do
-                        responseError $
-                          "Inline schemas for array items are not yet supported."
-                      otherItemType ->
-                        responseError $
-                          "Unsupported schema array item type found: "
-                            <> show otherItemType
-                  Just OA.OpenApiString ->
-                    pure . Just $ CGU.textSchemaTypeInfo
-                  Just OA.OpenApiBoolean ->
-                    pure . Just $ CGU.boolSchemaTypeInfo
-                  Just OA.OpenApiInteger ->
-                    case OA._schemaFormat schema of
-                      Just "int32" -> pure . Just $ CGU.int32SchemaTypeInfo
-                      Just "int64" -> pure . Just $ CGU.int64SchemaTypeInfo
-                      Just _ -> pure . Just $ CGU.integerSchemaTypeInfo
-                      Nothing -> pure . Just $ CGU.integerSchemaTypeInfo
-                  Just s ->
-                    responseError $ "Inline " <> show s <> " response schemas are not currently supported."
-                  Nothing ->
-                    responseError "Inline response schema doesn't have a type."
+                inlineSchema schema
               Nothing ->
                 pure Nothing
 

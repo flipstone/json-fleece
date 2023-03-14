@@ -41,6 +41,7 @@ module Fleece.CodeGenUtil.HaskellCode
   , toVarName
   , toConstructorVarName
   , listOf
+  , mapOf
   , maybeOf
   , eitherOf
   , dollar
@@ -383,6 +384,20 @@ deriving_ classes =
 listOf :: TypeExpression -> TypeExpression
 listOf itemName =
   TypeExpression ("[" <> toCode itemName <> "]")
+
+mapType :: TypeName
+mapType =
+  toTypeName "Data.Map" (Just "Map") "Map"
+
+mapOf :: TypeExpression -> TypeExpression -> TypeExpression
+mapOf keyName itemName =
+  "("
+    <> typeNameToCodeDefaultQualification mapType
+    <> " "
+    <> keyName
+    <> " "
+    <> itemName
+    <> ")"
 
 maybeOf :: TypeExpression -> TypeExpression
 maybeOf itemName =

@@ -8,6 +8,7 @@ module Fleece.Core.Schemas
   , boundedEnum
   , validate
   , list
+  , Fleece.Core.Schemas.map
   , nonEmpty
   , integer
   , int
@@ -46,6 +47,7 @@ module Fleece.Core.Schemas
 import Data.Coerce (Coercible, coerce)
 import qualified Data.Int as I
 import qualified Data.List.NonEmpty as NEL
+import qualified Data.Map as Map
 import Data.Scientific (floatingOrInteger, fromFloatDigits, toBoundedInteger, toRealFloat)
 import qualified Data.Text as T
 import qualified Data.Time as Time
@@ -63,8 +65,10 @@ import Fleece.Core.Class
   , Null (Null)
   , Object
   , UnionMembers
+  , additionalFields
   , array
   , boundedEnumNamed
+  , constructor
   , nullable
   , number
   , objectNamed
@@ -74,6 +78,7 @@ import Fleece.Core.Class
   , unionMemberWithIndex
   , unionNamed
   , validateNamed
+  , (#*)
   )
 import Fleece.Core.Name
   ( Name
@@ -233,6 +238,12 @@ list itemSchema =
     V.fromList
     V.toList
     (array itemSchema)
+
+map :: (Fleece schema, Typeable a) => schema a -> schema (Map.Map T.Text a)
+map innerSchema =
+  object $
+    constructor id
+      #* additionalFields id innerSchema
 
 nonEmpty :: Fleece schema => schema a -> schema (NEL.NonEmpty a)
 nonEmpty itemSchema =

@@ -1714,6 +1714,8 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/TestCases/InlineInt32Response.hs
     examples/test-cases/TestCases/Operations/TestCases/InlineInt64Response.hs
     examples/test-cases/TestCases/Operations/TestCases/InlineIntegerResponse.hs
+    examples/test-cases/TestCases/Operations/TestCases/InlineObjectStringArrayResponse.hs
+    examples/test-cases/TestCases/Operations/TestCases/InlineObjectStringResponse.hs
     examples/test-cases/TestCases/Operations/TestCases/InlineStringResponse.hs
     examples/test-cases/TestCases/Operations/TestCases/MultipleResponsesCodes.hs
     examples/test-cases/TestCases/Operations/TestCases/NoContentResponse.hs
