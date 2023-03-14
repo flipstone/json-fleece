@@ -320,7 +320,9 @@ lookupResponse operationKey schemaMap responseRef =
               Just (OA.Inline schema) ->
                 inlineSchema schema
               Nothing ->
-                pure Nothing
+                -- This indicates that the empty schema was specified for
+                -- the media type.
+                pure (Just CGU.anyJSONSchemaTypeInfo)
 
 mkOperationParams ::
   SchemaMap ->

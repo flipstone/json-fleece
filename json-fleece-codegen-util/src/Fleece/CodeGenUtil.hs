@@ -32,6 +32,7 @@ module Fleece.CodeGenUtil
   , arrayTypeInfo
   , mapTypeInfo
   , nullableTypeInfo
+  , anyJSONSchemaTypeInfo
   , textFormat
   , textSchemaTypeInfo
   , boolFormat
@@ -352,6 +353,13 @@ nullableTypeInfo itemInfo =
           <> " "
           <> schemaTypeSchema itemInfo
           <> ")"
+    }
+
+anyJSONSchemaTypeInfo :: SchemaTypeInfo
+anyJSONSchemaTypeInfo =
+  SchemaTypeInfo
+    { schemaTypeExpr = HC.typeNameToCodeDefaultQualification (fleeceCoreType "AnyJSON")
+    , schemaTypeSchema = fleeceCoreVar "anyJSON"
     }
 
 generateFleeceCode :: TypeMap -> CodeGen Modules

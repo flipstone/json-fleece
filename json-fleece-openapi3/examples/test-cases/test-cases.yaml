@@ -203,15 +203,17 @@ paths:
                   items:
                     type: string
   /test-cases/no-content-response:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FieldTestCases'
+    get:
       responses:
         '201':
           description: "Successful Post"
+  /test-cases/any-json-response:
+    get:
+      responses:
+        '201':
+          description: "Successful Post"
+          content:
+            application/json: {}
   /test-cases/multiple-responses-codes:
     post:
       requestBody:

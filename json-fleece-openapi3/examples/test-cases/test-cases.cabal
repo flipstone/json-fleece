@@ -24,6 +24,7 @@ library
       TestCases.Operations.ParamSchemaReference.StringParam
       TestCases.Operations.ParamSchemaReferenceArray
       TestCases.Operations.ParamSchemaReferenceArray.ArrayParam
+      TestCases.Operations.TestCases.AnyJsonResponse
       TestCases.Operations.TestCases.InlineArrayResponse
       TestCases.Operations.TestCases.InlineBooleanResponse
       TestCases.Operations.TestCases.InlineInt32Response
