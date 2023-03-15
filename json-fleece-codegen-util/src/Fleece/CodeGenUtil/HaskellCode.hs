@@ -67,6 +67,7 @@ module Fleece.CodeGenUtil.HaskellCode
 -- import prelude explicitly since we want to define our own 'lines' function
 import Prelude (Eq ((==)), Foldable, Int, Maybe (Just, Nothing), Monoid (mempty), Ord, Semigroup ((<>)), String, fmap, id, map, maybe, mconcat, show, zip, ($), (.))
 
+import qualified Data.Char as Char
 import Data.Foldable (toList)
 import qualified Data.List as List
 import qualified Data.Set as Set
@@ -265,9 +266,15 @@ toTypeName moduleName mbQualifier t =
     , typeNameSuggestedQualifier = fmap Manip.toPascal mbQualifier
     }
 
-toConstructorName :: T.Text -> ConstructorName
-toConstructorName =
-  ConstructorName . fromText . Manip.toPascal
+toConstructorName :: TypeName -> T.Text -> ConstructorName
+toConstructorName typeName constructorName =
+  case T.unpack constructorName of
+    c : _
+      | Char.isNumber c ->
+          ConstructorName . fromText $
+            Manip.toPascal (typeNameText typeName)
+              <> Manip.toPascal constructorName
+    _ -> ConstructorName . fromText $ Manip.toPascal constructorName
 
 toModuleName :: T.Text -> ModuleName
 toModuleName =

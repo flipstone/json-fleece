@@ -18,6 +18,7 @@ import qualified Data.List.NonEmpty as NEL
 import qualified Fleece.Aeson.Beeline as FA
 import Prelude (($), Eq, Maybe, Show, fmap)
 import qualified TestCases.Operations.TestCases.QueryParams.BooleanParam as BooleanParam
+import qualified TestCases.Operations.TestCases.QueryParams.InlineEnumIntParam as InlineEnumIntParam
 import qualified TestCases.Operations.TestCases.QueryParams.InlineEnumParam as InlineEnumParam
 import qualified TestCases.Operations.TestCases.QueryParams.OptionalArrayParam as OptionalArrayParam
 import qualified TestCases.Operations.TestCases.QueryParams.RequiredArrayParam as RequiredArrayParam
@@ -47,6 +48,7 @@ route =
 
 data QueryParams = QueryParams
   { booleanParam :: BooleanParam.BooleanParam
+  , inlineEnumIntParam :: Maybe InlineEnumIntParam.InlineEnumIntParam
   , inlineEnumParam :: Maybe InlineEnumParam.InlineEnumParam
   , optionalArrayParam :: [OptionalArrayParam.OptionalArrayParam]
   , requiredArrayParam :: NEL.NonEmpty RequiredArrayParam.RequiredArrayParam
@@ -58,6 +60,7 @@ queryParamsSchema :: H.QuerySchema q => q QueryParams QueryParams
 queryParamsSchema =
   H.makeQuery QueryParams
     ?+ H.required booleanParam BooleanParam.paramDef
+    ?+ H.optional inlineEnumIntParam InlineEnumIntParam.paramDef
     ?+ H.optional inlineEnumParam InlineEnumParam.paramDef
     ?+ H.explodedArray optionalArrayParam OptionalArrayParam.paramDef
     ?+ H.explodedNonEmpty requiredArrayParam RequiredArrayParam.paramDef

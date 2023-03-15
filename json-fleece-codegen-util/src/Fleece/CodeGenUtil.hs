@@ -596,23 +596,28 @@ generateOperationCode _typeMap codeGenOperation = do
                   : map (HC.indent 4 . mkParamSchema) queryParams
               )
 
-    responseConstructorName responseStatus =
-      HC.toConstructorName $
+    responseConstructorName responseType responseStatus =
+      HC.toConstructorName responseType $
         case responseStatus of
           ResponseStatusCode statusCode ->
             "Response" <> T.pack (show statusCode)
           DefaultResponse ->
             "OtherResponse"
 
-    mkResponseConstructor (responseStatus, mbSchemaTypeInfo) =
-      ( responseConstructorName responseStatus
+    mkResponseConstructor (responseType, responseStatus, mbSchemaTypeInfo) =
+      ( responseConstructorName responseType responseStatus
       , maybe beelineNoResponseBodyType schemaTypeExpr mbSchemaTypeInfo
       )
 
     responses =
-      Map.toList
-        . codeGenOperationResponses
-        $ codeGenOperation
+      let
+        statusAndSchema =
+          Map.toList
+            . codeGenOperationResponses
+            $ codeGenOperation
+        addResponseType (status, schema) = (responsesTypeName, status, schema)
+      in
+        map addResponseType statusAndSchema
 
     responsesTypeName =
       HC.toTypeName moduleName Nothing "Responses"
@@ -634,13 +639,13 @@ generateOperationCode _typeMap codeGenOperation = do
         <> " "
         <> schemaTypeSchema schemaTypeInfo
 
-    mkResponseSchema (responseStatus, mbSchemaTypeInfo) =
+    mkResponseSchema (responseType, responseStatus, mbSchemaTypeInfo) =
       "("
         <> responseStatusMacher responseStatus
         <> ", "
         <> HC.functorMap
         <> " "
-        <> HC.toCode (responseConstructorName responseStatus)
+        <> HC.toCode (responseConstructorName responseType responseStatus)
         <> " ("
         <> maybe beelineNoResponseBody schemaTypeResponse mbSchemaTypeInfo
         <> "))"
@@ -1261,7 +1266,7 @@ generateEnum ::
 generateEnum typeName enumValues =
   let
     mkEnumItem t =
-      (t, HC.toConstructorName t)
+      (t, HC.toConstructorName typeName t)
 
     enumItems =
       map mkEnumItem enumValues

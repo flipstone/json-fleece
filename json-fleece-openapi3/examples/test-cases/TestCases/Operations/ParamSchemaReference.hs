@@ -17,8 +17,10 @@ import Beeline.Routing ((/+), (/-))
 import qualified Beeline.Routing as R
 import qualified Fleece.Aeson.Beeline as FA
 import Prelude (($), Eq, Maybe, Show, fmap)
+import qualified TestCases.Operations.ParamSchemaReference.EnumIntParam as EnumIntParam
 import qualified TestCases.Operations.ParamSchemaReference.EnumParam as EnumParam
 import qualified TestCases.Operations.ParamSchemaReference.StringParam as StringParam
+import qualified TestCases.Types.EnumIntParam as EnumIntParam
 import qualified TestCases.Types.EnumParam as EnumParam
 import qualified TestCases.Types.FieldTestCases as FieldTestCases
 import qualified TestCases.Types.StringParam as StringParam
@@ -51,13 +53,15 @@ route =
       /+ R.Param StringParam.paramDef stringParam
 
 data QueryParams = QueryParams
-  { enumParam :: Maybe EnumParam.EnumParam
+  { enumIntParam :: Maybe EnumIntParam.EnumIntParam
+  , enumParam :: Maybe EnumParam.EnumParam
   }
   deriving (Eq, Show)
 
 queryParamsSchema :: H.QuerySchema q => q QueryParams QueryParams
 queryParamsSchema =
   H.makeQuery QueryParams
+    ?+ H.optional enumIntParam EnumIntParam.paramDef
     ?+ H.optional enumParam EnumParam.paramDef
 
 data Responses

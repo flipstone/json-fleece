@@ -63,6 +63,15 @@ paths:
               - baz
               - bat
               - bax
+        - name: inline-enum-int-param
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - "10"
+              - "20"
+              - "30"
       responses:
         '200':
           description: "Successful Get"
@@ -82,6 +91,10 @@ paths:
           in: query
           schema:
             $ref: '#/components/schemas/enum-param'
+        - name: enum-int-param
+          in: query
+          schema:
+            $ref: '#/components/schemas/enum-int-param'
       responses:
         '200':
           description: "Successful Get"
@@ -255,6 +268,12 @@ components:
         - foo
         - bar
         - baz
+    enum-int-param:
+      type: string
+      enum:
+        - "10"
+        - "20"
+        - "30"
     FieldTestCases:
       type: object
       description: A schema that contains test cases for each kind of field

@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.2.2.0
+version:        0.2.3.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -1705,6 +1705,7 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param1.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param2.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReference.hs
+    examples/test-cases/TestCases/Operations/ParamSchemaReference/EnumIntParam.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReference/EnumParam.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReference/StringParam.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReferenceArray.hs
@@ -1724,11 +1725,13 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/TestCases/NoContentResponse.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/BooleanParam.hs
+    examples/test-cases/TestCases/Operations/TestCases/QueryParams/InlineEnumIntParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/InlineEnumParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/OptionalArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/RequiredArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/StringParam.hs
     examples/test-cases/TestCases/Operations/TestCases/RequestBody.hs
+    examples/test-cases/TestCases/Types/EnumIntParam.hs
     examples/test-cases/TestCases/Types/EnumParam.hs
     examples/test-cases/TestCases/Types/FieldTestCases.hs
     examples/test-cases/TestCases/Types/FieldTestCases/ArrayFieldItem.hs
