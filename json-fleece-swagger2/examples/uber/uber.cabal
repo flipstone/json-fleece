@@ -70,7 +70,7 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
-    , beeline-http-client >=0.3.1 && <0.6
+    , beeline-http-client >=0.3.1 && <0.7
     , beeline-routing >=0.2.4 && <0.3
     , json-fleece-aeson-beeline ==0.1.*
     , json-fleece-core >=0.1.3 && <0.4
