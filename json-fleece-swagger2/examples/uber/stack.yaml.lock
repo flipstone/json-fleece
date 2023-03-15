@@ -41,6 +41,13 @@ packages:
   original:
     commit: 94ae4dfe91fa03cf5863c6402c40a6d7967ac8b4
     git: https://github.com/flipstone/shrubbery
+- completed:
+    hackage: attoparsec-iso8601-1.1.0.0@sha256:29d590f21adc4112973ad5e874d095f8b403b886932fe7e15567b239f5483539,1370
+    pantry-tree:
+      sha256: 7eddd7d3bd0f3d51a3b0fe8284ed996bc2bf83effc8cf6afce360e5f0e54fbe5
+      size: 361
+  original:
+    hackage: attoparsec-iso8601-1.1.0.0@sha256:29d590f21adc4112973ad5e874d095f8b403b886932fe7e15567b239f5483539,1370
 snapshots:
 - completed:
     sha256: adbc602422dde10cc330175da7de8609e70afc41449a7e2d6e8b1827aa0e5008

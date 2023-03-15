@@ -13,6 +13,7 @@ import qualified Data.ByteString.Lazy as LBS
 import qualified Data.Map.Strict as Map
 import Data.Scientific (Scientific, scientific)
 import qualified Data.Text as T
+import qualified Data.Time as Time
 import qualified Data.Vector as V
 import Hedgehog ((===))
 import qualified Hedgehog as HH
@@ -57,6 +58,7 @@ tests =
   , ("prop_encode_additional", prop_encode_additional)
   , ("prop_decode_anyJSON", prop_decode_anyJSON)
   , ("prop_encode_anyJSON", prop_encode_anyJSON)
+  , ("prop_utcTimeAndZonedTime", prop_utcTimeAndZonedTime)
   ]
 
 prop_decode_number :: HH.Property
@@ -524,6 +526,44 @@ prop_encode_anyJSON =
 
     expected === encoded
 
+prop_utcTimeAndZonedTime :: HH.Property
+prop_utcTimeAndZonedTime =
+  HH.property $ do
+    utcOrZonedTime <-
+      HH.forAll $ Gen.either genUTCTime genZonedTime
+
+    let
+      encoded =
+        case utcOrZonedTime of
+          Left utcTime -> FA.encode FC.utcTime utcTime
+          Right zonedTime -> FA.encode FC.zonedTime zonedTime
+
+      -- we only compare the minutes offset of the time zone because
+      -- otherwise UTC and +0000 are not equal
+      zonedTimeToTuple zonedTime =
+        ( Time.zonedTimeToLocalTime zonedTime
+        , Time.timeZoneMinutes (Time.zonedTimeZone zonedTime)
+        )
+
+    utcOrZonedTimeDecoded <-
+      HH.forAll $
+        Gen.either
+          (pure $ FA.decode FC.utcTime encoded)
+          (pure $ FA.decode FC.zonedTime encoded)
+
+    case (utcOrZonedTime, utcOrZonedTimeDecoded) of
+      (Left originalUTCTime, Left decodedUTCTime) ->
+        Right originalUTCTime === decodedUTCTime
+      (Left originalUTCTime, Right decodedZonedTime) ->
+        Right (zonedTimeToTuple (Time.utcToZonedTime Time.utc originalUTCTime))
+          === fmap zonedTimeToTuple decodedZonedTime
+      (Right originalZonedTime, Right decodedZonedTime) -> do
+        Right (zonedTimeToTuple originalZonedTime)
+          === fmap zonedTimeToTuple decodedZonedTime
+      (Right originalZonedTime, Left decodedUTCTime) -> do
+        Right (Time.zonedTimeToUTC originalZonedTime)
+          === decodedUTCTime
+
 genAnyJSON :: HH.Gen FC.AnyJSON
 genAnyJSON =
   Gen.choice
@@ -550,3 +590,34 @@ genScientific =
 genText :: HH.Gen T.Text
 genText =
   Gen.text (Range.linear 0 32) Gen.unicodeAll
+
+genUTCTime :: HH.Gen Time.UTCTime
+genUTCTime =
+  Time.UTCTime <$> genDay <*> genDiffTime
+
+genZonedTime :: HH.Gen Time.ZonedTime
+genZonedTime =
+  Time.ZonedTime <$> genLocalTime <*> genTimeZone
+
+genLocalTime :: HH.Gen Time.LocalTime
+genLocalTime =
+  Time.LocalTime <$> genDay <*> genTimeOfDay
+
+genTimeZone :: HH.Gen Time.TimeZone
+genTimeZone =
+  Time.minutesToTimeZone <$> Gen.integral (Range.linearFrom 0 (-60 * 12) (60 * 14))
+
+genDay :: HH.Gen Time.Day
+genDay = do
+  year <- Gen.integral (Range.linearFrom 2000 0 3000)
+  month <- Gen.integral (Range.constant 1 12)
+  day <- Gen.integral (Range.constant 1 (Time.gregorianMonthLength year month))
+
+  pure (Time.fromGregorian year month day)
+
+genTimeOfDay :: HH.Gen Time.TimeOfDay
+genTimeOfDay = fmap Time.timeToTimeOfDay genDiffTime
+
+genDiffTime :: HH.Gen Time.DiffTime
+genDiffTime =
+  Time.secondsToDiffTime <$> Gen.integral (Range.constant 0 85399)

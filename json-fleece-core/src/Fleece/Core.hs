@@ -68,7 +68,6 @@ module Fleece.Core
   , localTime
   , zonedTime
   , day
-  , iso8601Formatted
   , boundedIntegralNumber
   , boundedIntegralNumberNamed
   , unboundedIntegralNumber

@@ -30,7 +30,6 @@ module Fleece.Core.Schemas
   , localTime
   , zonedTime
   , day
-  , iso8601Formatted
   , boundedIntegralNumber
   , boundedIntegralNumberNamed
   , unboundedIntegralNumber
@@ -44,6 +43,8 @@ module Fleece.Core.Schemas
   , NothingEncoding (EmitNull, OmitKey)
   ) where
 
+import qualified Data.Attoparsec.Text as AttoText
+import qualified Data.Attoparsec.Time as AttoTime
 import Data.Coerce (Coercible, coerce)
 import qualified Data.Int as I
 import qualified Data.List.NonEmpty as NEL
@@ -404,40 +405,44 @@ string = transform T.pack T.unpack text
 
 utcTime :: Fleece schema => schema Time.UTCTime
 utcTime =
-  iso8601Formatted ISO8601.iso8601Format
+  iso8601Formatted "UTCTime" ISO8601.iso8601Format AttoTime.utcTime
 
 localTime :: Fleece schema => schema Time.LocalTime
 localTime =
-  iso8601Formatted ISO8601.iso8601Format
+  iso8601Formatted "LocalTime" ISO8601.iso8601Format AttoTime.localTime
 
 zonedTime :: Fleece schema => schema Time.ZonedTime
 zonedTime =
-  iso8601Formatted ISO8601.iso8601Format
+  iso8601Formatted "ZonedTime" ISO8601.iso8601Format AttoTime.zonedTime
 
 day :: Fleece schema => schema Time.Day
 day =
-  iso8601Formatted ISO8601.iso8601Format
+  iso8601Formatted "Day" ISO8601.iso8601Format AttoTime.day
 
+-- An internal helper for building building time schemes
 iso8601Formatted ::
-  (Fleece schema, Typeable t) =>
+  Fleece schema =>
+  String ->
   ISO8601.Format t ->
+  AttoText.Parser t ->
   schema t
-iso8601Formatted format =
+iso8601Formatted name format parser =
   let
-    name =
-      defaultSchemaName format
-
     parseTime jsonText =
-      case ISO8601.formatParseM format (T.unpack jsonText) of
-        Just time -> pure time
-        Nothing ->
+      case AttoText.parseOnly (parser <* AttoText.endOfInput) jsonText of
+        Right time ->
+          Right time
+        Left err ->
           Left $
             "Invalid time format for "
-              <> nameToString name
-              <> ": "
+              <> name
+              <> " value "
               <> show jsonText
+              <> ": "
+              <> err
   in
-    validate
+    validateNamed
+      (unqualifiedName name)
       (T.pack . ISO8601.formatShow format)
       parseTime
       text

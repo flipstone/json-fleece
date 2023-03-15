@@ -78,6 +78,7 @@ extra-deps:
       - beeline-http-client
   - git: https://github.com/flipstone/shrubbery
     commit: 94ae4dfe91fa03cf5863c6402c40a6d7967ac8b4
+  - attoparsec-iso8601-1.1.0.0@sha256:29d590f21adc4112973ad5e874d095f8b403b886932fe7e15567b239f5483539,1370
 
 
 # Extra package databases containing global packages
