@@ -122,7 +122,7 @@ data CodeGenOperation = CodeGenOperation
   , codeGenOperationMethod :: T.Text
   , codeGenOperationPath :: [OperationPathPiece]
   , codeGenOperationParams :: [CodeGenOperationParam]
-  , codeGenOperationRequestBody :: Maybe CodeGenType
+  , codeGenOperationRequestBody :: Maybe SchemaTypeInfo
   , codeGenOperationResponses :: Map.Map ResponseStatus (Maybe SchemaTypeInfo)
   }
 
@@ -417,25 +417,16 @@ generateOperationCode _typeMap codeGenOperation = do
         Nothing -> beelineNoPathParamsType
         Just name -> HC.typeNameToCode Nothing name
 
-    mbRequestBodyTypeName =
-      fmap
-        codeGenTypeName
-        (codeGenOperationRequestBody codeGenOperation)
+    mbRequestBodySchemaType = codeGenOperationRequestBody codeGenOperation
 
-    mkRequestBody requestBodyTypeName =
-      let
-        requestBodySchemaName =
-          HC.varNameToCodeDefaultQualification
-            . fleeceSchemaNameForType
-            $ requestBodyTypeName
-      in
-        beelineRequestBodySchema
-          <> " = "
-          <> beelineRequestBody
-          <> " "
-          <> fleeceJSON
-          <> " "
-          <> requestBodySchemaName
+    mkRequestBody requestBodySchema =
+      beelineRequestBodySchema
+        <> " = "
+        <> beelineRequestBody
+        <> " "
+        <> fleeceJSON
+        <> " "
+        <> HC.toCode (schemaTypeSchema requestBodySchema)
 
     operationType =
       HC.lines . (HC.indent 2 beelineOperation :) $
@@ -445,8 +436,8 @@ generateOperationCode _typeMap codeGenOperation = do
           , queryParamsTypeNameAsCode
           , maybe
               beelineNoRequestBodyType
-              HC.typeNameToCodeDefaultQualification
-              mbRequestBodyTypeName
+              (HC.toCode . schemaTypeExpr)
+              mbRequestBodySchemaType
           , HC.typeNameToCode Nothing responsesTypeName
           ]
 
@@ -455,7 +446,7 @@ generateOperationCode _typeMap codeGenOperation = do
         catMaybes
           [ Just (beelineRequestRoute <> " = route")
           , fmap (\name -> beelineRequestQuerySchema <> " = " <> name) mbQueryParamsSchemaName
-          , fmap mkRequestBody mbRequestBodyTypeName
+          , fmap mkRequestBody mbRequestBodySchemaType
           , Just (beelineResponseSchemas <> " = responseSchemas")
           ]
 

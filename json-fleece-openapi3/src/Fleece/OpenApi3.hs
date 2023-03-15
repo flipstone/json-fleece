@@ -153,7 +153,7 @@ mkOperation schemaMap filePath pathItem method operation = do
         , CGU.codeGenOperationMethod = method
         , CGU.codeGenOperationPath = pathPieces
         , CGU.codeGenOperationParams = Map.elems params
-        , CGU.codeGenOperationRequestBody = fmap schemaCodeGenType mbRequestBodySchema
+        , CGU.codeGenOperationRequestBody = mbRequestBodySchema
         , CGU.codeGenOperationResponses = responses
         }
 
@@ -192,12 +192,13 @@ lookupRequestBodySchema ::
   T.Text ->
   SchemaMap ->
   OA.MediaTypeObject ->
-  CGU.CodeGen (Maybe SchemaEntry)
+  CGU.CodeGen (Maybe CGU.SchemaTypeInfo)
 lookupRequestBodySchema operationKey schemaMap mediaTypeObject =
   case OA._mediaTypeObjectSchema mediaTypeObject of
     Just (OA.Ref (OA.Reference refKey)) ->
       case Map.lookup refKey schemaMap of
-        Just schemaEntry -> pure (Just schemaEntry)
+        Just schemaEntry ->
+          pure . Just . CGU.codeGenTypeSchemaInfo . schemaCodeGenType $ schemaEntry
         Nothing ->
           CGU.codeGenError $
             "Error finding request body schema for operation "
