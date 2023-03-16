@@ -28,6 +28,11 @@ library
       TestCases.Operations.TestCases.AnyJsonResponse
       TestCases.Operations.TestCases.InlineArrayResponse
       TestCases.Operations.TestCases.InlineBooleanResponse
+      TestCases.Operations.TestCases.InlineEnumArrayRequestBody
+      TestCases.Operations.TestCases.InlineEnumArrayRequestBody.RequestBodyItem
+      TestCases.Operations.TestCases.InlineEnumResponses
+      TestCases.Operations.TestCases.InlineEnumResponses.Response200Body
+      TestCases.Operations.TestCases.InlineEnumResponses.Response201Body
       TestCases.Operations.TestCases.InlineInt32Response
       TestCases.Operations.TestCases.InlineInt64Response
       TestCases.Operations.TestCases.InlineIntegerResponse

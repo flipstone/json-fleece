@@ -27,7 +27,7 @@ module Fleece.CodeGenUtil
   , TypeMap
   , SchemaTypeInfo (..)
   , CodeSection (Type, Operation)
-  , inferSchemaInfoForInputName
+  , inferSchemaInfoForTypeName
   , inferTypeForInputName
   , arrayTypeInfo
   , mapTypeInfo
@@ -874,10 +874,13 @@ generateSchemaCode ::
   CodeGenType ->
   CodeGen (FilePath, HC.HaskellCode)
 generateSchemaCode typeMap codeGenType = do
-  (moduleName, typeName) <-
-    inferTypeForInputName Type (codeGenTypeOriginalName codeGenType)
-
   let
+    typeName =
+      codeGenTypeName codeGenType
+
+    moduleName =
+      HC.typeNameModule typeName
+
     path =
       T.unpack (T.replace "." "/" (HC.moduleNameToText moduleName) <> ".hs")
 
@@ -1197,10 +1200,8 @@ primitiveSchemaTypeInfo typeName schema =
     , schemaTypeSchema = schema
     }
 
-inferSchemaInfoForInputName :: T.Text -> CodeGen SchemaTypeInfo
-inferSchemaInfoForInputName name = do
-  (_moduleName, typeName) <- inferTypeForInputName Type name
-
+inferSchemaInfoForTypeName :: HC.TypeName -> CodeGen SchemaTypeInfo
+inferSchemaInfoForTypeName typeName = do
   let
     schema =
       fleeceSchemaNameForType typeName

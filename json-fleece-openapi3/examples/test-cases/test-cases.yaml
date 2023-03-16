@@ -133,6 +133,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FieldTestCases'
+  /test-cases/inline-enum-array-request-body:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+                enum:
+                  - foo
+                  - bar
+                  - baz
+      responses:
+        '201':
+          description: "Successful Post"
   /test-cases/inline-string-response:
     get:
       responses:
@@ -234,6 +250,27 @@ paths:
               schema:
                 type: object
                 additionalProperties: true
+  /test-cases/inline-enum-responses:
+    get:
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: string
+                enum:
+                  - foo
+                  - bar
+        '201':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: string
+                enum:
+                  - baz
+                  - bat
   /test-cases/no-content-response:
     get:
       responses:
