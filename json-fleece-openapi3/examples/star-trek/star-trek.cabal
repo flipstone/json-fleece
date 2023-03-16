@@ -18,323 +18,483 @@ library
   exposed-modules:
       StarTrek.Operations.Animal
       StarTrek.Operations.Animal.ApiKey
-      StarTrek.Operations.Animal.Search
-      StarTrek.Operations.Animal.Search.ApiKey
-      StarTrek.Operations.Animal.Search.PageNumber
-      StarTrek.Operations.Animal.Search.PageSize
-      StarTrek.Operations.Animal.Search.Sort
+      StarTrek.Operations.Animal.Search.GET
+      StarTrek.Operations.Animal.Search.GET.ApiKey
+      StarTrek.Operations.Animal.Search.GET.PageNumber
+      StarTrek.Operations.Animal.Search.GET.PageSize
+      StarTrek.Operations.Animal.Search.POST
+      StarTrek.Operations.Animal.Search.POST.ApiKey
+      StarTrek.Operations.Animal.Search.POST.PageNumber
+      StarTrek.Operations.Animal.Search.POST.PageSize
+      StarTrek.Operations.Animal.Search.POST.Sort
       StarTrek.Operations.Animal.Uid
       StarTrek.Operations.AstronomicalObject
       StarTrek.Operations.AstronomicalObject.ApiKey
-      StarTrek.Operations.AstronomicalObject.Search
-      StarTrek.Operations.AstronomicalObject.Search.ApiKey
-      StarTrek.Operations.AstronomicalObject.Search.PageNumber
-      StarTrek.Operations.AstronomicalObject.Search.PageSize
-      StarTrek.Operations.AstronomicalObject.Search.Sort
+      StarTrek.Operations.AstronomicalObject.Search.GET
+      StarTrek.Operations.AstronomicalObject.Search.GET.ApiKey
+      StarTrek.Operations.AstronomicalObject.Search.GET.PageNumber
+      StarTrek.Operations.AstronomicalObject.Search.GET.PageSize
+      StarTrek.Operations.AstronomicalObject.Search.POST
+      StarTrek.Operations.AstronomicalObject.Search.POST.ApiKey
+      StarTrek.Operations.AstronomicalObject.Search.POST.PageNumber
+      StarTrek.Operations.AstronomicalObject.Search.POST.PageSize
+      StarTrek.Operations.AstronomicalObject.Search.POST.Sort
       StarTrek.Operations.AstronomicalObject.Uid
       StarTrek.Operations.Book
       StarTrek.Operations.Book.ApiKey
-      StarTrek.Operations.Book.Search
-      StarTrek.Operations.Book.Search.ApiKey
-      StarTrek.Operations.Book.Search.PageNumber
-      StarTrek.Operations.Book.Search.PageSize
-      StarTrek.Operations.Book.Search.Sort
+      StarTrek.Operations.Book.Search.GET
+      StarTrek.Operations.Book.Search.GET.ApiKey
+      StarTrek.Operations.Book.Search.GET.PageNumber
+      StarTrek.Operations.Book.Search.GET.PageSize
+      StarTrek.Operations.Book.Search.POST
+      StarTrek.Operations.Book.Search.POST.ApiKey
+      StarTrek.Operations.Book.Search.POST.PageNumber
+      StarTrek.Operations.Book.Search.POST.PageSize
+      StarTrek.Operations.Book.Search.POST.Sort
       StarTrek.Operations.Book.Uid
       StarTrek.Operations.BookCollection
       StarTrek.Operations.BookCollection.ApiKey
-      StarTrek.Operations.BookCollection.Search
-      StarTrek.Operations.BookCollection.Search.ApiKey
-      StarTrek.Operations.BookCollection.Search.PageNumber
-      StarTrek.Operations.BookCollection.Search.PageSize
-      StarTrek.Operations.BookCollection.Search.Sort
+      StarTrek.Operations.BookCollection.Search.GET
+      StarTrek.Operations.BookCollection.Search.GET.ApiKey
+      StarTrek.Operations.BookCollection.Search.GET.PageNumber
+      StarTrek.Operations.BookCollection.Search.GET.PageSize
+      StarTrek.Operations.BookCollection.Search.POST
+      StarTrek.Operations.BookCollection.Search.POST.ApiKey
+      StarTrek.Operations.BookCollection.Search.POST.PageNumber
+      StarTrek.Operations.BookCollection.Search.POST.PageSize
+      StarTrek.Operations.BookCollection.Search.POST.Sort
       StarTrek.Operations.BookCollection.Uid
       StarTrek.Operations.BookSeries
       StarTrek.Operations.BookSeries.ApiKey
-      StarTrek.Operations.BookSeries.Search
-      StarTrek.Operations.BookSeries.Search.ApiKey
-      StarTrek.Operations.BookSeries.Search.PageNumber
-      StarTrek.Operations.BookSeries.Search.PageSize
-      StarTrek.Operations.BookSeries.Search.Sort
+      StarTrek.Operations.BookSeries.Search.GET
+      StarTrek.Operations.BookSeries.Search.GET.ApiKey
+      StarTrek.Operations.BookSeries.Search.GET.PageNumber
+      StarTrek.Operations.BookSeries.Search.GET.PageSize
+      StarTrek.Operations.BookSeries.Search.POST
+      StarTrek.Operations.BookSeries.Search.POST.ApiKey
+      StarTrek.Operations.BookSeries.Search.POST.PageNumber
+      StarTrek.Operations.BookSeries.Search.POST.PageSize
+      StarTrek.Operations.BookSeries.Search.POST.Sort
       StarTrek.Operations.BookSeries.Uid
       StarTrek.Operations.Character
       StarTrek.Operations.Character.ApiKey
-      StarTrek.Operations.Character.Search
-      StarTrek.Operations.Character.Search.ApiKey
-      StarTrek.Operations.Character.Search.PageNumber
-      StarTrek.Operations.Character.Search.PageSize
-      StarTrek.Operations.Character.Search.Sort
+      StarTrek.Operations.Character.Search.GET
+      StarTrek.Operations.Character.Search.GET.ApiKey
+      StarTrek.Operations.Character.Search.GET.PageNumber
+      StarTrek.Operations.Character.Search.GET.PageSize
+      StarTrek.Operations.Character.Search.POST
+      StarTrek.Operations.Character.Search.POST.ApiKey
+      StarTrek.Operations.Character.Search.POST.PageNumber
+      StarTrek.Operations.Character.Search.POST.PageSize
+      StarTrek.Operations.Character.Search.POST.Sort
       StarTrek.Operations.Character.Uid
       StarTrek.Operations.ComicCollection
       StarTrek.Operations.ComicCollection.ApiKey
-      StarTrek.Operations.ComicCollection.Search
-      StarTrek.Operations.ComicCollection.Search.ApiKey
-      StarTrek.Operations.ComicCollection.Search.PageNumber
-      StarTrek.Operations.ComicCollection.Search.PageSize
-      StarTrek.Operations.ComicCollection.Search.Sort
+      StarTrek.Operations.ComicCollection.Search.GET
+      StarTrek.Operations.ComicCollection.Search.GET.ApiKey
+      StarTrek.Operations.ComicCollection.Search.GET.PageNumber
+      StarTrek.Operations.ComicCollection.Search.GET.PageSize
+      StarTrek.Operations.ComicCollection.Search.POST
+      StarTrek.Operations.ComicCollection.Search.POST.ApiKey
+      StarTrek.Operations.ComicCollection.Search.POST.PageNumber
+      StarTrek.Operations.ComicCollection.Search.POST.PageSize
+      StarTrek.Operations.ComicCollection.Search.POST.Sort
       StarTrek.Operations.ComicCollection.Uid
       StarTrek.Operations.Comics
       StarTrek.Operations.Comics.ApiKey
-      StarTrek.Operations.Comics.Search
-      StarTrek.Operations.Comics.Search.ApiKey
-      StarTrek.Operations.Comics.Search.PageNumber
-      StarTrek.Operations.Comics.Search.PageSize
-      StarTrek.Operations.Comics.Search.Sort
+      StarTrek.Operations.Comics.Search.GET
+      StarTrek.Operations.Comics.Search.GET.ApiKey
+      StarTrek.Operations.Comics.Search.GET.PageNumber
+      StarTrek.Operations.Comics.Search.GET.PageSize
+      StarTrek.Operations.Comics.Search.POST
+      StarTrek.Operations.Comics.Search.POST.ApiKey
+      StarTrek.Operations.Comics.Search.POST.PageNumber
+      StarTrek.Operations.Comics.Search.POST.PageSize
+      StarTrek.Operations.Comics.Search.POST.Sort
       StarTrek.Operations.Comics.Uid
       StarTrek.Operations.ComicSeries
       StarTrek.Operations.ComicSeries.ApiKey
-      StarTrek.Operations.ComicSeries.Search
-      StarTrek.Operations.ComicSeries.Search.ApiKey
-      StarTrek.Operations.ComicSeries.Search.PageNumber
-      StarTrek.Operations.ComicSeries.Search.PageSize
-      StarTrek.Operations.ComicSeries.Search.Sort
+      StarTrek.Operations.ComicSeries.Search.GET
+      StarTrek.Operations.ComicSeries.Search.GET.ApiKey
+      StarTrek.Operations.ComicSeries.Search.GET.PageNumber
+      StarTrek.Operations.ComicSeries.Search.GET.PageSize
+      StarTrek.Operations.ComicSeries.Search.POST
+      StarTrek.Operations.ComicSeries.Search.POST.ApiKey
+      StarTrek.Operations.ComicSeries.Search.POST.PageNumber
+      StarTrek.Operations.ComicSeries.Search.POST.PageSize
+      StarTrek.Operations.ComicSeries.Search.POST.Sort
       StarTrek.Operations.ComicSeries.Uid
       StarTrek.Operations.ComicStrip
       StarTrek.Operations.ComicStrip.ApiKey
-      StarTrek.Operations.ComicStrip.Search
-      StarTrek.Operations.ComicStrip.Search.ApiKey
-      StarTrek.Operations.ComicStrip.Search.PageNumber
-      StarTrek.Operations.ComicStrip.Search.PageSize
-      StarTrek.Operations.ComicStrip.Search.Sort
+      StarTrek.Operations.ComicStrip.Search.GET
+      StarTrek.Operations.ComicStrip.Search.GET.ApiKey
+      StarTrek.Operations.ComicStrip.Search.GET.PageNumber
+      StarTrek.Operations.ComicStrip.Search.GET.PageSize
+      StarTrek.Operations.ComicStrip.Search.POST
+      StarTrek.Operations.ComicStrip.Search.POST.ApiKey
+      StarTrek.Operations.ComicStrip.Search.POST.PageNumber
+      StarTrek.Operations.ComicStrip.Search.POST.PageSize
+      StarTrek.Operations.ComicStrip.Search.POST.Sort
       StarTrek.Operations.ComicStrip.Uid
       StarTrek.Operations.Company
       StarTrek.Operations.Company.ApiKey
-      StarTrek.Operations.Company.Search
-      StarTrek.Operations.Company.Search.ApiKey
-      StarTrek.Operations.Company.Search.PageNumber
-      StarTrek.Operations.Company.Search.PageSize
-      StarTrek.Operations.Company.Search.Sort
+      StarTrek.Operations.Company.Search.GET
+      StarTrek.Operations.Company.Search.GET.ApiKey
+      StarTrek.Operations.Company.Search.GET.PageNumber
+      StarTrek.Operations.Company.Search.GET.PageSize
+      StarTrek.Operations.Company.Search.POST
+      StarTrek.Operations.Company.Search.POST.ApiKey
+      StarTrek.Operations.Company.Search.POST.PageNumber
+      StarTrek.Operations.Company.Search.POST.PageSize
+      StarTrek.Operations.Company.Search.POST.Sort
       StarTrek.Operations.Company.Uid
       StarTrek.Operations.Conflict
       StarTrek.Operations.Conflict.ApiKey
-      StarTrek.Operations.Conflict.Search
-      StarTrek.Operations.Conflict.Search.ApiKey
-      StarTrek.Operations.Conflict.Search.PageNumber
-      StarTrek.Operations.Conflict.Search.PageSize
-      StarTrek.Operations.Conflict.Search.Sort
+      StarTrek.Operations.Conflict.Search.GET
+      StarTrek.Operations.Conflict.Search.GET.ApiKey
+      StarTrek.Operations.Conflict.Search.GET.PageNumber
+      StarTrek.Operations.Conflict.Search.GET.PageSize
+      StarTrek.Operations.Conflict.Search.POST
+      StarTrek.Operations.Conflict.Search.POST.ApiKey
+      StarTrek.Operations.Conflict.Search.POST.PageNumber
+      StarTrek.Operations.Conflict.Search.POST.PageSize
+      StarTrek.Operations.Conflict.Search.POST.Sort
       StarTrek.Operations.Conflict.Uid
       StarTrek.Operations.Element
       StarTrek.Operations.Element.ApiKey
-      StarTrek.Operations.Element.Search
-      StarTrek.Operations.Element.Search.ApiKey
-      StarTrek.Operations.Element.Search.PageNumber
-      StarTrek.Operations.Element.Search.PageSize
-      StarTrek.Operations.Element.Search.Sort
+      StarTrek.Operations.Element.Search.GET
+      StarTrek.Operations.Element.Search.GET.ApiKey
+      StarTrek.Operations.Element.Search.GET.PageNumber
+      StarTrek.Operations.Element.Search.GET.PageSize
+      StarTrek.Operations.Element.Search.POST
+      StarTrek.Operations.Element.Search.POST.ApiKey
+      StarTrek.Operations.Element.Search.POST.PageNumber
+      StarTrek.Operations.Element.Search.POST.PageSize
+      StarTrek.Operations.Element.Search.POST.Sort
       StarTrek.Operations.Element.Uid
       StarTrek.Operations.Episode
       StarTrek.Operations.Episode.ApiKey
-      StarTrek.Operations.Episode.Search
-      StarTrek.Operations.Episode.Search.ApiKey
-      StarTrek.Operations.Episode.Search.PageNumber
-      StarTrek.Operations.Episode.Search.PageSize
-      StarTrek.Operations.Episode.Search.Sort
+      StarTrek.Operations.Episode.Search.GET
+      StarTrek.Operations.Episode.Search.GET.ApiKey
+      StarTrek.Operations.Episode.Search.GET.PageNumber
+      StarTrek.Operations.Episode.Search.GET.PageSize
+      StarTrek.Operations.Episode.Search.POST
+      StarTrek.Operations.Episode.Search.POST.ApiKey
+      StarTrek.Operations.Episode.Search.POST.PageNumber
+      StarTrek.Operations.Episode.Search.POST.PageSize
+      StarTrek.Operations.Episode.Search.POST.Sort
       StarTrek.Operations.Episode.Uid
       StarTrek.Operations.Food
       StarTrek.Operations.Food.ApiKey
-      StarTrek.Operations.Food.Search
-      StarTrek.Operations.Food.Search.ApiKey
-      StarTrek.Operations.Food.Search.PageNumber
-      StarTrek.Operations.Food.Search.PageSize
-      StarTrek.Operations.Food.Search.Sort
+      StarTrek.Operations.Food.Search.GET
+      StarTrek.Operations.Food.Search.GET.ApiKey
+      StarTrek.Operations.Food.Search.GET.PageNumber
+      StarTrek.Operations.Food.Search.GET.PageSize
+      StarTrek.Operations.Food.Search.POST
+      StarTrek.Operations.Food.Search.POST.ApiKey
+      StarTrek.Operations.Food.Search.POST.PageNumber
+      StarTrek.Operations.Food.Search.POST.PageSize
+      StarTrek.Operations.Food.Search.POST.Sort
       StarTrek.Operations.Food.Uid
       StarTrek.Operations.Literature
       StarTrek.Operations.Literature.ApiKey
-      StarTrek.Operations.Literature.Search
-      StarTrek.Operations.Literature.Search.ApiKey
-      StarTrek.Operations.Literature.Search.PageNumber
-      StarTrek.Operations.Literature.Search.PageSize
-      StarTrek.Operations.Literature.Search.Sort
+      StarTrek.Operations.Literature.Search.GET
+      StarTrek.Operations.Literature.Search.GET.ApiKey
+      StarTrek.Operations.Literature.Search.GET.PageNumber
+      StarTrek.Operations.Literature.Search.GET.PageSize
+      StarTrek.Operations.Literature.Search.POST
+      StarTrek.Operations.Literature.Search.POST.ApiKey
+      StarTrek.Operations.Literature.Search.POST.PageNumber
+      StarTrek.Operations.Literature.Search.POST.PageSize
+      StarTrek.Operations.Literature.Search.POST.Sort
       StarTrek.Operations.Literature.Uid
       StarTrek.Operations.Location
       StarTrek.Operations.Location.ApiKey
-      StarTrek.Operations.Location.Search
-      StarTrek.Operations.Location.Search.ApiKey
-      StarTrek.Operations.Location.Search.PageNumber
-      StarTrek.Operations.Location.Search.PageSize
-      StarTrek.Operations.Location.Search.Sort
+      StarTrek.Operations.Location.Search.GET
+      StarTrek.Operations.Location.Search.GET.ApiKey
+      StarTrek.Operations.Location.Search.GET.PageNumber
+      StarTrek.Operations.Location.Search.GET.PageSize
+      StarTrek.Operations.Location.Search.POST
+      StarTrek.Operations.Location.Search.POST.ApiKey
+      StarTrek.Operations.Location.Search.POST.PageNumber
+      StarTrek.Operations.Location.Search.POST.PageSize
+      StarTrek.Operations.Location.Search.POST.Sort
       StarTrek.Operations.Location.Uid
       StarTrek.Operations.Magazine
       StarTrek.Operations.Magazine.ApiKey
-      StarTrek.Operations.Magazine.Search
-      StarTrek.Operations.Magazine.Search.ApiKey
-      StarTrek.Operations.Magazine.Search.PageNumber
-      StarTrek.Operations.Magazine.Search.PageSize
-      StarTrek.Operations.Magazine.Search.Sort
+      StarTrek.Operations.Magazine.Search.GET
+      StarTrek.Operations.Magazine.Search.GET.ApiKey
+      StarTrek.Operations.Magazine.Search.GET.PageNumber
+      StarTrek.Operations.Magazine.Search.GET.PageSize
+      StarTrek.Operations.Magazine.Search.POST
+      StarTrek.Operations.Magazine.Search.POST.ApiKey
+      StarTrek.Operations.Magazine.Search.POST.PageNumber
+      StarTrek.Operations.Magazine.Search.POST.PageSize
+      StarTrek.Operations.Magazine.Search.POST.Sort
       StarTrek.Operations.Magazine.Uid
       StarTrek.Operations.MagazineSeries
       StarTrek.Operations.MagazineSeries.ApiKey
-      StarTrek.Operations.MagazineSeries.Search
-      StarTrek.Operations.MagazineSeries.Search.ApiKey
-      StarTrek.Operations.MagazineSeries.Search.PageNumber
-      StarTrek.Operations.MagazineSeries.Search.PageSize
-      StarTrek.Operations.MagazineSeries.Search.Sort
+      StarTrek.Operations.MagazineSeries.Search.GET
+      StarTrek.Operations.MagazineSeries.Search.GET.ApiKey
+      StarTrek.Operations.MagazineSeries.Search.GET.PageNumber
+      StarTrek.Operations.MagazineSeries.Search.GET.PageSize
+      StarTrek.Operations.MagazineSeries.Search.POST
+      StarTrek.Operations.MagazineSeries.Search.POST.ApiKey
+      StarTrek.Operations.MagazineSeries.Search.POST.PageNumber
+      StarTrek.Operations.MagazineSeries.Search.POST.PageSize
+      StarTrek.Operations.MagazineSeries.Search.POST.Sort
       StarTrek.Operations.MagazineSeries.Uid
       StarTrek.Operations.Material
       StarTrek.Operations.Material.ApiKey
-      StarTrek.Operations.Material.Search
-      StarTrek.Operations.Material.Search.ApiKey
-      StarTrek.Operations.Material.Search.PageNumber
-      StarTrek.Operations.Material.Search.PageSize
-      StarTrek.Operations.Material.Search.Sort
+      StarTrek.Operations.Material.Search.GET
+      StarTrek.Operations.Material.Search.GET.ApiKey
+      StarTrek.Operations.Material.Search.GET.PageNumber
+      StarTrek.Operations.Material.Search.GET.PageSize
+      StarTrek.Operations.Material.Search.POST
+      StarTrek.Operations.Material.Search.POST.ApiKey
+      StarTrek.Operations.Material.Search.POST.PageNumber
+      StarTrek.Operations.Material.Search.POST.PageSize
+      StarTrek.Operations.Material.Search.POST.Sort
       StarTrek.Operations.Material.Uid
       StarTrek.Operations.MedicalCondition
       StarTrek.Operations.MedicalCondition.ApiKey
-      StarTrek.Operations.MedicalCondition.Search
-      StarTrek.Operations.MedicalCondition.Search.ApiKey
-      StarTrek.Operations.MedicalCondition.Search.PageNumber
-      StarTrek.Operations.MedicalCondition.Search.PageSize
-      StarTrek.Operations.MedicalCondition.Search.Sort
+      StarTrek.Operations.MedicalCondition.Search.GET
+      StarTrek.Operations.MedicalCondition.Search.GET.ApiKey
+      StarTrek.Operations.MedicalCondition.Search.GET.PageNumber
+      StarTrek.Operations.MedicalCondition.Search.GET.PageSize
+      StarTrek.Operations.MedicalCondition.Search.POST
+      StarTrek.Operations.MedicalCondition.Search.POST.ApiKey
+      StarTrek.Operations.MedicalCondition.Search.POST.PageNumber
+      StarTrek.Operations.MedicalCondition.Search.POST.PageSize
+      StarTrek.Operations.MedicalCondition.Search.POST.Sort
       StarTrek.Operations.MedicalCondition.Uid
       StarTrek.Operations.Movie
       StarTrek.Operations.Movie.ApiKey
-      StarTrek.Operations.Movie.Search
-      StarTrek.Operations.Movie.Search.ApiKey
-      StarTrek.Operations.Movie.Search.PageNumber
-      StarTrek.Operations.Movie.Search.PageSize
-      StarTrek.Operations.Movie.Search.Sort
+      StarTrek.Operations.Movie.Search.GET
+      StarTrek.Operations.Movie.Search.GET.ApiKey
+      StarTrek.Operations.Movie.Search.GET.PageNumber
+      StarTrek.Operations.Movie.Search.GET.PageSize
+      StarTrek.Operations.Movie.Search.POST
+      StarTrek.Operations.Movie.Search.POST.ApiKey
+      StarTrek.Operations.Movie.Search.POST.PageNumber
+      StarTrek.Operations.Movie.Search.POST.PageSize
+      StarTrek.Operations.Movie.Search.POST.Sort
       StarTrek.Operations.Movie.Uid
       StarTrek.Operations.Occupation
       StarTrek.Operations.Occupation.ApiKey
-      StarTrek.Operations.Occupation.Search
-      StarTrek.Operations.Occupation.Search.ApiKey
-      StarTrek.Operations.Occupation.Search.PageNumber
-      StarTrek.Operations.Occupation.Search.PageSize
-      StarTrek.Operations.Occupation.Search.Sort
+      StarTrek.Operations.Occupation.Search.GET
+      StarTrek.Operations.Occupation.Search.GET.ApiKey
+      StarTrek.Operations.Occupation.Search.GET.PageNumber
+      StarTrek.Operations.Occupation.Search.GET.PageSize
+      StarTrek.Operations.Occupation.Search.POST
+      StarTrek.Operations.Occupation.Search.POST.ApiKey
+      StarTrek.Operations.Occupation.Search.POST.PageNumber
+      StarTrek.Operations.Occupation.Search.POST.PageSize
+      StarTrek.Operations.Occupation.Search.POST.Sort
       StarTrek.Operations.Occupation.Uid
       StarTrek.Operations.Organization
       StarTrek.Operations.Organization.ApiKey
-      StarTrek.Operations.Organization.Search
-      StarTrek.Operations.Organization.Search.ApiKey
-      StarTrek.Operations.Organization.Search.PageNumber
-      StarTrek.Operations.Organization.Search.PageSize
-      StarTrek.Operations.Organization.Search.Sort
+      StarTrek.Operations.Organization.Search.GET
+      StarTrek.Operations.Organization.Search.GET.ApiKey
+      StarTrek.Operations.Organization.Search.GET.PageNumber
+      StarTrek.Operations.Organization.Search.GET.PageSize
+      StarTrek.Operations.Organization.Search.POST
+      StarTrek.Operations.Organization.Search.POST.ApiKey
+      StarTrek.Operations.Organization.Search.POST.PageNumber
+      StarTrek.Operations.Organization.Search.POST.PageSize
+      StarTrek.Operations.Organization.Search.POST.Sort
       StarTrek.Operations.Organization.Uid
       StarTrek.Operations.Performer
       StarTrek.Operations.Performer.ApiKey
-      StarTrek.Operations.Performer.Search
-      StarTrek.Operations.Performer.Search.ApiKey
-      StarTrek.Operations.Performer.Search.PageNumber
-      StarTrek.Operations.Performer.Search.PageSize
-      StarTrek.Operations.Performer.Search.Sort
+      StarTrek.Operations.Performer.Search.GET
+      StarTrek.Operations.Performer.Search.GET.ApiKey
+      StarTrek.Operations.Performer.Search.GET.PageNumber
+      StarTrek.Operations.Performer.Search.GET.PageSize
+      StarTrek.Operations.Performer.Search.POST
+      StarTrek.Operations.Performer.Search.POST.ApiKey
+      StarTrek.Operations.Performer.Search.POST.PageNumber
+      StarTrek.Operations.Performer.Search.POST.PageSize
+      StarTrek.Operations.Performer.Search.POST.Sort
       StarTrek.Operations.Performer.Uid
       StarTrek.Operations.Season
       StarTrek.Operations.Season.ApiKey
-      StarTrek.Operations.Season.Search
-      StarTrek.Operations.Season.Search.ApiKey
-      StarTrek.Operations.Season.Search.PageNumber
-      StarTrek.Operations.Season.Search.PageSize
-      StarTrek.Operations.Season.Search.Sort
+      StarTrek.Operations.Season.Search.GET
+      StarTrek.Operations.Season.Search.GET.ApiKey
+      StarTrek.Operations.Season.Search.GET.PageNumber
+      StarTrek.Operations.Season.Search.GET.PageSize
+      StarTrek.Operations.Season.Search.POST
+      StarTrek.Operations.Season.Search.POST.ApiKey
+      StarTrek.Operations.Season.Search.POST.PageNumber
+      StarTrek.Operations.Season.Search.POST.PageSize
+      StarTrek.Operations.Season.Search.POST.Sort
       StarTrek.Operations.Season.Uid
       StarTrek.Operations.Series
       StarTrek.Operations.Series.ApiKey
-      StarTrek.Operations.Series.Search
-      StarTrek.Operations.Series.Search.ApiKey
-      StarTrek.Operations.Series.Search.PageNumber
-      StarTrek.Operations.Series.Search.PageSize
-      StarTrek.Operations.Series.Search.Sort
+      StarTrek.Operations.Series.Search.GET
+      StarTrek.Operations.Series.Search.GET.ApiKey
+      StarTrek.Operations.Series.Search.GET.PageNumber
+      StarTrek.Operations.Series.Search.GET.PageSize
+      StarTrek.Operations.Series.Search.POST
+      StarTrek.Operations.Series.Search.POST.ApiKey
+      StarTrek.Operations.Series.Search.POST.PageNumber
+      StarTrek.Operations.Series.Search.POST.PageSize
+      StarTrek.Operations.Series.Search.POST.Sort
       StarTrek.Operations.Series.Uid
       StarTrek.Operations.Soundtrack
       StarTrek.Operations.Soundtrack.ApiKey
-      StarTrek.Operations.Soundtrack.Search
-      StarTrek.Operations.Soundtrack.Search.ApiKey
-      StarTrek.Operations.Soundtrack.Search.PageNumber
-      StarTrek.Operations.Soundtrack.Search.PageSize
-      StarTrek.Operations.Soundtrack.Search.Sort
+      StarTrek.Operations.Soundtrack.Search.GET
+      StarTrek.Operations.Soundtrack.Search.GET.ApiKey
+      StarTrek.Operations.Soundtrack.Search.GET.PageNumber
+      StarTrek.Operations.Soundtrack.Search.GET.PageSize
+      StarTrek.Operations.Soundtrack.Search.POST
+      StarTrek.Operations.Soundtrack.Search.POST.ApiKey
+      StarTrek.Operations.Soundtrack.Search.POST.PageNumber
+      StarTrek.Operations.Soundtrack.Search.POST.PageSize
+      StarTrek.Operations.Soundtrack.Search.POST.Sort
       StarTrek.Operations.Soundtrack.Uid
       StarTrek.Operations.Spacecraft
       StarTrek.Operations.Spacecraft.ApiKey
-      StarTrek.Operations.Spacecraft.Search
-      StarTrek.Operations.Spacecraft.Search.ApiKey
-      StarTrek.Operations.Spacecraft.Search.PageNumber
-      StarTrek.Operations.Spacecraft.Search.PageSize
-      StarTrek.Operations.Spacecraft.Search.Sort
+      StarTrek.Operations.Spacecraft.Search.GET
+      StarTrek.Operations.Spacecraft.Search.GET.ApiKey
+      StarTrek.Operations.Spacecraft.Search.GET.PageNumber
+      StarTrek.Operations.Spacecraft.Search.GET.PageSize
+      StarTrek.Operations.Spacecraft.Search.POST
+      StarTrek.Operations.Spacecraft.Search.POST.ApiKey
+      StarTrek.Operations.Spacecraft.Search.POST.PageNumber
+      StarTrek.Operations.Spacecraft.Search.POST.PageSize
+      StarTrek.Operations.Spacecraft.Search.POST.Sort
       StarTrek.Operations.Spacecraft.Uid
       StarTrek.Operations.SpacecraftClass
       StarTrek.Operations.SpacecraftClass.ApiKey
-      StarTrek.Operations.SpacecraftClass.Search
-      StarTrek.Operations.SpacecraftClass.Search.ApiKey
-      StarTrek.Operations.SpacecraftClass.Search.PageNumber
-      StarTrek.Operations.SpacecraftClass.Search.PageSize
-      StarTrek.Operations.SpacecraftClass.Search.Sort
+      StarTrek.Operations.SpacecraftClass.Search.GET
+      StarTrek.Operations.SpacecraftClass.Search.GET.ApiKey
+      StarTrek.Operations.SpacecraftClass.Search.GET.PageNumber
+      StarTrek.Operations.SpacecraftClass.Search.GET.PageSize
+      StarTrek.Operations.SpacecraftClass.Search.POST
+      StarTrek.Operations.SpacecraftClass.Search.POST.ApiKey
+      StarTrek.Operations.SpacecraftClass.Search.POST.PageNumber
+      StarTrek.Operations.SpacecraftClass.Search.POST.PageSize
+      StarTrek.Operations.SpacecraftClass.Search.POST.Sort
       StarTrek.Operations.SpacecraftClass.Uid
       StarTrek.Operations.Species
       StarTrek.Operations.Species.ApiKey
-      StarTrek.Operations.Species.Search
-      StarTrek.Operations.Species.Search.ApiKey
-      StarTrek.Operations.Species.Search.PageNumber
-      StarTrek.Operations.Species.Search.PageSize
-      StarTrek.Operations.Species.Search.Sort
+      StarTrek.Operations.Species.Search.GET
+      StarTrek.Operations.Species.Search.GET.ApiKey
+      StarTrek.Operations.Species.Search.GET.PageNumber
+      StarTrek.Operations.Species.Search.GET.PageSize
+      StarTrek.Operations.Species.Search.POST
+      StarTrek.Operations.Species.Search.POST.ApiKey
+      StarTrek.Operations.Species.Search.POST.PageNumber
+      StarTrek.Operations.Species.Search.POST.PageSize
+      StarTrek.Operations.Species.Search.POST.Sort
       StarTrek.Operations.Species.Uid
       StarTrek.Operations.Staff
       StarTrek.Operations.Staff.ApiKey
-      StarTrek.Operations.Staff.Search
-      StarTrek.Operations.Staff.Search.ApiKey
-      StarTrek.Operations.Staff.Search.PageNumber
-      StarTrek.Operations.Staff.Search.PageSize
-      StarTrek.Operations.Staff.Search.Sort
+      StarTrek.Operations.Staff.Search.GET
+      StarTrek.Operations.Staff.Search.GET.ApiKey
+      StarTrek.Operations.Staff.Search.GET.PageNumber
+      StarTrek.Operations.Staff.Search.GET.PageSize
+      StarTrek.Operations.Staff.Search.POST
+      StarTrek.Operations.Staff.Search.POST.ApiKey
+      StarTrek.Operations.Staff.Search.POST.PageNumber
+      StarTrek.Operations.Staff.Search.POST.PageSize
+      StarTrek.Operations.Staff.Search.POST.Sort
       StarTrek.Operations.Staff.Uid
       StarTrek.Operations.Technology
       StarTrek.Operations.Technology.ApiKey
-      StarTrek.Operations.Technology.Search
-      StarTrek.Operations.Technology.Search.ApiKey
-      StarTrek.Operations.Technology.Search.PageNumber
-      StarTrek.Operations.Technology.Search.PageSize
-      StarTrek.Operations.Technology.Search.Sort
+      StarTrek.Operations.Technology.Search.GET
+      StarTrek.Operations.Technology.Search.GET.ApiKey
+      StarTrek.Operations.Technology.Search.GET.PageNumber
+      StarTrek.Operations.Technology.Search.GET.PageSize
+      StarTrek.Operations.Technology.Search.POST
+      StarTrek.Operations.Technology.Search.POST.ApiKey
+      StarTrek.Operations.Technology.Search.POST.PageNumber
+      StarTrek.Operations.Technology.Search.POST.PageSize
+      StarTrek.Operations.Technology.Search.POST.Sort
       StarTrek.Operations.Technology.Uid
       StarTrek.Operations.Title
       StarTrek.Operations.Title.ApiKey
-      StarTrek.Operations.Title.Search
-      StarTrek.Operations.Title.Search.ApiKey
-      StarTrek.Operations.Title.Search.PageNumber
-      StarTrek.Operations.Title.Search.PageSize
-      StarTrek.Operations.Title.Search.Sort
+      StarTrek.Operations.Title.Search.GET
+      StarTrek.Operations.Title.Search.GET.ApiKey
+      StarTrek.Operations.Title.Search.GET.PageNumber
+      StarTrek.Operations.Title.Search.GET.PageSize
+      StarTrek.Operations.Title.Search.POST
+      StarTrek.Operations.Title.Search.POST.ApiKey
+      StarTrek.Operations.Title.Search.POST.PageNumber
+      StarTrek.Operations.Title.Search.POST.PageSize
+      StarTrek.Operations.Title.Search.POST.Sort
       StarTrek.Operations.Title.Uid
       StarTrek.Operations.TradingCard
       StarTrek.Operations.TradingCard.ApiKey
-      StarTrek.Operations.TradingCard.Search
-      StarTrek.Operations.TradingCard.Search.ApiKey
-      StarTrek.Operations.TradingCard.Search.PageNumber
-      StarTrek.Operations.TradingCard.Search.PageSize
-      StarTrek.Operations.TradingCard.Search.Sort
+      StarTrek.Operations.TradingCard.Search.GET
+      StarTrek.Operations.TradingCard.Search.GET.ApiKey
+      StarTrek.Operations.TradingCard.Search.GET.PageNumber
+      StarTrek.Operations.TradingCard.Search.GET.PageSize
+      StarTrek.Operations.TradingCard.Search.POST
+      StarTrek.Operations.TradingCard.Search.POST.ApiKey
+      StarTrek.Operations.TradingCard.Search.POST.PageNumber
+      StarTrek.Operations.TradingCard.Search.POST.PageSize
+      StarTrek.Operations.TradingCard.Search.POST.Sort
       StarTrek.Operations.TradingCard.Uid
       StarTrek.Operations.TradingCardDeck
       StarTrek.Operations.TradingCardDeck.ApiKey
-      StarTrek.Operations.TradingCardDeck.Search
-      StarTrek.Operations.TradingCardDeck.Search.ApiKey
-      StarTrek.Operations.TradingCardDeck.Search.PageNumber
-      StarTrek.Operations.TradingCardDeck.Search.PageSize
-      StarTrek.Operations.TradingCardDeck.Search.Sort
+      StarTrek.Operations.TradingCardDeck.Search.GET
+      StarTrek.Operations.TradingCardDeck.Search.GET.ApiKey
+      StarTrek.Operations.TradingCardDeck.Search.GET.PageNumber
+      StarTrek.Operations.TradingCardDeck.Search.GET.PageSize
+      StarTrek.Operations.TradingCardDeck.Search.POST
+      StarTrek.Operations.TradingCardDeck.Search.POST.ApiKey
+      StarTrek.Operations.TradingCardDeck.Search.POST.PageNumber
+      StarTrek.Operations.TradingCardDeck.Search.POST.PageSize
+      StarTrek.Operations.TradingCardDeck.Search.POST.Sort
       StarTrek.Operations.TradingCardDeck.Uid
       StarTrek.Operations.TradingCardSet
       StarTrek.Operations.TradingCardSet.ApiKey
-      StarTrek.Operations.TradingCardSet.Search
-      StarTrek.Operations.TradingCardSet.Search.ApiKey
-      StarTrek.Operations.TradingCardSet.Search.PageNumber
-      StarTrek.Operations.TradingCardSet.Search.PageSize
-      StarTrek.Operations.TradingCardSet.Search.Sort
+      StarTrek.Operations.TradingCardSet.Search.GET
+      StarTrek.Operations.TradingCardSet.Search.GET.ApiKey
+      StarTrek.Operations.TradingCardSet.Search.GET.PageNumber
+      StarTrek.Operations.TradingCardSet.Search.GET.PageSize
+      StarTrek.Operations.TradingCardSet.Search.POST
+      StarTrek.Operations.TradingCardSet.Search.POST.ApiKey
+      StarTrek.Operations.TradingCardSet.Search.POST.PageNumber
+      StarTrek.Operations.TradingCardSet.Search.POST.PageSize
+      StarTrek.Operations.TradingCardSet.Search.POST.Sort
       StarTrek.Operations.TradingCardSet.Uid
       StarTrek.Operations.VideoGame
       StarTrek.Operations.VideoGame.ApiKey
-      StarTrek.Operations.VideoGame.Search
-      StarTrek.Operations.VideoGame.Search.ApiKey
-      StarTrek.Operations.VideoGame.Search.PageNumber
-      StarTrek.Operations.VideoGame.Search.PageSize
-      StarTrek.Operations.VideoGame.Search.Sort
+      StarTrek.Operations.VideoGame.Search.GET
+      StarTrek.Operations.VideoGame.Search.GET.ApiKey
+      StarTrek.Operations.VideoGame.Search.GET.PageNumber
+      StarTrek.Operations.VideoGame.Search.GET.PageSize
+      StarTrek.Operations.VideoGame.Search.POST
+      StarTrek.Operations.VideoGame.Search.POST.ApiKey
+      StarTrek.Operations.VideoGame.Search.POST.PageNumber
+      StarTrek.Operations.VideoGame.Search.POST.PageSize
+      StarTrek.Operations.VideoGame.Search.POST.Sort
       StarTrek.Operations.VideoGame.Uid
       StarTrek.Operations.VideoRelease
       StarTrek.Operations.VideoRelease.ApiKey
-      StarTrek.Operations.VideoRelease.Search
-      StarTrek.Operations.VideoRelease.Search.ApiKey
-      StarTrek.Operations.VideoRelease.Search.PageNumber
-      StarTrek.Operations.VideoRelease.Search.PageSize
-      StarTrek.Operations.VideoRelease.Search.Sort
+      StarTrek.Operations.VideoRelease.Search.GET
+      StarTrek.Operations.VideoRelease.Search.GET.ApiKey
+      StarTrek.Operations.VideoRelease.Search.GET.PageNumber
+      StarTrek.Operations.VideoRelease.Search.GET.PageSize
+      StarTrek.Operations.VideoRelease.Search.POST
+      StarTrek.Operations.VideoRelease.Search.POST.ApiKey
+      StarTrek.Operations.VideoRelease.Search.POST.PageNumber
+      StarTrek.Operations.VideoRelease.Search.POST.PageSize
+      StarTrek.Operations.VideoRelease.Search.POST.Sort
       StarTrek.Operations.VideoRelease.Uid
       StarTrek.Operations.Weapon
       StarTrek.Operations.Weapon.ApiKey
-      StarTrek.Operations.Weapon.Search
-      StarTrek.Operations.Weapon.Search.ApiKey
-      StarTrek.Operations.Weapon.Search.PageNumber
-      StarTrek.Operations.Weapon.Search.PageSize
-      StarTrek.Operations.Weapon.Search.Sort
+      StarTrek.Operations.Weapon.Search.GET
+      StarTrek.Operations.Weapon.Search.GET.ApiKey
+      StarTrek.Operations.Weapon.Search.GET.PageNumber
+      StarTrek.Operations.Weapon.Search.GET.PageSize
+      StarTrek.Operations.Weapon.Search.POST
+      StarTrek.Operations.Weapon.Search.POST.ApiKey
+      StarTrek.Operations.Weapon.Search.POST.PageNumber
+      StarTrek.Operations.Weapon.Search.POST.PageSize
+      StarTrek.Operations.Weapon.Search.POST.Sort
       StarTrek.Operations.Weapon.Uid
       StarTrek.Types.AnimalBase
       StarTrek.Types.AnimalBase.Avian

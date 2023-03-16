@@ -24,7 +24,8 @@ module Fleece.CodeGenUtil
   , CodeGenDataFormat (..)
   , CodeGenObjectField (..)
   , CodeGenObjectFieldType (..)
-  , TypeMap
+  , CodeGenKey (..)
+  , CodeGenMap
   , SchemaTypeInfo (..)
   , CodeSection (Type, Operation)
   , inferSchemaInfoForTypeName
@@ -85,8 +86,14 @@ data CodeGenOptions = CodeGenOptions
 codeGenError :: String -> CodeGen a
 codeGenError = lift . Left . CodeGenError
 
-type TypeMap =
-  Map.Map T.Text CodeGenItem
+data CodeGenKey
+  = OperationKey T.Text
+  | ParamKey T.Text
+  | SchemaKey T.Text
+  deriving (Eq, Ord, Show)
+
+type CodeGenMap =
+  Map.Map CodeGenKey CodeGenItem
 
 data CodeGenItem
   = CodeGenItemType CodeGenType
@@ -188,7 +195,7 @@ data CodeGenObjectFieldType
       CodeGenObjectFieldType
 
 resolveFieldTypeInfo ::
-  TypeMap ->
+  CodeGenMap ->
   CodeGenObjectFieldType ->
   CodeGen SchemaTypeInfo
 resolveFieldTypeInfo typeMap =
@@ -196,7 +203,7 @@ resolveFieldTypeInfo typeMap =
     go fieldType =
       case fieldType of
         TypeReference ref ->
-          case Map.lookup ref typeMap of
+          case Map.lookup (SchemaKey ref) typeMap of
             Just (CodeGenItemType codeGenType) ->
               pure (codeGenTypeSchemaInfo codeGenType)
             _ ->
@@ -213,7 +220,7 @@ resolveFieldTypeInfo typeMap =
     go
 
 resolveFieldDescription ::
-  TypeMap ->
+  CodeGenMap ->
   CodeGenObjectFieldType ->
   Maybe T.Text
 resolveFieldDescription typeMap =
@@ -221,7 +228,7 @@ resolveFieldDescription typeMap =
     go fieldType =
       case fieldType of
         TypeReference ref ->
-          case Map.lookup ref typeMap of
+          case Map.lookup (SchemaKey ref) typeMap of
             Just (CodeGenItemType codeGenType) ->
               codeGenTypeDescription codeGenType
             Just (CodeGenItemOperation _operation) ->
@@ -362,12 +369,12 @@ anyJSONSchemaTypeInfo =
     , schemaTypeSchema = fleeceCoreVar "anyJSON"
     }
 
-generateFleeceCode :: TypeMap -> CodeGen Modules
+generateFleeceCode :: CodeGenMap -> CodeGen Modules
 generateFleeceCode typeMap =
   traverse (generateItem typeMap) (Map.elems typeMap)
 
 generateItem ::
-  TypeMap ->
+  CodeGenMap ->
   CodeGenItem ->
   CodeGen (FilePath, HC.HaskellCode)
 generateItem typeMap codeGenItem =
@@ -380,7 +387,7 @@ generateItem typeMap codeGenItem =
       generateOperationParamCode codeGenOperationParam
 
 generateOperationCode ::
-  TypeMap ->
+  CodeGenMap ->
   CodeGenOperation ->
   CodeGen (FilePath, HC.HaskellCode)
 generateOperationCode _typeMap codeGenOperation = do
@@ -870,7 +877,7 @@ operationParamHeader moduleName typeName paramDef =
       )
 
 generateSchemaCode ::
-  TypeMap ->
+  CodeGenMap ->
   CodeGenType ->
   CodeGen (FilePath, HC.HaskellCode)
 generateSchemaCode typeMap codeGenType = do
@@ -1067,7 +1074,7 @@ generateFleeceEnum typeName enumValues =
     ([toTextName], HC.declarations [enum, fleeceSchema])
 
 generateFleeceObject ::
-  TypeMap ->
+  CodeGenMap ->
   HC.TypeName ->
   [CodeGenObjectField] ->
   CodeGen ([HC.VarName], HC.HaskellCode)
@@ -1116,7 +1123,7 @@ generateFleeceObject typeMap typeName codeGenFields = do
   pure $ (extraExports, body)
 
 generateFleeceArray ::
-  TypeMap ->
+  CodeGenMap ->
   HC.TypeName ->
   CodeGenObjectFieldType ->
   CodeGen ([HC.VarName], HC.HaskellCode)
@@ -1165,7 +1172,7 @@ fleeceFieldFunction field =
     else fleeceCoreVar "optional"
 
 mkFleeceSchemaField ::
-  TypeMap ->
+  CodeGenMap ->
   HC.ModuleName ->
   CodeGenObjectField ->
   CodeGen FleeceSchemaField

@@ -24,22 +24,37 @@ generateOpenApiFleeceCode openApi = do
   CGU.generateFleeceCode typeMap
 
 type SchemaMap =
-  Map.Map T.Text SchemaEntry
+  Map.Map CGU.CodeGenKey SchemaEntry
 
 data SchemaEntry = SchemaEntry
   { schemaCodeGenType :: CGU.CodeGenType
   , schemaOpenApiSchema :: OA.Schema
   }
 
-mkCodeGenTypes :: OA.OpenApi -> CGU.CodeGen CGU.TypeMap
+unionsErrorOnConflict ::
+  [Map.Map CGU.CodeGenKey a] ->
+  CGU.CodeGen (Map.Map CGU.CodeGenKey a)
+unionsErrorOnConflict maps =
+  let
+    conflictOnError key _a _b =
+      CGU.codeGenError ("Duplicate key found: " <> show key)
+  in
+    sequence $
+      foldr
+        (Map.unionWithKey conflictOnError)
+        mempty
+        (fmap (fmap pure) maps)
+
+mkCodeGenTypes :: OA.OpenApi -> CGU.CodeGen CGU.CodeGenMap
 mkCodeGenTypes openApi = do
-  schemaMap <-
-    fmap Map.unions
-      . traverse (uncurry mkSchemaMap)
+  schemaMaps <-
+    traverse (uncurry mkSchemaMap)
       . IOHM.toList
       . OA._componentsSchemas
       . OA._openApiComponents
       $ openApi
+
+  schemaMap <- unionsErrorOnConflict schemaMaps
 
   let
     pathItems =
@@ -47,18 +62,29 @@ mkCodeGenTypes openApi = do
         . OA._openApiPaths
         $ openApi
 
-    typeMap =
+    codeGenMap =
       fmap (CGU.CodeGenItemType . schemaCodeGenType) schemaMap
 
   pathTypes <- traverse (uncurry $ mkPathItem schemaMap) pathItems
-  pure $ Map.unions (typeMap : pathTypes)
+  unionsErrorOnConflict (codeGenMap : pathTypes)
 
-mkPathItem :: SchemaMap -> FilePath -> OA.PathItem -> CGU.CodeGen CGU.TypeMap
-mkPathItem schemaMap filePath pathItem =
-  fmap Map.unions $
+mkPathItem :: SchemaMap -> FilePath -> OA.PathItem -> CGU.CodeGen CGU.CodeGenMap
+mkPathItem schemaMap filePath pathItem = do
+  let
+    methodOperations =
+      pathItemOperations pathItem
+
+    nameStrategy =
+      if length (methodOperations) > 1
+        then FallbackOperationNameIncludeMethod
+        else FallbackOperationNameOmitMethod
+
+  operationCodeGenMaps <-
     traverse
-      (uncurry $ mkOperation schemaMap filePath pathItem)
-      (pathItemOperations pathItem)
+      (uncurry $ mkOperation schemaMap filePath pathItem nameStrategy)
+      methodOperations
+
+  unionsErrorOnConflict operationCodeGenMaps
 
 pathItemOperations :: OA.PathItem -> [(T.Text, OA.Operation)]
 pathItemOperations pathItem =
@@ -80,14 +106,19 @@ pathItemOperations pathItem =
       , ("TRACE", OA._pathItemTrace)
       ]
 
+data FallbackOperationNamingStrategy
+  = FallbackOperationNameIncludeMethod
+  | FallbackOperationNameOmitMethod
+
 mkOperation ::
   SchemaMap ->
   FilePath ->
   OA.PathItem ->
+  FallbackOperationNamingStrategy ->
   T.Text ->
   OA.Operation ->
-  CGU.CodeGen CGU.TypeMap
-mkOperation schemaMap filePath pathItem method operation = do
+  CGU.CodeGen CGU.CodeGenMap
+mkOperation schemaMap filePath pathItem nameStrategy method operation = do
   let
     pathTextParts =
       filter (not . T.null)
@@ -98,7 +129,14 @@ mkOperation schemaMap filePath pathItem method operation = do
     operationKey =
       case OA._operationOperationId operation of
         Just operationId -> operationId
-        Nothing -> T.intercalate "." pathTextParts
+        Nothing ->
+          let
+            pathKey =
+              T.intercalate "." pathTextParts
+          in
+            case nameStrategy of
+              FallbackOperationNameOmitMethod -> pathKey
+              FallbackOperationNameIncludeMethod -> pathKey <> "." <> method
 
   params <-
     mkOperationParams schemaMap operationKey pathItem operation
@@ -159,7 +197,7 @@ mkOperation schemaMap filePath pathItem method operation = do
         }
 
     mkParamEntry (paramName, param) =
-      ( operationKey <> "." <> paramName
+      ( CGU.ParamKey (operationKey <> "." <> paramName)
       , CGU.CodeGenItemOperationParam param
       )
 
@@ -181,7 +219,7 @@ mkOperation schemaMap filePath pathItem method operation = do
         responses
 
   pure $
-    Map.singleton operationKey (CGU.CodeGenItemOperation codeGenOperation)
+    Map.singleton (CGU.OperationKey operationKey) (CGU.CodeGenItemOperation codeGenOperation)
       <> paramModules
       <> requestBodyModules
       <> responseBodyModules
@@ -204,7 +242,7 @@ lookupRequestBody operationKey operation =
 
 data BodySchema = BodySchema
   { bodySchemaTypeInfo :: CGU.SchemaTypeInfo
-  , bodySchemaModules :: CGU.TypeMap
+  , bodySchemaModules :: CGU.CodeGenMap
   }
 
 bodySchemaWithoutDependiences :: CGU.SchemaTypeInfo -> BodySchema
@@ -239,7 +277,7 @@ lookupRequestBodySchema operationKey schemaMap mediaTypeObject =
   in
     case OA._mediaTypeObjectSchema mediaTypeObject of
       Just (OA.Ref (OA.Reference refKey)) ->
-        case Map.lookup refKey schemaMap of
+        case Map.lookup (CGU.SchemaKey refKey) schemaMap of
           Just schemaEntry ->
             pure
               . Just
@@ -302,7 +340,7 @@ lookupResponseBodySchema operationKey schemaMap responseStatus responseRef =
           <> msg
 
     lookupCodeGenType refKey =
-      case Map.lookup refKey schemaMap of
+      case Map.lookup (CGU.SchemaKey refKey) schemaMap of
         Just schemaEntry ->
           pure . CGU.codeGenTypeSchemaInfo . schemaCodeGenType $ schemaEntry
         Nothing ->
@@ -351,7 +389,7 @@ mkInlineBodySchema ::
 mkInlineBodySchema raiseError schemaKey schemaMap schema =
   let
     lookupCodeGenType refKey =
-      case Map.lookup refKey schemaMap of
+      case Map.lookup (CGU.SchemaKey refKey) schemaMap of
         Just schemaEntry ->
           pure . CGU.codeGenTypeSchemaInfo . schemaCodeGenType $ schemaEntry
         Nothing ->
@@ -388,7 +426,8 @@ mkInlineBodySchema raiseError schemaKey schemaMap schema =
             pure $
               BodySchema
                 { bodySchemaTypeInfo = schemaTypeInfo
-                , bodySchemaModules = fmap (CGU.CodeGenItemType . schemaCodeGenType) inlinedTypes
+                , bodySchemaModules =
+                    fmap (CGU.CodeGenItemType . schemaCodeGenType) inlinedTypes
                 }
       Just OA.OpenApiBoolean ->
         pure . bodySchemaWithoutDependiences $ CGU.boolSchemaTypeInfo
@@ -567,7 +606,7 @@ schemaRefToParamInfo schemaMap paramName paramLocation operationKey schemaRef =
         operationKey
         schema
     OA.Ref (OA.Reference refKey) ->
-      case Map.lookup refKey schemaMap of
+      case Map.lookup (CGU.SchemaKey refKey) schemaMap of
         Just schemaEntry -> do
           let
             codeGenType =
@@ -710,7 +749,7 @@ mkSchemaTypeInfo schemaKey typeName schema = do
         }
 
     schemaMap =
-      Map.singleton schemaKey schemaEntry <> inlinedTypes
+      Map.singleton (CGU.SchemaKey schemaKey) schemaEntry <> inlinedTypes
 
   pure (schemaMap, schemaInfo)
 
@@ -893,7 +932,7 @@ schemaArrayItemsToFieldType parentKey schema fieldName arrayItems =
 
         let
           schemaMap =
-            Map.singleton key $
+            Map.singleton (CGU.SchemaKey key) $
               SchemaEntry
                 { schemaOpenApiSchema = schema
                 , schemaCodeGenType =

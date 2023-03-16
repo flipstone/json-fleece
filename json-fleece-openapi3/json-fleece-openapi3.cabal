@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.2.4.0
+version:        0.2.5.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -18,323 +18,483 @@ extra-source-files:
     examples/star-trek/star-trek.yaml
     examples/star-trek/StarTrek/Operations/Animal.hs
     examples/star-trek/StarTrek/Operations/Animal/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Animal/Search.hs
-    examples/star-trek/StarTrek/Operations/Animal/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Animal/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Animal/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Animal/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Animal/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Animal/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Animal/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Animal/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Animal/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Animal/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Animal/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Animal/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Animal/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Animal/Uid.hs
     examples/star-trek/StarTrek/Operations/AstronomicalObject.hs
     examples/star-trek/StarTrek/Operations/AstronomicalObject/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/AstronomicalObject/Search.hs
-    examples/star-trek/StarTrek/Operations/AstronomicalObject/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/AstronomicalObject/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/AstronomicalObject/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/AstronomicalObject/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/AstronomicalObject/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/AstronomicalObject/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/AstronomicalObject/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/AstronomicalObject/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/AstronomicalObject/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/AstronomicalObject/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/AstronomicalObject/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/AstronomicalObject/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/AstronomicalObject/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/AstronomicalObject/Uid.hs
     examples/star-trek/StarTrek/Operations/Book.hs
     examples/star-trek/StarTrek/Operations/Book/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Book/Search.hs
-    examples/star-trek/StarTrek/Operations/Book/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Book/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Book/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Book/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Book/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Book/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Book/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Book/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Book/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Book/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Book/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Book/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Book/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Book/Uid.hs
     examples/star-trek/StarTrek/Operations/BookCollection.hs
     examples/star-trek/StarTrek/Operations/BookCollection/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/BookCollection/Search.hs
-    examples/star-trek/StarTrek/Operations/BookCollection/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/BookCollection/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/BookCollection/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/BookCollection/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/BookCollection/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/BookCollection/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/BookCollection/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/BookCollection/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/BookCollection/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/BookCollection/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/BookCollection/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/BookCollection/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/BookCollection/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/BookCollection/Uid.hs
     examples/star-trek/StarTrek/Operations/BookSeries.hs
     examples/star-trek/StarTrek/Operations/BookSeries/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/BookSeries/Search.hs
-    examples/star-trek/StarTrek/Operations/BookSeries/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/BookSeries/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/BookSeries/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/BookSeries/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/BookSeries/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/BookSeries/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/BookSeries/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/BookSeries/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/BookSeries/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/BookSeries/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/BookSeries/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/BookSeries/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/BookSeries/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/BookSeries/Uid.hs
     examples/star-trek/StarTrek/Operations/Character.hs
     examples/star-trek/StarTrek/Operations/Character/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Character/Search.hs
-    examples/star-trek/StarTrek/Operations/Character/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Character/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Character/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Character/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Character/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Character/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Character/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Character/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Character/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Character/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Character/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Character/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Character/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Character/Uid.hs
     examples/star-trek/StarTrek/Operations/ComicCollection.hs
     examples/star-trek/StarTrek/Operations/ComicCollection/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/ComicCollection/Search.hs
-    examples/star-trek/StarTrek/Operations/ComicCollection/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/ComicCollection/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/ComicCollection/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/ComicCollection/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/ComicCollection/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/ComicCollection/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/ComicCollection/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/ComicCollection/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/ComicCollection/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/ComicCollection/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/ComicCollection/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/ComicCollection/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/ComicCollection/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/ComicCollection/Uid.hs
     examples/star-trek/StarTrek/Operations/Comics.hs
     examples/star-trek/StarTrek/Operations/Comics/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Comics/Search.hs
-    examples/star-trek/StarTrek/Operations/Comics/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Comics/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Comics/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Comics/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Comics/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Comics/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Comics/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Comics/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Comics/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Comics/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Comics/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Comics/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Comics/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Comics/Uid.hs
     examples/star-trek/StarTrek/Operations/ComicSeries.hs
     examples/star-trek/StarTrek/Operations/ComicSeries/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/ComicSeries/Search.hs
-    examples/star-trek/StarTrek/Operations/ComicSeries/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/ComicSeries/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/ComicSeries/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/ComicSeries/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/ComicSeries/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/ComicSeries/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/ComicSeries/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/ComicSeries/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/ComicSeries/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/ComicSeries/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/ComicSeries/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/ComicSeries/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/ComicSeries/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/ComicSeries/Uid.hs
     examples/star-trek/StarTrek/Operations/ComicStrip.hs
     examples/star-trek/StarTrek/Operations/ComicStrip/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/ComicStrip/Search.hs
-    examples/star-trek/StarTrek/Operations/ComicStrip/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/ComicStrip/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/ComicStrip/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/ComicStrip/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/ComicStrip/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/ComicStrip/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/ComicStrip/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/ComicStrip/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/ComicStrip/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/ComicStrip/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/ComicStrip/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/ComicStrip/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/ComicStrip/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/ComicStrip/Uid.hs
     examples/star-trek/StarTrek/Operations/Company.hs
     examples/star-trek/StarTrek/Operations/Company/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Company/Search.hs
-    examples/star-trek/StarTrek/Operations/Company/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Company/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Company/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Company/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Company/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Company/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Company/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Company/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Company/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Company/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Company/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Company/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Company/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Company/Uid.hs
     examples/star-trek/StarTrek/Operations/Conflict.hs
     examples/star-trek/StarTrek/Operations/Conflict/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Conflict/Search.hs
-    examples/star-trek/StarTrek/Operations/Conflict/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Conflict/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Conflict/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Conflict/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Conflict/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Conflict/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Conflict/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Conflict/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Conflict/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Conflict/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Conflict/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Conflict/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Conflict/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Conflict/Uid.hs
     examples/star-trek/StarTrek/Operations/Element.hs
     examples/star-trek/StarTrek/Operations/Element/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Element/Search.hs
-    examples/star-trek/StarTrek/Operations/Element/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Element/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Element/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Element/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Element/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Element/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Element/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Element/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Element/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Element/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Element/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Element/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Element/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Element/Uid.hs
     examples/star-trek/StarTrek/Operations/Episode.hs
     examples/star-trek/StarTrek/Operations/Episode/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Episode/Search.hs
-    examples/star-trek/StarTrek/Operations/Episode/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Episode/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Episode/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Episode/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Episode/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Episode/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Episode/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Episode/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Episode/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Episode/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Episode/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Episode/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Episode/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Episode/Uid.hs
     examples/star-trek/StarTrek/Operations/Food.hs
     examples/star-trek/StarTrek/Operations/Food/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Food/Search.hs
-    examples/star-trek/StarTrek/Operations/Food/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Food/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Food/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Food/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Food/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Food/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Food/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Food/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Food/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Food/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Food/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Food/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Food/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Food/Uid.hs
     examples/star-trek/StarTrek/Operations/Literature.hs
     examples/star-trek/StarTrek/Operations/Literature/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Literature/Search.hs
-    examples/star-trek/StarTrek/Operations/Literature/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Literature/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Literature/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Literature/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Literature/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Literature/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Literature/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Literature/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Literature/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Literature/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Literature/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Literature/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Literature/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Literature/Uid.hs
     examples/star-trek/StarTrek/Operations/Location.hs
     examples/star-trek/StarTrek/Operations/Location/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Location/Search.hs
-    examples/star-trek/StarTrek/Operations/Location/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Location/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Location/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Location/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Location/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Location/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Location/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Location/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Location/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Location/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Location/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Location/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Location/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Location/Uid.hs
     examples/star-trek/StarTrek/Operations/Magazine.hs
     examples/star-trek/StarTrek/Operations/Magazine/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Magazine/Search.hs
-    examples/star-trek/StarTrek/Operations/Magazine/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Magazine/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Magazine/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Magazine/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Magazine/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Magazine/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Magazine/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Magazine/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Magazine/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Magazine/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Magazine/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Magazine/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Magazine/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Magazine/Uid.hs
     examples/star-trek/StarTrek/Operations/MagazineSeries.hs
     examples/star-trek/StarTrek/Operations/MagazineSeries/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/MagazineSeries/Search.hs
-    examples/star-trek/StarTrek/Operations/MagazineSeries/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/MagazineSeries/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/MagazineSeries/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/MagazineSeries/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/MagazineSeries/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/MagazineSeries/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/MagazineSeries/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/MagazineSeries/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/MagazineSeries/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/MagazineSeries/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/MagazineSeries/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/MagazineSeries/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/MagazineSeries/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/MagazineSeries/Uid.hs
     examples/star-trek/StarTrek/Operations/Material.hs
     examples/star-trek/StarTrek/Operations/Material/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Material/Search.hs
-    examples/star-trek/StarTrek/Operations/Material/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Material/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Material/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Material/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Material/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Material/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Material/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Material/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Material/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Material/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Material/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Material/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Material/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Material/Uid.hs
     examples/star-trek/StarTrek/Operations/MedicalCondition.hs
     examples/star-trek/StarTrek/Operations/MedicalCondition/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/MedicalCondition/Search.hs
-    examples/star-trek/StarTrek/Operations/MedicalCondition/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/MedicalCondition/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/MedicalCondition/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/MedicalCondition/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/MedicalCondition/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/MedicalCondition/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/MedicalCondition/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/MedicalCondition/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/MedicalCondition/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/MedicalCondition/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/MedicalCondition/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/MedicalCondition/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/MedicalCondition/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/MedicalCondition/Uid.hs
     examples/star-trek/StarTrek/Operations/Movie.hs
     examples/star-trek/StarTrek/Operations/Movie/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Movie/Search.hs
-    examples/star-trek/StarTrek/Operations/Movie/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Movie/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Movie/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Movie/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Movie/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Movie/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Movie/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Movie/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Movie/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Movie/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Movie/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Movie/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Movie/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Movie/Uid.hs
     examples/star-trek/StarTrek/Operations/Occupation.hs
     examples/star-trek/StarTrek/Operations/Occupation/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Occupation/Search.hs
-    examples/star-trek/StarTrek/Operations/Occupation/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Occupation/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Occupation/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Occupation/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Occupation/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Occupation/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Occupation/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Occupation/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Occupation/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Occupation/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Occupation/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Occupation/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Occupation/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Occupation/Uid.hs
     examples/star-trek/StarTrek/Operations/Organization.hs
     examples/star-trek/StarTrek/Operations/Organization/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Organization/Search.hs
-    examples/star-trek/StarTrek/Operations/Organization/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Organization/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Organization/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Organization/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Organization/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Organization/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Organization/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Organization/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Organization/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Organization/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Organization/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Organization/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Organization/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Organization/Uid.hs
     examples/star-trek/StarTrek/Operations/Performer.hs
     examples/star-trek/StarTrek/Operations/Performer/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Performer/Search.hs
-    examples/star-trek/StarTrek/Operations/Performer/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Performer/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Performer/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Performer/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Performer/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Performer/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Performer/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Performer/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Performer/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Performer/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Performer/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Performer/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Performer/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Performer/Uid.hs
     examples/star-trek/StarTrek/Operations/Season.hs
     examples/star-trek/StarTrek/Operations/Season/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Season/Search.hs
-    examples/star-trek/StarTrek/Operations/Season/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Season/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Season/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Season/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Season/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Season/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Season/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Season/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Season/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Season/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Season/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Season/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Season/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Season/Uid.hs
     examples/star-trek/StarTrek/Operations/Series.hs
     examples/star-trek/StarTrek/Operations/Series/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Series/Search.hs
-    examples/star-trek/StarTrek/Operations/Series/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Series/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Series/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Series/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Series/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Series/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Series/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Series/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Series/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Series/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Series/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Series/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Series/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Series/Uid.hs
     examples/star-trek/StarTrek/Operations/Soundtrack.hs
     examples/star-trek/StarTrek/Operations/Soundtrack/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Soundtrack/Search.hs
-    examples/star-trek/StarTrek/Operations/Soundtrack/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Soundtrack/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Soundtrack/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Soundtrack/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Soundtrack/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Soundtrack/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Soundtrack/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Soundtrack/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Soundtrack/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Soundtrack/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Soundtrack/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Soundtrack/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Soundtrack/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Soundtrack/Uid.hs
     examples/star-trek/StarTrek/Operations/Spacecraft.hs
     examples/star-trek/StarTrek/Operations/Spacecraft/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Spacecraft/Search.hs
-    examples/star-trek/StarTrek/Operations/Spacecraft/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Spacecraft/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Spacecraft/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Spacecraft/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Spacecraft/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Spacecraft/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Spacecraft/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Spacecraft/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Spacecraft/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Spacecraft/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Spacecraft/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Spacecraft/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Spacecraft/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Spacecraft/Uid.hs
     examples/star-trek/StarTrek/Operations/SpacecraftClass.hs
     examples/star-trek/StarTrek/Operations/SpacecraftClass/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/SpacecraftClass/Search.hs
-    examples/star-trek/StarTrek/Operations/SpacecraftClass/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/SpacecraftClass/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/SpacecraftClass/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/SpacecraftClass/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/SpacecraftClass/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/SpacecraftClass/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/SpacecraftClass/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/SpacecraftClass/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/SpacecraftClass/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/SpacecraftClass/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/SpacecraftClass/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/SpacecraftClass/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/SpacecraftClass/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/SpacecraftClass/Uid.hs
     examples/star-trek/StarTrek/Operations/Species.hs
     examples/star-trek/StarTrek/Operations/Species/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Species/Search.hs
-    examples/star-trek/StarTrek/Operations/Species/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Species/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Species/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Species/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Species/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Species/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Species/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Species/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Species/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Species/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Species/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Species/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Species/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Species/Uid.hs
     examples/star-trek/StarTrek/Operations/Staff.hs
     examples/star-trek/StarTrek/Operations/Staff/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Staff/Search.hs
-    examples/star-trek/StarTrek/Operations/Staff/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Staff/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Staff/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Staff/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Staff/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Staff/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Staff/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Staff/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Staff/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Staff/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Staff/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Staff/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Staff/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Staff/Uid.hs
     examples/star-trek/StarTrek/Operations/Technology.hs
     examples/star-trek/StarTrek/Operations/Technology/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Technology/Search.hs
-    examples/star-trek/StarTrek/Operations/Technology/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Technology/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Technology/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Technology/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Technology/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Technology/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Technology/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Technology/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Technology/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Technology/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Technology/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Technology/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Technology/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Technology/Uid.hs
     examples/star-trek/StarTrek/Operations/Title.hs
     examples/star-trek/StarTrek/Operations/Title/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Title/Search.hs
-    examples/star-trek/StarTrek/Operations/Title/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Title/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Title/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Title/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Title/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Title/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Title/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Title/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Title/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Title/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Title/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Title/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Title/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Title/Uid.hs
     examples/star-trek/StarTrek/Operations/TradingCard.hs
     examples/star-trek/StarTrek/Operations/TradingCard/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/TradingCard/Search.hs
-    examples/star-trek/StarTrek/Operations/TradingCard/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/TradingCard/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/TradingCard/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/TradingCard/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/TradingCard/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/TradingCard/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/TradingCard/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/TradingCard/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/TradingCard/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/TradingCard/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/TradingCard/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/TradingCard/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/TradingCard/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/TradingCard/Uid.hs
     examples/star-trek/StarTrek/Operations/TradingCardDeck.hs
     examples/star-trek/StarTrek/Operations/TradingCardDeck/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/TradingCardDeck/Search.hs
-    examples/star-trek/StarTrek/Operations/TradingCardDeck/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/TradingCardDeck/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/TradingCardDeck/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/TradingCardDeck/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/TradingCardDeck/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/TradingCardDeck/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/TradingCardDeck/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/TradingCardDeck/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/TradingCardDeck/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/TradingCardDeck/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/TradingCardDeck/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/TradingCardDeck/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/TradingCardDeck/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/TradingCardDeck/Uid.hs
     examples/star-trek/StarTrek/Operations/TradingCardSet.hs
     examples/star-trek/StarTrek/Operations/TradingCardSet/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/TradingCardSet/Search.hs
-    examples/star-trek/StarTrek/Operations/TradingCardSet/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/TradingCardSet/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/TradingCardSet/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/TradingCardSet/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/TradingCardSet/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/TradingCardSet/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/TradingCardSet/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/TradingCardSet/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/TradingCardSet/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/TradingCardSet/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/TradingCardSet/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/TradingCardSet/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/TradingCardSet/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/TradingCardSet/Uid.hs
     examples/star-trek/StarTrek/Operations/VideoGame.hs
     examples/star-trek/StarTrek/Operations/VideoGame/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/VideoGame/Search.hs
-    examples/star-trek/StarTrek/Operations/VideoGame/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/VideoGame/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/VideoGame/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/VideoGame/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/VideoGame/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/VideoGame/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/VideoGame/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/VideoGame/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/VideoGame/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/VideoGame/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/VideoGame/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/VideoGame/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/VideoGame/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/VideoGame/Uid.hs
     examples/star-trek/StarTrek/Operations/VideoRelease.hs
     examples/star-trek/StarTrek/Operations/VideoRelease/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/VideoRelease/Search.hs
-    examples/star-trek/StarTrek/Operations/VideoRelease/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/VideoRelease/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/VideoRelease/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/VideoRelease/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/VideoRelease/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/VideoRelease/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/VideoRelease/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/VideoRelease/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/VideoRelease/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/VideoRelease/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/VideoRelease/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/VideoRelease/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/VideoRelease/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/VideoRelease/Uid.hs
     examples/star-trek/StarTrek/Operations/Weapon.hs
     examples/star-trek/StarTrek/Operations/Weapon/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Weapon/Search.hs
-    examples/star-trek/StarTrek/Operations/Weapon/Search/ApiKey.hs
-    examples/star-trek/StarTrek/Operations/Weapon/Search/PageNumber.hs
-    examples/star-trek/StarTrek/Operations/Weapon/Search/PageSize.hs
-    examples/star-trek/StarTrek/Operations/Weapon/Search/Sort.hs
+    examples/star-trek/StarTrek/Operations/Weapon/Search/GET.hs
+    examples/star-trek/StarTrek/Operations/Weapon/Search/GET/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Weapon/Search/GET/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Weapon/Search/GET/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Weapon/Search/POST.hs
+    examples/star-trek/StarTrek/Operations/Weapon/Search/POST/ApiKey.hs
+    examples/star-trek/StarTrek/Operations/Weapon/Search/POST/PageNumber.hs
+    examples/star-trek/StarTrek/Operations/Weapon/Search/POST/PageSize.hs
+    examples/star-trek/StarTrek/Operations/Weapon/Search/POST/Sort.hs
     examples/star-trek/StarTrek/Operations/Weapon/Uid.hs
     examples/star-trek/StarTrek/Types/AnimalBase.hs
     examples/star-trek/StarTrek/Types/AnimalBase/Avian.hs
@@ -1801,7 +1961,7 @@ library
     , base >=4.7 && <5
     , containers ==0.6.*
     , insert-ordered-containers ==0.2.*
-    , json-fleece-codegen-util >=0.2 && <0.4
+    , json-fleece-codegen-util >=0.2 && <0.5
     , openapi3 ==3.2.*
     , text ==1.2.*
   default-language: Haskell2010
@@ -1819,7 +1979,7 @@ executable fleece-openapi3
   ghc-options: -rtsopts -threaded
   build-depends:
       base >=4.7 && <5
-    , json-fleece-codegen-util >=0.2 && <0.4
+    , json-fleece-codegen-util >=0.2 && <0.5
     , json-fleece-openapi3
   default-language: Haskell2010
   if flag(strict)
@@ -1840,7 +2000,7 @@ test-suite json-fleece-openapi3-test
     , bytestring ==0.11.*
     , file-embed ==0.0.15.*
     , hedgehog
-    , json-fleece-codegen-util >=0.2 && <0.4
+    , json-fleece-codegen-util >=0.2 && <0.5
     , json-fleece-openapi3
     , yaml ==0.11.*
   default-language: Haskell2010
