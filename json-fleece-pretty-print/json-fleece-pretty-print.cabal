@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-pretty-print
-version:        0.1.1.0
+version:        0.1.2.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-pretty-print#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -36,7 +36,7 @@ library
       base >=4.7 && <5
     , containers ==0.6.*
     , dlist ==1.0.*
-    , json-fleece-core >=0.2 && <0.5
+    , json-fleece-core ==0.5.*
     , scientific ==0.3.*
     , shrubbery ==0.1.*
     , text ==1.2.*
@@ -58,7 +58,7 @@ test-suite json-fleece-pretty-print-test
       base >=4.7 && <5
     , containers ==0.6.*
     , hedgehog
-    , json-fleece-core >=0.2 && <0.5
+    , json-fleece-core ==0.5.*
     , json-fleece-examples
     , json-fleece-pretty-print
     , text ==1.2.*

@@ -31,6 +31,7 @@ tests =
   , ("prop_optionalNullableFieldEmitNull", prop_optionalNullableFieldEmitNull)
   , ("prop_optionalNullableFieldOmitKey", prop_optionalNullableFieldOmitKey)
   , ("prop_additional", prop_additional)
+  , ("prop_abnormalNumbers", prop_abnormalNumbers)
   , ("prop_nestedObject", prop_nestedObject)
   , ("prop_nameDisambiguation", prop_nameDisambiguation)
   ]
@@ -155,6 +156,26 @@ prop_additional =
       , "|field1|yes|no|string|"
       , "|field2|yes|no|string|"
       , "|All Other Keys|no|no|string|"
+      ]
+
+prop_abnormalNumbers :: HH.Property
+prop_abnormalNumbers =
+  HH.withTests 1 . HH.property $
+    assertMarkdownEquals
+      Examples.abnormalNumbersExampleSchema
+      [ "# AbnormalNumbersExample"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|stringyNumber|yes|no|number (encoded as json string)|"
+      , "|bareOrStringyNumber|yes|no|number (bare or encoded as json string)|"
+      , ""
+      , "# number (bare or encoded as json string)"
+      , ""
+      , "Any one of the following"
+      , ""
+      , "- number"
+      , "- number (encoded as json string)"
       ]
 
 prop_nestedObject :: HH.Property

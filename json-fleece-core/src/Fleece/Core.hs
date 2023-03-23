@@ -99,6 +99,10 @@ module Fleece.Core
   , getJSONNull
   , handleAnyJSON
 
+    -- * Schema helpers for dealing with JSON strings within json
+  , jsonString
+  , bareOrJSONString
+
     -- * Schema Names
   , Name (nameQualification, nameUnqualified)
   , unqualifiedName

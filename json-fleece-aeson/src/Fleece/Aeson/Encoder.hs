@@ -12,6 +12,7 @@ import qualified Data.Aeson.Types as AesonTypes
 import qualified Data.ByteString.Lazy as LBS
 import Data.Coerce (coerce)
 import qualified Data.Map.Strict as Map
+import qualified Data.Text.Lazy.Encoding as LEnc
 import qualified Data.Vector as V
 import qualified Fleece.Core as FC
 import qualified Shrubbery as Shrubbery
@@ -130,3 +131,12 @@ instance FC.Fleece Encoder where
 
   unionCombine (UnionMembers left) (UnionMembers right) =
     UnionMembers (Shrubbery.appendBranches left right)
+
+  jsonString (Encoder name toEncoding) =
+    Encoder
+      name
+      ( Aeson.toEncoding
+          . LEnc.decodeUtf8
+          . AesonEncoding.encodingToLazyByteString
+          . toEncoding
+      )

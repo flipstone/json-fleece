@@ -29,6 +29,7 @@ module Fleece.Core.Class
       , unionNamed
       , unionMemberWithIndex
       , unionCombine
+      , jsonString
       )
   , (#+)
   , (#*)
@@ -136,6 +137,10 @@ class Fleece schema where
     UnionMembers schema types left ->
     UnionMembers schema types right ->
     UnionMembers schema types (AppendTypes left right)
+
+  jsonString ::
+    schema a ->
+    schema a
 
 instance Fleece schema => Functor (Field schema object) where
   fmap = mapField

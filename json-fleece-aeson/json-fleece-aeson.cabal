@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-aeson
-version:        0.3.0.1
+version:        0.3.1.0
 description:    Please see the README on GitHub at <https://github.com/githubuser/json-fleece-aeson#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -40,7 +40,7 @@ library
     , base >=4.7 && <5
     , bytestring ==0.11.*
     , containers ==0.6.*
-    , json-fleece-core >=0.3 && <0.5
+    , json-fleece-core ==0.5.*
     , shrubbery >=0.1.2 && <0.2
     , text ==1.2.*
     , vector ==0.12.*
@@ -65,7 +65,7 @@ test-suite json-fleece-aeson-test
     , containers ==0.6.*
     , hedgehog
     , json-fleece-aeson
-    , json-fleece-core >=0.3 && <0.5
+    , json-fleece-core ==0.5.*
     , json-fleece-examples
     , scientific >=0.3.7 && <0.4
     , text ==1.2.*

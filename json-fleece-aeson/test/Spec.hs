@@ -9,10 +9,12 @@ import Data.Aeson ((.=))
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Encoding as AesonEncoding
 import qualified Data.Aeson.Key as AesonKey
+import qualified Data.Aeson.Text as AesonText
 import qualified Data.ByteString.Lazy as LBS
 import qualified Data.Map.Strict as Map
 import Data.Scientific (Scientific, scientific)
 import qualified Data.Text as T
+import qualified Data.Text.Lazy as LT
 import qualified Data.Time as Time
 import qualified Data.Vector as V
 import Hedgehog ((===))
@@ -58,6 +60,8 @@ tests =
   , ("prop_encode_additional", prop_encode_additional)
   , ("prop_decode_anyJSON", prop_decode_anyJSON)
   , ("prop_encode_anyJSON", prop_encode_anyJSON)
+  , ("prop_decode_abnormalNumbers", prop_decode_abnormalNumbers)
+  , ("prop_encode_abnormalNumbers", prop_encode_abnormalNumbers)
   , ("prop_utcTimeAndZonedTime", prop_utcTimeAndZonedTime)
   ]
 
@@ -526,6 +530,58 @@ prop_encode_anyJSON =
 
     expected === encoded
 
+prop_decode_abnormalNumbers :: HH.Property
+prop_decode_abnormalNumbers =
+  HH.property $ do
+    stringyNumber <- HH.forAll genScientific
+    bareOrStringyNumber <- HH.forAll genScientific
+    encodeBare <- HH.forAll Gen.bool
+
+    let
+      encoded =
+        encodeTestObject
+          [ "stringyNumber" .= Aeson.String (encodeAesonText stringyNumber)
+          , "bareOrStringyNumber"
+              .= if encodeBare
+                then Aeson.Number bareOrStringyNumber
+                else Aeson.String (encodeAesonText bareOrStringyNumber)
+          ]
+
+      decoded =
+        FA.decode Examples.abnormalNumbersExampleSchema encoded
+
+      expected =
+        Examples.AbnormalNumbersExample
+          { Examples.stringyNumber = stringyNumber
+          , Examples.bareOrStringyNumber = bareOrStringyNumber
+          }
+
+    Right expected === decoded
+
+prop_encode_abnormalNumbers :: HH.Property
+prop_encode_abnormalNumbers =
+  HH.property $ do
+    stringyNumber <- HH.forAll genScientific
+    bareOrStringyNumber <- HH.forAll genScientific
+
+    let
+      input =
+        Examples.AbnormalNumbersExample
+          { Examples.stringyNumber = stringyNumber
+          , Examples.bareOrStringyNumber = bareOrStringyNumber
+          }
+
+      expected =
+        encodeTestObject
+          [ "stringyNumber" .= Aeson.String (encodeAesonText stringyNumber)
+          , "bareOrStringyNumber" .= Aeson.Number bareOrStringyNumber
+          ]
+
+      encoded =
+        FA.encode Examples.abnormalNumbersExampleSchema input
+
+    expected === encoded
+
 prop_utcTimeAndZonedTime :: HH.Property
 prop_utcTimeAndZonedTime =
   HH.property $ do
@@ -580,6 +636,10 @@ encodeTestObject =
   AesonEncoding.encodingToLazyByteString
     . Aeson.pairs
     . mconcat
+
+encodeAesonText :: Aeson.ToJSON a => a -> T.Text
+encodeAesonText =
+  LT.toStrict . AesonText.encodeToLazyText
 
 genScientific :: HH.Gen Scientific
 genScientific =

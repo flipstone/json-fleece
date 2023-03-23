@@ -180,6 +180,9 @@ instance FC.Fleece PrettyPrinter where
   unionCombine (UnionMembers leftBranches) (UnionMembers rightBranches) =
     UnionMembers (Shrubbery.appendBranches leftBranches rightBranches)
 
+  jsonString schema =
+    schema
+
 renderName :: FC.Name -> LTB.Builder
 renderName =
   LTB.fromString . FC.nameUnqualified

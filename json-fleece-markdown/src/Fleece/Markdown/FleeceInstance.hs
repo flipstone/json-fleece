@@ -165,6 +165,12 @@ instance FC.Fleece Markdown where
   unionCombine (UnionMembers left) (UnionMembers right) =
     UnionMembers (left <> right)
 
+  jsonString (Markdown schemaDocs) =
+    Markdown $
+      schemaDocs
+        { schemaName = FC.annotateName (schemaName schemaDocs) "(encoded as json string)"
+        }
+
 primitiveMarkdown :: String -> Markdown a
 primitiveMarkdown nameString =
   let

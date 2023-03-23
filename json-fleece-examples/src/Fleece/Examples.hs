@@ -16,6 +16,8 @@ module Fleece.Examples
   , boundedEnumToText
   , AdditionalFieldsExample (..)
   , additionalFieldsExampleSchema
+  , AbnormalNumbersExample (..)
+  , abnormalNumbersExampleSchema
   ) where
 
 import qualified Data.Map as Map
@@ -27,8 +29,10 @@ import Fleece.Core
   , NothingEncoding (EmitNull, OmitKey)
   , Null
   , additionalFields
+  , bareOrJSONString
   , boundedEnum
   , constructor
+  , jsonString
   , nullable
   , number
   , object
@@ -143,3 +147,16 @@ additionalFieldsExampleSchema =
       #+ required "field1" field1 text
       #+ required "field2" field2 text
       #* additionalFields otherFields text
+
+data AbnormalNumbersExample = AbnormalNumbersExample
+  { stringyNumber :: Scientific
+  , bareOrStringyNumber :: Scientific
+  }
+  deriving (Eq, Show)
+
+abnormalNumbersExampleSchema :: Fleece schema => schema AbnormalNumbersExample
+abnormalNumbersExampleSchema =
+  object $
+    constructor AbnormalNumbersExample
+      #+ required "stringyNumber" stringyNumber (jsonString number)
+      #+ required "bareOrStringyNumber" bareOrStringyNumber (bareOrJSONString number)

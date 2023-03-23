@@ -40,6 +40,7 @@ module Fleece.Core.Schemas
   , coerceSchemaNamed
   , union
   , unionMember
+  , bareOrJSONString
   , NothingEncoding (EmitNull, OmitKey)
   ) where
 
@@ -57,7 +58,7 @@ import Data.Typeable (Typeable)
 import qualified Data.Vector as V
 import qualified Data.Word as W
 import GHC.TypeLits (KnownNat)
-import Shrubbery (Union, firstIndexOfType)
+import Shrubbery (Union, branch, branchBuild, branchEnd, dissectUnion, firstIndexOfType, index0, index1, unifyWithIndex)
 import Shrubbery.TypeList (FirstIndexOf, Length)
 
 import Fleece.Core.Class
@@ -70,12 +71,14 @@ import Fleece.Core.Class
   , array
   , boundedEnumNamed
   , constructor
+  , jsonString
   , nullable
   , number
   , objectNamed
   , optional
   , schemaName
   , text
+  , unionCombine
   , unionMemberWithIndex
   , unionNamed
   , validateNamed
@@ -83,6 +86,7 @@ import Fleece.Core.Class
   )
 import Fleece.Core.Name
   ( Name
+  , annotateName
   , defaultSchemaName
   , nameToString
   , nameUnqualified
@@ -418,6 +422,38 @@ zonedTime =
 day :: Fleece schema => schema Time.Day
 day =
   iso8601Formatted "Day" ISO8601.iso8601Format AttoTime.day
+
+bareOrJSONString :: Fleece schema => schema a -> schema a
+bareOrJSONString baseSchema =
+  let
+    toUnion :: a -> Union [a, a]
+    toUnion =
+      unifyWithIndex index0
+
+    fromUnion :: Union [a, a] -> a
+    fromUnion =
+      dissectUnion
+        . branchBuild
+        . branch id
+        . branch id
+        $ branchEnd
+
+    name =
+      annotateName
+        (schemaName baseSchema)
+        "(bare or encoded as json string)"
+
+    unionSchema =
+      unionNamed name $
+        unionCombine
+          (unionMemberWithIndex index0 baseSchema)
+          (unionMemberWithIndex index1 (jsonString baseSchema))
+  in
+    transformNamed
+      name
+      toUnion
+      fromUnion
+      unionSchema
 
 -- An internal helper for building building time schemes
 iso8601Formatted ::

@@ -41,6 +41,7 @@ tests =
   , ("prop_optionalNullableFieldOmitKey", prop_optionalNullableFieldOmitKey)
   , ("prop_additional", prop_additional)
   , ("prop_nestedObject", prop_nestedObject)
+  , ("prop_abnormalNumbers", prop_abnormalNumbers)
   ]
 
 prop_object :: HH.Property
@@ -296,6 +297,28 @@ prop_additional =
         ]
     in
       assertPrettyPrintEquals Examples.additionalFieldsExampleSchema value expected
+
+prop_abnormalNumbers :: HH.Property
+prop_abnormalNumbers =
+  HH.withTests 1 . HH.property $
+    let
+      value =
+        Examples.AbnormalNumbersExample
+          { Examples.stringyNumber = 3.14
+          , Examples.bareOrStringyNumber = 6.28
+          }
+
+      -- Ideally we would like to not include the long type number with
+      -- 'bareOrStringyNumber' number below, but naively doing so would mean
+      -- not including the name of any union schemas which is also not what we
+      -- want
+      expected =
+        [ "AbnormalNumbersExample"
+        , "  stringyNumber = 3.14"
+        , "  bareOrStringyNumber = number (bare or encoded as json string) 6.28"
+        ]
+    in
+      assertPrettyPrintEquals Examples.abnormalNumbersExampleSchema value expected
 
 prop_nestedObject :: HH.Property
 prop_nestedObject =

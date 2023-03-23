@@ -14,6 +14,7 @@ import qualified Data.Aeson.KeyMap as AesonKeyMap
 import qualified Data.Aeson.Types as AesonTypes
 import qualified Data.ByteString.Lazy as LBS
 import qualified Data.Map.Strict as Map
+import qualified Data.Text.Encoding as Enc
 import qualified Shrubbery
 
 import qualified Fleece.Core as FC
@@ -165,3 +166,10 @@ instance FC.Fleece Decoder where
       parseLeft name value
         <|> parseRight name value
         <|> fail ("All union parsing options for " <> FC.nameUnqualified name <> " failed.")
+
+  jsonString (Decoder name parseValue) =
+    Decoder name $
+      Aeson.withText (FC.nameUnqualified name) $ \jsonText ->
+        case Aeson.eitherDecodeStrict (Enc.encodeUtf8 jsonText) of
+          Left err -> fail ("Error decoding nested json string:" <> err)
+          Right value -> parseValue value
