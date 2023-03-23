@@ -1,3 +1,6 @@
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RankNTypes #-}
+
 module Fleece.CodeGenUtil.Executable
   ( codeGenMain
   ) where
@@ -8,6 +11,7 @@ import Data.Foldable (traverse_)
 import qualified Data.Text as T
 import qualified Data.Text.Lazy.IO as LTIO
 import qualified Data.Yaml.Aeson as YA
+import qualified Dhall
 import qualified Options.Applicative as Opt
 import System.Console.Isocline (readline)
 import qualified System.Directory as Dir
@@ -17,12 +21,25 @@ import System.FilePath (takeDirectory, takeExtension, (</>))
 import qualified Fleece.CodeGenUtil as CGU
 
 data Options = Options
-  { moduleBaseName :: T.Text
-  , fileName :: FilePath
+  { configFileName :: FilePath
   , mode :: Mode
-  , destination :: FilePath
   , noConfirm :: Bool
   }
+
+data Config = Config
+  { configModuleBaseName :: T.Text
+  , configInputFileName :: FilePath
+  , configDestination :: FilePath
+  }
+
+configDecoder :: Dhall.Decoder (T.Text -> Config)
+configDecoder =
+  Dhall.function Dhall.inject $
+    Dhall.record $
+      Config
+        <$> Dhall.field "moduleBaseName" Dhall.strictText
+        <*> Dhall.field "inputFileName" Dhall.string
+        <*> Dhall.field "destination" Dhall.string
 
 data Mode
   = Preview
@@ -32,10 +49,8 @@ optionsInfo :: Opt.ParserInfo Options
 optionsInfo =
   Opt.info
     ( Options
-        <$> Opt.strArgument (Opt.metavar "MODULE_BASE_NAME")
-        <*> Opt.strArgument (Opt.metavar "OPEN_API_3.yml")
+        <$> Opt.strArgument (Opt.metavar "codegen.dhall")
         <*> modeParser
-        <*> destinationParser
         <*> Opt.flag False True (Opt.long "yes")
     )
     mempty
@@ -47,24 +62,24 @@ modeParser =
     Preview
     (Opt.long "preview" <> Opt.short 'p')
 
-destinationParser :: Opt.Parser FilePath
-destinationParser =
-  Opt.strOption
-    ( Opt.long "dest"
-        <> Opt.short 'd'
-        <> Opt.metavar "DESTINATION"
-        <> Opt.value "."
-    )
-
 codeGenMain :: Aeson.FromJSON a => (a -> CGU.CodeGen CGU.Modules) -> IO ()
 codeGenMain generateModules = do
   options <- Opt.customExecParser parserPrefs optionsInfo
-  source <- loadSourceOrDie (fileName options)
+  mkConfig <- Dhall.inputFile configDecoder (configFileName options)
+
+  let
+    rootDir =
+      takeDirectory (configFileName options)
+
+    config =
+      mkConfig (T.pack rootDir)
+
+  source <- loadSourceOrDie (configInputFileName config)
 
   let
     codeGenOptions =
       CGU.CodeGenOptions
-        { CGU.moduleBaseName = moduleBaseName options
+        { CGU.moduleBaseName = configModuleBaseName config
         }
 
   case CGU.runCodeGen codeGenOptions (generateModules source) of
@@ -72,7 +87,7 @@ codeGenMain generateModules = do
     Right modules ->
       case mode options of
         Preview -> traverse_ (uncurry previewModule) modules
-        Run -> createFiles options modules
+        Run -> createFiles options config modules
 
 previewModule :: FilePath -> CGU.HaskellCode -> IO ()
 previewModule path code = do
@@ -104,16 +119,16 @@ loadSourceOrDie path = do
     Left err -> Exit.die (show err)
     Right source -> pure source
 
-createFiles :: Options -> [(FilePath, CGU.HaskellCode)] -> IO ()
-createFiles options modules = do
+createFiles :: Options -> Config -> [(FilePath, CGU.HaskellCode)] -> IO ()
+createFiles options config modules = do
   confirm options modules
-  traverse_ (uncurry $ createFile options) modules
+  traverse_ (uncurry $ createFile config) modules
 
-createFile :: Options -> FilePath -> CGU.HaskellCode -> IO ()
-createFile options path code = do
+createFile :: Config -> FilePath -> CGU.HaskellCode -> IO ()
+createFile config path code = do
   let
     fullPath =
-      destination options </> path
+      configDestination config </> path
 
     directory =
       takeDirectory fullPath

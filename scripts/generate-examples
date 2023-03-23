@@ -9,9 +9,7 @@ rm -rf json-fleece-openapi3/examples/test-cases/TestCases
 stack exec \
   fleece-openapi3 \
   -- \
-  TestCases \
-  json-fleece-openapi3/examples/test-cases/test-cases.yaml \
-  --dest json-fleece-openapi3/examples/test-cases \
+  json-fleece-openapi3/examples/test-cases/codegen.dhall \
   --yes
 
 echo "Generating StarTrek API (OpenAPI 3.0.1)"
@@ -19,9 +17,7 @@ rm -rf json-fleece-openapi3/examples/star-trek/StarTrek
 stack exec \
   fleece-openapi3 \
   -- \
-  StarTrek \
-  json-fleece-openapi3/examples/star-trek/star-trek.yaml \
-  --dest json-fleece-openapi3/examples/star-trek \
+  json-fleece-openapi3/examples/star-trek/codegen.dhall \
   --yes
 
 echo "Generating Uber API (Swagger 2.0)"
@@ -29,9 +25,7 @@ rm -rf json-fleece-swagger2/examples/uber/Uber
 stack exec \
   fleece-swagger2 \
   -- \
-  Uber \
-  json-fleece-swagger2/examples/uber/uber.json \
-  --dest json-fleece-swagger2/examples/uber \
+  json-fleece-swagger2/examples/uber/codegen.dhall \
   --yes
 
 ./scripts/test-examples
