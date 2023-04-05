@@ -59,5 +59,23 @@ in
                   { deriveClasses = CodeGen.derive CodeGen.noClasses
                   }
             }
+          , { type = "TestCases.Operations.TestCases.OperationTypeOptions.PathParam.PathParams"
+            , options =
+                CodeGen.TypeOptions::
+                  { deriveClasses = CodeGen.derive CodeGen.noClasses
+                  }
+            }
+          , { type = "TestCases.Operations.TestCases.OperationTypeOptions.PathParam.QueryParams"
+            , options =
+                CodeGen.TypeOptions::
+                  { deriveClasses = CodeGen.derive CodeGen.noClasses
+                  }
+            }
+          , { type = "TestCases.Operations.TestCases.OperationTypeOptions.PathParam.Responses"
+            , options =
+                CodeGen.TypeOptions::
+                  { deriveClasses = CodeGen.derive CodeGen.noClasses
+                  }
+            }
           ]
       }

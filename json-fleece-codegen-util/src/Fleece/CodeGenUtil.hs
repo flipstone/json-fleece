@@ -469,6 +469,84 @@ generateOperationCode _typeMap codeGenOperation = do
       codeGenOperationMethod codeGenOperation
 
   let
+    responsesTypeName =
+      HC.toTypeName moduleName Nothing "Responses"
+
+  responsesTypeOptions <-
+    lookupTypeOptions responsesTypeName
+
+  let
+    recordWithTypeOptions fields name = do
+      recordTypeOptions <- lookupTypeOptions name
+      pure (HC.record name fields (deriveClassNames recordTypeOptions))
+
+    urlPath =
+      codeGenOperationPath codeGenOperation
+
+    mkRouteField pathPiece =
+      case pathPiece of
+        PathParamRef paramNameText paramTypeName _paramDefName ->
+          Just
+            ( HC.toVarName moduleName Nothing paramNameText
+            , HC.typeNameToCodeDefaultQualification paramTypeName
+            , Nothing
+            )
+        PathLiteral _ -> Nothing
+
+    routeFields =
+      mapMaybe mkRouteField urlPath
+
+    mbPathParamsTypeName =
+      case routeFields of
+        [] -> Nothing
+        _ -> Just (HC.toTypeName moduleName Nothing "PathParams")
+
+  mbPathParamsDeclaration <-
+    traverse
+      (recordWithTypeOptions routeFields)
+      mbPathParamsTypeName
+
+  let
+    queryParams =
+      filter (\p -> codeGenOperationParamLocation p == ParamLocationQuery)
+        . codeGenOperationParams
+        $ codeGenOperation
+
+    paramFieldType param =
+      let
+        paramTypeName =
+          HC.typeNameToCodeDefaultQualification $
+            codeGenOperationParamTypeName param
+      in
+        case codeGenOperationParamArity param of
+          ExactlyOne -> paramTypeName
+          AtMostOne -> HC.maybeOf paramTypeName
+          AtLeastZero -> HC.listOf paramTypeName
+          AtLeastOne ->
+            HC.typeNameToCodeDefaultQualification nonEmptyType
+              <> " "
+              <> paramTypeName
+
+    mkParamField param =
+      ( HC.toVarName moduleName Nothing (codeGenOperationParamName param)
+      , paramFieldType param
+      , Nothing
+      )
+
+    queryParamFields =
+      map mkParamField queryParams
+
+    mbQueryParamsTypeName =
+      case queryParamFields of
+        [] -> Nothing
+        _ -> Just (HC.toTypeName moduleName Nothing "QueryParams")
+
+  mbQueryParamsDeclaration <-
+    traverse
+      (recordWithTypeOptions queryParamFields)
+      mbQueryParamsTypeName
+
+  let
     filePath =
       T.unpack (T.replace "." "/" (HC.moduleNameToText moduleName) <> ".hs")
 
@@ -478,14 +556,6 @@ generateOperationCode _typeMap codeGenOperation = do
         mbPathParamsTypeName
         mbQueryParamsTypeName
         mbQueryParamsSchemaName
-
-    urlPath =
-      codeGenOperationPath codeGenOperation
-
-    mbPathParamsTypeName =
-      case routeFields of
-        [] -> Nothing
-        _ -> Just (HC.toTypeName moduleName Nothing "PathParams")
 
     pathParamsTypeNameAsCode =
       case mbPathParamsTypeName of
@@ -534,24 +604,6 @@ generateOperationCode _typeMap codeGenOperation = do
             : map (HC.indent 4) (operationFields <> ["}"])
         )
 
-    mkRouteField pathPiece =
-      case pathPiece of
-        PathParamRef paramNameText paramTypeName _paramDefName ->
-          Just
-            ( HC.toVarName moduleName Nothing paramNameText
-            , HC.typeNameToCodeDefaultQualification paramTypeName
-            , Nothing
-            )
-        PathLiteral _ -> Nothing
-
-    routeFields =
-      mapMaybe mkRouteField urlPath
-
-    mbPathParamsDeclaration =
-      fmap
-        (\name -> HC.record name routeFields Nothing)
-        mbPathParamsTypeName
-
     mkPiece pathPiece =
       case pathPiece of
         PathLiteral text -> beelinePiece <> " " <> HC.stringLiteral text
@@ -577,49 +629,10 @@ generateOperationCode _typeMap codeGenOperation = do
             : fmap (\piece -> HC.indent 6 (mkPiece piece)) urlPath
         )
 
-    queryParams =
-      filter (\p -> codeGenOperationParamLocation p == ParamLocationQuery)
-        . codeGenOperationParams
-        $ codeGenOperation
-
-    paramFieldType param =
-      let
-        paramTypeName =
-          HC.typeNameToCodeDefaultQualification $
-            codeGenOperationParamTypeName param
-      in
-        case codeGenOperationParamArity param of
-          ExactlyOne -> paramTypeName
-          AtMostOne -> HC.maybeOf paramTypeName
-          AtLeastZero -> HC.listOf paramTypeName
-          AtLeastOne ->
-            HC.typeNameToCodeDefaultQualification nonEmptyType
-              <> " "
-              <> paramTypeName
-
-    mkParamField param =
-      ( HC.toVarName moduleName Nothing (codeGenOperationParamName param)
-      , paramFieldType param
-      , Nothing
-      )
-
-    queryParamFields =
-      map mkParamField queryParams
-
-    mbQueryParamsTypeName =
-      case queryParamFields of
-        [] -> Nothing
-        _ -> Just (HC.toTypeName moduleName Nothing "QueryParams")
-
     queryParamsTypeNameAsCode =
       case mbQueryParamsTypeName of
         Nothing -> beelineNoQueryParams
         Just name -> HC.typeNameToCode Nothing name
-
-    mbQueryParamsDeclaration =
-      fmap
-        (\name -> HC.record name queryParamFields Nothing)
-        mbQueryParamsTypeName
 
     queryParamsSchemaType =
       beelineQuerySchema
@@ -689,11 +702,11 @@ generateOperationCode _typeMap codeGenOperation = do
       in
         map addResponseType statusAndSchema
 
-    responsesTypeName =
-      HC.toTypeName moduleName Nothing "Responses"
-
     responsesType =
-      HC.sumType responsesTypeName (map mkResponseConstructor responses)
+      HC.sumType
+        responsesTypeName
+        (map mkResponseConstructor responses)
+        (deriveClassNames responsesTypeOptions)
 
     responseStatusMacher responseStatus =
       case responseStatus of

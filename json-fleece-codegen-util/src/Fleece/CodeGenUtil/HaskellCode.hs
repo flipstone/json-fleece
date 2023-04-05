@@ -452,17 +452,17 @@ enum typeName constructors mbDeriveClasses =
 
     derivations =
       deriving_ $
-        case mbDeriveClasses of
-          Just deriveClasses -> deriveClasses
-          Nothing -> [eqClass, showClass, ordClass, enumClass, boundedClass]
+        fromMaybe
+          [eqClass, showClass, ordClass, enumClass, boundedClass]
+          mbDeriveClasses
   in
     lines
       ( "data " <> typeNameToCode Nothing typeName
           : map (indent 2) (constructorLines <> [derivations])
       )
 
-sumType :: TypeName -> [(ConstructorName, TypeExpression)] -> HaskellCode
-sumType typeName constructors =
+sumType :: TypeName -> [(ConstructorName, TypeExpression)] -> Maybe [TypeName] -> HaskellCode
+sumType typeName constructors mbDeriveClasses =
   let
     mkConstructor (conName, conArgType) =
       toCode conName <> " " <> toCode conArgType
@@ -471,7 +471,7 @@ sumType typeName constructors =
       delimitLines "= " "| " (map mkConstructor constructors)
 
     derivations =
-      deriving_ [eqClass, showClass]
+      deriving_ (fromMaybe [eqClass, showClass] mbDeriveClasses)
   in
     lines
       ( "data " <> typeNameToCode Nothing typeName

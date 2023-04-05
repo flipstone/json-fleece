@@ -295,6 +295,24 @@ paths:
           description: "Successful Post"
         '422':
           description: "Invalid Post"
+  /test-cases/operation-type-options/{path-param}:
+    get:
+      parameters:
+        - name: path-param
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: query-param
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: "Successful Post"
+        '422':
+          description: "Invalid Post"
 components:
   schemas:
     string-param:

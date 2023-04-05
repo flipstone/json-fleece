@@ -1890,6 +1890,9 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/TestCases/InlineStringResponse.hs
     examples/test-cases/TestCases/Operations/TestCases/MultipleResponsesCodes.hs
     examples/test-cases/TestCases/Operations/TestCases/NoContentResponse.hs
+    examples/test-cases/TestCases/Operations/TestCases/OperationTypeOptions/PathParam.hs
+    examples/test-cases/TestCases/Operations/TestCases/OperationTypeOptions/PathParam/PathParam.hs
+    examples/test-cases/TestCases/Operations/TestCases/OperationTypeOptions/PathParam/QueryParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/BooleanParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/InlineEnumIntParam.hs
