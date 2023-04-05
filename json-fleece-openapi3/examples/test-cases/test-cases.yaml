@@ -417,3 +417,35 @@ components:
           type: string
         where:
           type: string
+
+    DateTimeFormats:
+      type: object
+      properties:
+        defaultTimeField:
+          type: string
+          format: date-time
+        utcTimeField:
+          type: string
+          format: date-time
+        zonedTimeField:
+          type: string
+          format: date-time
+        localTimeField:
+          type: string
+          format: date-time
+
+    DefaultTimeType:
+      type: string
+      format: date-time
+    UtcTimeType:
+      type: string
+      format: date-time
+    ZonedTimeType:
+      type: string
+      format: date-time
+    LocalTimeType:
+      type: string
+      format: date-time
+
+    DerivingNothing:
+      type: string

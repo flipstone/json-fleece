@@ -13,7 +13,8 @@ import qualified Hedgehog as HH
 import qualified Hedgehog.Main as HHM
 
 import qualified Fleece.CodeGenUtil as CGU
-import Fleece.CodeGenUtil.Test (assertGoldenMatchesGenerated)
+import qualified Fleece.CodeGenUtil.Config as Config
+import Fleece.CodeGenUtil.Test (assertGoldenMatchesGenerated, loadTestConfig)
 import qualified Fleece.Swagger2 as FS2
 
 main :: IO ()
@@ -32,26 +33,28 @@ uberFiles =
 prop_uberExample :: HH.Property
 prop_uberExample =
   HH.withTests 1 . HH.property $ do
-    json <- lookupOrFail "uber.json" uberFiles
+    config <- loadTestConfig (lookupOrFail uberFiles) "codegen.dhall"
+    json <- lookupOrFail uberFiles (Config.inputFileName config)
     swagger <- HH.evalEither (Aeson.eitherDecodeStrict json)
-
-    let
-      codeGenOptions =
-        CGU.CodeGenOptions
-          { CGU.moduleBaseName = "Uber"
-          }
 
     modules <-
       HH.evalEither $
-        CGU.runCodeGen codeGenOptions (FS2.generateSwaggerFleeceCode swagger)
+        CGU.runCodeGen
+          (Config.codeGenOptions config)
+          (FS2.generateSwaggerFleeceCode swagger)
 
     assertGoldenMatchesGenerated (===) uberFiles modules
 
-lookupOrFail :: FilePath -> [(FilePath, a)] -> HH.PropertyT IO a
-lookupOrFail needle haystack =
-  case lookup needle haystack of
-    Nothing -> do
-      HH.annotate ("failed to find " <> needle)
-      HH.failure
-    Just target ->
-      pure target
+lookupOrFail :: [(FilePath, a)] -> FilePath -> HH.PropertyT IO a
+lookupOrFail haystack needle =
+  case needle of
+    '.' : '/' : rest ->
+      -- If the path starts with './', drop it
+      lookupOrFail haystack rest
+    _ ->
+      case lookup needle haystack of
+        Nothing -> do
+          HH.annotate ("failed to find " <> needle)
+          HH.failure
+        Just target ->
+          pure target

@@ -421,7 +421,11 @@ mkInlineBodySchema raiseError schemaKey schemaMap schema =
           Nothing -> pure . bodySchemaWithoutDependiences $ CGU.textSchemaTypeInfo
           Just _values -> do
             (_moduleName, typeName) <- CGU.inferTypeForInputName CGU.Operation schemaKey
-            (inlinedTypes, schemaTypeInfo) <- mkSchemaTypeInfo schemaKey typeName schema
+            (inlinedTypes, schemaTypeInfo) <-
+              mkSchemaTypeInfo
+                schemaKey
+                typeName
+                schema
 
             pure $
               BodySchema
@@ -548,6 +552,8 @@ mkOperationParam schemaMap operationKey paramRef = do
           OA.ParamHeader -> pure CGU.ParamLocationHeader
           OA.ParamCookie -> paramCodeGenError paramName operationKey "Cookie params not supported."
 
+      typeOptions <- CGU.lookupTypeOptions paramTypeName
+
       pure
         CGU.CodeGenOperationParam
           { CGU.codeGenOperationParamName = paramName
@@ -561,6 +567,7 @@ mkOperationParam schemaMap operationKey paramRef = do
                 moduleName
                 (Just (HC.typeNameText paramTypeName))
                 "paramDef"
+          , CGU.codeGenOperationParamTypeOptions = typeOptions
           }
     Nothing ->
       paramCodeGenError paramName operationKey "No param schema found."
@@ -724,8 +731,7 @@ mkSchemaTypeInfo ::
   CGU.CodeGen (SchemaMap, CGU.SchemaTypeInfo)
 mkSchemaTypeInfo schemaKey typeName schema = do
   baseSchemaInfo <- CGU.inferSchemaInfoForTypeName typeName
-
-  (inlinedTypes, dataFormat) <- mkOpenApiDataFormat schemaKey schema
+  (inlinedTypes, dataFormat) <- mkOpenApiDataFormat schemaKey typeName schema
 
   let
     schemaInfo =
@@ -753,36 +759,49 @@ mkSchemaTypeInfo schemaKey typeName schema = do
 
   pure (schemaMap, schemaInfo)
 
-mkOpenApiDataFormat :: T.Text -> OA.Schema -> CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
-mkOpenApiDataFormat typeName schema =
+mkOpenApiDataFormat ::
+  T.Text ->
+  HC.TypeName ->
+  OA.Schema ->
+  CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
+mkOpenApiDataFormat schemaKey typeName schema =
   let
     noRefs mkFormat = do
       dataFormat <- mkFormat
       pure (Map.empty, dataFormat)
   in
     case OA._schemaType schema of
-      Just OA.OpenApiString -> noRefs $ mkOpenApiStringFormat schema
-      Just OA.OpenApiNumber -> noRefs $ mkOpenApiNumberFormat schema
-      Just OA.OpenApiInteger -> noRefs $ mkOpenApiIntegerFormat schema
-      Just OA.OpenApiBoolean -> noRefs $ pure CGU.boolFormat
-      Just OA.OpenApiArray -> mkOpenApiArrayFormat typeName schema
-      Just OA.OpenApiObject -> mkOpenApiObjectFormat typeName schema
-      Just OA.OpenApiNull -> noRefs $ pure CGU.nullFormat
-      Nothing -> mkOpenApiObjectFormat typeName schema
+      Just OA.OpenApiString -> noRefs $ mkOpenApiStringFormat typeName schema
+      Just OA.OpenApiNumber -> noRefs $ mkOpenApiNumberFormat typeName schema
+      Just OA.OpenApiInteger -> noRefs $ mkOpenApiIntegerFormat typeName schema
+      Just OA.OpenApiBoolean -> do
+        typeOptions <- CGU.lookupTypeOptions typeName
+        noRefs $ pure (CGU.boolFormat typeOptions)
+      Just OA.OpenApiArray -> mkOpenApiArrayFormat schemaKey typeName schema
+      Just OA.OpenApiObject -> mkOpenApiObjectFormat schemaKey typeName schema
+      Just OA.OpenApiNull -> do
+        typeOptions <- CGU.lookupTypeOptions typeName
+        noRefs $ pure (CGU.nullFormat typeOptions)
+      Nothing -> mkOpenApiObjectFormat schemaKey typeName schema
 
-mkOpenApiStringFormat :: OA.Schema -> CGU.CodeGen CGU.CodeGenDataFormat
-mkOpenApiStringFormat schema =
+mkOpenApiStringFormat :: HC.TypeName -> OA.Schema -> CGU.CodeGen CGU.CodeGenDataFormat
+mkOpenApiStringFormat typeName schema = do
+  typeOptions <- CGU.lookupTypeOptions typeName
   case OA._schemaEnum schema of
     Just enumValues ->
       fmap
-        (CGU.enumFormat . catMaybes)
+        (CGU.enumFormat typeOptions . catMaybes)
         (traverse (enumValueToText schema) enumValues)
     Nothing ->
       pure $
         case OA._schemaFormat schema of
-          Just "date" -> CGU.dayFormat
-          Just "date-time" -> CGU.utcTimeFormat
-          _ -> CGU.textFormat
+          Just "date" -> CGU.dayFormat typeOptions
+          Just "date-time" ->
+            case CGU.dateTimeFormat typeOptions of
+              CGU.UTCTimeFormat -> CGU.utcTimeFormat typeOptions
+              CGU.ZonedTimeFormat -> CGU.zonedTimeFormat typeOptions
+              CGU.LocalTimeFormat -> CGU.localTimeFormat typeOptions
+          _ -> CGU.textFormat typeOptions
 
 enumValueToText :: OA.Schema -> Aeson.Value -> CGU.CodeGen (Maybe T.Text)
 enumValueToText schema value =
@@ -794,30 +813,35 @@ enumValueToText schema value =
         _ -> CGU.codeGenError "null listed as enum value in a non-nullable schema"
     _ -> CGU.codeGenError "Non-string value found for enum"
 
-mkOpenApiNumberFormat :: OA.Schema -> CGU.CodeGen CGU.CodeGenDataFormat
-mkOpenApiNumberFormat schema =
+mkOpenApiNumberFormat :: HC.TypeName -> OA.Schema -> CGU.CodeGen CGU.CodeGenDataFormat
+mkOpenApiNumberFormat typeName schema = do
+  typeOptions <- CGU.lookupTypeOptions typeName
   pure $
     case OA._schemaFormat schema of
-      Just "float" -> CGU.floatFormat
-      Just "double" -> CGU.doubleFormat
-      _ -> CGU.scientificFormat
+      Just "float" -> CGU.floatFormat typeOptions
+      Just "double" -> CGU.doubleFormat typeOptions
+      _ -> CGU.scientificFormat typeOptions
 
-mkOpenApiIntegerFormat :: OA.Schema -> CGU.CodeGen CGU.CodeGenDataFormat
-mkOpenApiIntegerFormat schema =
+mkOpenApiIntegerFormat :: HC.TypeName -> OA.Schema -> CGU.CodeGen CGU.CodeGenDataFormat
+mkOpenApiIntegerFormat typeName schema = do
+  typeOptions <- CGU.lookupTypeOptions typeName
   pure $
     case OA._schemaFormat schema of
-      Just "int32" -> CGU.int32Format
-      Just "int64" -> CGU.int64Format
-      _ -> CGU.integerFormat
+      Just "int32" -> CGU.int32Format typeOptions
+      Just "int64" -> CGU.int64Format typeOptions
+      _ -> CGU.integerFormat typeOptions
 
 mkOpenApiObjectFormat ::
   T.Text ->
+  HC.TypeName ->
   OA.Schema ->
   CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
-mkOpenApiObjectFormat schemaKey schema = do
+mkOpenApiObjectFormat schemaKey typeName schema = do
   let
     requiredParams =
       OA._schemaRequired schema
+
+  typeOptions <- CGU.lookupTypeOptions typeName
 
   (schemaMaps, fields) <-
     fmap unzip
@@ -827,7 +851,7 @@ mkOpenApiObjectFormat schemaKey schema = do
       . OA._schemaProperties
       $ schema
 
-  pure (Map.unions schemaMaps, CGU.CodeGenObject fields)
+  pure (Map.unions schemaMaps, CGU.CodeGenObject typeOptions fields)
 
 unsupportedProperties :: [T.Text]
 unsupportedProperties =
@@ -836,10 +860,12 @@ unsupportedProperties =
 
 mkOpenApiArrayFormat ::
   T.Text ->
+  HC.TypeName ->
   OA.Schema ->
   CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
-mkOpenApiArrayFormat schemaKey schema = do
-  fmap (fmap CGU.CodeGenArray) $
+mkOpenApiArrayFormat schemaKey typeName schema = do
+  typeOptions <- CGU.lookupTypeOptions typeName
+  fmap (fmap (CGU.CodeGenArray typeOptions)) $
     schemaArrayItemsToFieldType
       schemaKey
       schema
@@ -875,19 +901,19 @@ schemaRefToFieldType parentKey fieldName schemaRef =
   case schemaRef of
     OA.Ref ref ->
       pure (Map.empty, CGU.TypeReference . OA.getReference $ ref)
-    OA.Inline inline ->
-      case OA._schemaType inline of
+    OA.Inline inlineSchema ->
+      case OA._schemaType inlineSchema of
         Just OA.OpenApiArray ->
           let
             nullable =
-              OA._schemaNullable inline == Just True
+              OA._schemaNullable inlineSchema == Just True
           in
             fmap (fmap (CGU.CodeGenFieldArray nullable)) $
               schemaArrayItemsToFieldType
                 parentKey
-                inline
+                inlineSchema
                 fieldName
-                (OA._schemaItems inline)
+                (OA._schemaItems inlineSchema)
         _ -> do
           let
             key =
@@ -896,7 +922,7 @@ schemaRefToFieldType parentKey fieldName schemaRef =
             childRef =
               CGU.TypeReference key
 
-          schemaMap <- mkSchemaMap key inline
+          schemaMap <- mkSchemaMap key inlineSchema
           pure (schemaMap, childRef)
 
 schemaArrayItemsToFieldType ::
@@ -929,6 +955,7 @@ schemaArrayItemsToFieldType parentKey schema fieldName arrayItems =
 
         (_moduleName, typeName) <- CGU.inferTypeForInputName CGU.Type key
         schemaTypeInfo <- CGU.inferSchemaInfoForTypeName typeName
+        typeOptions <- CGU.lookupTypeOptions typeName
 
         let
           schemaMap =
@@ -941,7 +968,7 @@ schemaArrayItemsToFieldType parentKey schema fieldName arrayItems =
                       , CGU.codeGenTypeName = typeName
                       , CGU.codeGenTypeSchemaInfo = schemaTypeInfo
                       , CGU.codeGenTypeDescription = Nothing
-                      , CGU.codeGenTypeDataFormat = CGU.textFormat
+                      , CGU.codeGenTypeDataFormat = CGU.textFormat typeOptions
                       }
                 }
 

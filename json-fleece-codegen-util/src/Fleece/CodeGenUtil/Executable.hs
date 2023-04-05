@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RankNTypes #-}
 
 module Fleece.CodeGenUtil.Executable
   ( codeGenMain
@@ -19,27 +18,13 @@ import qualified System.Exit as Exit
 import System.FilePath (takeDirectory, takeExtension, (</>))
 
 import qualified Fleece.CodeGenUtil as CGU
+import qualified Fleece.CodeGenUtil.Config as Config
 
 data Options = Options
   { configFileName :: FilePath
   , mode :: Mode
   , noConfirm :: Bool
   }
-
-data Config = Config
-  { configModuleBaseName :: T.Text
-  , configInputFileName :: FilePath
-  , configDestination :: FilePath
-  }
-
-configDecoder :: Dhall.Decoder (T.Text -> Config)
-configDecoder =
-  Dhall.function Dhall.inject $
-    Dhall.record $
-      Config
-        <$> Dhall.field "moduleBaseName" Dhall.strictText
-        <*> Dhall.field "inputFileName" Dhall.string
-        <*> Dhall.field "destination" Dhall.string
 
 data Mode
   = Preview
@@ -65,7 +50,7 @@ modeParser =
 codeGenMain :: Aeson.FromJSON a => (a -> CGU.CodeGen CGU.Modules) -> IO ()
 codeGenMain generateModules = do
   options <- Opt.customExecParser parserPrefs optionsInfo
-  mkConfig <- Dhall.inputFile configDecoder (configFileName options)
+  mkConfig <- Dhall.inputFile Config.decoder (configFileName options)
 
   let
     rootDir =
@@ -74,15 +59,9 @@ codeGenMain generateModules = do
     config =
       mkConfig (T.pack rootDir)
 
-  source <- loadSourceOrDie (configInputFileName config)
+  source <- loadSourceOrDie (Config.inputFileName config)
 
-  let
-    codeGenOptions =
-      CGU.CodeGenOptions
-        { CGU.moduleBaseName = configModuleBaseName config
-        }
-
-  case CGU.runCodeGen codeGenOptions (generateModules source) of
+  case CGU.runCodeGen (Config.codeGenOptions config) (generateModules source) of
     Left err -> Exit.die (show err)
     Right modules ->
       case mode options of
@@ -119,16 +98,16 @@ loadSourceOrDie path = do
     Left err -> Exit.die (show err)
     Right source -> pure source
 
-createFiles :: Options -> Config -> [(FilePath, CGU.HaskellCode)] -> IO ()
+createFiles :: Options -> Config.Config -> [(FilePath, CGU.HaskellCode)] -> IO ()
 createFiles options config modules = do
   confirm options modules
   traverse_ (uncurry $ createFile config) modules
 
-createFile :: Config -> FilePath -> CGU.HaskellCode -> IO ()
+createFile :: Config.Config -> FilePath -> CGU.HaskellCode -> IO ()
 createFile config path code = do
   let
     fullPath =
-      configDestination config </> path
+      Config.destination config </> path
 
     directory =
       takeDirectory fullPath

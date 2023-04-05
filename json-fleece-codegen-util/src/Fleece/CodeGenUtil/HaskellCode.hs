@@ -65,6 +65,8 @@ module Fleece.CodeGenUtil.HaskellCode
   ) where
 
 -- import prelude explicitly since we want to define our own 'lines' function
+
+import Data.Maybe (fromMaybe)
 import Prelude (Eq ((==)), Foldable, Int, Maybe (Just, Nothing), Monoid (mempty), Ord, Semigroup ((<>)), String, fmap, id, map, maybe, mconcat, show, zip, ($), (.))
 
 import qualified Data.Char as Char
@@ -348,8 +350,12 @@ delimitLines beforeFirst separator =
   in
     map mkLine . zip [0 ..]
 
-record :: TypeName -> [(VarName, TypeExpression, Maybe T.Text)] -> HaskellCode
-record typeName fields =
+record ::
+  TypeName ->
+  [(VarName, TypeExpression, Maybe T.Text)] ->
+  Maybe [TypeName] ->
+  HaskellCode
+record typeName fields mbDeriveClasses =
   let
     mkField :: (VarName, TypeExpression, Maybe T.Text) -> HaskellCode
     mkField (fieldName, fieldType, fieldDescription) =
@@ -360,7 +366,7 @@ record typeName fields =
       delimitLines "{ " ", " (map mkField fields)
 
     derivations =
-      deriving_ [eqClass, showClass]
+      deriving_ (fromMaybe [eqClass, showClass] mbDeriveClasses)
 
     maybeClosingParen =
       if List.null fieldLines
@@ -372,8 +378,8 @@ record typeName fields =
           : map (indent 2) (fieldLines <> maybeClosingParen <> [derivations])
       )
 
-newtype_ :: TypeName -> TypeExpression -> HaskellCode
-newtype_ wrapperName baseType =
+newtype_ :: TypeName -> TypeExpression -> Maybe [TypeName] -> HaskellCode
+newtype_ wrapperName baseType mbDeriveClasses =
   lines
     [ "newtype "
         <> typeNameToCode Nothing wrapperName
@@ -381,7 +387,7 @@ newtype_ wrapperName baseType =
         <> typeNameToCode Nothing wrapperName
         <> " "
         <> toCode baseType
-    , indent 2 (deriving_ [showClass, eqClass])
+    , indent 2 (deriving_ (fromMaybe [showClass, eqClass] mbDeriveClasses))
     ]
 
 deriving_ :: [TypeName] -> HaskellCode
@@ -438,14 +444,17 @@ functorMap :: HaskellCode
 functorMap =
   addReferences [VarReference "Prelude" Nothing "fmap"] "fmap"
 
-enum :: TypeName -> [ConstructorName] -> HaskellCode
-enum typeName constructors =
+enum :: TypeName -> [ConstructorName] -> Maybe [TypeName] -> HaskellCode
+enum typeName constructors mbDeriveClasses =
   let
     constructorLines =
       delimitLines "= " "| " (map toCode constructors)
 
     derivations =
-      deriving_ [eqClass, showClass, ordClass, enumClass, boundedClass]
+      deriving_ $
+        case mbDeriveClasses of
+          Just deriveClasses -> deriveClasses
+          Nothing -> [eqClass, showClass, ordClass, enumClass, boundedClass]
   in
     lines
       ( "data " <> typeNameToCode Nothing typeName

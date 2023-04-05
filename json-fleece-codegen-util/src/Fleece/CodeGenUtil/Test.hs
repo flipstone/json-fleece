@@ -1,16 +1,49 @@
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Fleece.CodeGenUtil.Test
   ( assertGoldenMatchesGenerated
+  , loadTestConfig
   ) where
 
+import qualified Control.Monad.IO.Class as MIO
 import qualified Data.ByteString.Char8 as BS8
+import qualified Data.FileEmbed as FileEmbed
 import Data.Foldable (traverse_)
 import qualified Data.List as List
 import qualified Data.Set as Set
+import qualified Data.Text as T
 import qualified Data.Text.Encoding as Enc
+import qualified Dhall
+import qualified System.Environment as Env
+import System.FilePath (takeDirectory)
 
 import qualified Fleece.CodeGenUtil as CGU
+import qualified Fleece.CodeGenUtil.Config as Config
+
+loadTestConfig ::
+  MIO.MonadIO m =>
+  (FilePath -> m BS8.ByteString) ->
+  FilePath ->
+  m Config.Config
+loadTestConfig readTestFile dhallPath = do
+  dhallBytes <- readTestFile dhallPath
+  MIO.liftIO (Env.setEnv "CODEGEN_TEST_PRELUDE" (BS8.unpack configPrelude))
+  mkConfig <- MIO.liftIO (Dhall.input Config.decoder (Enc.decodeUtf8 dhallBytes))
+
+  let
+    rootDir =
+      takeDirectory dhallPath
+
+    config =
+      mkConfig (T.pack rootDir)
+
+  pure config
+
+configPrelude :: BS8.ByteString
+configPrelude =
+  -- last changed 2023-05-05 14:12:04
+  $(FileEmbed.embedFile "codegen-prelude.dhall")
 
 assertGoldenMatchesGenerated ::
   Monad m =>

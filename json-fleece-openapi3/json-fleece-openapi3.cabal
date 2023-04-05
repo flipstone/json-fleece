@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.3.0.0
+version:        0.4.0.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -15,6 +15,7 @@ copyright:      2023 Author name here
 license:        BSD3
 build-type:     Simple
 extra-source-files:
+    examples/star-trek/codegen.dhall
     examples/star-trek/star-trek.yaml
     examples/star-trek/StarTrek/Operations/Animal.hs
     examples/star-trek/StarTrek/Operations/Animal/ApiKey.hs
@@ -1860,6 +1861,7 @@ extra-source-files:
     examples/star-trek/StarTrek/Types/WeaponHeader.hs
     examples/star-trek/StarTrek/Types/WeaponHeader/Name.hs
     examples/star-trek/StarTrek/Types/WeaponHeader/Uid.hs
+    examples/test-cases/codegen.dhall
     examples/test-cases/test-cases.yaml
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param1.hs
@@ -1896,6 +1898,13 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/RequiredArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/StringParam.hs
     examples/test-cases/TestCases/Operations/TestCases/RequestBody.hs
+    examples/test-cases/TestCases/Types/DateTimeFormats.hs
+    examples/test-cases/TestCases/Types/DateTimeFormats/DefaultTimeField.hs
+    examples/test-cases/TestCases/Types/DateTimeFormats/LocalTimeField.hs
+    examples/test-cases/TestCases/Types/DateTimeFormats/UtcTimeField.hs
+    examples/test-cases/TestCases/Types/DateTimeFormats/ZonedTimeField.hs
+    examples/test-cases/TestCases/Types/DefaultTimeType.hs
+    examples/test-cases/TestCases/Types/DerivingNothing.hs
     examples/test-cases/TestCases/Types/EnumIntParam.hs
     examples/test-cases/TestCases/Types/EnumParam.hs
     examples/test-cases/TestCases/Types/FieldTestCases.hs
@@ -1907,6 +1916,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/FieldTestCases/OptionalNullableField.hs
     examples/test-cases/TestCases/Types/FieldTestCases/RequiredField.hs
     examples/test-cases/TestCases/Types/FieldTestCases/RequiredNullableField.hs
+    examples/test-cases/TestCases/Types/LocalTimeType.hs
     examples/test-cases/TestCases/Types/NameConflicts.hs
     examples/test-cases/TestCases/Types/NameConflicts/Case.hs
     examples/test-cases/TestCases/Types/NameConflicts/Class.hs
@@ -1938,6 +1948,8 @@ extra-source-files:
     examples/test-cases/TestCases/Types/TopLevelArray/TopLevelArrayItem.hs
     examples/test-cases/TestCases/Types/TopLevelArrayNullable.hs
     examples/test-cases/TestCases/Types/TopLevelArrayNullable/TopLevelArrayNullableItem.hs
+    examples/test-cases/TestCases/Types/UtcTimeType.hs
+    examples/test-cases/TestCases/Types/ZonedTimeType.hs
 
 source-repository head
   type: git
@@ -1961,7 +1973,7 @@ library
     , base >=4.7 && <5
     , containers ==0.6.*
     , insert-ordered-containers ==0.2.*
-    , json-fleece-codegen-util ==0.5.*
+    , json-fleece-codegen-util ==0.6.*
     , openapi3 ==3.2.*
     , text ==1.2.*
   default-language: Haskell2010
@@ -1979,7 +1991,7 @@ executable fleece-openapi3
   ghc-options: -rtsopts -threaded
   build-depends:
       base >=4.7 && <5
-    , json-fleece-codegen-util ==0.5.*
+    , json-fleece-codegen-util ==0.6.*
     , json-fleece-openapi3
   default-language: Haskell2010
   if flag(strict)
@@ -2000,7 +2012,7 @@ test-suite json-fleece-openapi3-test
     , bytestring ==0.11.*
     , file-embed ==0.0.15.*
     , hedgehog
-    , json-fleece-codegen-util ==0.5.*
+    , json-fleece-codegen-util ==0.6.*
     , json-fleece-openapi3
     , yaml ==0.11.*
   default-language: Haskell2010

@@ -13,7 +13,8 @@ import qualified Hedgehog as HH
 import qualified Hedgehog.Main as HHM
 
 import qualified Fleece.CodeGenUtil as CGU
-import Fleece.CodeGenUtil.Test (assertGoldenMatchesGenerated)
+import qualified Fleece.CodeGenUtil.Config as Config
+import Fleece.CodeGenUtil.Test (assertGoldenMatchesGenerated, loadTestConfig)
 import qualified Fleece.OpenApi3 as FOA3
 
 main :: IO ()
@@ -33,18 +34,15 @@ testCasesFiles =
 prop_testCasesExample :: HH.Property
 prop_testCasesExample =
   HH.withTests 1 . HH.property $ do
-    yaml <- lookupOrFail "test-cases.yaml" testCasesFiles
+    config <- loadTestConfig (lookupOrFail testCasesFiles) "codegen.dhall"
+    yaml <- lookupOrFail testCasesFiles (Config.inputFileName config)
     openApi <- YA.decodeThrow yaml
-
-    let
-      codeGenOptions =
-        CGU.CodeGenOptions
-          { CGU.moduleBaseName = "TestCases"
-          }
 
     modules <-
       HH.evalEither $
-        CGU.runCodeGen codeGenOptions (FOA3.generateOpenApiFleeceCode openApi)
+        CGU.runCodeGen
+          (Config.codeGenOptions config)
+          (FOA3.generateOpenApiFleeceCode openApi)
 
     assertGoldenMatchesGenerated (===) testCasesFiles modules
 
@@ -55,28 +53,28 @@ starTrekFiles =
 prop_starTrekExample :: HH.Property
 prop_starTrekExample =
   HH.withTests 1 . HH.property $ do
-    yaml <- lookupOrFail "star-trek.yaml" starTrekFiles
+    config <- loadTestConfig (lookupOrFail starTrekFiles) "codegen.dhall"
+    yaml <- lookupOrFail starTrekFiles (Config.inputFileName config)
     openApi <- YA.decodeThrow yaml
 
-    let
-      codeGenOptions =
-        CGU.CodeGenOptions
-          { CGU.moduleBaseName = "StarTrek"
-          }
-
-    _modules <-
+    modules <-
       HH.evalEither $
-        CGU.runCodeGen codeGenOptions (FOA3.generateOpenApiFleeceCode openApi)
+        CGU.runCodeGen
+          (Config.codeGenOptions config)
+          (FOA3.generateOpenApiFleeceCode openApi)
 
-    pure ()
+    assertGoldenMatchesGenerated (===) starTrekFiles modules
 
--- assertGoldenMatchesGenerated (===) starTrekFiles modules
-
-lookupOrFail :: FilePath -> [(FilePath, a)] -> HH.PropertyT IO a
-lookupOrFail needle haystack =
-  case lookup needle haystack of
-    Nothing -> do
-      HH.annotate ("failed to find " <> needle)
-      HH.failure
-    Just target ->
-      pure target
+lookupOrFail :: [(FilePath, a)] -> FilePath -> HH.PropertyT IO a
+lookupOrFail haystack needle =
+  case needle of
+    '.' : '/' : rest ->
+      -- If the path starts with './', drop it
+      lookupOrFail haystack rest
+    _ ->
+      case lookup needle haystack of
+        Nothing -> do
+          HH.annotate ("failed to find " <> needle)
+          HH.failure
+        Just target ->
+          pure target

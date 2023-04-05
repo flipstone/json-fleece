@@ -3,10 +3,11 @@
 
 module Fleece.CodeGenUtil
   ( generateFleeceCode
-  , CodeGenOptions
-    ( CodeGenOptions
-    , moduleBaseName
-    )
+  , CodeGenOptions (..)
+  , DateTimeFormat (..)
+  , TypeOptions (..)
+  , DerivableClass (..)
+  , lookupTypeOptions
   , CodeGen
   , runCodeGen
   , codeGenError
@@ -49,6 +50,8 @@ module Fleece.CodeGenUtil
   , doubleFormat
   , dayFormat
   , utcTimeFormat
+  , zonedTimeFormat
+  , localTimeFormat
   , enumFormat
   , nullFormat
   , HC.HaskellCode
@@ -57,7 +60,7 @@ module Fleece.CodeGenUtil
   , Modules
   ) where
 
-import Control.Monad.Reader (ReaderT, ask, runReaderT)
+import Control.Monad.Reader (ReaderT, ask, asks, runReaderT)
 import Control.Monad.Trans (lift)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (catMaybes, mapMaybe)
@@ -81,7 +84,53 @@ type Modules =
 
 data CodeGenOptions = CodeGenOptions
   { moduleBaseName :: T.Text
+  , defaultTypeOptions :: TypeOptions
+  , typeOptionsMap :: Map.Map T.Text TypeOptions
   }
+
+data TypeOptions = TypeOptions
+  { dateTimeFormat :: DateTimeFormat
+  , deriveClasses :: Maybe [DerivableClass]
+  }
+
+deriveClassNames :: TypeOptions -> Maybe [HC.TypeName]
+deriveClassNames =
+  fmap (map derivableClassTypeName) . deriveClasses
+
+data DerivableClass
+  = Show
+  | Eq
+  | Ord
+  | Enum
+  | Bounded
+
+derivableClassTypeName :: DerivableClass -> HC.TypeName
+derivableClassTypeName derivableClass =
+  case derivableClass of
+    Show -> HC.showClass
+    Eq -> HC.eqClass
+    Ord -> HC.ordClass
+    Enum -> HC.enumClass
+    Bounded -> HC.boundedClass
+
+lookupTypeOptions :: HC.TypeName -> CodeGen TypeOptions
+lookupTypeOptions typeName = do
+  let
+    key =
+      HC.moduleNameToText (HC.typeNameModule typeName)
+        <> "."
+        <> HC.typeNameText typeName
+
+  optionsMap <- asks typeOptionsMap
+
+  case Map.lookup key optionsMap of
+    Nothing -> asks defaultTypeOptions
+    Just typeOptions -> pure typeOptions
+
+data DateTimeFormat
+  = UTCTimeFormat
+  | ZonedTimeFormat
+  | LocalTimeFormat
 
 codeGenError :: String -> CodeGen a
 codeGenError = lift . Left . CodeGenError
@@ -141,6 +190,7 @@ data CodeGenOperationParam = CodeGenOperationParam
   , codeGenOperationParamArity :: OperationParamArity
   , codeGenOperationParamFormat :: OperationParamFormat
   , codeGenOperationParamLocation :: OperationParamLocation
+  , codeGenOperationParamTypeOptions :: TypeOptions
   }
 
 data OperationPathPiece
@@ -176,10 +226,10 @@ data OperationParamLocation
   deriving (Show, Eq)
 
 data CodeGenDataFormat
-  = CodeGenNewType SchemaTypeInfo
-  | CodeGenEnum [T.Text]
-  | CodeGenObject [CodeGenObjectField]
-  | CodeGenArray CodeGenObjectFieldType
+  = CodeGenNewType TypeOptions SchemaTypeInfo
+  | CodeGenEnum TypeOptions [T.Text]
+  | CodeGenObject TypeOptions [CodeGenObjectField]
+  | CodeGenArray TypeOptions CodeGenObjectFieldType
 
 data CodeGenObjectField = CodeGenObjectField
   { codeGenFieldName :: T.Text
@@ -242,83 +292,101 @@ resolveFieldDescription typeMap =
   in
     go
 
-dayFormat :: CodeGenDataFormat
-dayFormat =
-  CodeGenNewType $
+dayFormat :: TypeOptions -> CodeGenDataFormat
+dayFormat typeOptions =
+  CodeGenNewType typeOptions $
     primitiveSchemaTypeInfo
       (HC.toTypeName "Data.Time" (Just "Time") "Day")
       (fleeceCoreVar "day")
 
-utcTimeFormat :: CodeGenDataFormat
-utcTimeFormat =
-  CodeGenNewType $
+utcTimeFormat :: TypeOptions -> CodeGenDataFormat
+utcTimeFormat typeOptions =
+  CodeGenNewType typeOptions $
     primitiveSchemaTypeInfo
       (HC.toTypeName "Data.Time" (Just "Time") "UTCTime")
       (fleeceCoreVar "utcTime")
 
-textFormat :: CodeGenDataFormat
-textFormat =
-  CodeGenNewType textSchemaTypeInfo
+zonedTimeFormat :: TypeOptions -> CodeGenDataFormat
+zonedTimeFormat typeOptions =
+  CodeGenNewType typeOptions $
+    primitiveSchemaTypeInfo
+      (HC.toTypeName "Data.Time" (Just "Time") "ZonedTime")
+      (fleeceCoreVar "zonedTime")
+
+localTimeFormat :: TypeOptions -> CodeGenDataFormat
+localTimeFormat typeOptions =
+  CodeGenNewType typeOptions $
+    primitiveSchemaTypeInfo
+      (HC.toTypeName "Data.Time" (Just "Time") "LocalTime")
+      (fleeceCoreVar "localTime")
+
+textFormat :: TypeOptions -> CodeGenDataFormat
+textFormat typeOptions =
+  CodeGenNewType typeOptions textSchemaTypeInfo
 
 textSchemaTypeInfo :: SchemaTypeInfo
 textSchemaTypeInfo =
   primitiveSchemaTypeInfo textType (fleeceCoreVar "text")
 
-floatFormat :: CodeGenDataFormat
-floatFormat =
-  CodeGenNewType $
-    primitiveSchemaTypeInfo floatType (fleeceCoreVar "float")
+floatFormat :: TypeOptions -> CodeGenDataFormat
+floatFormat typeOptions =
+  CodeGenNewType
+    typeOptions
+    (primitiveSchemaTypeInfo floatType (fleeceCoreVar "float"))
 
-doubleFormat :: CodeGenDataFormat
-doubleFormat =
-  CodeGenNewType $
-    primitiveSchemaTypeInfo doubleType (fleeceCoreVar "double")
+doubleFormat :: TypeOptions -> CodeGenDataFormat
+doubleFormat typeOptions =
+  CodeGenNewType
+    typeOptions
+    (primitiveSchemaTypeInfo doubleType (fleeceCoreVar "double"))
 
-scientificFormat :: CodeGenDataFormat
-scientificFormat =
-  CodeGenNewType $
-    primitiveSchemaTypeInfo scientificType (fleeceCoreVar "number")
+scientificFormat :: TypeOptions -> CodeGenDataFormat
+scientificFormat typeOptions =
+  CodeGenNewType
+    typeOptions
+    (primitiveSchemaTypeInfo scientificType (fleeceCoreVar "number"))
 
-int32Format :: CodeGenDataFormat
-int32Format =
-  CodeGenNewType int32SchemaTypeInfo
+int32Format :: TypeOptions -> CodeGenDataFormat
+int32Format typeOptions =
+  CodeGenNewType typeOptions int32SchemaTypeInfo
 
 int32SchemaTypeInfo :: SchemaTypeInfo
 int32SchemaTypeInfo =
   primitiveSchemaTypeInfo int32Type (fleeceCoreVar "int32")
 
-int64Format :: CodeGenDataFormat
-int64Format =
-  CodeGenNewType int64SchemaTypeInfo
+int64Format :: TypeOptions -> CodeGenDataFormat
+int64Format typeOptions =
+  CodeGenNewType typeOptions int64SchemaTypeInfo
 
 int64SchemaTypeInfo :: SchemaTypeInfo
 int64SchemaTypeInfo =
   primitiveSchemaTypeInfo int64Type (fleeceCoreVar "int64")
 
-integerFormat :: CodeGenDataFormat
-integerFormat =
-  CodeGenNewType integerSchemaTypeInfo
+integerFormat :: TypeOptions -> CodeGenDataFormat
+integerFormat typeOptions =
+  CodeGenNewType typeOptions integerSchemaTypeInfo
 
 integerSchemaTypeInfo :: SchemaTypeInfo
 integerSchemaTypeInfo =
   primitiveSchemaTypeInfo integerType (fleeceCoreVar "integer")
 
-boolFormat :: CodeGenDataFormat
-boolFormat =
-  CodeGenNewType boolSchemaTypeInfo
+boolFormat :: TypeOptions -> CodeGenDataFormat
+boolFormat typeOptions =
+  CodeGenNewType typeOptions boolSchemaTypeInfo
 
 boolSchemaTypeInfo :: SchemaTypeInfo
 boolSchemaTypeInfo =
   primitiveSchemaTypeInfo boolType (fleeceCoreVar "boolean")
 
-enumFormat :: [T.Text] -> CodeGenDataFormat
+enumFormat :: TypeOptions -> [T.Text] -> CodeGenDataFormat
 enumFormat =
   CodeGenEnum
 
-nullFormat :: CodeGenDataFormat
-nullFormat =
-  CodeGenNewType $
-    primitiveSchemaTypeInfo (fleeceCoreType "Null") (fleeceCoreVar "null")
+nullFormat :: TypeOptions -> CodeGenDataFormat
+nullFormat typeOptions =
+  CodeGenNewType
+    typeOptions
+    (primitiveSchemaTypeInfo (fleeceCoreType "Null") (fleeceCoreVar "null"))
 
 arrayTypeInfo :: SchemaTypeInfo -> SchemaTypeInfo
 arrayTypeInfo itemInfo =
@@ -480,7 +548,9 @@ generateOperationCode _typeMap codeGenOperation = do
       mapMaybe mkRouteField urlPath
 
     mbPathParamsDeclaration =
-      fmap (\name -> HC.record name routeFields) mbPathParamsTypeName
+      fmap
+        (\name -> HC.record name routeFields Nothing)
+        mbPathParamsTypeName
 
     mkPiece pathPiece =
       case pathPiece of
@@ -547,7 +617,9 @@ generateOperationCode _typeMap codeGenOperation = do
         Just name -> HC.typeNameToCode Nothing name
 
     mbQueryParamsDeclaration =
-      fmap (\name -> HC.record name queryParamFields) mbQueryParamsTypeName
+      fmap
+        (\name -> HC.record name queryParamFields Nothing)
+        mbQueryParamsTypeName
 
     queryParamsSchemaType =
       beelineQuerySchema
@@ -738,6 +810,9 @@ generateOperationParamCode codeGenOperationParam = do
     paramFormat =
       codeGenOperationParamFormat codeGenOperationParam
 
+    typeOptions =
+      codeGenOperationParamTypeOptions codeGenOperationParam
+
     pragmas =
       HC.lines
         [ "{-# LANGUAGE NoImplicitPrelude #-}"
@@ -752,8 +827,9 @@ generateOperationParamCode codeGenOperationParam = do
               HC.newtype_
                 typeName
                 (HC.fromCode (HC.typeNameToCodeDefaultQualification haskellType))
+                (deriveClassNames typeOptions)
           Left enumValues ->
-            Just . snd $ generateEnum typeName enumValues
+            Just . snd $ generateEnum typeName enumValues typeOptions
         else Nothing
 
     beelineBaseDef =
@@ -896,18 +972,19 @@ generateSchemaCode typeMap codeGenType = do
 
   (extraExports, moduleBody) <-
     case format of
-      CodeGenNewType baseTypeInfo ->
+      CodeGenNewType typeOptions baseTypeInfo ->
         pure $
           generateFleeceNewtype
             typeName
             (schemaTypeExpr baseTypeInfo)
             (schemaTypeSchema baseTypeInfo)
-      CodeGenEnum values ->
-        pure $ generateFleeceEnum typeName values
-      CodeGenObject fields ->
-        generateFleeceObject typeMap typeName fields
-      CodeGenArray itemType ->
-        generateFleeceArray typeMap typeName itemType
+            typeOptions
+      CodeGenEnum typeOptions values ->
+        pure $ generateFleeceEnum typeName values typeOptions
+      CodeGenObject typeOptions fields ->
+        generateFleeceObject typeMap typeName fields typeOptions
+      CodeGenArray typeOptions itemType ->
+        generateFleeceArray typeMap typeName itemType typeOptions
 
   let
     header =
@@ -1035,11 +1112,15 @@ generateFleeceNewtype ::
   HC.TypeName ->
   HC.TypeExpression ->
   HC.HaskellCode ->
+  TypeOptions ->
   ([HC.VarName], HC.HaskellCode)
-generateFleeceNewtype wrapperName baseType schemaName =
+generateFleeceNewtype wrapperName baseType schemaName typeOptions =
   let
     newtypeDecl =
-      HC.newtype_ wrapperName baseType
+      HC.newtype_
+        wrapperName
+        baseType
+        (deriveClassNames typeOptions)
 
     fleeceSchema =
       fleeceSchemaForType wrapperName $
@@ -1060,11 +1141,12 @@ generateFleeceNewtype wrapperName baseType schemaName =
 generateFleeceEnum ::
   HC.TypeName ->
   [T.Text] ->
+  TypeOptions ->
   ([HC.VarName], HC.HaskellCode)
-generateFleeceEnum typeName enumValues =
+generateFleeceEnum typeName enumValues typeOptions =
   let
     (toTextName, enum) =
-      generateEnum typeName enumValues
+      generateEnum typeName enumValues typeOptions
 
     fleeceSchema =
       fleeceSchemaForType typeName $
@@ -1077,8 +1159,9 @@ generateFleeceObject ::
   CodeGenMap ->
   HC.TypeName ->
   [CodeGenObjectField] ->
+  TypeOptions ->
   CodeGen ([HC.VarName], HC.HaskellCode)
-generateFleeceObject typeMap typeName codeGenFields = do
+generateFleeceObject typeMap typeName codeGenFields typeOptions = do
   let
     moduleName =
       HC.typeNameModule typeName
@@ -1091,7 +1174,10 @@ generateFleeceObject typeMap typeName codeGenFields = do
       (fieldName field, fieldTypeName field, fieldDescription field)
 
     recordDecl =
-      HC.record typeName (map fieldNameAndType fields)
+      HC.record
+        typeName
+        (map fieldNameAndType fields)
+        (deriveClassNames typeOptions)
 
     fleeceField field =
       HC.addReferences [HC.VarReference "Fleece.Core" Nothing "(#+)"] $
@@ -1126,14 +1212,16 @@ generateFleeceArray ::
   CodeGenMap ->
   HC.TypeName ->
   CodeGenObjectFieldType ->
+  TypeOptions ->
   CodeGen ([HC.VarName], HC.HaskellCode)
-generateFleeceArray typeMap typeName itemType = do
+generateFleeceArray typeMap typeName itemType typeOptions = do
   typeInfo <- fmap arrayTypeInfo (resolveFieldTypeInfo typeMap itemType)
   pure $
     generateFleeceNewtype
       typeName
       (schemaTypeExpr typeInfo)
       (schemaTypeSchema typeInfo)
+      typeOptions
 
 data FleeceSchemaField = FleeceSchemaField
   { fieldName :: HC.VarName
@@ -1261,8 +1349,9 @@ fleeceSchemaForType typeName bodyLines =
 generateEnum ::
   HC.TypeName ->
   [T.Text] ->
+  TypeOptions ->
   (HC.VarName, HC.HaskellCode)
-generateEnum typeName enumValues =
+generateEnum typeName enumValues typeOptions =
   let
     mkEnumItem t =
       (t, HC.toConstructorName typeName t)
@@ -1274,7 +1363,10 @@ generateEnum typeName enumValues =
       HC.typeNameModule typeName
 
     enumDeclaration =
-      HC.enum typeName (map snd enumItems)
+      HC.enum
+        typeName
+        (map snd enumItems)
+        (deriveClassNames typeOptions)
 
     toTextName =
       HC.toVarName

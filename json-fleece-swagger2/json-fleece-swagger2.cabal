@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-swagger2
-version:        0.3.0.0
+version:        0.4.0.0
 description:    Please see the README on GitHub at <https://github.com/githubuser/json-fleece-swagger2#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -15,6 +15,7 @@ copyright:      2023 Author name here
 license:        BSD3
 build-type:     Simple
 extra-source-files:
+    examples/uber/codegen.dhall
     examples/uber/uber.json
     examples/uber/Uber/Operations/Estimates/Price.hs
     examples/uber/Uber/Operations/Estimates/Price/EndLatitude.hs
@@ -84,8 +85,8 @@ library
   build-depends:
       base >=4.7 && <5
     , insert-ordered-containers ==0.2.*
-    , json-fleece-codegen-util ==0.5.*
-    , json-fleece-openapi3 ==0.3.*
+    , json-fleece-codegen-util ==0.6.*
+    , json-fleece-openapi3 ==0.4.*
     , openapi3 ==3.2.*
     , swagger2 ==2.8.*
     , text ==1.2.*
@@ -104,7 +105,7 @@ executable fleece-swagger2
   ghc-options: -rtsopts -threaded
   build-depends:
       base >=4.7 && <5
-    , json-fleece-codegen-util ==0.5.*
+    , json-fleece-codegen-util ==0.6.*
     , json-fleece-swagger2
   default-language: Haskell2010
   if flag(strict)
@@ -126,7 +127,7 @@ test-suite json-fleece-swagger2-test
     , bytestring ==0.11.*
     , file-embed ==0.0.15.*
     , hedgehog
-    , json-fleece-codegen-util ==0.5.*
+    , json-fleece-codegen-util ==0.6.*
     , json-fleece-swagger2
   default-language: Haskell2010
   if flag(strict)

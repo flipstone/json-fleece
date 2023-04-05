@@ -51,6 +51,13 @@ library
       TestCases.Operations.TestCases.QueryParams.RequiredArrayParam
       TestCases.Operations.TestCases.QueryParams.StringParam
       TestCases.Operations.TestCases.RequestBody
+      TestCases.Types.DateTimeFormats
+      TestCases.Types.DateTimeFormats.DefaultTimeField
+      TestCases.Types.DateTimeFormats.LocalTimeField
+      TestCases.Types.DateTimeFormats.UtcTimeField
+      TestCases.Types.DateTimeFormats.ZonedTimeField
+      TestCases.Types.DefaultTimeType
+      TestCases.Types.DerivingNothing
       TestCases.Types.EnumIntParam
       TestCases.Types.EnumParam
       TestCases.Types.FieldTestCases
@@ -62,6 +69,7 @@ library
       TestCases.Types.FieldTestCases.OptionalNullableField
       TestCases.Types.FieldTestCases.RequiredField
       TestCases.Types.FieldTestCases.RequiredNullableField
+      TestCases.Types.LocalTimeType
       TestCases.Types.NameConflicts
       TestCases.Types.NameConflicts.Case
       TestCases.Types.NameConflicts.Class
@@ -93,6 +101,8 @@ library
       TestCases.Types.TopLevelArray.TopLevelArrayItem
       TestCases.Types.TopLevelArrayNullable
       TestCases.Types.TopLevelArrayNullable.TopLevelArrayNullableItem
+      TestCases.Types.UtcTimeType
+      TestCases.Types.ZonedTimeType
   other-modules:
       Paths_test_cases
   hs-source-dirs:
