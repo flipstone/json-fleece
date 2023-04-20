@@ -7,7 +7,8 @@ module Fleece.Markdown.SchemaDocumentation
       , schemaMainEntry
       , schemaReferences
       )
-  , schemaReferencesIncludingSelf
+  , schemaSelfReference
+  , schemaReferencesWithDescendants
   , SchemaNullability (NotNull, Nullable)
   , MainEntry (NameOnly, Fields, EnumValues, ArrayEntry, NullableEntry, UnionEntry)
   , FieldDocumentation
@@ -34,12 +35,29 @@ data SchemaDocumentation = SchemaDocumentation
   , schemaReferences :: Map.Map FC.Name SchemaDocumentation
   }
 
-schemaReferencesIncludingSelf ::
+schemaSelfReference :: SchemaDocumentation -> Map.Map FC.Name SchemaDocumentation
+schemaSelfReference schemaDoc =
+  Map.singleton (schemaName schemaDoc) schemaDoc
+
+schemaReferencesWithDescendants ::
   SchemaDocumentation ->
   Map.Map FC.Name SchemaDocumentation
-schemaReferencesIncludingSelf schemaDocs =
-  Map.singleton (schemaName schemaDocs) schemaDocs
-    <> schemaReferences schemaDocs
+schemaReferencesWithDescendants =
+  let
+    go results schemaDocs =
+      if Map.member (schemaName schemaDocs) results
+        then results
+        else
+          let
+            resultsWithSelf =
+              Map.insert (schemaName schemaDocs) schemaDocs results
+          in
+            foldr
+              (flip go)
+              resultsWithSelf
+              (schemaReferences schemaDocs)
+  in
+    go Map.empty
 
 data SchemaNullability
   = NotNull

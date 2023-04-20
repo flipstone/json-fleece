@@ -32,7 +32,7 @@ import Fleece.Markdown.SchemaDocumentation
     , schemaReferences
     )
   , SchemaNullability (NotNull, Nullable)
-  , schemaReferencesIncludingSelf
+  , schemaSelfReference
   )
 
 newtype Markdown a = Markdown SchemaDocumentation
@@ -77,7 +77,7 @@ instance FC.Fleece Markdown where
           , schemaExcludeFromRender = True
           , schemaNullability = NotNull
           , schemaMainEntry = ArrayEntry (schemaMainEntry itemSchemaDocs)
-          , schemaReferences = schemaReferences itemSchemaDocs
+          , schemaReferences = schemaSelfReference itemSchemaDocs
           }
 
   null =
@@ -108,18 +108,14 @@ instance FC.Fleece Markdown where
     Object (DList.snoc fields fieldDocs)
 
   objectNamed name (Object fields) =
-    let
-      allReferences =
-        foldMap (schemaReferencesIncludingSelf . fieldSchemaDocs) fields
-    in
-      Markdown $
-        SchemaDocumentation
-          { schemaName = name
-          , schemaExcludeFromRender = False
-          , schemaNullability = NotNull
-          , schemaMainEntry = Fields fields
-          , schemaReferences = allReferences
-          }
+    Markdown $
+      SchemaDocumentation
+        { schemaName = name
+        , schemaExcludeFromRender = False
+        , schemaNullability = NotNull
+        , schemaMainEntry = Fields fields
+        , schemaReferences = foldMap (schemaSelfReference . fieldSchemaDocs) fields
+        }
 
   validateNamed _name _check _unvalidate (Markdown schemaDocs) =
     Markdown schemaDocs

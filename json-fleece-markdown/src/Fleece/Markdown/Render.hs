@@ -26,33 +26,33 @@ import Fleece.Markdown.SchemaDocumentation
     , schemaMainEntry
     , schemaName
     , schemaNullability
-    , schemaReferences
     )
   , SchemaNullability (NotNull, Nullable)
+  , schemaReferencesWithDescendants
   )
 
 schemaDocumentationToMarkdown :: SchemaDocumentation -> LT.Text
-schemaDocumentationToMarkdown schemaDocs =
+schemaDocumentationToMarkdown rootDocs =
   let
-    allNames =
-      Set.singleton (schemaName schemaDocs)
-        <> Map.keysSet (schemaReferences schemaDocs)
+    allDocs =
+      schemaReferencesWithDescendants rootDocs
 
     nameContext =
-      mkNameContext allNames
+      mkNameContext (Map.keysSet allDocs)
 
-    referencesToRenderInOrder =
+    docsWithoutRootInOrder =
       List.sortBy (schemaDocumentationOrder nameContext)
         . filter (not . schemaExcludeFromRender)
         . Map.elems
-        . schemaReferences
-        $ schemaDocs
+        . Map.delete (schemaName rootDocs)
+        $ allDocs
+
+    docSections =
+      map
+        (schemaMainEntryDocs nameContext)
+        (rootDocs : docsWithoutRootInOrder)
   in
-    LTB.toLazyText $
-      schemaMainEntryDocs nameContext schemaDocs
-        <> foldMap
-          (\docs -> newline <> schemaMainEntryDocs nameContext docs)
-          referencesToRenderInOrder
+    LTB.toLazyText (mconcat (List.intersperse newline docSections))
 
 newtype NameContext = NameContext
   { namesRequiringQualification :: Set.Set FC.Name

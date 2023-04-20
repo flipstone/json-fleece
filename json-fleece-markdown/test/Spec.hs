@@ -32,6 +32,7 @@ tests =
   , ("prop_optionalNullableFieldOmitKey", prop_optionalNullableFieldOmitKey)
   , ("prop_additional", prop_additional)
   , ("prop_abnormalNumbers", prop_abnormalNumbers)
+  , ("prop_listField", prop_listField)
   , ("prop_nestedObject", prop_nestedObject)
   , ("prop_nameDisambiguation", prop_nameDisambiguation)
   ]
@@ -176,6 +177,26 @@ prop_abnormalNumbers =
       , ""
       , "- number"
       , "- number (encoded as json string)"
+      ]
+
+prop_listField :: HH.Property
+prop_listField =
+  HH.withTests 1 . HH.property $
+    assertMarkdownEquals
+      Examples.listFieldExampleSchema
+      [ "# ListFieldExample"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|listField|yes|no|BoundedEnum array|"
+      , ""
+      , "# BoundedEnum"
+      , ""
+      , "Enum values:"
+      , ""
+      , "- apple"
+      , "- orange"
+      , "- kumquat"
       ]
 
 prop_nestedObject :: HH.Property

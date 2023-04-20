@@ -18,6 +18,8 @@ module Fleece.Examples
   , additionalFieldsExampleSchema
   , AbnormalNumbersExample (..)
   , abnormalNumbersExampleSchema
+  , ListFieldExample (..)
+  , listFieldExampleSchema
   ) where
 
 import qualified Data.Map as Map
@@ -33,6 +35,7 @@ import Fleece.Core
   , boundedEnum
   , constructor
   , jsonString
+  , list
   , nullable
   , number
   , object
@@ -160,3 +163,14 @@ abnormalNumbersExampleSchema =
     constructor AbnormalNumbersExample
       #+ required "stringyNumber" stringyNumber (jsonString number)
       #+ required "bareOrStringyNumber" bareOrStringyNumber (bareOrJSONString number)
+
+newtype ListFieldExample = ListFieldExample
+  { listField :: [BoundedEnum]
+  }
+  deriving (Eq, Show)
+
+listFieldExampleSchema :: Fleece schema => schema ListFieldExample
+listFieldExampleSchema =
+  object $
+    constructor ListFieldExample
+      #+ required "listField" listField (list boundedEnumSchema)

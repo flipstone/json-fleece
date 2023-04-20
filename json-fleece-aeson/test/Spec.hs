@@ -62,6 +62,8 @@ tests =
   , ("prop_encode_anyJSON", prop_encode_anyJSON)
   , ("prop_decode_abnormalNumbers", prop_decode_abnormalNumbers)
   , ("prop_encode_abnormalNumbers", prop_encode_abnormalNumbers)
+  , ("prop_decode_listField", prop_decode_listField)
+  , ("prop_encode_listField", prop_encode_listField)
   , ("prop_utcTimeAndZonedTime", prop_utcTimeAndZonedTime)
   ]
 
@@ -581,6 +583,42 @@ prop_encode_abnormalNumbers =
         FA.encode Examples.abnormalNumbersExampleSchema input
 
     expected === encoded
+
+prop_decode_listField :: HH.Property
+prop_decode_listField =
+  HH.property $ do
+    values <- HH.forAll (Gen.list (Range.linear 0 10) Gen.enumBounded)
+
+    let
+      jsonObject =
+        encodeTestObject
+          [ "listField" .= map Examples.boundedEnumToText values
+          ]
+
+      expected =
+        Examples.ListFieldExample
+          { Examples.listField = values
+          }
+
+    FA.decode Examples.listFieldExampleSchema jsonObject === Right expected
+
+prop_encode_listField :: HH.Property
+prop_encode_listField =
+  HH.property $ do
+    values <- HH.forAll (Gen.list (Range.linear 0 10) Gen.enumBounded)
+
+    let
+      expected =
+        encodeTestObject
+          [ "listField" .= map Examples.boundedEnumToText values
+          ]
+
+      input =
+        Examples.ListFieldExample
+          { Examples.listField = values
+          }
+
+    FA.encode Examples.listFieldExampleSchema input === expected
 
 prop_utcTimeAndZonedTime :: HH.Property
 prop_utcTimeAndZonedTime =
