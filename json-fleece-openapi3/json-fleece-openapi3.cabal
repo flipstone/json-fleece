@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.4.0.0
+version:        0.4.0.1
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -1910,6 +1910,10 @@ extra-source-files:
     examples/test-cases/TestCases/Types/DerivingNothing.hs
     examples/test-cases/TestCases/Types/EnumIntParam.hs
     examples/test-cases/TestCases/Types/EnumParam.hs
+    examples/test-cases/TestCases/Types/FieldDescriptions.hs
+    examples/test-cases/TestCases/Types/FieldDescriptions/EmptyDescription.hs
+    examples/test-cases/TestCases/Types/FieldDescriptions/NoDescription.hs
+    examples/test-cases/TestCases/Types/FieldDescriptions/WithDescription.hs
     examples/test-cases/TestCases/Types/FieldTestCases.hs
     examples/test-cases/TestCases/Types/FieldTestCases/ArrayFieldItem.hs
     examples/test-cases/TestCases/Types/FieldTestCases/NullableArrayFieldItem.hs
@@ -1976,7 +1980,8 @@ library
     , base >=4.7 && <5
     , containers ==0.6.*
     , insert-ordered-containers ==0.2.*
-    , json-fleece-codegen-util ==0.6.*
+    , json-fleece-codegen-util ==0.7.*
+    , non-empty-text ==0.2.*
     , openapi3 ==3.2.*
     , text ==1.2.*
   default-language: Haskell2010
@@ -1994,7 +1999,7 @@ executable fleece-openapi3
   ghc-options: -rtsopts -threaded
   build-depends:
       base >=4.7 && <5
-    , json-fleece-codegen-util ==0.6.*
+    , json-fleece-codegen-util ==0.7.*
     , json-fleece-openapi3
   default-language: Haskell2010
   if flag(strict)
@@ -2015,7 +2020,7 @@ test-suite json-fleece-openapi3-test
     , bytestring ==0.11.*
     , file-embed ==0.0.15.*
     , hedgehog
-    , json-fleece-codegen-util ==0.6.*
+    , json-fleece-codegen-util ==0.7.*
     , json-fleece-openapi3
     , yaml ==0.11.*
   default-language: Haskell2010

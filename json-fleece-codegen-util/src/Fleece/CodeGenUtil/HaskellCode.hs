@@ -72,6 +72,7 @@ import Prelude (Eq ((==)), Foldable, Int, Maybe (Just, Nothing), Monoid (mempty)
 import qualified Data.Char as Char
 import Data.Foldable (toList)
 import qualified Data.List as List
+import qualified Data.NonEmptyText as NET
 import qualified Data.Set as Set
 import qualified Data.String as String
 import qualified Data.Text as T
@@ -352,15 +353,18 @@ delimitLines beforeFirst separator =
 
 record ::
   TypeName ->
-  [(VarName, TypeExpression, Maybe T.Text)] ->
+  [(VarName, TypeExpression, Maybe NET.NonEmptyText)] ->
   Maybe [TypeName] ->
   HaskellCode
 record typeName fields mbDeriveClasses =
   let
-    mkField :: (VarName, TypeExpression, Maybe T.Text) -> HaskellCode
+    mkField :: (VarName, TypeExpression, Maybe NET.NonEmptyText) -> HaskellCode
     mkField (fieldName, fieldType, fieldDescription) =
       typeAnnotate fieldName fieldType
-        <> maybe "" ((" -- ^ " <>) . fromText . T.replace "\n" " ") fieldDescription
+        <> maybe
+          ""
+          ((" -- ^ " <>) . fromText . T.replace "\n" " " . NET.toText)
+          fieldDescription
 
     fieldLines =
       delimitLines "{ " ", " (map mkField fields)

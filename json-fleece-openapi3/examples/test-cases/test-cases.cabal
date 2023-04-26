@@ -63,6 +63,10 @@ library
       TestCases.Types.DerivingNothing
       TestCases.Types.EnumIntParam
       TestCases.Types.EnumParam
+      TestCases.Types.FieldDescriptions
+      TestCases.Types.FieldDescriptions.EmptyDescription
+      TestCases.Types.FieldDescriptions.NoDescription
+      TestCases.Types.FieldDescriptions.WithDescription
       TestCases.Types.FieldTestCases
       TestCases.Types.FieldTestCases.ArrayFieldItem
       TestCases.Types.FieldTestCases.NullableArrayFieldItem

@@ -10,6 +10,7 @@ import qualified Data.Aeson as Aeson
 import qualified Data.HashMap.Strict.InsOrd as IOHM
 import qualified Data.Map.Strict as Map
 import Data.Maybe (catMaybes, mapMaybe)
+import qualified Data.NonEmptyText as NET
 import qualified Data.OpenApi as OA
 import qualified Data.Text as T
 
@@ -744,7 +745,7 @@ mkSchemaTypeInfo schemaKey typeName schema = do
         { CGU.codeGenTypeOriginalName = schemaKey
         , CGU.codeGenTypeName = typeName
         , CGU.codeGenTypeSchemaInfo = schemaInfo
-        , CGU.codeGenTypeDescription = OA._schemaDescription schema
+        , CGU.codeGenTypeDescription = NET.fromText =<< OA._schemaDescription schema
         , CGU.codeGenTypeDataFormat = dataFormat
         }
 

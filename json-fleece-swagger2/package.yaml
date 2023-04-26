@@ -1,5 +1,5 @@
 name:                json-fleece-swagger2
-version:             0.4.0.0
+version:             0.4.0.1
 github:              "flipstone/json-fleece/json-fleece-swagger2"
 license:             BSD3
 author:              "Author name here"
@@ -17,7 +17,7 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
-- json-fleece-codegen-util >= 0.6 && < 0.7
+- json-fleece-codegen-util >= 0.6 && < 0.8
 
 flags:
   strict:

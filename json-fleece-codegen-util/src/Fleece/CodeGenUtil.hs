@@ -64,6 +64,7 @@ import Control.Monad.Reader (ReaderT, ask, asks, runReaderT)
 import Control.Monad.Trans (lift)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (catMaybes, mapMaybe)
+import qualified Data.NonEmptyText as NET
 import qualified Data.Set as Set
 import qualified Data.Text as T
 
@@ -153,7 +154,7 @@ data CodeGenType = CodeGenType
   { codeGenTypeOriginalName :: T.Text
   , codeGenTypeName :: HC.TypeName
   , codeGenTypeSchemaInfo :: SchemaTypeInfo
-  , codeGenTypeDescription :: Maybe T.Text
+  , codeGenTypeDescription :: Maybe NET.NonEmptyText
   , codeGenTypeDataFormat :: CodeGenDataFormat
   }
 
@@ -272,7 +273,7 @@ resolveFieldTypeInfo typeMap =
 resolveFieldDescription ::
   CodeGenMap ->
   CodeGenObjectFieldType ->
-  Maybe T.Text
+  Maybe NET.NonEmptyText
 resolveFieldDescription typeMap =
   let
     go fieldType =
@@ -1241,7 +1242,7 @@ data FleeceSchemaField = FleeceSchemaField
   , fieldJSONName :: T.Text
   , fieldCodeGenField :: CodeGenObjectField
   , fieldBaseSchemaTypeInfo :: SchemaTypeInfo
-  , fieldDescription :: Maybe T.Text
+  , fieldDescription :: Maybe NET.NonEmptyText
   }
 
 fieldRequired :: FleeceSchemaField -> Bool

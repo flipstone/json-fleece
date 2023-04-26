@@ -467,3 +467,15 @@ components:
 
     DerivingNothing:
       type: string
+
+    FieldDescriptions:
+      type: object
+      properties:
+        noDescription:
+          type: string
+        withDescription:
+          type: string
+          description: This field has a description
+        emptyDescription:
+          type: string
+          description: ""
