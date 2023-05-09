@@ -21,6 +21,7 @@ operation ::
     H.ContentTypeDecodingError
     H.NoPathParams
     H.NoQueryParams
+    H.NoHeaderParams
     [RequestBodyItem.RequestBodyItem]
     Responses
 operation =

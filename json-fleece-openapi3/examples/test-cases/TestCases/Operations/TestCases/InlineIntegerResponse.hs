@@ -20,6 +20,7 @@ operation ::
     H.ContentTypeDecodingError
     H.NoPathParams
     H.NoQueryParams
+    H.NoHeaderParams
     H.NoRequestBody
     Responses
 operation =

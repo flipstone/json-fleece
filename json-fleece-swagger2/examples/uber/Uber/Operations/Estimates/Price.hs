@@ -29,6 +29,7 @@ operation ::
     H.ContentTypeDecodingError
     H.NoPathParams
     QueryParams
+    H.NoHeaderParams
     H.NoRequestBody
     Responses
 operation =
@@ -53,9 +54,9 @@ data QueryParams = QueryParams
   }
   deriving (Eq, Show)
 
-queryParamsSchema :: H.QuerySchema q => q QueryParams QueryParams
+queryParamsSchema :: H.ParameterCollectionSchema p => p QueryParams QueryParams
 queryParamsSchema =
-  H.makeQuery QueryParams
+  H.makeParams QueryParams
     ?+ H.required endLatitude EndLatitude.paramDef
     ?+ H.required endLongitude EndLongitude.paramDef
     ?+ H.required startLatitude StartLatitude.paramDef

@@ -23,6 +23,7 @@ operation ::
     H.ContentTypeDecodingError
     PathParams
     H.NoQueryParams
+    H.NoHeaderParams
     H.NoRequestBody
     Responses
 operation =

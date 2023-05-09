@@ -26,6 +26,13 @@ library
       TestCases.Operations.ParamSchemaReferenceArray
       TestCases.Operations.ParamSchemaReferenceArray.ArrayParam
       TestCases.Operations.TestCases.AnyJsonResponse
+      TestCases.Operations.TestCases.HeaderParams
+      TestCases.Operations.TestCases.HeaderParams.BooleanParam
+      TestCases.Operations.TestCases.HeaderParams.InlineEnumIntParam
+      TestCases.Operations.TestCases.HeaderParams.InlineEnumParam
+      TestCases.Operations.TestCases.HeaderParams.OptionalArrayParam
+      TestCases.Operations.TestCases.HeaderParams.RequiredArrayParam
+      TestCases.Operations.TestCases.HeaderParams.StringParam
       TestCases.Operations.TestCases.InlineArrayResponse
       TestCases.Operations.TestCases.InlineBooleanResponse
       TestCases.Operations.TestCases.InlineEnumArrayRequestBody
@@ -117,7 +124,7 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
-    , beeline-http-client >=0.3.1 && <0.7
+    , beeline-http-client ==0.8.*
     , beeline-routing >=0.2.4 && <0.3
     , containers
     , json-fleece-aeson-beeline ==0.1.*

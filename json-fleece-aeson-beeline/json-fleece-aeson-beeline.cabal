@@ -34,7 +34,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
-    , beeline-http-client >=0.2 && <0.7
+    , beeline-http-client >=0.2 && <0.9
     , bytestring ==0.11.*
     , http-client ==0.7.*
     , json-fleece-aeson >=0.1 && <0.4

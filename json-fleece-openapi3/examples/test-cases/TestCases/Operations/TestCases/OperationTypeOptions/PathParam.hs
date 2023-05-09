@@ -24,6 +24,7 @@ operation ::
     H.ContentTypeDecodingError
     PathParams
     QueryParams
+    H.NoHeaderParams
     H.NoRequestBody
     Responses
 operation =
@@ -51,9 +52,9 @@ data QueryParams = QueryParams
   }
   deriving ()
 
-queryParamsSchema :: H.QuerySchema q => q QueryParams QueryParams
+queryParamsSchema :: H.ParameterCollectionSchema p => p QueryParams QueryParams
 queryParamsSchema =
-  H.makeQuery QueryParams
+  H.makeParams QueryParams
     ?+ H.required queryParam QueryParam.paramDef
 
 data Responses

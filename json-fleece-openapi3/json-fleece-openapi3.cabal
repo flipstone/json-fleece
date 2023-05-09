@@ -1873,6 +1873,13 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/ParamSchemaReferenceArray.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReferenceArray/ArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/AnyJsonResponse.hs
+    examples/test-cases/TestCases/Operations/TestCases/HeaderParams.hs
+    examples/test-cases/TestCases/Operations/TestCases/HeaderParams/BooleanParam.hs
+    examples/test-cases/TestCases/Operations/TestCases/HeaderParams/InlineEnumIntParam.hs
+    examples/test-cases/TestCases/Operations/TestCases/HeaderParams/InlineEnumParam.hs
+    examples/test-cases/TestCases/Operations/TestCases/HeaderParams/OptionalArrayParam.hs
+    examples/test-cases/TestCases/Operations/TestCases/HeaderParams/RequiredArrayParam.hs
+    examples/test-cases/TestCases/Operations/TestCases/HeaderParams/StringParam.hs
     examples/test-cases/TestCases/Operations/TestCases/InlineArrayResponse.hs
     examples/test-cases/TestCases/Operations/TestCases/InlineBooleanResponse.hs
     examples/test-cases/TestCases/Operations/TestCases/InlineEnumArrayRequestBody.hs

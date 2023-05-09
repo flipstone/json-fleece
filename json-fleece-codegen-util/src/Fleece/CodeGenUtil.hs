@@ -62,6 +62,7 @@ module Fleece.CodeGenUtil
 
 import Control.Monad.Reader (ReaderT, ask, asks, runReaderT)
 import Control.Monad.Trans (lift)
+import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map.Strict as Map
 import Data.Maybe (catMaybes, mapMaybe)
 import qualified Data.NonEmptyText as NET
@@ -477,10 +478,6 @@ generateOperationCode _typeMap codeGenOperation = do
     lookupTypeOptions responsesTypeName
 
   let
-    recordWithTypeOptions fields name = do
-      recordTypeOptions <- lookupTypeOptions name
-      pure (HC.record name fields (deriveClassNames recordTypeOptions))
-
     urlPath =
       codeGenOperationPath codeGenOperation
 
@@ -513,39 +510,32 @@ generateOperationCode _typeMap codeGenOperation = do
         . codeGenOperationParams
         $ codeGenOperation
 
-    paramFieldType param =
-      let
-        paramTypeName =
-          HC.typeNameToCodeDefaultQualification $
-            codeGenOperationParamTypeName param
-      in
-        case codeGenOperationParamArity param of
-          ExactlyOne -> paramTypeName
-          AtMostOne -> HC.maybeOf paramTypeName
-          AtLeastZero -> HC.listOf paramTypeName
-          AtLeastOne ->
-            HC.typeNameToCodeDefaultQualification nonEmptyType
-              <> " "
-              <> paramTypeName
+    headerParams =
+      filter (\p -> codeGenOperationParamLocation p == ParamLocationHeader)
+        . codeGenOperationParams
+        $ codeGenOperation
 
-    mkParamField param =
-      ( HC.toVarName moduleName Nothing (codeGenOperationParamName param)
-      , paramFieldType param
-      , Nothing
-      )
+  mbQueryParamsCode <-
+    case NEL.nonEmpty queryParams of
+      Nothing -> pure Nothing
+      Just nonEmptyParams ->
+        fmap Just $
+          mkParameterCollectionCode
+            moduleName
+            (HC.toTypeName moduleName Nothing "QueryParams")
+            (HC.toVarName moduleName Nothing "queryParamsSchema")
+            nonEmptyParams
 
-    queryParamFields =
-      map mkParamField queryParams
-
-    mbQueryParamsTypeName =
-      case queryParamFields of
-        [] -> Nothing
-        _ -> Just (HC.toTypeName moduleName Nothing "QueryParams")
-
-  mbQueryParamsDeclaration <-
-    traverse
-      (recordWithTypeOptions queryParamFields)
-      mbQueryParamsTypeName
+  mbHeaderParamsCode <-
+    case NEL.nonEmpty headerParams of
+      Nothing -> pure Nothing
+      Just nonEmptyParams ->
+        fmap Just $
+          mkParameterCollectionCode
+            moduleName
+            (HC.toTypeName moduleName Nothing "HeaderParams")
+            (HC.toVarName moduleName Nothing "headerParamsSchema")
+            nonEmptyParams
 
   let
     filePath =
@@ -555,8 +545,8 @@ generateOperationCode _typeMap codeGenOperation = do
       operationModuleHeader
         moduleName
         mbPathParamsTypeName
-        mbQueryParamsTypeName
-        mbQueryParamsSchemaName
+        mbQueryParamsCode
+        mbHeaderParamsCode
 
     pathParamsTypeNameAsCode =
       case mbPathParamsTypeName of
@@ -579,7 +569,14 @@ generateOperationCode _typeMap codeGenOperation = do
         fmap (HC.indent 4) $
           [ beelineContentTypeDecodingError
           , pathParamsTypeNameAsCode
-          , queryParamsTypeNameAsCode
+          , maybe
+              beelineNoQueryParams
+              (HC.typeNameToCode Nothing . paramCollectionTypeName)
+              mbQueryParamsCode
+          , maybe
+              beelineNoHeaderParams
+              (HC.typeNameToCode Nothing . paramCollectionTypeName)
+              mbHeaderParamsCode
           , maybe
               beelineNoRequestBodyType
               (HC.toCode . schemaTypeExpr)
@@ -591,7 +588,12 @@ generateOperationCode _typeMap codeGenOperation = do
       HC.delimitLines "{ " ", " $
         catMaybes
           [ Just (beelineRequestRoute <> " = route")
-          , fmap (\name -> beelineRequestQuerySchema <> " = " <> name) mbQueryParamsSchemaName
+          , fmap
+              (\c -> beelineRequestQuerySchema <> " = " <> paramCollectionSchemaNameAsCode c)
+              mbQueryParamsCode
+          , fmap
+              (\c -> beelineRequestHeaderSchema <> " = " <> paramCollectionSchemaNameAsCode c)
+              mbHeaderParamsCode
           , fmap mkRequestBody mbRequestBodySchemaType
           , Just (beelineResponseSchemas <> " = responseSchemas")
           ]
@@ -629,56 +631,6 @@ generateOperationCode _typeMap codeGenOperation = do
             : HC.indent 4 (beelineMake <> " " <> pathParamsTypeNameAsCode)
             : fmap (\piece -> HC.indent 6 (mkPiece piece)) urlPath
         )
-
-    queryParamsTypeNameAsCode =
-      case mbQueryParamsTypeName of
-        Nothing -> beelineNoQueryParams
-        Just name -> HC.typeNameToCode Nothing name
-
-    queryParamsSchemaType =
-      beelineQuerySchema
-        <> " q => q "
-        <> queryParamsTypeNameAsCode
-        <> " "
-        <> queryParamsTypeNameAsCode
-
-    mkParamSchema param =
-      let
-        paramFieldName =
-          HC.varNameToCode Nothing $
-            HC.toVarName moduleName Nothing (codeGenOperationParamName param)
-
-        beelineArity =
-          case codeGenOperationParamArity param of
-            ExactlyOne -> beelineRequired
-            AtMostOne -> beelineOptional
-            AtLeastZero -> beelineExplodedArray
-            AtLeastOne -> beelineExplodedNonEmpty
-      in
-        beelineQueryParam
-          <> " "
-          <> beelineArity
-          <> " "
-          <> paramFieldName
-          <> " "
-          <> HC.varNameToCodeDefaultQualification (codeGenOperationParamDefName param)
-
-    mbQueryParamsSchemaName =
-      case mbQueryParamsTypeName of
-        Nothing -> Nothing
-        Just _ -> Just (HC.fromText "queryParamsSchema")
-
-    mbQueryParamsSchema =
-      case mbQueryParamsSchemaName of
-        Nothing -> Nothing
-        Just schemaName ->
-          Just $
-            HC.lines
-              ( schemaName <> " :: " <> queryParamsSchemaType
-                  : schemaName <> " ="
-                  : HC.indent 2 (beelineMakeQuery <> " " <> queryParamsTypeNameAsCode)
-                  : map (HC.indent 4 . mkParamSchema) queryParams
-              )
 
     responseConstructorName responseType responseStatus =
       HC.toConstructorName responseType $
@@ -758,8 +710,10 @@ generateOperationCode _typeMap codeGenOperation = do
         [ Just operation
         , mbPathParamsDeclaration
         , Just route
-        , mbQueryParamsDeclaration
-        , mbQueryParamsSchema
+        , fmap paramCollectionDeclaration mbQueryParamsCode
+        , fmap paramCollectionSchema mbQueryParamsCode
+        , fmap paramCollectionDeclaration mbHeaderParamsCode
+        , fmap paramCollectionSchema mbHeaderParamsCode
         , Just responsesType
         , Just responseSchemas
         ]
@@ -780,21 +734,126 @@ generateOperationCode _typeMap codeGenOperation = do
 
   pure (filePath, code)
 
+data ParameterCollectionCode = ParameterCollectionCode
+  { paramCollectionDeclaration :: HC.HaskellCode
+  , paramCollectionSchema :: HC.HaskellCode
+  , paramCollectionTypeName :: HC.TypeName
+  , paramCollectionSchemaName :: HC.VarName
+  }
+
+paramCollectionSchemaNameAsCode :: ParameterCollectionCode -> HC.HaskellCode
+paramCollectionSchemaNameAsCode =
+  HC.varNameToCode Nothing . paramCollectionSchemaName
+
+mkParameterCollectionCode ::
+  HC.ModuleName ->
+  HC.TypeName ->
+  HC.VarName ->
+  NEL.NonEmpty CodeGenOperationParam ->
+  CodeGen ParameterCollectionCode
+mkParameterCollectionCode moduleName typeName schemaName params = do
+  let
+    paramFieldType param =
+      let
+        paramTypeName =
+          HC.typeNameToCodeDefaultQualification $
+            codeGenOperationParamTypeName param
+      in
+        case codeGenOperationParamArity param of
+          ExactlyOne -> paramTypeName
+          AtMostOne -> HC.maybeOf paramTypeName
+          AtLeastZero -> HC.listOf paramTypeName
+          AtLeastOne ->
+            HC.typeNameToCodeDefaultQualification nonEmptyType
+              <> " "
+              <> paramTypeName
+
+    mkParamField param =
+      ( HC.toVarName moduleName Nothing (codeGenOperationParamName param)
+      , paramFieldType param
+      , Nothing
+      )
+
+    paramFields =
+      fmap mkParamField params
+
+    mkParamSchema param =
+      let
+        paramFieldName =
+          HC.varNameToCode Nothing $
+            HC.toVarName moduleName Nothing (codeGenOperationParamName param)
+
+        beelineArity =
+          case codeGenOperationParamArity param of
+            ExactlyOne -> beelineRequired
+            AtMostOne -> beelineOptional
+            AtLeastZero -> beelineExplodedArray
+            AtLeastOne -> beelineExplodedNonEmpty
+      in
+        beelineQueryParam
+          <> " "
+          <> beelineArity
+          <> " "
+          <> paramFieldName
+          <> " "
+          <> HC.varNameToCodeDefaultQualification (codeGenOperationParamDefName param)
+
+    paramsTypeNameAsCode =
+      HC.typeNameToCode Nothing typeName
+
+    paramsSchemaType =
+      beelineParameterCollectionSchema
+        <> " p => p "
+        <> paramsTypeNameAsCode
+        <> " "
+        <> paramsTypeNameAsCode
+
+    paramsSchema =
+      HC.lines
+        ( HC.varNameToCode Nothing schemaName <> " :: " <> paramsSchemaType
+            : HC.varNameToCode Nothing schemaName <> " ="
+            : HC.indent 2 (beelineMakeParams <> " " <> paramsTypeNameAsCode)
+            : map (HC.indent 4 . mkParamSchema) (NEL.toList params)
+        )
+
+  paramsDeclaration <- recordWithTypeOptions (NEL.toList paramFields) typeName
+
+  pure $
+    ParameterCollectionCode
+      { paramCollectionDeclaration = paramsDeclaration
+      , paramCollectionSchema = paramsSchema
+      , paramCollectionTypeName = typeName
+      , paramCollectionSchemaName = schemaName
+      }
+
+recordWithTypeOptions ::
+  [(HC.VarName, HC.TypeExpression, Maybe NET.NonEmptyText)] ->
+  HC.TypeName ->
+  CodeGen HC.HaskellCode
+recordWithTypeOptions fields name = do
+  recordTypeOptions <- lookupTypeOptions name
+  pure (HC.record name fields (deriveClassNames recordTypeOptions))
+
 operationModuleHeader ::
   HC.ModuleName ->
   Maybe HC.TypeName ->
-  Maybe HC.TypeName ->
-  Maybe HC.HaskellCode ->
+  Maybe ParameterCollectionCode ->
+  Maybe ParameterCollectionCode ->
   HC.HaskellCode
-operationModuleHeader moduleName mbPathParamsTypeName mbQueryParamsTypeName mbQueryParamsSchemaName =
+operationModuleHeader moduleName mbPathParamsTypeName mbQueryParamsCode mbHeaderParamsCode =
   let
+    paramCollectionTypeExport code =
+      HC.typeNameToCode Nothing (paramCollectionTypeName code) <> "(..)"
+
     exports =
       HC.delimitLines "( " ", " . catMaybes $
         [ Just "operation"
         , fmap (\name -> HC.typeNameToCode Nothing name <> "(..)") mbPathParamsTypeName
         , Just "route"
-        , fmap (\name -> HC.typeNameToCode Nothing name <> "(..)") mbQueryParamsTypeName
-        , mbQueryParamsSchemaName
+        , fmap paramCollectionTypeExport mbQueryParamsCode
+        , fmap paramCollectionSchemaNameAsCode mbQueryParamsCode
+        , fmap paramCollectionTypeExport mbHeaderParamsCode
+        , fmap paramCollectionSchemaNameAsCode mbHeaderParamsCode
         , Just "Responses(..)"
         , Just "responseSchemas"
         ]
@@ -1623,13 +1682,13 @@ beelineRoutingOperator op =
     [HC.VarReference "Beeline.Routing" Nothing ("(" <> op <> ")")]
     (HC.fromText op)
 
-beelineQuerySchema :: HC.FromCode c => c
-beelineQuerySchema =
-  beelineHTTPType "QuerySchema"
+beelineParameterCollectionSchema :: HC.FromCode c => c
+beelineParameterCollectionSchema =
+  beelineHTTPType "ParameterCollectionSchema"
 
-beelineMakeQuery :: HC.FromCode c => c
-beelineMakeQuery =
-  beelineHTTPVar "makeQuery"
+beelineMakeParams :: HC.FromCode c => c
+beelineMakeParams =
+  beelineHTTPVar "makeParams"
 
 beelineQueryParam :: (HC.FromCode c, HC.ToCode c) => c
 beelineQueryParam =
@@ -1666,6 +1725,10 @@ beelineRequestRoute =
 beelineRequestQuerySchema :: HC.FromCode c => c
 beelineRequestQuerySchema =
   beelineHTTPVar "requestQuerySchema"
+
+beelineRequestHeaderSchema :: HC.FromCode c => c
+beelineRequestHeaderSchema =
+  beelineHTTPVar "requestHeaderSchema"
 
 beelineResponseSchemas :: HC.FromCode c => c
 beelineResponseSchemas =
@@ -1710,6 +1773,10 @@ beelineNoPathParamsType =
 beelineNoQueryParams :: HC.FromCode c => c
 beelineNoQueryParams =
   beelineHTTPType "NoQueryParams"
+
+beelineNoHeaderParams :: HC.FromCode c => c
+beelineNoHeaderParams =
+  beelineHTTPType "NoHeaderParams"
 
 beelineNoRequestBodyType :: HC.FromCode c => c
 beelineNoRequestBodyType =

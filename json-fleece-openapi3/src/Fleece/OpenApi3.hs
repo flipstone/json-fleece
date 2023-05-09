@@ -680,8 +680,8 @@ schemaTypeToParamInfo schemaMap paramName paramLocation operationKey schema =
         Just "float" -> pure (primitiveParamInfo CGU.ParamTypeFloat)
         _ -> pure (primitiveParamInfo CGU.ParamTypeScientific)
     Just OA.OpenApiArray ->
-      case paramLocation of
-        OA.ParamQuery ->
+      let
+        arrayParamSchema =
           case OA._schemaItems schema of
             Just (OA.OpenApiItemsObject itemSchemaRef) -> do
               itemInfo <-
@@ -707,11 +707,15 @@ schemaTypeToParamInfo schemaMap paramName paramLocation operationKey schema =
               paramCodeGenError paramName operationKey $
                 "Unsupported schema array item type found: "
                   <> show otherItemType
-        otherLocation ->
-          paramCodeGenError paramName operationKey $
-            "Array parameters are not supported for "
-              <> show otherLocation
-              <> " paremeters."
+      in
+        case paramLocation of
+          OA.ParamQuery -> arrayParamSchema
+          OA.ParamHeader -> arrayParamSchema
+          otherLocation ->
+            paramCodeGenError paramName operationKey $
+              "Array parameters are not supported for "
+                <> show otherLocation
+                <> " paremeters."
     Just otherType ->
       paramCodeGenError paramName operationKey $
         "Unsupported schema type found for param: "
