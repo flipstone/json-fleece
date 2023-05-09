@@ -1,7 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module TestCases.Operations.GetAResultNamedNumberSomething
+module TestCases.Operations.Num2GetAResultNamedNumberSomething
   ( operation
   , route
   , Responses(..)

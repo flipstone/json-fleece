@@ -1863,10 +1863,10 @@ extra-source-files:
     examples/star-trek/StarTrek/Types/WeaponHeader/Uid.hs
     examples/test-cases/codegen.dhall
     examples/test-cases/test-cases.yaml
-    examples/test-cases/TestCases/Operations/GetAResultNamedNumberSomething.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param1.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param2.hs
+    examples/test-cases/TestCases/Operations/Num2GetAResultNamedNumberSomething.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReference.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReference/EnumIntParam.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReference/EnumParam.hs

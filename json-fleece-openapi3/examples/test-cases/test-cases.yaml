@@ -369,7 +369,7 @@ paths:
           description: "Invalid Post"
   /test-cases/op-with-number-prefixed-type:
     get:
-      operationId: GetAResultNamedNumberSomething
+      operationId: 2GetAResultNamedNumberSomething
       responses:
         '200':
           description: "Successful Get"
