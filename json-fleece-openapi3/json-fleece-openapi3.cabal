@@ -1931,6 +1931,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/FieldTestCases/RequiredField.hs
     examples/test-cases/TestCases/Types/FieldTestCases/RequiredNullableField.hs
     examples/test-cases/TestCases/Types/LocalTimeType.hs
+    examples/test-cases/TestCases/Types/N2_SchemaStartingWithNumber.hs
     examples/test-cases/TestCases/Types/NameConflicts.hs
     examples/test-cases/TestCases/Types/NameConflicts/Case.hs
     examples/test-cases/TestCases/Types/NameConflicts/Class.hs

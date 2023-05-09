@@ -533,3 +533,7 @@ components:
         emptyDescription:
           type: string
           description: ""
+
+    2_SchemaStartingWithNumber:
+      type: string
+      description: This Schema's name starts with a number and must be renamed for the generated code to be correct.

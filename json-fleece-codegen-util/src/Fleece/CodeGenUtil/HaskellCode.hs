@@ -264,7 +264,7 @@ indent n code =
 toTypeName :: ModuleName -> Maybe T.Text -> T.Text -> TypeName
 toTypeName moduleName mbQualifier t =
   TypeName
-    { typeNameText = Manip.toPascal t
+    { typeNameText = transformDigitPrefixes $ Manip.toPascal t
     , typeNameModule = moduleName
     , typeNameSuggestedQualifier = fmap Manip.toPascal mbQualifier
     }
@@ -283,6 +283,7 @@ toModuleName :: T.Text -> ModuleName
 toModuleName =
   ModuleName
     . T.intercalate "."
+    . map transformDigitPrefixes
     . map Manip.toPascal
     . T.splitOn "."
 
@@ -336,6 +337,16 @@ reservedWords =
     , "type"
     , "where"
     ]
+
+transformDigitPrefixes :: T.Text -> T.Text
+transformDigitPrefixes original =
+  let
+    numberPrefix = T.takeWhile Char.isDigit original
+    suffix = fromMaybe original $ T.stripPrefix numberPrefix original
+  in
+    if T.null numberPrefix
+      then original
+      else "N" <> numberPrefix <> "_" <> suffix
 
 delimitLines :: Semigroup c => c -> c -> [c] -> [c]
 delimitLines beforeFirst separator =

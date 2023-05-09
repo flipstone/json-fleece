@@ -84,6 +84,7 @@ library
       TestCases.Types.FieldTestCases.RequiredField
       TestCases.Types.FieldTestCases.RequiredNullableField
       TestCases.Types.LocalTimeType
+      TestCases.Types.N2_SchemaStartingWithNumber
       TestCases.Types.NameConflicts
       TestCases.Types.NameConflicts.Case
       TestCases.Types.NameConflicts.Class
