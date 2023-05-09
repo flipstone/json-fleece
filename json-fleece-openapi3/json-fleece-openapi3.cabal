@@ -1931,7 +1931,6 @@ extra-source-files:
     examples/test-cases/TestCases/Types/FieldTestCases/RequiredField.hs
     examples/test-cases/TestCases/Types/FieldTestCases/RequiredNullableField.hs
     examples/test-cases/TestCases/Types/LocalTimeType.hs
-    examples/test-cases/TestCases/Types/N2_SchemaStartingWithNumber.hs
     examples/test-cases/TestCases/Types/NameConflicts.hs
     examples/test-cases/TestCases/Types/NameConflicts/Case.hs
     examples/test-cases/TestCases/Types/NameConflicts/Class.hs
@@ -1958,6 +1957,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/NameConflicts/Then.hs
     examples/test-cases/TestCases/Types/NameConflicts/Type.hs
     examples/test-cases/TestCases/Types/NameConflicts/Where.hs
+    examples/test-cases/TestCases/Types/Num2SchemaStartingWithNumber.hs
     examples/test-cases/TestCases/Types/StringParam.hs
     examples/test-cases/TestCases/Types/TopLevelArray.hs
     examples/test-cases/TestCases/Types/TopLevelArray/TopLevelArrayItem.hs

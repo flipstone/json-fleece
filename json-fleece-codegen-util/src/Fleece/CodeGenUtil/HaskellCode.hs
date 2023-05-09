@@ -67,7 +67,7 @@ module Fleece.CodeGenUtil.HaskellCode
 -- import prelude explicitly since we want to define our own 'lines' function
 
 import Data.Maybe (fromMaybe)
-import Prelude (Eq ((==)), Foldable, Int, Maybe (Just, Nothing), Monoid (mempty), Ord, Semigroup ((<>)), String, fmap, id, map, maybe, mconcat, show, zip, ($), (.))
+import Prelude (Eq ((==)), Foldable, Int, Maybe (Just, Nothing), Monoid (mempty), Ord, Semigroup ((<>)), String, any, flip, fmap, id, map, maybe, mconcat, show, zip, ($), (.))
 
 import qualified Data.Char as Char
 import Data.Foldable (toList)
@@ -341,12 +341,12 @@ reservedWords =
 transformDigitPrefixes :: T.Text -> T.Text
 transformDigitPrefixes original =
   let
-    numberPrefix = T.takeWhile Char.isDigit original
-    suffix = fromMaybe original $ T.stripPrefix numberPrefix original
+    digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    hasNumberPrefix = any (flip T.isPrefixOf original) digits
   in
-    if T.null numberPrefix
-      then original
-      else "N" <> numberPrefix <> "_" <> suffix
+    if hasNumberPrefix
+      then "Num" <> original
+      else original
 
 delimitLines :: Semigroup c => c -> c -> [c] -> [c]
 delimitLines beforeFirst separator =
