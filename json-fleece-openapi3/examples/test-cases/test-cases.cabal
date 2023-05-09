@@ -16,6 +16,7 @@ build-type:     Simple
 
 library
   exposed-modules:
+      TestCases.Operations.GetAResultNamedNumberSomething
       TestCases.Operations.GetMultiplePathsParams
       TestCases.Operations.GetMultiplePathsParams.Param1
       TestCases.Operations.GetMultiplePathsParams.Param2

@@ -367,6 +367,16 @@ paths:
           description: "Successful Post"
         '422':
           description: "Invalid Post"
+  /test-cases/op-with-number-prefixed-type:
+    get:
+      operationId: GetAResultNamedNumberSomething
+      responses:
+        '200':
+          description: "Successful Get"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/2_SchemaStartingWithNumber'
 components:
   schemas:
     string-param:

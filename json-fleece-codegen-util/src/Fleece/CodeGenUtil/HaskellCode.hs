@@ -264,9 +264,9 @@ indent n code =
 toTypeName :: ModuleName -> Maybe T.Text -> T.Text -> TypeName
 toTypeName moduleName mbQualifier t =
   TypeName
-    { typeNameText = transformDigitPrefixes $ Manip.toPascal t
+    { typeNameText = transformDigitPrefixes . Manip.toPascal $ t
     , typeNameModule = moduleName
-    , typeNameSuggestedQualifier = fmap Manip.toPascal mbQualifier
+    , typeNameSuggestedQualifier = fmap (transformDigitPrefixes . Manip.toPascal) mbQualifier
     }
 
 toConstructorName :: TypeName -> T.Text -> ConstructorName
