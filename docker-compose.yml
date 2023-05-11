@@ -10,6 +10,9 @@ services:
     environment:
       STACK_ROOT: /stack-root
       IN_DEV_CONTAINER: "true"
+      # Pass through the CI variable from GitHub (or if it set locally for
+      # debugging CI builds)
+      CI:
 
 volumes:
   stack_root:
