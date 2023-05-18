@@ -4,6 +4,7 @@ module Fleece.Aeson.Decoder
   ( Decoder
   , decode
   , fromValue
+  , toParser
   ) where
 
 import Control.Applicative ((<|>))
@@ -23,7 +24,12 @@ data Decoder a
   = Decoder FC.Name (Aeson.Value -> AesonTypes.Parser a)
 
 fromValue :: Decoder a -> Aeson.Value -> Either String a
-fromValue (Decoder _name f) = AesonTypes.parseEither f
+fromValue =
+  AesonTypes.parseEither . toParser
+
+toParser :: Decoder a -> Aeson.Value -> AesonTypes.Parser a
+toParser (Decoder _name f) =
+  f
 
 decode :: Decoder a -> LBS.ByteString -> Either String a
 decode decoder =
