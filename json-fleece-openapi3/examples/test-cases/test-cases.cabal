@@ -48,6 +48,11 @@ library
       TestCases.Operations.TestCases.InlineObjectJsonResponse
       TestCases.Operations.TestCases.InlineObjectStringArrayResponse
       TestCases.Operations.TestCases.InlineObjectStringResponse
+      TestCases.Operations.TestCases.InlineObjectWithPropertiesJsonResponse
+      TestCases.Operations.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body
+      TestCases.Operations.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body.Bar
+      TestCases.Operations.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body.Baz
+      TestCases.Operations.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body.Foo
       TestCases.Operations.TestCases.InlineStringResponse
       TestCases.Operations.TestCases.MultipleResponsesCodes
       TestCases.Operations.TestCases.NoContentResponse
@@ -113,6 +118,7 @@ library
       TestCases.Types.NameConflicts.Where
       TestCases.Types.Num2SchemaStartingWithNumber
       TestCases.Types.StringParam
+      TestCases.Types.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body.Baz.Bax
       TestCases.Types.TopLevelArray
       TestCases.Types.TopLevelArray.TopLevelArrayItem
       TestCases.Types.TopLevelArrayNullable

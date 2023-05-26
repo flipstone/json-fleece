@@ -304,6 +304,28 @@ paths:
               schema:
                 type: object
                 additionalProperties: true
+  /test-cases/inline-object-with-properties-json-response:
+    get:
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - foo
+                  - baz
+                properties:
+                  foo:
+                    type: string
+                  bar:
+                    type: string
+                  baz:
+                    type: object
+                    properties:
+                      bax:
+                        type: string
   /test-cases/inline-enum-responses:
     get:
       responses:

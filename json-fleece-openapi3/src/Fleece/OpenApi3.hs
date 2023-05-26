@@ -49,7 +49,7 @@ unionsErrorOnConflict maps =
 mkCodeGenTypes :: OA.OpenApi -> CGU.CodeGen CGU.CodeGenMap
 mkCodeGenTypes openApi = do
   schemaMaps <-
-    traverse (uncurry mkSchemaMap)
+    traverse (uncurry (mkSchemaMap CGU.Type))
       . IOHM.toList
       . OA._componentsSchemas
       . OA._openApiComponents
@@ -474,7 +474,48 @@ mkInlineBodySchema raiseError schemaKey schemaMap schema =
                 fmap
                   (fmapBodySchema CGU.mapTypeInfo)
                   (mkInlineBodySchema raiseError itemKey schemaMap innerSchema)
-          else raiseError "Inline schemas for objects with properties are not yet supported."
+          else do
+            let
+              requiredParams =
+                OA._schemaRequired schema
+
+            (schemaMaps, fields) <-
+              fmap unzip
+                . traverse (uncurry $ propertyToCodeGenField CGU.Operation schemaKey requiredParams)
+                . filter (\(prop, _) -> not (prop `elem` unsupportedProperties))
+                . IOHM.toList
+                . OA._schemaProperties
+                $ schema
+
+            (_moduleName, typeName) <- CGU.inferTypeForInputName CGU.Operation schemaKey
+            schemaTypeInfo <- CGU.inferSchemaInfoForTypeName typeName
+            typeOptions <- CGU.lookupTypeOptions typeName
+
+            let
+              dataFormat =
+                CGU.CodeGenObject typeOptions fields
+
+              codeGenItem =
+                CGU.CodeGenItemType $
+                  CGU.CodeGenType
+                    { CGU.codeGenTypeOriginalName = schemaKey
+                    , CGU.codeGenTypeName = typeName
+                    , CGU.codeGenTypeSchemaInfo = schemaTypeInfo
+                    , CGU.codeGenTypeDescription = NET.fromText =<< OA._schemaDescription schema
+                    , CGU.codeGenTypeDataFormat = dataFormat
+                    }
+
+              codeGenModules =
+                Map.insert (CGU.SchemaKey schemaKey) codeGenItem $
+                  fmap
+                    (CGU.CodeGenItemType . schemaCodeGenType)
+                    (Map.unions schemaMaps)
+
+            pure $
+              BodySchema
+                { bodySchemaTypeInfo = schemaTypeInfo
+                , bodySchemaModules = codeGenModules
+                }
       Just s ->
         raiseError $ "Inline " <> show s <> " schemas are not currently supported."
       Nothing ->
@@ -724,9 +765,9 @@ schemaTypeToParamInfo schemaMap paramName paramLocation operationKey schema =
       paramCodeGenError paramName operationKey $
         "No schema type found."
 
-mkSchemaMap :: T.Text -> OA.Schema -> CGU.CodeGen SchemaMap
-mkSchemaMap schemaKey schema = do
-  (_moduleName, typeName) <- CGU.inferTypeForInputName CGU.Type schemaKey
+mkSchemaMap :: CGU.CodeSection -> T.Text -> OA.Schema -> CGU.CodeGen SchemaMap
+mkSchemaMap section schemaKey schema = do
+  (_moduleName, typeName) <- CGU.inferTypeForInputName section schemaKey
   fmap fst (mkSchemaTypeInfo schemaKey typeName schema)
 
 mkSchemaTypeInfo ::
@@ -850,7 +891,7 @@ mkOpenApiObjectFormat schemaKey typeName schema = do
 
   (schemaMaps, fields) <-
     fmap unzip
-      . traverse (uncurry $ propertyToCodeGenField schemaKey requiredParams)
+      . traverse (uncurry $ propertyToCodeGenField CGU.Type schemaKey requiredParams)
       . filter (\(prop, _) -> not (prop `elem` unsupportedProperties))
       . IOHM.toList
       . OA._schemaProperties
@@ -872,20 +913,22 @@ mkOpenApiArrayFormat schemaKey typeName schema = do
   typeOptions <- CGU.lookupTypeOptions typeName
   fmap (fmap (CGU.CodeGenArray typeOptions)) $
     schemaArrayItemsToFieldType
+      CGU.Type
       schemaKey
       schema
       schemaKey
       (OA._schemaItems schema)
 
 propertyToCodeGenField ::
+  CGU.CodeSection ->
   T.Text ->
   [OA.ParamName] ->
   OA.ParamName ->
   OA.Referenced OA.Schema ->
   CGU.CodeGen (SchemaMap, CGU.CodeGenObjectField)
-propertyToCodeGenField parentSchemaKey requiredParams name schemaRef = do
+propertyToCodeGenField section parentSchemaKey requiredParams name schemaRef = do
   (schemaMap, codeGenFieldType) <-
-    schemaRefToFieldType parentSchemaKey name schemaRef
+    schemaRefToFieldType section parentSchemaKey name schemaRef
 
   let
     field =
@@ -898,11 +941,12 @@ propertyToCodeGenField parentSchemaKey requiredParams name schemaRef = do
   pure (schemaMap, field)
 
 schemaRefToFieldType ::
+  CGU.CodeSection ->
   T.Text ->
   OA.ParamName ->
   OA.Referenced OA.Schema ->
   CGU.CodeGen (SchemaMap, CGU.CodeGenObjectFieldType)
-schemaRefToFieldType parentKey fieldName schemaRef =
+schemaRefToFieldType section parentKey fieldName schemaRef =
   case schemaRef of
     OA.Ref ref ->
       pure (Map.empty, CGU.TypeReference . OA.getReference $ ref)
@@ -915,6 +959,7 @@ schemaRefToFieldType parentKey fieldName schemaRef =
           in
             fmap (fmap (CGU.CodeGenFieldArray nullable)) $
               schemaArrayItemsToFieldType
+                section
                 parentKey
                 inlineSchema
                 fieldName
@@ -927,16 +972,17 @@ schemaRefToFieldType parentKey fieldName schemaRef =
             childRef =
               CGU.TypeReference key
 
-          schemaMap <- mkSchemaMap key inlineSchema
+          schemaMap <- mkSchemaMap section key inlineSchema
           pure (schemaMap, childRef)
 
 schemaArrayItemsToFieldType ::
+  CGU.CodeSection ->
   T.Text ->
   OA.Schema ->
   OA.ParamName ->
   Maybe OA.OpenApiItems ->
   CGU.CodeGen (SchemaMap, CGU.CodeGenObjectFieldType)
-schemaArrayItemsToFieldType parentKey schema fieldName arrayItems =
+schemaArrayItemsToFieldType section parentKey schema fieldName arrayItems =
   let
     fieldError err =
       CGU.codeGenError $
@@ -949,7 +995,7 @@ schemaArrayItemsToFieldType parentKey schema fieldName arrayItems =
   in
     case arrayItems of
       Just (OA.OpenApiItemsObject itemSchema) ->
-        schemaRefToFieldType parentKey (fieldName <> "Item") itemSchema
+        schemaRefToFieldType section parentKey (fieldName <> "Item") itemSchema
       Just (OA.OpenApiItemsArray []) -> do
         let
           key =
@@ -958,7 +1004,7 @@ schemaArrayItemsToFieldType parentKey schema fieldName arrayItems =
           fieldType =
             CGU.TypeReference key
 
-        (_moduleName, typeName) <- CGU.inferTypeForInputName CGU.Type key
+        (_moduleName, typeName) <- CGU.inferTypeForInputName section key
         schemaTypeInfo <- CGU.inferSchemaInfoForTypeName typeName
         typeOptions <- CGU.lookupTypeOptions typeName
 
