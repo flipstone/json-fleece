@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.4.0.1
+version:        0.4.1.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -1895,6 +1895,11 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/TestCases/InlineObjectJsonResponse.hs
     examples/test-cases/TestCases/Operations/TestCases/InlineObjectStringArrayResponse.hs
     examples/test-cases/TestCases/Operations/TestCases/InlineObjectStringResponse.hs
+    examples/test-cases/TestCases/Operations/TestCases/InlineObjectWithPropertiesJsonResponse.hs
+    examples/test-cases/TestCases/Operations/TestCases/InlineObjectWithPropertiesJsonResponse/Response200Body.hs
+    examples/test-cases/TestCases/Operations/TestCases/InlineObjectWithPropertiesJsonResponse/Response200Body/Bar.hs
+    examples/test-cases/TestCases/Operations/TestCases/InlineObjectWithPropertiesJsonResponse/Response200Body/Baz.hs
+    examples/test-cases/TestCases/Operations/TestCases/InlineObjectWithPropertiesJsonResponse/Response200Body/Foo.hs
     examples/test-cases/TestCases/Operations/TestCases/InlineStringResponse.hs
     examples/test-cases/TestCases/Operations/TestCases/MultipleResponsesCodes.hs
     examples/test-cases/TestCases/Operations/TestCases/NoContentResponse.hs
@@ -1960,6 +1965,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/NameConflicts/Where.hs
     examples/test-cases/TestCases/Types/Num2SchemaStartingWithNumber.hs
     examples/test-cases/TestCases/Types/StringParam.hs
+    examples/test-cases/TestCases/Types/TestCases/InlineObjectWithPropertiesJsonResponse/Response200Body/Baz/Bax.hs
     examples/test-cases/TestCases/Types/TopLevelArray.hs
     examples/test-cases/TestCases/Types/TopLevelArray/TopLevelArrayItem.hs
     examples/test-cases/TestCases/Types/TopLevelArrayNullable.hs
