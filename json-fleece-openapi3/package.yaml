@@ -1,5 +1,5 @@
 name:                json-fleece-openapi3
-version:             0.4.1.0
+version:             0.4.2.0
 github:              "flipstone/json-fleece/json-fleece-openapi3"
 license:             BSD3
 author:              "Author name here"
@@ -44,7 +44,7 @@ when:
 
 dependencies:
   - base >= 4.7 && < 5
-  - json-fleece-codegen-util >= 0.7 && < 0.8
+  - json-fleece-codegen-util >= 0.8 && < 0.9
 
 extra-source-files:
   - examples/star-trek/codegen.dhall

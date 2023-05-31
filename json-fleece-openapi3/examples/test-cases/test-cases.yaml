@@ -281,6 +281,17 @@ paths:
                 type: object
                 additionalProperties:
                   type: string
+  /test-cases/inline-object-string-ref-response:
+    get:
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: "#/components/schemas/AStringType"
   /test-cases/inline-object-string-array-response:
     get:
       responses:
@@ -326,6 +337,25 @@ paths:
                     properties:
                       bax:
                         type: string
+  /test-cases/inline-object-with-properties-and-additional-json-response:
+    get:
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - foo
+                  - baz
+                properties:
+                  foo:
+                    type: string
+                  bar:
+                    type: string
+                additionalProperties:
+                  type: string
   /test-cases/inline-enum-responses:
     get:
       responses:
@@ -552,6 +582,7 @@ components:
       format: date-time
 
     DerivingNothing:
+      description: A simple string type with options set in codegen.dhall to derive nothing
       type: string
 
     FieldDescriptions:
@@ -569,3 +600,56 @@ components:
     2_SchemaStartingWithNumber:
       type: string
       description: This Schema's name starts with a number and must be renamed for the generated code to be correct.
+
+    JustAdditionalPropertiesTrue:
+      type: object
+      description: An object with just additionalProperties = true
+      additionalProperties: true
+
+    JustAdditionalPropertiesSchemaRef:
+      type: object
+      description: An object with just additionalProperties as a schema ref
+      additionalProperties:
+        $ref: '#/components/schemas/AStringType'
+
+    JustAdditionalPropertiesSchemaInline:
+      type: object
+      description: An object with just additionalProperties as an inline schema
+      additionalProperties:
+        type: string
+
+    MixedInAdditionalPropertiesTrue:
+      type: object
+      description: An object with additionalProperties = true mixed in with other properties
+      properties:
+        foo:
+          type: string
+        bar:
+          type: string
+      additionalProperties: true
+
+    MixedInJustAdditionalPropertiesSchemaRef:
+      type: object
+      description: An object with additionalProperties as a schema ref mixed in with other properties
+      properties:
+        foo:
+          type: string
+        bar:
+          type: string
+      additionalProperties:
+        $ref: '#/components/schemas/AStringType'
+
+    MixedInJustAdditionalPropertiesSchemaInline:
+      type: object
+      description: An object with additionalProperties as an inline schema mixed in with other properties
+      properties:
+        foo:
+          type: string
+        bar:
+          type: string
+      additionalProperties:
+        type: string
+
+    AStringType:
+      description: An explicit type that is just a string for use in other test cases
+      type: string

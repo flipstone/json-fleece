@@ -24,6 +24,7 @@ module Fleece.CodeGenUtil
   , OperationParamLocation (..)
   , CodeGenDataFormat (..)
   , CodeGenObjectField (..)
+  , CodeGenAdditionalProperties (..)
   , CodeGenObjectFieldType (..)
   , CodeGenKey (..)
   , CodeGenMap
@@ -230,13 +231,17 @@ data OperationParamLocation
 data CodeGenDataFormat
   = CodeGenNewType TypeOptions SchemaTypeInfo
   | CodeGenEnum TypeOptions [T.Text]
-  | CodeGenObject TypeOptions [CodeGenObjectField]
+  | CodeGenObject TypeOptions [CodeGenObjectField] (Maybe CodeGenAdditionalProperties)
   | CodeGenArray TypeOptions CodeGenObjectFieldType
 
 data CodeGenObjectField = CodeGenObjectField
   { codeGenFieldName :: T.Text
   , codeGenFieldType :: CodeGenObjectFieldType
   , codeGenFieldRequired :: Bool
+  }
+
+newtype CodeGenAdditionalProperties = CodeGenAdditionalProperties
+  { codeGenAdditionalPropertiesSchemaInfo :: SchemaTypeInfo
   }
 
 data CodeGenObjectFieldType
@@ -1054,8 +1059,8 @@ generateSchemaCode typeMap codeGenType = do
             typeOptions
       CodeGenEnum typeOptions values ->
         pure $ generateFleeceEnum typeName values typeOptions
-      CodeGenObject typeOptions fields ->
-        generateFleeceObject typeMap typeName fields typeOptions
+      CodeGenObject typeOptions fields mbAdditionalProperties ->
+        generateFleeceObject typeMap typeName fields mbAdditionalProperties typeOptions
       CodeGenArray typeOptions itemType ->
         generateFleeceArray typeMap typeName itemType typeOptions
 
@@ -1232,9 +1237,10 @@ generateFleeceObject ::
   CodeGenMap ->
   HC.TypeName ->
   [CodeGenObjectField] ->
+  Maybe CodeGenAdditionalProperties ->
   TypeOptions ->
   CodeGen ([HC.VarName], HC.HaskellCode)
-generateFleeceObject typeMap typeName codeGenFields typeOptions = do
+generateFleeceObject typeMap typeName codeGenFields mbAdditionalProperties typeOptions = do
   let
     moduleName =
       HC.typeNameModule typeName
@@ -1246,10 +1252,25 @@ generateFleeceObject typeMap typeName codeGenFields typeOptions = do
     fieldNameAndType field =
       (fieldName field, fieldTypeName field, fieldDescription field)
 
+    additionalPropsFieldName =
+      HC.toVarName moduleName Nothing "additionalProperties"
+
+    additionalPropsFieldNameAndType =
+      case mbAdditionalProperties of
+        Nothing ->
+          []
+        Just (CodeGenAdditionalProperties additionalPropsTypeInfo) ->
+          [
+            ( additionalPropsFieldName
+            , schemaTypeExpr (mapTypeInfo additionalPropsTypeInfo)
+            , Nothing
+            )
+          ]
+
     recordDecl =
       HC.record
         typeName
-        (map fieldNameAndType fields)
+        (map fieldNameAndType fields ++ additionalPropsFieldNameAndType)
         (deriveClassNames typeOptions)
 
     fleeceField field =
@@ -1263,11 +1284,25 @@ generateFleeceObject typeMap typeName codeGenFields typeOptions = do
           <> " "
           <> fieldFleeceSchemaCode field
 
+    fleeceAdditionalProps =
+      case mbAdditionalProperties of
+        Nothing ->
+          []
+        Just (CodeGenAdditionalProperties additionalPropsTypeInfo) ->
+          [ HC.addReferences [HC.VarReference "Fleece.Core" Nothing "(#*)"] $
+              "#* "
+                <> fleeceCoreVar "additionalFields"
+                <> " "
+                <> HC.varNameToCode Nothing additionalPropsFieldName
+                <> " "
+                <> schemaTypeSchema additionalPropsTypeInfo
+          ]
+
     fleeceSchema =
       fleeceSchemaForType typeName $
         ( fleeceCoreVar "object" <> " " <> HC.dollar
             : "  " <> fleeceCoreVar "constructor" <> " " <> HC.typeNameToCode Nothing typeName
-            : map (HC.indent 4 . fleeceField) fields
+            : map (HC.indent 4) (map fleeceField fields ++ fleeceAdditionalProps)
         )
 
     extraExports =
@@ -1380,7 +1415,7 @@ inferSchemaInfoForTypeName typeName = do
       , schemaTypeSchema = HC.varNameToCodeDefaultQualification schema
       }
 
-inferTypeForInputName :: CodeSection -> T.Text -> (CodeGen (HC.ModuleName, HC.TypeName))
+inferTypeForInputName :: CodeSection -> T.Text -> CodeGen (HC.ModuleName, HC.TypeName)
 inferTypeForInputName section inputName = do
   moduleName <- generatedModuleName section inputName
   case reverse (T.splitOn "." inputName) of

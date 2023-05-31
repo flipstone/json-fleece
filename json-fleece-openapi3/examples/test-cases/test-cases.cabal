@@ -47,7 +47,13 @@ library
       TestCases.Operations.TestCases.InlineObjectAdditionalPropertiesJsonResponse
       TestCases.Operations.TestCases.InlineObjectJsonResponse
       TestCases.Operations.TestCases.InlineObjectStringArrayResponse
+      TestCases.Operations.TestCases.InlineObjectStringRefResponse
       TestCases.Operations.TestCases.InlineObjectStringResponse
+      TestCases.Operations.TestCases.InlineObjectWithPropertiesAndAdditionalJsonResponse
+      TestCases.Operations.TestCases.InlineObjectWithPropertiesAndAdditionalJsonResponse.Response200Body
+      TestCases.Operations.TestCases.InlineObjectWithPropertiesAndAdditionalJsonResponse.Response200Body.Bar
+      TestCases.Operations.TestCases.InlineObjectWithPropertiesAndAdditionalJsonResponse.Response200Body.Foo
+      TestCases.Operations.TestCases.InlineObjectWithPropertiesAndAdditionalJsonResponse.Response200BodyItem
       TestCases.Operations.TestCases.InlineObjectWithPropertiesJsonResponse
       TestCases.Operations.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body
       TestCases.Operations.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body.Bar
@@ -67,6 +73,7 @@ library
       TestCases.Operations.TestCases.QueryParams.RequiredArrayParam
       TestCases.Operations.TestCases.QueryParams.StringParam
       TestCases.Operations.TestCases.RequestBody
+      TestCases.Types.AStringType
       TestCases.Types.DateTimeFormats
       TestCases.Types.DateTimeFormats.DefaultTimeField
       TestCases.Types.DateTimeFormats.LocalTimeField
@@ -89,7 +96,21 @@ library
       TestCases.Types.FieldTestCases.OptionalNullableField
       TestCases.Types.FieldTestCases.RequiredField
       TestCases.Types.FieldTestCases.RequiredNullableField
+      TestCases.Types.JustAdditionalPropertiesSchemaInline
+      TestCases.Types.JustAdditionalPropertiesSchemaInlineItem
+      TestCases.Types.JustAdditionalPropertiesSchemaRef
+      TestCases.Types.JustAdditionalPropertiesTrue
       TestCases.Types.LocalTimeType
+      TestCases.Types.MixedInAdditionalPropertiesTrue
+      TestCases.Types.MixedInAdditionalPropertiesTrue.Bar
+      TestCases.Types.MixedInAdditionalPropertiesTrue.Foo
+      TestCases.Types.MixedInJustAdditionalPropertiesSchemaInline
+      TestCases.Types.MixedInJustAdditionalPropertiesSchemaInline.Bar
+      TestCases.Types.MixedInJustAdditionalPropertiesSchemaInline.Foo
+      TestCases.Types.MixedInJustAdditionalPropertiesSchemaInlineItem
+      TestCases.Types.MixedInJustAdditionalPropertiesSchemaRef
+      TestCases.Types.MixedInJustAdditionalPropertiesSchemaRef.Bar
+      TestCases.Types.MixedInJustAdditionalPropertiesSchemaRef.Foo
       TestCases.Types.NameConflicts
       TestCases.Types.NameConflicts.Case
       TestCases.Types.NameConflicts.Class
