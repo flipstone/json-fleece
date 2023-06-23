@@ -10,6 +10,6 @@ else
   MODE=inplace
 fi
 
-find */* -iname '*.hs' \
+git ls-files '*.hs' \
   | grep -v -E '(openapi3|swagger2)/examples' \
   | xargs fourmolu --mode $MODE

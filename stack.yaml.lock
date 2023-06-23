@@ -5,7 +5,7 @@
 
 packages:
 - completed:
-    commit: 0e2112e4828f333887b11532b6cd26196ca42c2c
+    commit: 6c580e9569ffbb1ad481be97832b1e18d6a48556
     git: https://github.com/flipstone/beeline
     name: beeline-routing
     pantry-tree:
@@ -14,11 +14,11 @@ packages:
     subdir: beeline-routing
     version: 0.2.4.0
   original:
-    commit: 0e2112e4828f333887b11532b6cd26196ca42c2c
+    commit: 6c580e9569ffbb1ad481be97832b1e18d6a48556
     git: https://github.com/flipstone/beeline
     subdir: beeline-routing
 - completed:
-    commit: 0e2112e4828f333887b11532b6cd26196ca42c2c
+    commit: 6c580e9569ffbb1ad481be97832b1e18d6a48556
     git: https://github.com/flipstone/beeline
     name: beeline-http-client
     pantry-tree:
@@ -27,19 +27,19 @@ packages:
     subdir: beeline-http-client
     version: 0.8.0.0
   original:
-    commit: 0e2112e4828f333887b11532b6cd26196ca42c2c
+    commit: 6c580e9569ffbb1ad481be97832b1e18d6a48556
     git: https://github.com/flipstone/beeline
     subdir: beeline-http-client
 - completed:
-    commit: 94ae4dfe91fa03cf5863c6402c40a6d7967ac8b4
+    commit: 730b97f629de04031e0158fd2029332bb0be9882
     git: https://github.com/flipstone/shrubbery
     name: shrubbery
     pantry-tree:
-      sha256: 0fb6731198839e21baddc4e60138b94310e8befd334e19997f641bee8b2a7eb9
-      size: 1094
+      sha256: 008a55c7dcc7494ad409382870c722d3a655f2d0e6fea69fd6a38ac268f82b1e
+      size: 1566
     version: 0.1.2.0
   original:
-    commit: 94ae4dfe91fa03cf5863c6402c40a6d7967ac8b4
+    commit: 730b97f629de04031e0158fd2029332bb0be9882
     git: https://github.com/flipstone/shrubbery
 - completed:
     hackage: attoparsec-iso8601-1.1.0.0@sha256:29d590f21adc4112973ad5e874d095f8b403b886932fe7e15567b239f5483539,1370
@@ -57,8 +57,8 @@ packages:
     hackage: non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
 snapshots:
 - completed:
-    sha256: adbc602422dde10cc330175da7de8609e70afc41449a7e2d6e8b1827aa0e5008
-    size: 649342
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/20/11.yaml
+    sha256: e019cd29e3f7f9dbad500225829a3f7a50f73c674614f2f452e21bb8bf5d99ea
+    size: 650253
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/20/24.yaml
   original:
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/20/11.yaml
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/20/24.yaml
