@@ -5,7 +5,7 @@
 
 packages:
 - completed:
-    commit: 22bf91d2a11e1ba03b5511c12595da6eb174b8fa
+    commit: 0d29b3b6bf0d5a1775d6dc7d184a45bd2c8bc7a3
     git: https://github.com/flipstone/beeline
     name: beeline-routing
     pantry-tree:
@@ -14,11 +14,11 @@ packages:
     subdir: beeline-routing
     version: 0.2.4.0
   original:
-    commit: 22bf91d2a11e1ba03b5511c12595da6eb174b8fa
+    commit: 0d29b3b6bf0d5a1775d6dc7d184a45bd2c8bc7a3
     git: https://github.com/flipstone/beeline
     subdir: beeline-routing
 - completed:
-    commit: 22bf91d2a11e1ba03b5511c12595da6eb174b8fa
+    commit: 0d29b3b6bf0d5a1775d6dc7d184a45bd2c8bc7a3
     git: https://github.com/flipstone/beeline
     name: beeline-http-client
     pantry-tree:
@@ -27,19 +27,19 @@ packages:
     subdir: beeline-http-client
     version: 0.8.0.0
   original:
-    commit: 22bf91d2a11e1ba03b5511c12595da6eb174b8fa
+    commit: 0d29b3b6bf0d5a1775d6dc7d184a45bd2c8bc7a3
     git: https://github.com/flipstone/beeline
     subdir: beeline-http-client
 - completed:
-    commit: 3bed44b40e4a3828a9063cc995ea82d39284a1cb
+    commit: 350ab1bf6c62c63e4acad5004200879ecbe1f3cb
     git: https://github.com/flipstone/shrubbery
     name: shrubbery
     pantry-tree:
-      sha256: c91b77a8e894126ac10aa2f4d07e3365e41c2fb6f8c3fd25aaf263b5b51de269
+      sha256: ffb74e1148407ceb1c6c6f61c76efea215c13b1c5d92a448294f86c558306f93
       size: 1566
     version: 0.1.2.0
   original:
-    commit: 3bed44b40e4a3828a9063cc995ea82d39284a1cb
+    commit: 350ab1bf6c62c63e4acad5004200879ecbe1f3cb
     git: https://github.com/flipstone/shrubbery
 - completed:
     hackage: attoparsec-iso8601-1.1.0.0@sha256:29d590f21adc4112973ad5e874d095f8b403b886932fe7e15567b239f5483539,1370

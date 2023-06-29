@@ -58,12 +58,12 @@ flags:
 
 extra-deps:
   - git: https://github.com/flipstone/beeline
-    commit: 22bf91d2a11e1ba03b5511c12595da6eb174b8fa
+    commit: 0d29b3b6bf0d5a1775d6dc7d184a45bd2c8bc7a3
     subdirs:
       - beeline-routing
       - beeline-http-client
   - git: https://github.com/flipstone/shrubbery
-    commit: 3bed44b40e4a3828a9063cc995ea82d39284a1cb
+    commit: 350ab1bf6c62c63e4acad5004200879ecbe1f3cb
   - attoparsec-iso8601-1.1.0.0@sha256:29d590f21adc4112973ad5e874d095f8b403b886932fe7e15567b239f5483539,1370
   - non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
 
