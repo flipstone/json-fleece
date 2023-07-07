@@ -10,6 +10,7 @@ module Fleece.Core.Schemas
   , list
   , Fleece.Core.Schemas.map
   , nonEmpty
+  , nonEmptyText
   , integer
   , int
   , int8
@@ -50,6 +51,7 @@ import Data.Coerce (Coercible, coerce)
 import qualified Data.Int as I
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map as Map
+import qualified Data.NonEmptyText as NET
 import Data.Scientific (floatingOrInteger, fromFloatDigits, toBoundedInteger, toRealFloat)
 import qualified Data.Text as T
 import qualified Data.Time as Time
@@ -263,6 +265,20 @@ nonEmpty itemSchema =
       NEL.toList
       validateNonEmpty
       (list itemSchema)
+
+nonEmptyText :: Fleece schema => schema NET.NonEmptyText
+nonEmptyText =
+  let
+    validateNonEmptyText value =
+      case NET.fromText value of
+        Just net -> Right net
+        Nothing -> Left "Expected non-empty text for NonEmptyText, but text was empty"
+  in
+    validateNamed
+      (unqualifiedName "NonEmptyText")
+      NET.toText
+      validateNonEmptyText
+      text
 
 integer :: Fleece schema => schema Integer
 integer =

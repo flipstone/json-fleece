@@ -1,5 +1,5 @@
 name:                json-fleece-core
-version:             0.5.0.0
+version:             0.5.1.0
 github:              "flipstone/json-fleece/json-fleece-core"
 license:             BSD3
 author:              "Author name here"
@@ -20,6 +20,7 @@ dependencies:
 - attoparsec >= 0.14 && < 0.15
 - attoparsec-iso8601 >= 1.1 && < 1.2
 - containers >= 0.6 &&  < 0.7
+- non-empty-text >= 0.2 && < 0.3
 - scientific >= 0.3.7 && < 0.4
 - shrubbery >= 0.1.2 && < 0.2
 - text >= 1.2 && < 1.3

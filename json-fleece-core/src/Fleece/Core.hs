@@ -48,6 +48,7 @@ module Fleece.Core
   , list
   , Fleece.Core.Schemas.map
   , nonEmpty
+  , nonEmptyText
   , integer
   , int
   , int8

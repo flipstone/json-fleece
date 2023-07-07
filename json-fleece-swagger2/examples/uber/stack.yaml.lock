@@ -48,6 +48,13 @@ packages:
       size: 361
   original:
     hackage: attoparsec-iso8601-1.1.0.0@sha256:29d590f21adc4112973ad5e874d095f8b403b886932fe7e15567b239f5483539,1370
+- completed:
+    hackage: non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
+    pantry-tree:
+      sha256: 303f637d7ca4c4573c8d861282b07b172959c8d3f3aa531b0462f3d08b9669d1
+      size: 400
+  original:
+    hackage: non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
 snapshots:
 - completed:
     sha256: e019cd29e3f7f9dbad500225829a3f7a50f73c674614f2f452e21bb8bf5d99ea
