@@ -13,9 +13,9 @@ import qualified StarTrek.Types.ResponseSort as ResponseSort
 import qualified StarTrek.Types.SoundtrackBase as SoundtrackBase
 
 data SoundtrackBaseResponse = SoundtrackBaseResponse
-  { sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
-  , soundtracks :: Maybe [SoundtrackBase.SoundtrackBase] -- ^ Base soundtrack, returned in search results
+  { soundtracks :: Maybe [SoundtrackBase.SoundtrackBase] -- ^ Base soundtrack, returned in search results
   , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
+  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ soundtrackBaseResponseSchema :: FC.Fleece schema => schema SoundtrackBaseRespons
 soundtrackBaseResponseSchema =
   FC.object $
     FC.constructor SoundtrackBaseResponse
-      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
       #+ FC.optional "soundtracks" soundtracks (FC.list SoundtrackBase.soundtrackBaseSchema)
       #+ FC.optional "page" page ResponsePage.responsePageSchema
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema

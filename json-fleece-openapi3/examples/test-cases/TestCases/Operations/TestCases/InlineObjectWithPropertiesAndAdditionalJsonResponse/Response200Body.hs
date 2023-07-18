@@ -15,8 +15,8 @@ import qualified TestCases.Operations.TestCases.InlineObjectWithPropertiesAndAdd
 import qualified TestCases.Operations.TestCases.InlineObjectWithPropertiesAndAdditionalJsonResponse.Response200BodyItem as Response200BodyItem
 
 data Response200Body = Response200Body
-  { foo :: Foo.Foo
-  , bar :: Maybe Bar.Bar
+  { bar :: Maybe Bar.Bar
+  , foo :: Foo.Foo
   , additionalProperties :: (Map.Map T.Text Response200BodyItem.Response200BodyItem)
   }
   deriving (Eq, Show)
@@ -25,6 +25,6 @@ response200BodySchema :: FC.Fleece schema => schema Response200Body
 response200BodySchema =
   FC.object $
     FC.constructor Response200Body
-      #+ FC.required "foo" foo Foo.fooSchema
       #+ FC.optional "bar" bar Bar.barSchema
+      #+ FC.required "foo" foo Foo.fooSchema
       #* FC.additionalFields additionalProperties Response200BodyItem.response200BodyItemSchema

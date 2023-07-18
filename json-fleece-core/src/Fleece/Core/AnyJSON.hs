@@ -43,13 +43,13 @@ import Fleece.Core.Schemas (list, transform, unionMember)
 newtype AnyJSON
   = AnyJSON
       ( Union
-          [ T.Text
-          , Bool
-          , Scientific
-          , [AnyJSON]
-          , Map.Map T.Text AnyJSON
-          , Null
-          ]
+          '[ T.Text
+           , Bool
+           , Scientific
+           , [AnyJSON]
+           , Map.Map T.Text AnyJSON
+           , Null
+           ]
       )
   deriving (Show)
 
@@ -148,7 +148,7 @@ handleAnyJSON handleText handleBool handleNumber handleArray handleObject handle
   in
     \(AnyJSON u) -> handler u
 
-anyJSON :: Fleece schema => schema AnyJSON
+anyJSON :: (Fleece schema) => schema AnyJSON
 anyJSON =
   transform (\(AnyJSON u) -> u) AnyJSON $
     unionNamed (unqualifiedName "AnyJSON") $
@@ -159,11 +159,11 @@ anyJSON =
         #| unionMember anyObject
         #| unionMember Fleece.Core.Class.null
 
-anyArray :: Fleece schema => schema [AnyJSON]
+anyArray :: (Fleece schema) => schema [AnyJSON]
 anyArray =
   list anyJSON
 
-anyObject :: Fleece schema => schema (Map.Map T.Text AnyJSON)
+anyObject :: (Fleece schema) => schema (Map.Map T.Text AnyJSON)
 anyObject =
   objectNamed (unqualifiedName "AnyJSON object") $
     constructor id

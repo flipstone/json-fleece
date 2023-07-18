@@ -12,8 +12,8 @@ import qualified StarTrek.Types.MedicalConditionHeader.Name as Name
 import qualified StarTrek.Types.MedicalConditionHeader.Uid as Uid
 
 data MedicalConditionHeader = MedicalConditionHeader
-  { name :: Name.Name -- ^ Medical condition name
-  , uid :: Uid.Uid -- ^ Medical condition unique ID
+  { uid :: Uid.Uid -- ^ Medical condition unique ID
+  , name :: Name.Name -- ^ Medical condition name
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ medicalConditionHeaderSchema :: FC.Fleece schema => schema MedicalConditionHeade
 medicalConditionHeaderSchema =
   FC.object $
     FC.constructor MedicalConditionHeader
-      #+ FC.required "name" name Name.nameSchema
       #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.required "name" name Name.nameSchema

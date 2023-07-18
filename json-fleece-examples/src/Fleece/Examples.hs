@@ -54,7 +54,7 @@ data FooBar = FooBar
   }
   deriving (Eq, Show)
 
-fooBarSchema :: Fleece schema => schema FooBar
+fooBarSchema :: (Fleece schema) => schema FooBar
 fooBarSchema =
   object $
     constructor FooBar
@@ -66,7 +66,7 @@ data NullableField = NullableField
   }
   deriving (Eq, Show)
 
-nullableFieldSchema :: Fleece schema => schema NullableField
+nullableFieldSchema :: (Fleece schema) => schema NullableField
 nullableFieldSchema =
   object $
     constructor NullableField
@@ -75,7 +75,7 @@ nullableFieldSchema =
 newtype Validation = Validation T.Text
   deriving (Eq, Show)
 
-validationSchema :: Fleece schema => schema Validation
+validationSchema :: (Fleece schema) => schema Validation
 validationSchema =
   validate
     (\(Validation t) -> t)
@@ -87,7 +87,7 @@ data OptionalField = OptionalField
   }
   deriving (Eq, Show)
 
-optionalFieldSchema :: Fleece schema => schema OptionalField
+optionalFieldSchema :: (Fleece schema) => schema OptionalField
 optionalFieldSchema =
   object $
     constructor OptionalField
@@ -99,7 +99,7 @@ data OptionalNullableFieldEmitNull = OptionalNullableFieldEmitNull
   deriving (Eq, Show)
 
 optionalNullableFieldEmitNullSchema ::
-  Fleece schema =>
+  (Fleece schema) =>
   schema OptionalNullableFieldEmitNull
 optionalNullableFieldEmitNullSchema =
   object $
@@ -112,7 +112,7 @@ data OptionalNullableFieldOmitKey = OptionalNullableFieldOmitKey
   deriving (Eq, Show)
 
 optionalNullableFieldOmitKeySchema ::
-  Fleece schema =>
+  (Fleece schema) =>
   schema OptionalNullableFieldOmitKey
 optionalNullableFieldOmitKeySchema =
   object $
@@ -125,7 +125,7 @@ data BoundedEnum
   | Kumquat
   deriving (Eq, Show, Enum, Bounded)
 
-boundedEnumSchema :: Fleece schema => schema BoundedEnum
+boundedEnumSchema :: (Fleece schema) => schema BoundedEnum
 boundedEnumSchema =
   boundedEnum boundedEnumToText
 
@@ -143,7 +143,7 @@ data AdditionalFieldsExample = AdditionalFieldsExample
   }
   deriving (Eq, Show)
 
-additionalFieldsExampleSchema :: Fleece schema => schema AdditionalFieldsExample
+additionalFieldsExampleSchema :: (Fleece schema) => schema AdditionalFieldsExample
 additionalFieldsExampleSchema =
   object $
     constructor AdditionalFieldsExample
@@ -157,7 +157,7 @@ data AbnormalNumbersExample = AbnormalNumbersExample
   }
   deriving (Eq, Show)
 
-abnormalNumbersExampleSchema :: Fleece schema => schema AbnormalNumbersExample
+abnormalNumbersExampleSchema :: (Fleece schema) => schema AbnormalNumbersExample
 abnormalNumbersExampleSchema =
   object $
     constructor AbnormalNumbersExample
@@ -169,7 +169,7 @@ newtype ListFieldExample = ListFieldExample
   }
   deriving (Eq, Show)
 
-listFieldExampleSchema :: Fleece schema => schema ListFieldExample
+listFieldExampleSchema :: (Fleece schema) => schema ListFieldExample
 listFieldExampleSchema =
   object $
     constructor ListFieldExample

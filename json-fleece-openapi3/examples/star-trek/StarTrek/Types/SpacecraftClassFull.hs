@@ -22,18 +22,18 @@ import qualified StarTrek.Types.SpeciesHeader as SpeciesHeader
 
 data SpacecraftClassFull = SpacecraftClassFull
   { alternateReality :: Maybe AlternateReality.AlternateReality -- ^ Whether this spacecraft class is from alternate reality
-  , name :: Name.Name -- ^ Spacecraft class name
-  , spacecrafts :: Maybe [SpacecraftBase.SpacecraftBase] -- ^ Base spacecraft, returned in search results
-  , activeFrom :: Maybe ActiveFrom.ActiveFrom -- ^ Starting period when this spacecraft class was in use
   , warpCapable :: Maybe WarpCapable.WarpCapable -- ^ Whether it's a warp-capable spacecraft class
-  , numberOfDecks :: Maybe NumberOfDecks.NumberOfDecks -- ^ Number of decks
   , affiliation :: Maybe OrganizationBase.OrganizationBase -- ^ Base organization, returned in search results
   , uid :: Uid.Uid -- ^ Spacecraft class unique ID
   , owner :: Maybe OrganizationBase.OrganizationBase -- ^ Base organization, returned in search results
+  , numberOfDecks :: Maybe NumberOfDecks.NumberOfDecks -- ^ Number of decks
   , species :: Maybe SpeciesHeader.SpeciesHeader -- ^ Header species, embedded in other objects
-  , activeTo :: Maybe ActiveTo.ActiveTo -- ^ Ending period when this spacecraft class was in use
-  , operator :: Maybe OrganizationBase.OrganizationBase -- ^ Base organization, returned in search results
   , spacecraftTypes :: Maybe [SpacecraftType.SpacecraftType] -- ^ Rating of video release, etc.
+  , activeFrom :: Maybe ActiveFrom.ActiveFrom -- ^ Starting period when this spacecraft class was in use
+  , name :: Name.Name -- ^ Spacecraft class name
+  , activeTo :: Maybe ActiveTo.ActiveTo -- ^ Ending period when this spacecraft class was in use
+  , spacecrafts :: Maybe [SpacecraftBase.SpacecraftBase] -- ^ Base spacecraft, returned in search results
+  , operator :: Maybe OrganizationBase.OrganizationBase -- ^ Base organization, returned in search results
   }
   deriving (Eq, Show)
 
@@ -42,15 +42,15 @@ spacecraftClassFullSchema =
   FC.object $
     FC.constructor SpacecraftClassFull
       #+ FC.optional "alternateReality" alternateReality AlternateReality.alternateRealitySchema
-      #+ FC.required "name" name Name.nameSchema
-      #+ FC.optional "spacecrafts" spacecrafts (FC.list SpacecraftBase.spacecraftBaseSchema)
-      #+ FC.optional "activeFrom" activeFrom ActiveFrom.activeFromSchema
       #+ FC.optional "warpCapable" warpCapable WarpCapable.warpCapableSchema
-      #+ FC.optional "numberOfDecks" numberOfDecks NumberOfDecks.numberOfDecksSchema
       #+ FC.optional "affiliation" affiliation OrganizationBase.organizationBaseSchema
       #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.optional "owner" owner OrganizationBase.organizationBaseSchema
+      #+ FC.optional "numberOfDecks" numberOfDecks NumberOfDecks.numberOfDecksSchema
       #+ FC.optional "species" species SpeciesHeader.speciesHeaderSchema
-      #+ FC.optional "activeTo" activeTo ActiveTo.activeToSchema
-      #+ FC.optional "operator" operator OrganizationBase.organizationBaseSchema
       #+ FC.optional "spacecraftTypes" spacecraftTypes (FC.list SpacecraftType.spacecraftTypeSchema)
+      #+ FC.optional "activeFrom" activeFrom ActiveFrom.activeFromSchema
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.optional "activeTo" activeTo ActiveTo.activeToSchema
+      #+ FC.optional "spacecrafts" spacecrafts (FC.list SpacecraftBase.spacecraftBaseSchema)
+      #+ FC.optional "operator" operator OrganizationBase.organizationBaseSchema

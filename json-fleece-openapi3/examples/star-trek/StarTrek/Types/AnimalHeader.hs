@@ -12,8 +12,8 @@ import qualified StarTrek.Types.AnimalHeader.Name as Name
 import qualified StarTrek.Types.AnimalHeader.Uid as Uid
 
 data AnimalHeader = AnimalHeader
-  { name :: Name.Name -- ^ Animal name
-  , uid :: Uid.Uid -- ^ Animal unique ID
+  { uid :: Uid.Uid -- ^ Animal unique ID
+  , name :: Name.Name -- ^ Animal name
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ animalHeaderSchema :: FC.Fleece schema => schema AnimalHeader
 animalHeaderSchema =
   FC.object $
     FC.constructor AnimalHeader
-      #+ FC.required "name" name Name.nameSchema
       #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.required "name" name Name.nameSchema

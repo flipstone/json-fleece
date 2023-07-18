@@ -18,13 +18,13 @@ import qualified StarTrek.Types.TitleFull.ReligiousTitle as ReligiousTitle
 import qualified StarTrek.Types.TitleFull.Uid as Uid
 
 data TitleFull = TitleFull
-  { militaryRank :: Maybe MilitaryRank.MilitaryRank -- ^ Whether it's a military rank
-  , name :: Name.Name -- ^ Title name
-  , religiousTitle :: Maybe ReligiousTitle.ReligiousTitle -- ^ Whether it's a religious title
-  , uid :: Uid.Uid -- ^ Title unique ID
+  { characters :: Maybe [CharacterBase.CharacterBase] -- ^ Base character, returned in search results
   , mirror :: Maybe Mirror.Mirror -- ^ Whether this title is from mirror universe
-  , characters :: Maybe [CharacterBase.CharacterBase] -- ^ Base character, returned in search results
+  , uid :: Uid.Uid -- ^ Title unique ID
   , fleetRank :: Maybe FleetRank.FleetRank -- ^ Whether it's a fleet rank
+  , militaryRank :: Maybe MilitaryRank.MilitaryRank -- ^ Whether it's a military rank
+  , religiousTitle :: Maybe ReligiousTitle.ReligiousTitle -- ^ Whether it's a religious title
+  , name :: Name.Name -- ^ Title name
   , position :: Maybe Position.Position -- ^ Whether it's a position
   }
   deriving (Eq, Show)
@@ -33,11 +33,11 @@ titleFullSchema :: FC.Fleece schema => schema TitleFull
 titleFullSchema =
   FC.object $
     FC.constructor TitleFull
-      #+ FC.optional "militaryRank" militaryRank MilitaryRank.militaryRankSchema
-      #+ FC.required "name" name Name.nameSchema
-      #+ FC.optional "religiousTitle" religiousTitle ReligiousTitle.religiousTitleSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "mirror" mirror Mirror.mirrorSchema
       #+ FC.optional "characters" characters (FC.list CharacterBase.characterBaseSchema)
+      #+ FC.optional "mirror" mirror Mirror.mirrorSchema
+      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.optional "fleetRank" fleetRank FleetRank.fleetRankSchema
+      #+ FC.optional "militaryRank" militaryRank MilitaryRank.militaryRankSchema
+      #+ FC.optional "religiousTitle" religiousTitle ReligiousTitle.religiousTitleSchema
+      #+ FC.required "name" name Name.nameSchema
       #+ FC.optional "position" position Position.positionSchema

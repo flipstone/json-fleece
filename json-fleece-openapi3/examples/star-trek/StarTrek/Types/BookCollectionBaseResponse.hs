@@ -14,8 +14,8 @@ import qualified StarTrek.Types.ResponseSort as ResponseSort
 
 data BookCollectionBaseResponse = BookCollectionBaseResponse
   { bookCollections :: Maybe [BookCollectionBase.BookCollectionBase] -- ^ Base book collection, returned in search results
-  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
   , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
+  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
   }
   deriving (Eq, Show)
 
@@ -24,5 +24,5 @@ bookCollectionBaseResponseSchema =
   FC.object $
     FC.constructor BookCollectionBaseResponse
       #+ FC.optional "bookCollections" bookCollections (FC.list BookCollectionBase.bookCollectionBaseSchema)
-      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
       #+ FC.optional "page" page ResponsePage.responsePageSchema
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema

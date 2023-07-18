@@ -510,7 +510,7 @@ dummyInfo =
     , OA._infoVersion = "dummy-version"
     }
 
-traverseRef :: Applicative f => (a -> f b) -> SW.Referenced a -> f (OA.Referenced b)
+traverseRef :: (Applicative f) => (a -> f b) -> SW.Referenced a -> f (OA.Referenced b)
 traverseRef f ref =
   case ref of
     SW.Ref (SW.Reference refKey) -> pure (OA.Ref (OA.Reference refKey))

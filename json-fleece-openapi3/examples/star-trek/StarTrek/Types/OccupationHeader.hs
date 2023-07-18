@@ -12,8 +12,8 @@ import qualified StarTrek.Types.OccupationHeader.Name as Name
 import qualified StarTrek.Types.OccupationHeader.Uid as Uid
 
 data OccupationHeader = OccupationHeader
-  { name :: Name.Name -- ^ Occupation name
-  , uid :: Uid.Uid -- ^ Occupation unique ID
+  { uid :: Uid.Uid -- ^ Occupation unique ID
+  , name :: Name.Name -- ^ Occupation name
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ occupationHeaderSchema :: FC.Fleece schema => schema OccupationHeader
 occupationHeaderSchema =
   FC.object $
     FC.constructor OccupationHeader
-      #+ FC.required "name" name Name.nameSchema
       #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.required "name" name Name.nameSchema

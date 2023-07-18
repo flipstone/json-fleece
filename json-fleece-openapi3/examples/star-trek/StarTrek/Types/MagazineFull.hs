@@ -23,19 +23,19 @@ import qualified StarTrek.Types.MagazineSeriesBase as MagazineSeriesBase
 import qualified StarTrek.Types.StaffBase as StaffBase
 
 data MagazineFull = MagazineFull
-  { magazineSeries :: Maybe [MagazineSeriesBase.MagazineSeriesBase] -- ^ Base magazine series, returned in search results
-  , publishers :: Maybe [CompanyBase.CompanyBase] -- ^ Base company, returned in search results
-  , publishedMonth :: Maybe PublishedMonth.PublishedMonth -- ^ Month the magazine was published
-  , publishedYear :: Maybe PublishedYear.PublishedYear -- ^ Year the magazine was published
-  , uid :: Uid.Uid -- ^ Magazine unique ID
-  , publishedDay :: Maybe PublishedDay.PublishedDay -- ^ Day the magazine was published
+  { coverMonth :: Maybe CoverMonth.CoverMonth -- ^ Cover publication month
   , coverYear :: Maybe CoverYear.CoverYear -- ^ Cover publication year
-  , issueNumber :: Maybe IssueNumber.IssueNumber -- ^ Magazine issue number
+  , uid :: Uid.Uid -- ^ Magazine unique ID
+  , publishedMonth :: Maybe PublishedMonth.PublishedMonth -- ^ Month the magazine was published
+  , publishedDay :: Maybe PublishedDay.PublishedDay -- ^ Day the magazine was published
+  , publishers :: Maybe [CompanyBase.CompanyBase] -- ^ Base company, returned in search results
+  , editors :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
+  , magazineSeries :: Maybe [MagazineSeriesBase.MagazineSeriesBase] -- ^ Base magazine series, returned in search results
   , title :: Title.Title -- ^ Magazine title
+  , issueNumber :: Maybe IssueNumber.IssueNumber -- ^ Magazine issue number
   , coverDay :: Maybe CoverDay.CoverDay -- ^ Cover publication day
   , numberOfPages :: Maybe NumberOfPages.NumberOfPages -- ^ Number of pages
-  , coverMonth :: Maybe CoverMonth.CoverMonth -- ^ Cover publication month
-  , editors :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
+  , publishedYear :: Maybe PublishedYear.PublishedYear -- ^ Year the magazine was published
   }
   deriving (Eq, Show)
 
@@ -43,16 +43,16 @@ magazineFullSchema :: FC.Fleece schema => schema MagazineFull
 magazineFullSchema =
   FC.object $
     FC.constructor MagazineFull
-      #+ FC.optional "magazineSeries" magazineSeries (FC.list MagazineSeriesBase.magazineSeriesBaseSchema)
-      #+ FC.optional "publishers" publishers (FC.list CompanyBase.companyBaseSchema)
-      #+ FC.optional "publishedMonth" publishedMonth PublishedMonth.publishedMonthSchema
-      #+ FC.optional "publishedYear" publishedYear PublishedYear.publishedYearSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "publishedDay" publishedDay PublishedDay.publishedDaySchema
+      #+ FC.optional "coverMonth" coverMonth CoverMonth.coverMonthSchema
       #+ FC.optional "coverYear" coverYear CoverYear.coverYearSchema
-      #+ FC.optional "issueNumber" issueNumber IssueNumber.issueNumberSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "publishedMonth" publishedMonth PublishedMonth.publishedMonthSchema
+      #+ FC.optional "publishedDay" publishedDay PublishedDay.publishedDaySchema
+      #+ FC.optional "publishers" publishers (FC.list CompanyBase.companyBaseSchema)
+      #+ FC.optional "editors" editors (FC.list StaffBase.staffBaseSchema)
+      #+ FC.optional "magazineSeries" magazineSeries (FC.list MagazineSeriesBase.magazineSeriesBaseSchema)
       #+ FC.required "title" title Title.titleSchema
+      #+ FC.optional "issueNumber" issueNumber IssueNumber.issueNumberSchema
       #+ FC.optional "coverDay" coverDay CoverDay.coverDaySchema
       #+ FC.optional "numberOfPages" numberOfPages NumberOfPages.numberOfPagesSchema
-      #+ FC.optional "coverMonth" coverMonth CoverMonth.coverMonthSchema
-      #+ FC.optional "editors" editors (FC.list StaffBase.staffBaseSchema)
+      #+ FC.optional "publishedYear" publishedYear PublishedYear.publishedYearSchema

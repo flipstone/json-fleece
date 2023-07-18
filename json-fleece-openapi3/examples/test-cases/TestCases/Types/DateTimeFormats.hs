@@ -15,9 +15,9 @@ import qualified TestCases.Types.DateTimeFormats.ZonedTimeField as ZonedTimeFiel
 
 data DateTimeFormats = DateTimeFormats
   { defaultTimeField :: Maybe DefaultTimeField.DefaultTimeField
-  , localTimeField :: Maybe LocalTimeField.LocalTimeField
   , utcTimeField :: Maybe UtcTimeField.UtcTimeField
   , zonedTimeField :: Maybe ZonedTimeField.ZonedTimeField
+  , localTimeField :: Maybe LocalTimeField.LocalTimeField
   }
   deriving (Show)
 
@@ -26,6 +26,6 @@ dateTimeFormatsSchema =
   FC.object $
     FC.constructor DateTimeFormats
       #+ FC.optional "defaultTimeField" defaultTimeField DefaultTimeField.defaultTimeFieldSchema
-      #+ FC.optional "localTimeField" localTimeField LocalTimeField.localTimeFieldSchema
       #+ FC.optional "utcTimeField" utcTimeField UtcTimeField.utcTimeFieldSchema
       #+ FC.optional "zonedTimeField" zonedTimeField ZonedTimeField.zonedTimeFieldSchema
+      #+ FC.optional "localTimeField" localTimeField LocalTimeField.localTimeFieldSchema

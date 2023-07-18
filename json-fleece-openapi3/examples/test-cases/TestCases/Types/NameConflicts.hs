@@ -35,31 +35,31 @@ import qualified TestCases.Types.NameConflicts.Type as Type
 import qualified TestCases.Types.NameConflicts.Where as Where
 
 data NameConflicts = NameConflicts
-  { else_ :: Maybe Else.Else
-  , infix_ :: Maybe Infix.Infix
-  , import_ :: Maybe Import.Import
-  , then_ :: Maybe Then.Then
-  , type_ :: Maybe Type.Type
+  { infixr_ :: Maybe Infixr.Infixr
   , let_ :: Maybe Let.Let
-  , deriving_ :: Maybe Deriving.Deriving
-  , infixl_ :: Maybe Infixl.Infixl
-  , case_ :: Maybe Case.Case
-  , class_ :: Maybe Class.Class
-  , if_ :: Maybe If.If
-  , where_ :: Maybe Where.Where
-  , of_ :: Maybe Of.Of
-  , nameConflicts :: Maybe NameConflicts.NameConflicts
-  , int32 :: Maybe Int32.Int32
   , in_ :: Maybe In.In
-  , module_ :: Maybe Module.Module
-  , infixr_ :: Maybe Infixr.Infixr
-  , data_ :: Maybe Data.Data
-  , newtype_ :: Maybe Newtype.Newtype
-  , instance_ :: Maybe Instance.Instance
-  , do_ :: Maybe Do.Do
-  , scientific :: Maybe Scientific.Scientific
   , text :: Maybe Text.Text
+  , where_ :: Maybe Where.Where
+  , case_ :: Maybe Case.Case
+  , deriving_ :: Maybe Deriving.Deriving
+  , data_ :: Maybe Data.Data
+  , infix_ :: Maybe Infix.Infix
+  , if_ :: Maybe If.If
+  , else_ :: Maybe Else.Else
+  , nameConflicts :: Maybe NameConflicts.NameConflicts
+  , module_ :: Maybe Module.Module
+  , then_ :: Maybe Then.Then
+  , newtype_ :: Maybe Newtype.Newtype
+  , scientific :: Maybe Scientific.Scientific
+  , type_ :: Maybe Type.Type
+  , import_ :: Maybe Import.Import
+  , do_ :: Maybe Do.Do
+  , instance_ :: Maybe Instance.Instance
+  , int32 :: Maybe Int32.Int32
+  , class_ :: Maybe Class.Class
+  , of_ :: Maybe Of.Of
   , int64 :: Maybe Int64.Int64
+  , infixl_ :: Maybe Infixl.Infixl
   }
   deriving (Eq, Show)
 
@@ -67,28 +67,28 @@ nameConflictsSchema :: FC.Fleece schema => schema NameConflicts
 nameConflictsSchema =
   FC.object $
     FC.constructor NameConflicts
-      #+ FC.optional "else" else_ Else.elseSchema
-      #+ FC.optional "infix" infix_ Infix.infixSchema
-      #+ FC.optional "import" import_ Import.importSchema
-      #+ FC.optional "then" then_ Then.thenSchema
-      #+ FC.optional "type" type_ Type.typeSchema
-      #+ FC.optional "let" let_ Let.letSchema
-      #+ FC.optional "deriving" deriving_ Deriving.derivingSchema
-      #+ FC.optional "infixl" infixl_ Infixl.infixlSchema
-      #+ FC.optional "case" case_ Case.caseSchema
-      #+ FC.optional "class" class_ Class.classSchema
-      #+ FC.optional "if" if_ If.ifSchema
-      #+ FC.optional "where" where_ Where.whereSchema
-      #+ FC.optional "of" of_ Of.ofSchema
-      #+ FC.optional "nameConflicts" nameConflicts NameConflicts.nameConflictsSchema
-      #+ FC.optional "int32" int32 Int32.int32Schema
-      #+ FC.optional "in" in_ In.inSchema
-      #+ FC.optional "module" module_ Module.moduleSchema
       #+ FC.optional "infixr" infixr_ Infixr.infixrSchema
-      #+ FC.optional "data" data_ Data.dataSchema
-      #+ FC.optional "newtype" newtype_ Newtype.newtypeSchema
-      #+ FC.optional "instance" instance_ Instance.instanceSchema
-      #+ FC.optional "do" do_ Do.doSchema
-      #+ FC.optional "scientific" scientific Scientific.scientificSchema
+      #+ FC.optional "let" let_ Let.letSchema
+      #+ FC.optional "in" in_ In.inSchema
       #+ FC.optional "text" text Text.textSchema
+      #+ FC.optional "where" where_ Where.whereSchema
+      #+ FC.optional "case" case_ Case.caseSchema
+      #+ FC.optional "deriving" deriving_ Deriving.derivingSchema
+      #+ FC.optional "data" data_ Data.dataSchema
+      #+ FC.optional "infix" infix_ Infix.infixSchema
+      #+ FC.optional "if" if_ If.ifSchema
+      #+ FC.optional "else" else_ Else.elseSchema
+      #+ FC.optional "nameConflicts" nameConflicts NameConflicts.nameConflictsSchema
+      #+ FC.optional "module" module_ Module.moduleSchema
+      #+ FC.optional "then" then_ Then.thenSchema
+      #+ FC.optional "newtype" newtype_ Newtype.newtypeSchema
+      #+ FC.optional "scientific" scientific Scientific.scientificSchema
+      #+ FC.optional "type" type_ Type.typeSchema
+      #+ FC.optional "import" import_ Import.importSchema
+      #+ FC.optional "do" do_ Do.doSchema
+      #+ FC.optional "instance" instance_ Instance.instanceSchema
+      #+ FC.optional "int32" int32 Int32.int32Schema
+      #+ FC.optional "class" class_ Class.classSchema
+      #+ FC.optional "of" of_ Of.ofSchema
       #+ FC.optional "int64" int64 Int64.int64Schema
+      #+ FC.optional "infixl" infixl_ Infixl.infixlSchema

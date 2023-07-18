@@ -12,8 +12,8 @@ import qualified StarTrek.Types.ElementHeader.Name as Name
 import qualified StarTrek.Types.ElementHeader.Uid as Uid
 
 data ElementHeader = ElementHeader
-  { name :: Name.Name -- ^ Element name
-  , uid :: Uid.Uid -- ^ Element unique ID
+  { uid :: Uid.Uid -- ^ Element unique ID
+  , name :: Name.Name -- ^ Element name
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ elementHeaderSchema :: FC.Fleece schema => schema ElementHeader
 elementHeaderSchema =
   FC.object $
     FC.constructor ElementHeader
-      #+ FC.required "name" name Name.nameSchema
       #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.required "name" name Name.nameSchema

@@ -1,6 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Fleece.Core.Schemas
   ( optionalNullable
@@ -180,7 +181,7 @@ transform aToB bToA schemaB =
     schemaA
 
 transformNamed ::
-  Fleece schema =>
+  (Fleece schema) =>
   Name ->
   (a -> b) ->
   (b -> a) ->
@@ -216,7 +217,7 @@ data NothingEncoding
   | OmitKey
 
 optionalNullable ::
-  Fleece schema =>
+  (Fleece schema) =>
   NothingEncoding ->
   String ->
   (object -> Maybe a) ->
@@ -238,7 +239,7 @@ optionalNullable encoding name accessor schema =
     fmap collapseNull $
       optional name nullableAccessor (nullable schema)
 
-list :: Fleece schema => schema a -> schema [a]
+list :: (Fleece schema) => schema a -> schema [a]
 list itemSchema =
   transformNamed
     (unqualifiedName $ "[" <> nameUnqualified (schemaName itemSchema) <> "]")
@@ -252,7 +253,7 @@ map innerSchema =
     constructor id
       #* additionalFields id innerSchema
 
-nonEmpty :: Fleece schema => schema a -> schema (NEL.NonEmpty a)
+nonEmpty :: (Fleece schema) => schema a -> schema (NEL.NonEmpty a)
 nonEmpty itemSchema =
   let
     validateNonEmpty items =
@@ -266,7 +267,7 @@ nonEmpty itemSchema =
       validateNonEmpty
       (list itemSchema)
 
-nonEmptyText :: Fleece schema => schema NET.NonEmptyText
+nonEmptyText :: (Fleece schema) => schema NET.NonEmptyText
 nonEmptyText =
   let
     validateNonEmptyText value =
@@ -280,7 +281,7 @@ nonEmptyText =
       validateNonEmptyText
       text
 
-integer :: Fleece schema => schema Integer
+integer :: (Fleece schema) => schema Integer
 integer =
   unboundedIntegralNumber
 
@@ -358,41 +359,41 @@ boundedIntegralNumber =
   in
     schema
 
-int :: Fleece schema => schema Int
+int :: (Fleece schema) => schema Int
 int = boundedIntegralNumber
 
-int8 :: Fleece schema => schema I.Int8
+int8 :: (Fleece schema) => schema I.Int8
 int8 = boundedIntegralNumber
 
-int16 :: Fleece schema => schema I.Int16
+int16 :: (Fleece schema) => schema I.Int16
 int16 = boundedIntegralNumber
 
-int32 :: Fleece schema => schema I.Int32
+int32 :: (Fleece schema) => schema I.Int32
 int32 = boundedIntegralNumber
 
-int64 :: Fleece schema => schema I.Int64
+int64 :: (Fleece schema) => schema I.Int64
 int64 = boundedIntegralNumber
 
-word :: Fleece schema => schema Word
+word :: (Fleece schema) => schema Word
 word = boundedIntegralNumber
 
-word8 :: Fleece schema => schema W.Word8
+word8 :: (Fleece schema) => schema W.Word8
 word8 = boundedIntegralNumber
 
-word16 :: Fleece schema => schema W.Word16
+word16 :: (Fleece schema) => schema W.Word16
 word16 = boundedIntegralNumber
 
-word32 :: Fleece schema => schema W.Word32
+word32 :: (Fleece schema) => schema W.Word32
 word32 = boundedIntegralNumber
 
-word64 :: Fleece schema => schema W.Word64
+word64 :: (Fleece schema) => schema W.Word64
 word64 = boundedIntegralNumber
 
-double :: Fleece schema => schema Double
+double :: (Fleece schema) => schema Double
 double =
   realFloat
 
-float :: Fleece schema => schema Float
+float :: (Fleece schema) => schema Float
 float =
   realFloat
 
@@ -420,33 +421,33 @@ realFloatNamed name =
     toRealFloat
     number
 
-string :: Fleece schema => schema String
+string :: (Fleece schema) => schema String
 string = transform T.pack T.unpack text
 
-utcTime :: Fleece schema => schema Time.UTCTime
+utcTime :: (Fleece schema) => schema Time.UTCTime
 utcTime =
   iso8601Formatted "UTCTime" ISO8601.iso8601Format AttoTime.utcTime
 
-localTime :: Fleece schema => schema Time.LocalTime
+localTime :: (Fleece schema) => schema Time.LocalTime
 localTime =
   iso8601Formatted "LocalTime" ISO8601.iso8601Format AttoTime.localTime
 
-zonedTime :: Fleece schema => schema Time.ZonedTime
+zonedTime :: (Fleece schema) => schema Time.ZonedTime
 zonedTime =
   iso8601Formatted "ZonedTime" ISO8601.iso8601Format AttoTime.zonedTime
 
-day :: Fleece schema => schema Time.Day
+day :: (Fleece schema) => schema Time.Day
 day =
   iso8601Formatted "Day" ISO8601.iso8601Format AttoTime.day
 
-bareOrJSONString :: Fleece schema => schema a -> schema a
+bareOrJSONString :: (Fleece schema) => schema a -> schema a
 bareOrJSONString baseSchema =
   let
-    toUnion :: a -> Union [a, a]
+    toUnion :: a -> Union '[a, a]
     toUnion =
       unifyWithIndex index0
 
-    fromUnion :: Union [a, a] -> a
+    fromUnion :: Union '[a, a] -> a
     fromUnion =
       dissectUnion
         . branchBuild
@@ -473,7 +474,7 @@ bareOrJSONString baseSchema =
 
 -- An internal helper for building building time schemes
 iso8601Formatted ::
-  Fleece schema =>
+  (Fleece schema) =>
   String ->
   ISO8601.Format t ->
   AttoText.Parser t ->

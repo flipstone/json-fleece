@@ -16,10 +16,10 @@ import qualified StarTrek.Types.OccupationBase.Uid as Uid
 
 data OccupationBase = OccupationBase
   { medicalOccupation :: Maybe MedicalOccupation.MedicalOccupation -- ^ Whether it's a medical occupation
-  , name :: Name.Name -- ^ Occupation name
   , uid :: Uid.Uid -- ^ Occupation unique ID
-  , legalOccupation :: Maybe LegalOccupation.LegalOccupation -- ^ Whether it's a legal occupation
   , scientificOccupation :: Maybe ScientificOccupation.ScientificOccupation -- ^ Whether it's a scientific occupation
+  , legalOccupation :: Maybe LegalOccupation.LegalOccupation -- ^ Whether it's a legal occupation
+  , name :: Name.Name -- ^ Occupation name
   }
   deriving (Eq, Show)
 
@@ -28,7 +28,7 @@ occupationBaseSchema =
   FC.object $
     FC.constructor OccupationBase
       #+ FC.optional "medicalOccupation" medicalOccupation MedicalOccupation.medicalOccupationSchema
-      #+ FC.required "name" name Name.nameSchema
       #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "legalOccupation" legalOccupation LegalOccupation.legalOccupationSchema
       #+ FC.optional "scientificOccupation" scientificOccupation ScientificOccupation.scientificOccupationSchema
+      #+ FC.optional "legalOccupation" legalOccupation LegalOccupation.legalOccupationSchema
+      #+ FC.required "name" name Name.nameSchema

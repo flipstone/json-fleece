@@ -34,30 +34,30 @@ import qualified StarTrek.Types.BookBase.YearFrom as YearFrom
 import qualified StarTrek.Types.BookBase.YearTo as YearTo
 
 data BookBase = BookBase
-  { anthology :: Anthology.Anthology -- ^ Whether it's an anthology
-  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of book story
-  , stardateTo :: Maybe StardateTo.StardateTo -- ^ Ending stardate of book story
-  , audiobookAbridged :: AudiobookAbridged.AudiobookAbridged -- ^ If it's an audiobook, whether it's been abridged
+  { yearTo :: Maybe YearTo.YearTo -- ^ Ending year of book story
+  , rolePlayingBook :: RolePlayingBook.RolePlayingBook -- ^ Whether it's a role playing book
   , audiobookPublishedDay :: Maybe AudiobookPublishedDay.AudiobookPublishedDay -- ^ Day the audiobook was published
   , productionNumber :: Maybe ProductionNumber.ProductionNumber -- ^ Book's production number
-  , publishedMonth :: Maybe PublishedMonth.PublishedMonth -- ^ Month the book was published
-  , publishedYear :: Maybe PublishedYear.PublishedYear -- ^ Year the book was published
+  , stardateTo :: Maybe StardateTo.StardateTo -- ^ Ending stardate of book story
+  , biographyBook :: BiographyBook.BiographyBook -- ^ Whether it's a biography book
+  , audiobookAbridged :: AudiobookAbridged.AudiobookAbridged -- ^ If it's an audiobook, whether it's been abridged
+  , referenceBook :: ReferenceBook.ReferenceBook -- ^ Whether it's a reference book
   , uid :: Uid.Uid -- ^ Book unique ID
-  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of book story
+  , eBook :: EBook.EBook -- ^ Whether it's an eBook
+  , publishedMonth :: Maybe PublishedMonth.PublishedMonth -- ^ Month the book was published
   , publishedDay :: Maybe PublishedDay.PublishedDay -- ^ Day the book was published
   , novel :: Novel.Novel -- ^ Whether it's a novel
-  , audiobookRunTime :: Maybe AudiobookRunTime.AudiobookRunTime -- ^ Audiobook run time, in minutes
-  , title :: Title.Title -- ^ Book title
-  , referenceBook :: ReferenceBook.ReferenceBook -- ^ Whether it's a reference book
-  , audiobookPublishedMonth :: Maybe AudiobookPublishedMonth.AudiobookPublishedMonth -- ^ Month the audiobook was published
-  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of book story
+  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of book story
   , audiobookPublishedYear :: Maybe AudiobookPublishedYear.AudiobookPublishedYear -- ^ Year the audiobook was published
-  , biographyBook :: BiographyBook.BiographyBook -- ^ Whether it's a biography book
-  , rolePlayingBook :: RolePlayingBook.RolePlayingBook -- ^ Whether it's a role playing book
+  , title :: Title.Title -- ^ Book title
+  , audiobookRunTime :: Maybe AudiobookRunTime.AudiobookRunTime -- ^ Audiobook run time, in minutes
+  , audiobookPublishedMonth :: Maybe AudiobookPublishedMonth.AudiobookPublishedMonth -- ^ Month the audiobook was published
+  , anthology :: Anthology.Anthology -- ^ Whether it's an anthology
+  , audiobook :: Audiobook.Audiobook -- ^ Whether it's an audiobook, or has been release as an audiobook in addition to other form
+  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of book story
   , novelization :: Novelization.Novelization -- ^ Whether it's a novelization
   , numberOfPages :: Maybe NumberOfPages.NumberOfPages -- ^ Number of pages
-  , eBook :: EBook.EBook -- ^ Whether it's an eBook
-  , audiobook :: Audiobook.Audiobook -- ^ Whether it's an audiobook, or has been release as an audiobook in addition to other form
+  , publishedYear :: Maybe PublishedYear.PublishedYear -- ^ Year the book was published
   }
   deriving (Eq, Show)
 
@@ -65,27 +65,27 @@ bookBaseSchema :: FC.Fleece schema => schema BookBase
 bookBaseSchema =
   FC.object $
     FC.constructor BookBase
-      #+ FC.required "anthology" anthology Anthology.anthologySchema
-      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
-      #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
-      #+ FC.required "audiobookAbridged" audiobookAbridged AudiobookAbridged.audiobookAbridgedSchema
+      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
+      #+ FC.required "rolePlayingBook" rolePlayingBook RolePlayingBook.rolePlayingBookSchema
       #+ FC.optional "audiobookPublishedDay" audiobookPublishedDay AudiobookPublishedDay.audiobookPublishedDaySchema
       #+ FC.optional "productionNumber" productionNumber ProductionNumber.productionNumberSchema
-      #+ FC.optional "publishedMonth" publishedMonth PublishedMonth.publishedMonthSchema
-      #+ FC.optional "publishedYear" publishedYear PublishedYear.publishedYearSchema
+      #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
+      #+ FC.required "biographyBook" biographyBook BiographyBook.biographyBookSchema
+      #+ FC.required "audiobookAbridged" audiobookAbridged AudiobookAbridged.audiobookAbridgedSchema
+      #+ FC.required "referenceBook" referenceBook ReferenceBook.referenceBookSchema
       #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
+      #+ FC.required "eBook" eBook EBook.eBookSchema
+      #+ FC.optional "publishedMonth" publishedMonth PublishedMonth.publishedMonthSchema
       #+ FC.optional "publishedDay" publishedDay PublishedDay.publishedDaySchema
       #+ FC.required "novel" novel Novel.novelSchema
-      #+ FC.optional "audiobookRunTime" audiobookRunTime AudiobookRunTime.audiobookRunTimeSchema
-      #+ FC.required "title" title Title.titleSchema
-      #+ FC.required "referenceBook" referenceBook ReferenceBook.referenceBookSchema
-      #+ FC.optional "audiobookPublishedMonth" audiobookPublishedMonth AudiobookPublishedMonth.audiobookPublishedMonthSchema
-      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
+      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
       #+ FC.optional "audiobookPublishedYear" audiobookPublishedYear AudiobookPublishedYear.audiobookPublishedYearSchema
-      #+ FC.required "biographyBook" biographyBook BiographyBook.biographyBookSchema
-      #+ FC.required "rolePlayingBook" rolePlayingBook RolePlayingBook.rolePlayingBookSchema
+      #+ FC.required "title" title Title.titleSchema
+      #+ FC.optional "audiobookRunTime" audiobookRunTime AudiobookRunTime.audiobookRunTimeSchema
+      #+ FC.optional "audiobookPublishedMonth" audiobookPublishedMonth AudiobookPublishedMonth.audiobookPublishedMonthSchema
+      #+ FC.required "anthology" anthology Anthology.anthologySchema
+      #+ FC.required "audiobook" audiobook Audiobook.audiobookSchema
+      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
       #+ FC.required "novelization" novelization Novelization.novelizationSchema
       #+ FC.optional "numberOfPages" numberOfPages NumberOfPages.numberOfPagesSchema
-      #+ FC.required "eBook" eBook EBook.eBookSchema
-      #+ FC.required "audiobook" audiobook Audiobook.audiobookSchema
+      #+ FC.optional "publishedYear" publishedYear PublishedYear.publishedYearSchema

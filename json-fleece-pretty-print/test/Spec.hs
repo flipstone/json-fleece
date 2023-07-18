@@ -353,7 +353,7 @@ data Parent = Parent
   , nestedObject :: NestedObject
   }
 
-parentSchema :: FC.Fleece schema => schema Parent
+parentSchema :: (FC.Fleece schema) => schema Parent
 parentSchema =
   FC.object $
     FC.constructor Parent
@@ -366,7 +366,7 @@ data NestedObject = NestedObject
   , nestedField2 :: T.Text
   }
 
-nestedObjectSchema :: FC.Fleece schema => schema NestedObject
+nestedObjectSchema :: (FC.Fleece schema) => schema NestedObject
 nestedObjectSchema =
   FC.object $
     FC.constructor NestedObject

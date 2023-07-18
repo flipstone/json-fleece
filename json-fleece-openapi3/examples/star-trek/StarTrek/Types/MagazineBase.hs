@@ -20,16 +20,16 @@ import qualified StarTrek.Types.MagazineBase.Title as Title
 import qualified StarTrek.Types.MagazineBase.Uid as Uid
 
 data MagazineBase = MagazineBase
-  { publishedMonth :: Maybe PublishedMonth.PublishedMonth -- ^ Month the magazine was published
-  , publishedYear :: Maybe PublishedYear.PublishedYear -- ^ Year the magazine was published
-  , uid :: Uid.Uid -- ^ Magazine unique ID
-  , publishedDay :: Maybe PublishedDay.PublishedDay -- ^ Day the magazine was published
+  { coverMonth :: Maybe CoverMonth.CoverMonth -- ^ Cover publication month
   , coverYear :: Maybe CoverYear.CoverYear -- ^ Cover publication year
-  , issueNumber :: Maybe IssueNumber.IssueNumber -- ^ Magazine issue number
+  , uid :: Uid.Uid -- ^ Magazine unique ID
+  , publishedMonth :: Maybe PublishedMonth.PublishedMonth -- ^ Month the magazine was published
+  , publishedDay :: Maybe PublishedDay.PublishedDay -- ^ Day the magazine was published
   , title :: Title.Title -- ^ Magazine title
+  , issueNumber :: Maybe IssueNumber.IssueNumber -- ^ Magazine issue number
   , coverDay :: Maybe CoverDay.CoverDay -- ^ Cover publication day
   , numberOfPages :: Maybe NumberOfPages.NumberOfPages -- ^ Number of pages
-  , coverMonth :: Maybe CoverMonth.CoverMonth -- ^ Cover publication month
+  , publishedYear :: Maybe PublishedYear.PublishedYear -- ^ Year the magazine was published
   }
   deriving (Eq, Show)
 
@@ -37,13 +37,13 @@ magazineBaseSchema :: FC.Fleece schema => schema MagazineBase
 magazineBaseSchema =
   FC.object $
     FC.constructor MagazineBase
-      #+ FC.optional "publishedMonth" publishedMonth PublishedMonth.publishedMonthSchema
-      #+ FC.optional "publishedYear" publishedYear PublishedYear.publishedYearSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "publishedDay" publishedDay PublishedDay.publishedDaySchema
+      #+ FC.optional "coverMonth" coverMonth CoverMonth.coverMonthSchema
       #+ FC.optional "coverYear" coverYear CoverYear.coverYearSchema
-      #+ FC.optional "issueNumber" issueNumber IssueNumber.issueNumberSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "publishedMonth" publishedMonth PublishedMonth.publishedMonthSchema
+      #+ FC.optional "publishedDay" publishedDay PublishedDay.publishedDaySchema
       #+ FC.required "title" title Title.titleSchema
+      #+ FC.optional "issueNumber" issueNumber IssueNumber.issueNumberSchema
       #+ FC.optional "coverDay" coverDay CoverDay.coverDaySchema
       #+ FC.optional "numberOfPages" numberOfPages NumberOfPages.numberOfPagesSchema
-      #+ FC.optional "coverMonth" coverMonth CoverMonth.coverMonthSchema
+      #+ FC.optional "publishedYear" publishedYear PublishedYear.publishedYearSchema

@@ -18,14 +18,14 @@ import qualified StarTrek.Types.VideoGameBase.YearFrom as YearFrom
 import qualified StarTrek.Types.VideoGameBase.YearTo as YearTo
 
 data VideoGameBase = VideoGameBase
-  { yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of video game story
+  { yearTo :: Maybe YearTo.YearTo -- ^ Ending year of video game story
   , stardateTo :: Maybe StardateTo.StardateTo -- ^ Ending stardate of video game story
-  , systemRequirements :: Maybe SystemRequirements.SystemRequirements -- ^ System requirements
-  , releaseDate :: Maybe ReleaseDate.ReleaseDate -- ^ Release date
   , uid :: Uid.Uid -- ^ Video game unique ID
   , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of video game story
   , title :: Title.Title -- ^ Video game title
-  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of video game story
+  , systemRequirements :: Maybe SystemRequirements.SystemRequirements -- ^ System requirements
+  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of video game story
+  , releaseDate :: Maybe ReleaseDate.ReleaseDate -- ^ Release date
   }
   deriving (Eq, Show)
 
@@ -33,11 +33,11 @@ videoGameBaseSchema :: FC.Fleece schema => schema VideoGameBase
 videoGameBaseSchema =
   FC.object $
     FC.constructor VideoGameBase
-      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
+      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
       #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
-      #+ FC.optional "systemRequirements" systemRequirements SystemRequirements.systemRequirementsSchema
-      #+ FC.optional "releaseDate" releaseDate ReleaseDate.releaseDateSchema
       #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
       #+ FC.required "title" title Title.titleSchema
-      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
+      #+ FC.optional "systemRequirements" systemRequirements SystemRequirements.systemRequirementsSchema
+      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
+      #+ FC.optional "releaseDate" releaseDate ReleaseDate.releaseDateSchema

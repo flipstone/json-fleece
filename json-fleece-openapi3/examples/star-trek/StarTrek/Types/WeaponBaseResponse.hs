@@ -13,9 +13,9 @@ import qualified StarTrek.Types.ResponseSort as ResponseSort
 import qualified StarTrek.Types.WeaponBase as WeaponBase
 
 data WeaponBaseResponse = WeaponBaseResponse
-  { sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
-  , weapons :: Maybe [WeaponBase.WeaponBase] -- ^ Base weapon, returned in search results
+  { weapons :: Maybe [WeaponBase.WeaponBase] -- ^ Base weapon, returned in search results
   , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
+  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ weaponBaseResponseSchema :: FC.Fleece schema => schema WeaponBaseResponse
 weaponBaseResponseSchema =
   FC.object $
     FC.constructor WeaponBaseResponse
-      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
       #+ FC.optional "weapons" weapons (FC.list WeaponBase.weaponBaseSchema)
       #+ FC.optional "page" page ResponsePage.responsePageSchema
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema

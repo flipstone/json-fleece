@@ -13,9 +13,9 @@ import qualified StarTrek.Types.ResponsePage as ResponsePage
 import qualified StarTrek.Types.ResponseSort as ResponseSort
 
 data MedicalConditionBaseResponse = MedicalConditionBaseResponse
-  { sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
-  , medicalConditions :: Maybe [MedicalConditionBase.MedicalConditionBase] -- ^ Base medical condition, returned in search results
+  { medicalConditions :: Maybe [MedicalConditionBase.MedicalConditionBase] -- ^ Base medical condition, returned in search results
   , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
+  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ medicalConditionBaseResponseSchema :: FC.Fleece schema => schema MedicalConditio
 medicalConditionBaseResponseSchema =
   FC.object $
     FC.constructor MedicalConditionBaseResponse
-      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
       #+ FC.optional "medicalConditions" medicalConditions (FC.list MedicalConditionBase.medicalConditionBaseSchema)
       #+ FC.optional "page" page ResponsePage.responsePageSchema
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema

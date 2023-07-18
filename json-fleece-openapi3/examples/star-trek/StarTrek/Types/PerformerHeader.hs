@@ -12,8 +12,8 @@ import qualified StarTrek.Types.PerformerHeader.Name as Name
 import qualified StarTrek.Types.PerformerHeader.Uid as Uid
 
 data PerformerHeader = PerformerHeader
-  { name :: Name.Name -- ^ Performer name
-  , uid :: Uid.Uid -- ^ Performer unique ID
+  { uid :: Uid.Uid -- ^ Performer unique ID
+  , name :: Name.Name -- ^ Performer name
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ performerHeaderSchema :: FC.Fleece schema => schema PerformerHeader
 performerHeaderSchema =
   FC.object $
     FC.constructor PerformerHeader
-      #+ FC.required "name" name Name.nameSchema
       #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.required "name" name Name.nameSchema

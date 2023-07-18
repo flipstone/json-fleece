@@ -24,20 +24,20 @@ import qualified StarTrek.Types.OrganizationBase.SportOrganization as SportOrgan
 import qualified StarTrek.Types.OrganizationBase.Uid as Uid
 
 data OrganizationBase = OrganizationBase
-  { alternateReality :: Maybe AlternateReality.AlternateReality -- ^ Whether this location is from alternate reality
-  , name :: Name.Name -- ^ Organization name
-  , militaryOrganization :: Maybe MilitaryOrganization.MilitaryOrganization -- ^ Whether it's a military organization
-  , prisonOrPenalColony :: Maybe PrisonOrPenalColony.PrisonOrPenalColony -- ^ Whether it's a prison or penal colony
-  , intergovernmentalOrganization :: Maybe IntergovernmentalOrganization.IntergovernmentalOrganization -- ^ Whether it's an intergovernmental organization
-  , uid :: Uid.Uid -- ^ Organization unique ID
-  , governmentAgency :: Maybe GovernmentAgency.GovernmentAgency -- ^ Whether it's a government agency
+  { lawEnforcementAgency :: Maybe LawEnforcementAgency.LawEnforcementAgency -- ^ Whether it's a law enforcement agency
+  , alternateReality :: Maybe AlternateReality.AlternateReality -- ^ Whether this location is from alternate reality
   , mirror :: Maybe Mirror.Mirror -- ^ Whether this organization is from mirror universe
+  , government :: Maybe Government.Government -- ^ Whether it's a government
+  , uid :: Uid.Uid -- ^ Organization unique ID
   , militaryUnit :: Maybe MilitaryUnit.MilitaryUnit -- ^ Whether it's a military unit
   , researchOrganization :: Maybe ResearchOrganization.ResearchOrganization -- ^ Whether it's a research organization
-  , government :: Maybe Government.Government -- ^ Whether it's a government
-  , lawEnforcementAgency :: Maybe LawEnforcementAgency.LawEnforcementAgency -- ^ Whether it's a law enforcement agency
+  , militaryOrganization :: Maybe MilitaryOrganization.MilitaryOrganization -- ^ Whether it's a military organization
   , sportOrganization :: Maybe SportOrganization.SportOrganization -- ^ Whether it's a sport organization
+  , intergovernmentalOrganization :: Maybe IntergovernmentalOrganization.IntergovernmentalOrganization -- ^ Whether it's an intergovernmental organization
+  , governmentAgency :: Maybe GovernmentAgency.GovernmentAgency -- ^ Whether it's a government agency
   , medicalOrganization :: Maybe MedicalOrganization.MedicalOrganization -- ^ Whether it's a medical organization
+  , prisonOrPenalColony :: Maybe PrisonOrPenalColony.PrisonOrPenalColony -- ^ Whether it's a prison or penal colony
+  , name :: Name.Name -- ^ Organization name
   }
   deriving (Eq, Show)
 
@@ -45,17 +45,17 @@ organizationBaseSchema :: FC.Fleece schema => schema OrganizationBase
 organizationBaseSchema =
   FC.object $
     FC.constructor OrganizationBase
+      #+ FC.optional "lawEnforcementAgency" lawEnforcementAgency LawEnforcementAgency.lawEnforcementAgencySchema
       #+ FC.optional "alternateReality" alternateReality AlternateReality.alternateRealitySchema
-      #+ FC.required "name" name Name.nameSchema
-      #+ FC.optional "militaryOrganization" militaryOrganization MilitaryOrganization.militaryOrganizationSchema
-      #+ FC.optional "prisonOrPenalColony" prisonOrPenalColony PrisonOrPenalColony.prisonOrPenalColonySchema
-      #+ FC.optional "intergovernmentalOrganization" intergovernmentalOrganization IntergovernmentalOrganization.intergovernmentalOrganizationSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "governmentAgency" governmentAgency GovernmentAgency.governmentAgencySchema
       #+ FC.optional "mirror" mirror Mirror.mirrorSchema
+      #+ FC.optional "government" government Government.governmentSchema
+      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.optional "militaryUnit" militaryUnit MilitaryUnit.militaryUnitSchema
       #+ FC.optional "researchOrganization" researchOrganization ResearchOrganization.researchOrganizationSchema
-      #+ FC.optional "government" government Government.governmentSchema
-      #+ FC.optional "lawEnforcementAgency" lawEnforcementAgency LawEnforcementAgency.lawEnforcementAgencySchema
+      #+ FC.optional "militaryOrganization" militaryOrganization MilitaryOrganization.militaryOrganizationSchema
       #+ FC.optional "sportOrganization" sportOrganization SportOrganization.sportOrganizationSchema
+      #+ FC.optional "intergovernmentalOrganization" intergovernmentalOrganization IntergovernmentalOrganization.intergovernmentalOrganizationSchema
+      #+ FC.optional "governmentAgency" governmentAgency GovernmentAgency.governmentAgencySchema
       #+ FC.optional "medicalOrganization" medicalOrganization MedicalOrganization.medicalOrganizationSchema
+      #+ FC.optional "prisonOrPenalColony" prisonOrPenalColony PrisonOrPenalColony.prisonOrPenalColonySchema
+      #+ FC.required "name" name Name.nameSchema
