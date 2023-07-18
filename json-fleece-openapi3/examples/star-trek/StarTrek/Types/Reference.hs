@@ -13,8 +13,8 @@ import qualified StarTrek.Types.Reference.Uid as Uid
 import qualified StarTrek.Types.ReferenceType as ReferenceType
 
 data Reference = Reference
-  { referenceNumber :: Maybe ReferenceNumber.ReferenceNumber -- ^ Reference number
-  , uid :: Maybe Uid.Uid -- ^ Reference unique ID
+  { uid :: Maybe Uid.Uid -- ^ Reference unique ID
+  , referenceNumber :: Maybe ReferenceNumber.ReferenceNumber -- ^ Reference number
   , referenceType :: Maybe ReferenceType.ReferenceType -- ^ Reference type
   }
   deriving (Eq, Show)
@@ -23,6 +23,6 @@ referenceSchema :: FC.Fleece schema => schema Reference
 referenceSchema =
   FC.object $
     FC.constructor Reference
-      #+ FC.optional "referenceNumber" referenceNumber ReferenceNumber.referenceNumberSchema
       #+ FC.optional "uid" uid Uid.uidSchema
+      #+ FC.optional "referenceNumber" referenceNumber ReferenceNumber.referenceNumberSchema
       #+ FC.optional "referenceType" referenceType ReferenceType.referenceTypeSchema

@@ -31,26 +31,26 @@ import qualified StarTrek.Types.PerformerBase.VoicePerformer as VoicePerformer
 import qualified StarTrek.Types.PerformerBase.VoyPerformer as VoyPerformer
 
 data PerformerBase = PerformerBase
-  { birthName :: Maybe BirthName.BirthName -- ^ Performer birth name
-  , name :: Name.Name -- ^ Performer name
-  , tngPerformer :: Maybe TngPerformer.TngPerformer -- ^ Whether it's a performer that appeared in Star Trek: The Next Generation
-  , animalPerformer :: Maybe AnimalPerformer.AnimalPerformer -- ^ Whether it's an animal performer
-  , standInPerformer :: Maybe StandInPerformer.StandInPerformer -- ^ Whether it's a stand-in performer
-  , tasPerformer :: Maybe TasPerformer.TasPerformer -- ^ Whether it's a performer that appeared in Star Trek: The Animated Series
-  , uid :: Uid.Uid -- ^ Performer unique ID
-  , dateOfDeath :: Maybe DateOfDeath.DateOfDeath -- ^ Date the performer died
-  , stuntPerformer :: Maybe StuntPerformer.StuntPerformer -- ^ Whether it's a stunt performer
-  , entPerformer :: Maybe EntPerformer.EntPerformer -- ^ Whether it's a performer that appeared in Star Trek: Enterprise
-  , voicePerformer :: Maybe VoicePerformer.VoicePerformer -- ^ Whether it's a voice performer
-  , disPerformer :: Maybe DisPerformer.DisPerformer -- ^ Whether it's a performer that appeared in Star Trek: Discovery
+  { tasPerformer :: Maybe TasPerformer.TasPerformer -- ^ Whether it's a performer that appeared in Star Trek: The Animated Series
+  , birthName :: Maybe BirthName.BirthName -- ^ Performer birth name
   , ds9Performer :: Maybe Ds9Performer.Ds9Performer -- ^ Whether it's a performer that appeared in Star Trek: Deep Space Nine
-  , gender :: Maybe Gender.Gender -- ^ Gender
+  , tngPerformer :: Maybe TngPerformer.TngPerformer -- ^ Whether it's a performer that appeared in Star Trek: The Next Generation
   , dateOfBirth :: Maybe DateOfBirth.DateOfBirth -- ^ Date the performer was born
-  , placeOfDeath :: Maybe PlaceOfDeath.PlaceOfDeath -- ^ Place the performer died
-  , tosPerformer :: Maybe TosPerformer.TosPerformer -- ^ Whether it's a performer that appeared in Star Trek: The Original Series
+  , placeOfBirth :: Maybe PlaceOfBirth.PlaceOfBirth -- ^ Place the performer was born
+  , uid :: Uid.Uid -- ^ Performer unique ID
+  , stuntPerformer :: Maybe StuntPerformer.StuntPerformer -- ^ Whether it's a stunt performer
+  , standInPerformer :: Maybe StandInPerformer.StandInPerformer -- ^ Whether it's a stand-in performer
   , videoGamePerformer :: Maybe VideoGamePerformer.VideoGamePerformer -- ^ Whether it's a video game performer
   , filmPerformer :: Maybe FilmPerformer.FilmPerformer -- ^ Whether it's a performer that appeared in a Star Trek movie
-  , placeOfBirth :: Maybe PlaceOfBirth.PlaceOfBirth -- ^ Place the performer was born
+  , gender :: Maybe Gender.Gender -- ^ Gender
+  , disPerformer :: Maybe DisPerformer.DisPerformer -- ^ Whether it's a performer that appeared in Star Trek: Discovery
+  , animalPerformer :: Maybe AnimalPerformer.AnimalPerformer -- ^ Whether it's an animal performer
+  , placeOfDeath :: Maybe PlaceOfDeath.PlaceOfDeath -- ^ Place the performer died
+  , dateOfDeath :: Maybe DateOfDeath.DateOfDeath -- ^ Date the performer died
+  , tosPerformer :: Maybe TosPerformer.TosPerformer -- ^ Whether it's a performer that appeared in Star Trek: The Original Series
+  , entPerformer :: Maybe EntPerformer.EntPerformer -- ^ Whether it's a performer that appeared in Star Trek: Enterprise
+  , voicePerformer :: Maybe VoicePerformer.VoicePerformer -- ^ Whether it's a voice performer
+  , name :: Name.Name -- ^ Performer name
   , voyPerformer :: Maybe VoyPerformer.VoyPerformer -- ^ Whether it's a performer that appeared in Star Trek: Voyager
   }
   deriving (Eq, Show)
@@ -59,24 +59,24 @@ performerBaseSchema :: FC.Fleece schema => schema PerformerBase
 performerBaseSchema =
   FC.object $
     FC.constructor PerformerBase
-      #+ FC.optional "birthName" birthName BirthName.birthNameSchema
-      #+ FC.required "name" name Name.nameSchema
-      #+ FC.optional "tngPerformer" tngPerformer TngPerformer.tngPerformerSchema
-      #+ FC.optional "animalPerformer" animalPerformer AnimalPerformer.animalPerformerSchema
-      #+ FC.optional "standInPerformer" standInPerformer StandInPerformer.standInPerformerSchema
       #+ FC.optional "tasPerformer" tasPerformer TasPerformer.tasPerformerSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "dateOfDeath" dateOfDeath DateOfDeath.dateOfDeathSchema
-      #+ FC.optional "stuntPerformer" stuntPerformer StuntPerformer.stuntPerformerSchema
-      #+ FC.optional "entPerformer" entPerformer EntPerformer.entPerformerSchema
-      #+ FC.optional "voicePerformer" voicePerformer VoicePerformer.voicePerformerSchema
-      #+ FC.optional "disPerformer" disPerformer DisPerformer.disPerformerSchema
+      #+ FC.optional "birthName" birthName BirthName.birthNameSchema
       #+ FC.optional "ds9Performer" ds9Performer Ds9Performer.ds9PerformerSchema
-      #+ FC.optional "gender" gender Gender.genderSchema
+      #+ FC.optional "tngPerformer" tngPerformer TngPerformer.tngPerformerSchema
       #+ FC.optional "dateOfBirth" dateOfBirth DateOfBirth.dateOfBirthSchema
-      #+ FC.optional "placeOfDeath" placeOfDeath PlaceOfDeath.placeOfDeathSchema
-      #+ FC.optional "tosPerformer" tosPerformer TosPerformer.tosPerformerSchema
+      #+ FC.optional "placeOfBirth" placeOfBirth PlaceOfBirth.placeOfBirthSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "stuntPerformer" stuntPerformer StuntPerformer.stuntPerformerSchema
+      #+ FC.optional "standInPerformer" standInPerformer StandInPerformer.standInPerformerSchema
       #+ FC.optional "videoGamePerformer" videoGamePerformer VideoGamePerformer.videoGamePerformerSchema
       #+ FC.optional "filmPerformer" filmPerformer FilmPerformer.filmPerformerSchema
-      #+ FC.optional "placeOfBirth" placeOfBirth PlaceOfBirth.placeOfBirthSchema
+      #+ FC.optional "gender" gender Gender.genderSchema
+      #+ FC.optional "disPerformer" disPerformer DisPerformer.disPerformerSchema
+      #+ FC.optional "animalPerformer" animalPerformer AnimalPerformer.animalPerformerSchema
+      #+ FC.optional "placeOfDeath" placeOfDeath PlaceOfDeath.placeOfDeathSchema
+      #+ FC.optional "dateOfDeath" dateOfDeath DateOfDeath.dateOfDeathSchema
+      #+ FC.optional "tosPerformer" tosPerformer TosPerformer.tosPerformerSchema
+      #+ FC.optional "entPerformer" entPerformer EntPerformer.entPerformerSchema
+      #+ FC.optional "voicePerformer" voicePerformer VoicePerformer.voicePerformerSchema
+      #+ FC.required "name" name Name.nameSchema
       #+ FC.optional "voyPerformer" voyPerformer VoyPerformer.voyPerformerSchema

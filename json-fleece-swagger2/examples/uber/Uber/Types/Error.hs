@@ -14,8 +14,8 @@ import qualified Uber.Types.Error.Message as Message
 
 data Error = Error
   { message :: Maybe Message.Message
-  , code :: Maybe Code.Code
   , fields :: Maybe Fields.Fields
+  , code :: Maybe Code.Code
   }
   deriving (Eq, Show)
 
@@ -24,5 +24,5 @@ errorSchema =
   FC.object $
     FC.constructor Error
       #+ FC.optional "message" message Message.messageSchema
-      #+ FC.optional "code" code Code.codeSchema
       #+ FC.optional "fields" fields Fields.fieldsSchema
+      #+ FC.optional "code" code Code.codeSchema

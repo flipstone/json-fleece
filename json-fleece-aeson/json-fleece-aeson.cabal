@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.35.1.
+-- This file has been generated from package.yaml by hpack version 0.35.2.
 --
 -- see: https://github.com/sol/hpack
 
@@ -36,14 +36,14 @@ library
   hs-source-dirs:
       src
   build-depends:
-      aeson ==2.0.*
+      aeson >=2.0 && <2.2
     , base >=4.7 && <5
     , bytestring ==0.11.*
     , containers ==0.6.*
     , json-fleece-core ==0.5.*
     , shrubbery >=0.1.2 && <0.2
-    , text ==1.2.*
-    , vector ==0.12.*
+    , text >=1.2 && <2.1
+    , vector >=0.12 && <0.14
   default-language: Haskell2010
   if flag(strict)
     ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations
@@ -59,7 +59,7 @@ test-suite json-fleece-aeson-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      aeson ==2.0.*
+      aeson >=2.0 && <2.2
     , base >=4.7 && <5
     , bytestring ==0.11.*
     , containers ==0.6.*
@@ -68,9 +68,9 @@ test-suite json-fleece-aeson-test
     , json-fleece-core ==0.5.*
     , json-fleece-examples
     , scientific >=0.3.7 && <0.4
-    , text ==1.2.*
-    , time ==1.11.*
-    , vector ==0.12.*
+    , text >=1.2 && <2.1
+    , time >=1.11 && <1.13
+    , vector >=0.12 && <0.14
   default-language: Haskell2010
   if flag(strict)
     ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations

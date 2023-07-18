@@ -14,10 +14,10 @@ import qualified StarTrek.Types.SoundtrackBase.Title as Title
 import qualified StarTrek.Types.SoundtrackBase.Uid as Uid
 
 data SoundtrackBase = SoundtrackBase
-  { releaseDate :: Maybe ReleaseDate.ReleaseDate -- ^ Release date
+  { length :: Maybe Length.Length -- ^ Length, in seconds
   , uid :: Uid.Uid -- ^ Soundtrack unique ID
-  , length :: Maybe Length.Length -- ^ Length, in seconds
   , title :: Title.Title -- ^ Soundtrack title
+  , releaseDate :: Maybe ReleaseDate.ReleaseDate -- ^ Release date
   }
   deriving (Eq, Show)
 
@@ -25,7 +25,7 @@ soundtrackBaseSchema :: FC.Fleece schema => schema SoundtrackBase
 soundtrackBaseSchema =
   FC.object $
     FC.constructor SoundtrackBase
-      #+ FC.optional "releaseDate" releaseDate ReleaseDate.releaseDateSchema
-      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.optional "length" length Length.lengthSchema
+      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.required "title" title Title.titleSchema
+      #+ FC.optional "releaseDate" releaseDate ReleaseDate.releaseDateSchema

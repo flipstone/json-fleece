@@ -12,8 +12,8 @@ import qualified StarTrek.Types.MaterialHeader.Name as Name
 import qualified StarTrek.Types.MaterialHeader.Uid as Uid
 
 data MaterialHeader = MaterialHeader
-  { name :: Name.Name -- ^ Material name
-  , uid :: Uid.Uid -- ^ Material unique ID
+  { uid :: Uid.Uid -- ^ Material unique ID
+  , name :: Name.Name -- ^ Material name
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ materialHeaderSchema :: FC.Fleece schema => schema MaterialHeader
 materialHeaderSchema =
   FC.object $
     FC.constructor MaterialHeader
-      #+ FC.required "name" name Name.nameSchema
       #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.required "name" name Name.nameSchema

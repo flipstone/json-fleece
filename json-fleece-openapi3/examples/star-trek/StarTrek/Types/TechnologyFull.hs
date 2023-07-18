@@ -32,28 +32,28 @@ import qualified StarTrek.Types.TechnologyFull.TransporterTechnology as Transpor
 import qualified StarTrek.Types.TechnologyFull.Uid as Uid
 
 data TechnologyFull = TechnologyFull
-  { name :: Name.Name -- ^ Technology name
-  , identificationTechnology :: Maybe IdentificationTechnology.IdentificationTechnology -- ^ Whether it's a identification technology
-  , fictionalTechnology :: Maybe FictionalTechnology.FictionalTechnology -- ^ Whether it's a fictional technology
-  , subroutine :: Maybe Subroutine.Subroutine -- ^ Whether it's a subroutine
-  , communicationsTechnology :: Maybe CommunicationsTechnology.CommunicationsTechnology -- ^ Whether it's a communications technology
+  { sensorTechnology :: Maybe SensorTechnology.SensorTechnology -- ^ Whether it's a sensor technology
   , computerTechnology :: Maybe ComputerTechnology.ComputerTechnology -- ^ Whether it's a computer technology
-  , borgComponent :: Maybe BorgComponent.BorgComponent -- ^ Whether it's a Borg component
+  , holographicTechnology :: Maybe HolographicTechnology.HolographicTechnology -- ^ Whether it's a holographic technology
+  , communicationsTechnology :: Maybe CommunicationsTechnology.CommunicationsTechnology -- ^ Whether it's a communications technology
   , engineeringTool :: Maybe EngineeringTool.EngineeringTool -- ^ Whether it's a engineering tool
   , uid :: Uid.Uid -- ^ Technology unique ID
-  , transporterTechnology :: Maybe TransporterTechnology.TransporterTechnology -- ^ Whether it's a transporter technology
-  , computerProgramming :: Maybe ComputerProgramming.ComputerProgramming -- ^ Whether it's a technology related to computer programming
-  , database :: Maybe Database.Database -- ^ Whether it's a database
-  , shieldTechnology :: Maybe ShieldTechnology.ShieldTechnology -- ^ Whether it's a shield technology
-  , medicalEquipment :: Maybe MedicalEquipment.MedicalEquipment -- ^ Whether it's a medical equipment
-  , holographicTechnology :: Maybe HolographicTechnology.HolographicTechnology -- ^ Whether it's a holographic technology
-  , householdTool :: Maybe HouseholdTool.HouseholdTool -- ^ Whether it's a household tool
-  , culinaryTool :: Maybe CulinaryTool.CulinaryTool -- ^ Whether it's a culinary tool
+  , subroutine :: Maybe Subroutine.Subroutine -- ^ Whether it's a subroutine
+  , borgComponent :: Maybe BorgComponent.BorgComponent -- ^ Whether it's a Borg component
   , energyTechnology :: Maybe EnergyTechnology.EnergyTechnology -- ^ Whether it's a energy technology
-  , lifeSupportTechnology :: Maybe LifeSupportTechnology.LifeSupportTechnology -- ^ Whether it's a life support technology
+  , transporterTechnology :: Maybe TransporterTechnology.TransporterTechnology -- ^ Whether it's a transporter technology
   , tool :: Maybe Tool.Tool -- ^ Whether it's a tool
+  , computerProgramming :: Maybe ComputerProgramming.ComputerProgramming -- ^ Whether it's a technology related to computer programming
+  , lifeSupportTechnology :: Maybe LifeSupportTechnology.LifeSupportTechnology -- ^ Whether it's a life support technology
+  , culinaryTool :: Maybe CulinaryTool.CulinaryTool -- ^ Whether it's a culinary tool
+  , database :: Maybe Database.Database -- ^ Whether it's a database
+  , fictionalTechnology :: Maybe FictionalTechnology.FictionalTechnology -- ^ Whether it's a fictional technology
+  , identificationTechnology :: Maybe IdentificationTechnology.IdentificationTechnology -- ^ Whether it's a identification technology
+  , householdTool :: Maybe HouseholdTool.HouseholdTool -- ^ Whether it's a household tool
+  , medicalEquipment :: Maybe MedicalEquipment.MedicalEquipment -- ^ Whether it's a medical equipment
+  , name :: Name.Name -- ^ Technology name
+  , shieldTechnology :: Maybe ShieldTechnology.ShieldTechnology -- ^ Whether it's a shield technology
   , borgTechnology :: Maybe BorgTechnology.BorgTechnology -- ^ Whether it's a Borg technology
-  , sensorTechnology :: Maybe SensorTechnology.SensorTechnology -- ^ Whether it's a sensor technology
   }
   deriving (Eq, Show)
 
@@ -61,25 +61,25 @@ technologyFullSchema :: FC.Fleece schema => schema TechnologyFull
 technologyFullSchema =
   FC.object $
     FC.constructor TechnologyFull
-      #+ FC.required "name" name Name.nameSchema
-      #+ FC.optional "identificationTechnology" identificationTechnology IdentificationTechnology.identificationTechnologySchema
-      #+ FC.optional "fictionalTechnology" fictionalTechnology FictionalTechnology.fictionalTechnologySchema
-      #+ FC.optional "subroutine" subroutine Subroutine.subroutineSchema
-      #+ FC.optional "communicationsTechnology" communicationsTechnology CommunicationsTechnology.communicationsTechnologySchema
+      #+ FC.optional "sensorTechnology" sensorTechnology SensorTechnology.sensorTechnologySchema
       #+ FC.optional "computerTechnology" computerTechnology ComputerTechnology.computerTechnologySchema
-      #+ FC.optional "borgComponent" borgComponent BorgComponent.borgComponentSchema
+      #+ FC.optional "holographicTechnology" holographicTechnology HolographicTechnology.holographicTechnologySchema
+      #+ FC.optional "communicationsTechnology" communicationsTechnology CommunicationsTechnology.communicationsTechnologySchema
       #+ FC.optional "engineeringTool" engineeringTool EngineeringTool.engineeringToolSchema
       #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "transporterTechnology" transporterTechnology TransporterTechnology.transporterTechnologySchema
-      #+ FC.optional "computerProgramming" computerProgramming ComputerProgramming.computerProgrammingSchema
-      #+ FC.optional "database" database Database.databaseSchema
-      #+ FC.optional "shieldTechnology" shieldTechnology ShieldTechnology.shieldTechnologySchema
-      #+ FC.optional "medicalEquipment" medicalEquipment MedicalEquipment.medicalEquipmentSchema
-      #+ FC.optional "holographicTechnology" holographicTechnology HolographicTechnology.holographicTechnologySchema
-      #+ FC.optional "householdTool" householdTool HouseholdTool.householdToolSchema
-      #+ FC.optional "culinaryTool" culinaryTool CulinaryTool.culinaryToolSchema
+      #+ FC.optional "subroutine" subroutine Subroutine.subroutineSchema
+      #+ FC.optional "borgComponent" borgComponent BorgComponent.borgComponentSchema
       #+ FC.optional "energyTechnology" energyTechnology EnergyTechnology.energyTechnologySchema
-      #+ FC.optional "lifeSupportTechnology" lifeSupportTechnology LifeSupportTechnology.lifeSupportTechnologySchema
+      #+ FC.optional "transporterTechnology" transporterTechnology TransporterTechnology.transporterTechnologySchema
       #+ FC.optional "tool" tool Tool.toolSchema
+      #+ FC.optional "computerProgramming" computerProgramming ComputerProgramming.computerProgrammingSchema
+      #+ FC.optional "lifeSupportTechnology" lifeSupportTechnology LifeSupportTechnology.lifeSupportTechnologySchema
+      #+ FC.optional "culinaryTool" culinaryTool CulinaryTool.culinaryToolSchema
+      #+ FC.optional "database" database Database.databaseSchema
+      #+ FC.optional "fictionalTechnology" fictionalTechnology FictionalTechnology.fictionalTechnologySchema
+      #+ FC.optional "identificationTechnology" identificationTechnology IdentificationTechnology.identificationTechnologySchema
+      #+ FC.optional "householdTool" householdTool HouseholdTool.householdToolSchema
+      #+ FC.optional "medicalEquipment" medicalEquipment MedicalEquipment.medicalEquipmentSchema
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.optional "shieldTechnology" shieldTechnology ShieldTechnology.shieldTechnologySchema
       #+ FC.optional "borgTechnology" borgTechnology BorgTechnology.borgTechnologySchema
-      #+ FC.optional "sensorTechnology" sensorTechnology SensorTechnology.sensorTechnologySchema

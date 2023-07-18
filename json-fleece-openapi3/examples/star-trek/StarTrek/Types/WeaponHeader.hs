@@ -12,8 +12,8 @@ import qualified StarTrek.Types.WeaponHeader.Name as Name
 import qualified StarTrek.Types.WeaponHeader.Uid as Uid
 
 data WeaponHeader = WeaponHeader
-  { name :: Name.Name -- ^ Weapon name
-  , uid :: Uid.Uid -- ^ Weapon unique ID
+  { uid :: Uid.Uid -- ^ Weapon unique ID
+  , name :: Name.Name -- ^ Weapon name
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ weaponHeaderSchema :: FC.Fleece schema => schema WeaponHeader
 weaponHeaderSchema =
   FC.object $
     FC.constructor WeaponHeader
-      #+ FC.required "name" name Name.nameSchema
       #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.required "name" name Name.nameSchema

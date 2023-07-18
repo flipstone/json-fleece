@@ -17,13 +17,13 @@ import qualified StarTrek.Types.MagazineSeriesBase.Title as Title
 import qualified StarTrek.Types.MagazineSeriesBase.Uid as Uid
 
 data MagazineSeriesBase = MagazineSeriesBase
-  { publishedMonthFrom :: Maybe PublishedMonthFrom.PublishedMonthFrom -- ^ Month from which the magazine series was published
-  , publishedYearTo :: Maybe PublishedYearTo.PublishedYearTo -- ^ Year to which the magazine series was published
-  , uid :: Uid.Uid -- ^ Magazine series unique ID
+  { publishedYearTo :: Maybe PublishedYearTo.PublishedYearTo -- ^ Year to which the magazine series was published
+  , publishedMonthTo :: Maybe PublishedMonthTo.PublishedMonthTo -- ^ Month to which the magazine series was published
   , numberOfIssues :: Maybe NumberOfIssues.NumberOfIssues -- ^ Number of issues
+  , uid :: Uid.Uid -- ^ Magazine series unique ID
   , publishedYearFrom :: Maybe PublishedYearFrom.PublishedYearFrom -- ^ Year from which the magazine series was published
   , title :: Title.Title -- ^ Magazine series title
-  , publishedMonthTo :: Maybe PublishedMonthTo.PublishedMonthTo -- ^ Month to which the magazine series was published
+  , publishedMonthFrom :: Maybe PublishedMonthFrom.PublishedMonthFrom -- ^ Month from which the magazine series was published
   }
   deriving (Eq, Show)
 
@@ -31,10 +31,10 @@ magazineSeriesBaseSchema :: FC.Fleece schema => schema MagazineSeriesBase
 magazineSeriesBaseSchema =
   FC.object $
     FC.constructor MagazineSeriesBase
-      #+ FC.optional "publishedMonthFrom" publishedMonthFrom PublishedMonthFrom.publishedMonthFromSchema
       #+ FC.optional "publishedYearTo" publishedYearTo PublishedYearTo.publishedYearToSchema
-      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "publishedMonthTo" publishedMonthTo PublishedMonthTo.publishedMonthToSchema
       #+ FC.optional "numberOfIssues" numberOfIssues NumberOfIssues.numberOfIssuesSchema
+      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.optional "publishedYearFrom" publishedYearFrom PublishedYearFrom.publishedYearFromSchema
       #+ FC.required "title" title Title.titleSchema
-      #+ FC.optional "publishedMonthTo" publishedMonthTo PublishedMonthTo.publishedMonthToSchema
+      #+ FC.optional "publishedMonthFrom" publishedMonthFrom PublishedMonthFrom.publishedMonthFromSchema

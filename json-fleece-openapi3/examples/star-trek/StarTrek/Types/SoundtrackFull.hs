@@ -17,15 +17,15 @@ import qualified StarTrek.Types.SoundtrackFull.Uid as Uid
 import qualified StarTrek.Types.StaffBase as StaffBase
 
 data SoundtrackFull = SoundtrackFull
-  { releaseDate :: Maybe ReleaseDate.ReleaseDate -- ^ Release date
-  , uid :: Uid.Uid -- ^ Soundtrack unique ID
+  { labels :: Maybe [CompanyBase.CompanyBase] -- ^ Base company, returned in search results
   , length :: Maybe Length.Length -- ^ Length, in seconds
-  , composers :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
-  , title :: Title.Title -- ^ Soundtrack title
-  , labels :: Maybe [CompanyBase.CompanyBase] -- ^ Base company, returned in search results
-  , references :: Maybe [Reference.Reference] -- ^ Reference of book, comics, video release, etc.
   , orchestrators :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
+  , uid :: Uid.Uid -- ^ Soundtrack unique ID
+  , references :: Maybe [Reference.Reference] -- ^ Reference of book, comics, video release, etc.
   , contributors :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
+  , title :: Title.Title -- ^ Soundtrack title
+  , composers :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
+  , releaseDate :: Maybe ReleaseDate.ReleaseDate -- ^ Release date
   }
   deriving (Eq, Show)
 
@@ -33,12 +33,12 @@ soundtrackFullSchema :: FC.Fleece schema => schema SoundtrackFull
 soundtrackFullSchema =
   FC.object $
     FC.constructor SoundtrackFull
-      #+ FC.optional "releaseDate" releaseDate ReleaseDate.releaseDateSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "length" length Length.lengthSchema
-      #+ FC.optional "composers" composers (FC.list StaffBase.staffBaseSchema)
-      #+ FC.required "title" title Title.titleSchema
       #+ FC.optional "labels" labels (FC.list CompanyBase.companyBaseSchema)
-      #+ FC.optional "references" references (FC.list Reference.referenceSchema)
+      #+ FC.optional "length" length Length.lengthSchema
       #+ FC.optional "orchestrators" orchestrators (FC.list StaffBase.staffBaseSchema)
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "references" references (FC.list Reference.referenceSchema)
       #+ FC.optional "contributors" contributors (FC.list StaffBase.staffBaseSchema)
+      #+ FC.required "title" title Title.titleSchema
+      #+ FC.optional "composers" composers (FC.list StaffBase.staffBaseSchema)
+      #+ FC.optional "releaseDate" releaseDate ReleaseDate.releaseDateSchema

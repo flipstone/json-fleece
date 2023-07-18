@@ -12,8 +12,8 @@ import qualified StarTrek.Types.SpacecraftType.Name as Name
 import qualified StarTrek.Types.SpacecraftType.Uid as Uid
 
 data SpacecraftType = SpacecraftType
-  { name :: Maybe Name.Name -- ^ Spacecraft type name
-  , uid :: Maybe Uid.Uid -- ^ Spacecraft type unique ID
+  { uid :: Maybe Uid.Uid -- ^ Spacecraft type unique ID
+  , name :: Maybe Name.Name -- ^ Spacecraft type name
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ spacecraftTypeSchema :: FC.Fleece schema => schema SpacecraftType
 spacecraftTypeSchema =
   FC.object $
     FC.constructor SpacecraftType
-      #+ FC.optional "name" name Name.nameSchema
       #+ FC.optional "uid" uid Uid.uidSchema
+      #+ FC.optional "name" name Name.nameSchema

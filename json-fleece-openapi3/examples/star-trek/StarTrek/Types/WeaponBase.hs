@@ -20,14 +20,14 @@ import qualified StarTrek.Types.WeaponBase.Uid as Uid
 
 data WeaponBase = WeaponBase
   { alternateReality :: Maybe AlternateReality.AlternateReality -- ^ Whether this weapon is from alternate reality
-  , name :: Name.Name -- ^ Weapon name
-  , plasmaTechnology :: Maybe PlasmaTechnology.PlasmaTechnology -- ^ Whether it's a plasma technology
-  , handHeldWeapon :: Maybe HandHeldWeapon.HandHeldWeapon -- ^ Whether it's hand-help weapon
-  , photonicTechnology :: Maybe PhotonicTechnology.PhotonicTechnology -- ^ Whether it's a photonic technology
-  , uid :: Uid.Uid -- ^ Weapon unique ID
   , mirror :: Maybe Mirror.Mirror -- ^ Whether this weapon is from mirror universe
-  , phaserTechnology :: Maybe PhaserTechnology.PhaserTechnology -- ^ Whether it's a phaser technology
+  , uid :: Uid.Uid -- ^ Weapon unique ID
+  , photonicTechnology :: Maybe PhotonicTechnology.PhotonicTechnology -- ^ Whether it's a photonic technology
+  , handHeldWeapon :: Maybe HandHeldWeapon.HandHeldWeapon -- ^ Whether it's hand-help weapon
   , laserTechnology :: Maybe LaserTechnology.LaserTechnology -- ^ Whether it's a laser technology
+  , phaserTechnology :: Maybe PhaserTechnology.PhaserTechnology -- ^ Whether it's a phaser technology
+  , plasmaTechnology :: Maybe PlasmaTechnology.PlasmaTechnology -- ^ Whether it's a plasma technology
+  , name :: Name.Name -- ^ Weapon name
   }
   deriving (Eq, Show)
 
@@ -36,11 +36,11 @@ weaponBaseSchema =
   FC.object $
     FC.constructor WeaponBase
       #+ FC.optional "alternateReality" alternateReality AlternateReality.alternateRealitySchema
-      #+ FC.required "name" name Name.nameSchema
-      #+ FC.optional "plasmaTechnology" plasmaTechnology PlasmaTechnology.plasmaTechnologySchema
-      #+ FC.optional "handHeldWeapon" handHeldWeapon HandHeldWeapon.handHeldWeaponSchema
-      #+ FC.optional "photonicTechnology" photonicTechnology PhotonicTechnology.photonicTechnologySchema
-      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.optional "mirror" mirror Mirror.mirrorSchema
-      #+ FC.optional "phaserTechnology" phaserTechnology PhaserTechnology.phaserTechnologySchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "photonicTechnology" photonicTechnology PhotonicTechnology.photonicTechnologySchema
+      #+ FC.optional "handHeldWeapon" handHeldWeapon HandHeldWeapon.handHeldWeaponSchema
       #+ FC.optional "laserTechnology" laserTechnology LaserTechnology.laserTechnologySchema
+      #+ FC.optional "phaserTechnology" phaserTechnology PhaserTechnology.phaserTechnologySchema
+      #+ FC.optional "plasmaTechnology" plasmaTechnology PlasmaTechnology.plasmaTechnologySchema
+      #+ FC.required "name" name Name.nameSchema

@@ -13,9 +13,9 @@ import qualified StarTrek.Types.ResponseSort as ResponseSort
 import qualified StarTrek.Types.SpeciesBase as SpeciesBase
 
 data SpeciesBaseResponse = SpeciesBaseResponse
-  { sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
-  , species :: Maybe [SpeciesBase.SpeciesBase] -- ^ Base species, returned in search results
+  { species :: Maybe [SpeciesBase.SpeciesBase] -- ^ Base species, returned in search results
   , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
+  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ speciesBaseResponseSchema :: FC.Fleece schema => schema SpeciesBaseResponse
 speciesBaseResponseSchema =
   FC.object $
     FC.constructor SpeciesBaseResponse
-      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
       #+ FC.optional "species" species (FC.list SpeciesBase.speciesBaseSchema)
       #+ FC.optional "page" page ResponsePage.responsePageSchema
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema

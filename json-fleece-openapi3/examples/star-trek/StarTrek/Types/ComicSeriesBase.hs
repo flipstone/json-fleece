@@ -25,21 +25,21 @@ import qualified StarTrek.Types.ComicSeriesBase.YearFrom as YearFrom
 import qualified StarTrek.Types.ComicSeriesBase.YearTo as YearTo
 
 data ComicSeriesBase = ComicSeriesBase
-  { yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of comic series stories
+  { yearTo :: Maybe YearTo.YearTo -- ^ Ending year of comic series stories
   , stardateTo :: Maybe StardateTo.StardateTo -- ^ Ending stardate of comic series stories
-  , publishedMonthFrom :: Maybe PublishedMonthFrom.PublishedMonthFrom -- ^ Month from which the comic series was published
   , publishedYearTo :: Maybe PublishedYearTo.PublishedYearTo -- ^ Year to which the comic series was published
-  , uid :: Uid.Uid -- ^ Comic series unique ID
-  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of comic series stories
-  , numberOfIssues :: Maybe NumberOfIssues.NumberOfIssues -- ^ Number of issues
-  , publishedYearFrom :: Maybe PublishedYearFrom.PublishedYearFrom -- ^ Year from which the comic series was published
-  , title :: Title.Title -- ^ Comic series title
   , publishedMonthTo :: Maybe PublishedMonthTo.PublishedMonthTo -- ^ Month to which the comic series was published
-  , photonovelSeries :: Maybe PhotonovelSeries.PhotonovelSeries -- ^ Whether it's a photonovel series
-  , miniseries :: Maybe Miniseries.Miniseries -- ^ Whether it's a miniseries
-  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of comic series stories
-  , publishedDayTo :: Maybe PublishedDayTo.PublishedDayTo -- ^ Day to which the comic series was published
+  , numberOfIssues :: Maybe NumberOfIssues.NumberOfIssues -- ^ Number of issues
+  , uid :: Uid.Uid -- ^ Comic series unique ID
   , publishedDayFrom :: Maybe PublishedDayFrom.PublishedDayFrom -- ^ Day from which the comic series was published
+  , miniseries :: Maybe Miniseries.Miniseries -- ^ Whether it's a miniseries
+  , publishedYearFrom :: Maybe PublishedYearFrom.PublishedYearFrom -- ^ Year from which the comic series was published
+  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of comic series stories
+  , photonovelSeries :: Maybe PhotonovelSeries.PhotonovelSeries -- ^ Whether it's a photonovel series
+  , title :: Title.Title -- ^ Comic series title
+  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of comic series stories
+  , publishedMonthFrom :: Maybe PublishedMonthFrom.PublishedMonthFrom -- ^ Month from which the comic series was published
+  , publishedDayTo :: Maybe PublishedDayTo.PublishedDayTo -- ^ Day to which the comic series was published
   }
   deriving (Eq, Show)
 
@@ -47,18 +47,18 @@ comicSeriesBaseSchema :: FC.Fleece schema => schema ComicSeriesBase
 comicSeriesBaseSchema =
   FC.object $
     FC.constructor ComicSeriesBase
-      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
-      #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
-      #+ FC.optional "publishedMonthFrom" publishedMonthFrom PublishedMonthFrom.publishedMonthFromSchema
-      #+ FC.optional "publishedYearTo" publishedYearTo PublishedYearTo.publishedYearToSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
-      #+ FC.optional "numberOfIssues" numberOfIssues NumberOfIssues.numberOfIssuesSchema
-      #+ FC.optional "publishedYearFrom" publishedYearFrom PublishedYearFrom.publishedYearFromSchema
-      #+ FC.required "title" title Title.titleSchema
-      #+ FC.optional "publishedMonthTo" publishedMonthTo PublishedMonthTo.publishedMonthToSchema
-      #+ FC.optional "photonovelSeries" photonovelSeries PhotonovelSeries.photonovelSeriesSchema
-      #+ FC.optional "miniseries" miniseries Miniseries.miniseriesSchema
       #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
-      #+ FC.optional "publishedDayTo" publishedDayTo PublishedDayTo.publishedDayToSchema
+      #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
+      #+ FC.optional "publishedYearTo" publishedYearTo PublishedYearTo.publishedYearToSchema
+      #+ FC.optional "publishedMonthTo" publishedMonthTo PublishedMonthTo.publishedMonthToSchema
+      #+ FC.optional "numberOfIssues" numberOfIssues NumberOfIssues.numberOfIssuesSchema
+      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.optional "publishedDayFrom" publishedDayFrom PublishedDayFrom.publishedDayFromSchema
+      #+ FC.optional "miniseries" miniseries Miniseries.miniseriesSchema
+      #+ FC.optional "publishedYearFrom" publishedYearFrom PublishedYearFrom.publishedYearFromSchema
+      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
+      #+ FC.optional "photonovelSeries" photonovelSeries PhotonovelSeries.photonovelSeriesSchema
+      #+ FC.required "title" title Title.titleSchema
+      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
+      #+ FC.optional "publishedMonthFrom" publishedMonthFrom PublishedMonthFrom.publishedMonthFromSchema
+      #+ FC.optional "publishedDayTo" publishedDayTo PublishedDayTo.publishedDayToSchema

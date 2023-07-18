@@ -41,39 +41,39 @@ import qualified StarTrek.Types.VideoReleaseFull.YearTo as YearTo
 import qualified StarTrek.Types.VideoReleaseFull.YouTubeDigitalRelease as YouTubeDigitalRelease
 
 data VideoReleaseFull = VideoReleaseFull
-  { youTubeDigitalRelease :: Maybe YouTubeDigitalRelease.YouTubeDigitalRelease -- ^ Whether this video has been release on YouTube
-  , numberOfFeatureLengthEpisodes :: Maybe NumberOfFeatureLengthEpisodes.NumberOfFeatureLengthEpisodes -- ^ Number of feature-length episodes
-  , languagesSubtitles :: Maybe [ContentLanguage.ContentLanguage] -- ^ Rating of video release, etc.
-  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of video release story
-  , iTunesDigitalRelease :: Maybe ITunesDigitalRelease.ITunesDigitalRelease -- ^ Whether this video has been release on iTunes
-  , format :: Maybe VideoReleaseFormat.VideoReleaseFormat -- ^ Video release format
-  , dailymotionDigitalRelease :: Maybe DailymotionDigitalRelease.DailymotionDigitalRelease -- ^ Whether this video has been release on Dailymotion
-  , region1SlimlineReleaseDate :: Maybe Region1SlimlineReleaseDate.Region1SlimlineReleaseDate -- ^ Region 1 slimline release date
-  , vuduDigitalRelease :: Maybe VuduDigitalRelease.VuduDigitalRelease -- ^ Whether this video has been release on VUDU
-  , languagesDubbed :: Maybe [ContentLanguage.ContentLanguage] -- ^ Rating of video release, etc.
-  , amazonDigitalRelease :: Maybe AmazonDigitalRelease.AmazonDigitalRelease -- ^ Whether this video has been release on Amazon.com
-  , region4AReleaseDate :: Maybe Region4AReleaseDate.Region4AReleaseDate -- ^ Region 4 release date
-  , runTime :: Maybe RunTime.RunTime -- ^ Run time, in minutes
-  , uid :: Uid.Uid -- ^ Video release unique ID
-  , ratings :: Maybe [ContentRating.ContentRating] -- ^ Rating of video release, etc.
-  , vimeoDigitalRelease :: Maybe VimeoDigitalRelease.VimeoDigitalRelease -- ^ Whether this video has been release on Vimeo
+  { region4AReleaseDate :: Maybe Region4AReleaseDate.Region4AReleaseDate -- ^ Region 4 release date
+  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of video release story
+  , region1AReleaseDate :: Maybe Region1AReleaseDate.Region1AReleaseDate -- ^ Region 1/A release date
+  , languages :: Maybe [ContentLanguage.ContentLanguage] -- ^ Rating of video release, etc.
   , region2SlimlineReleaseDate :: Maybe Region2SlimlineReleaseDate.Region2SlimlineReleaseDate -- ^ Region 2 slimline release date
+  , xboxSmartGlassDigitalRelease :: Maybe XboxSmartGlassDigitalRelease.XboxSmartGlassDigitalRelease -- ^ Whether this video has been release on Xbox SmartGlass
+  , series :: Maybe SeriesBase.SeriesBase -- ^ Base series, returned in search results
+  , vuduDigitalRelease :: Maybe VuduDigitalRelease.VuduDigitalRelease -- ^ Whether this video has been release on VUDU
+  , netflixDigitalRelease :: Maybe NetflixDigitalRelease.NetflixDigitalRelease -- ^ Whether this video has been release on Netflix
+  , uid :: Uid.Uid -- ^ Video release unique ID
+  , region1SlimlineReleaseDate :: Maybe Region1SlimlineReleaseDate.Region1SlimlineReleaseDate -- ^ Region 1 slimline release date
+  , regionFreeReleaseDate :: Maybe RegionFreeReleaseDate.RegionFreeReleaseDate -- ^ Region free release date
+  , format :: Maybe VideoReleaseFormat.VideoReleaseFormat -- ^ Video release format
+  , amazonDigitalRelease :: Maybe AmazonDigitalRelease.AmazonDigitalRelease -- ^ Whether this video has been release on Amazon.com
+  , references :: Maybe [Reference.Reference] -- ^ Reference of book, comics, video release, etc.
+  , dailymotionDigitalRelease :: Maybe DailymotionDigitalRelease.DailymotionDigitalRelease -- ^ Whether this video has been release on Dailymotion
+  , runTime :: Maybe RunTime.RunTime -- ^ Run time, in minutes
+  , region4SlimlineReleaseDate :: Maybe Region4SlimlineReleaseDate.Region4SlimlineReleaseDate -- ^ Region 4 slimline release date
+  , numberOfFeatureLengthEpisodes :: Maybe NumberOfFeatureLengthEpisodes.NumberOfFeatureLengthEpisodes -- ^ Number of feature-length episodes
+  , youTubeDigitalRelease :: Maybe YouTubeDigitalRelease.YouTubeDigitalRelease -- ^ Whether this video has been release on YouTube
+  , region2BReleaseDate :: Maybe Region2BReleaseDate.Region2BReleaseDate -- ^ Region 2/B release date
+  , languagesDubbed :: Maybe [ContentLanguage.ContentLanguage] -- ^ Rating of video release, etc.
   , googlePlayDigitalRelease :: Maybe GooglePlayDigitalRelease.GooglePlayDigitalRelease -- ^ Whether this video has been release on Google Play
   , title :: Title.Title -- ^ Video release title
-  , region1AReleaseDate :: Maybe Region1AReleaseDate.Region1AReleaseDate -- ^ Region 1/A release date
-  , xboxSmartGlassDigitalRelease :: Maybe XboxSmartGlassDigitalRelease.XboxSmartGlassDigitalRelease -- ^ Whether this video has been release on Xbox SmartGlass
-  , references :: Maybe [Reference.Reference] -- ^ Reference of book, comics, video release, etc.
-  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of video release story
-  , ultraVioletDigitalRelease :: Maybe UltraVioletDigitalRelease.UltraVioletDigitalRelease -- ^ Whether this video has been release on UltraViolet
-  , series :: Maybe SeriesBase.SeriesBase -- ^ Base series, returned in search results
-  , region4SlimlineReleaseDate :: Maybe Region4SlimlineReleaseDate.Region4SlimlineReleaseDate -- ^ Region 4 slimline release date
-  , languages :: Maybe [ContentLanguage.ContentLanguage] -- ^ Rating of video release, etc.
+  , languagesSubtitles :: Maybe [ContentLanguage.ContentLanguage] -- ^ Rating of video release, etc.
   , season :: Maybe SeasonBase.SeasonBase -- ^ Base season, returned in search results
-  , region2BReleaseDate :: Maybe Region2BReleaseDate.Region2BReleaseDate -- ^ Region 2/B release date
-  , netflixDigitalRelease :: Maybe NetflixDigitalRelease.NetflixDigitalRelease -- ^ Whether this video has been release on Netflix
+  , ultraVioletDigitalRelease :: Maybe UltraVioletDigitalRelease.UltraVioletDigitalRelease -- ^ Whether this video has been release on UltraViolet
+  , iTunesDigitalRelease :: Maybe ITunesDigitalRelease.ITunesDigitalRelease -- ^ Whether this video has been release on iTunes
+  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of video release story
   , numberOfDataCarriers :: Maybe NumberOfDataCarriers.NumberOfDataCarriers -- ^ Number of data carriers (like DVD, VCD, VHS etc.)
-  , regionFreeReleaseDate :: Maybe RegionFreeReleaseDate.RegionFreeReleaseDate -- ^ Region free release date
   , numberOfEpisodes :: Maybe NumberOfEpisodes.NumberOfEpisodes -- ^ Number of episodes
+  , ratings :: Maybe [ContentRating.ContentRating] -- ^ Rating of video release, etc.
+  , vimeoDigitalRelease :: Maybe VimeoDigitalRelease.VimeoDigitalRelease -- ^ Whether this video has been release on Vimeo
   }
   deriving (Eq, Show)
 
@@ -81,36 +81,36 @@ videoReleaseFullSchema :: FC.Fleece schema => schema VideoReleaseFull
 videoReleaseFullSchema =
   FC.object $
     FC.constructor VideoReleaseFull
-      #+ FC.optional "youTubeDigitalRelease" youTubeDigitalRelease YouTubeDigitalRelease.youTubeDigitalReleaseSchema
-      #+ FC.optional "numberOfFeatureLengthEpisodes" numberOfFeatureLengthEpisodes NumberOfFeatureLengthEpisodes.numberOfFeatureLengthEpisodesSchema
-      #+ FC.optional "languagesSubtitles" languagesSubtitles (FC.list ContentLanguage.contentLanguageSchema)
-      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
-      #+ FC.optional "iTunesDigitalRelease" iTunesDigitalRelease ITunesDigitalRelease.iTunesDigitalReleaseSchema
-      #+ FC.optional "format" format VideoReleaseFormat.videoReleaseFormatSchema
-      #+ FC.optional "dailymotionDigitalRelease" dailymotionDigitalRelease DailymotionDigitalRelease.dailymotionDigitalReleaseSchema
-      #+ FC.optional "region1SlimlineReleaseDate" region1SlimlineReleaseDate Region1SlimlineReleaseDate.region1SlimlineReleaseDateSchema
-      #+ FC.optional "vuduDigitalRelease" vuduDigitalRelease VuduDigitalRelease.vuduDigitalReleaseSchema
-      #+ FC.optional "languagesDubbed" languagesDubbed (FC.list ContentLanguage.contentLanguageSchema)
-      #+ FC.optional "amazonDigitalRelease" amazonDigitalRelease AmazonDigitalRelease.amazonDigitalReleaseSchema
       #+ FC.optional "region4AReleaseDate" region4AReleaseDate Region4AReleaseDate.region4AReleaseDateSchema
-      #+ FC.optional "runTime" runTime RunTime.runTimeSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "ratings" ratings (FC.list ContentRating.contentRatingSchema)
-      #+ FC.optional "vimeoDigitalRelease" vimeoDigitalRelease VimeoDigitalRelease.vimeoDigitalReleaseSchema
+      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
+      #+ FC.optional "region1AReleaseDate" region1AReleaseDate Region1AReleaseDate.region1AReleaseDateSchema
+      #+ FC.optional "languages" languages (FC.list ContentLanguage.contentLanguageSchema)
       #+ FC.optional "region2SlimlineReleaseDate" region2SlimlineReleaseDate Region2SlimlineReleaseDate.region2SlimlineReleaseDateSchema
+      #+ FC.optional "xboxSmartGlassDigitalRelease" xboxSmartGlassDigitalRelease XboxSmartGlassDigitalRelease.xboxSmartGlassDigitalReleaseSchema
+      #+ FC.optional "series" series SeriesBase.seriesBaseSchema
+      #+ FC.optional "vuduDigitalRelease" vuduDigitalRelease VuduDigitalRelease.vuduDigitalReleaseSchema
+      #+ FC.optional "netflixDigitalRelease" netflixDigitalRelease NetflixDigitalRelease.netflixDigitalReleaseSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "region1SlimlineReleaseDate" region1SlimlineReleaseDate Region1SlimlineReleaseDate.region1SlimlineReleaseDateSchema
+      #+ FC.optional "regionFreeReleaseDate" regionFreeReleaseDate RegionFreeReleaseDate.regionFreeReleaseDateSchema
+      #+ FC.optional "format" format VideoReleaseFormat.videoReleaseFormatSchema
+      #+ FC.optional "amazonDigitalRelease" amazonDigitalRelease AmazonDigitalRelease.amazonDigitalReleaseSchema
+      #+ FC.optional "references" references (FC.list Reference.referenceSchema)
+      #+ FC.optional "dailymotionDigitalRelease" dailymotionDigitalRelease DailymotionDigitalRelease.dailymotionDigitalReleaseSchema
+      #+ FC.optional "runTime" runTime RunTime.runTimeSchema
+      #+ FC.optional "region4SlimlineReleaseDate" region4SlimlineReleaseDate Region4SlimlineReleaseDate.region4SlimlineReleaseDateSchema
+      #+ FC.optional "numberOfFeatureLengthEpisodes" numberOfFeatureLengthEpisodes NumberOfFeatureLengthEpisodes.numberOfFeatureLengthEpisodesSchema
+      #+ FC.optional "youTubeDigitalRelease" youTubeDigitalRelease YouTubeDigitalRelease.youTubeDigitalReleaseSchema
+      #+ FC.optional "region2BReleaseDate" region2BReleaseDate Region2BReleaseDate.region2BReleaseDateSchema
+      #+ FC.optional "languagesDubbed" languagesDubbed (FC.list ContentLanguage.contentLanguageSchema)
       #+ FC.optional "googlePlayDigitalRelease" googlePlayDigitalRelease GooglePlayDigitalRelease.googlePlayDigitalReleaseSchema
       #+ FC.required "title" title Title.titleSchema
-      #+ FC.optional "region1AReleaseDate" region1AReleaseDate Region1AReleaseDate.region1AReleaseDateSchema
-      #+ FC.optional "xboxSmartGlassDigitalRelease" xboxSmartGlassDigitalRelease XboxSmartGlassDigitalRelease.xboxSmartGlassDigitalReleaseSchema
-      #+ FC.optional "references" references (FC.list Reference.referenceSchema)
-      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
-      #+ FC.optional "ultraVioletDigitalRelease" ultraVioletDigitalRelease UltraVioletDigitalRelease.ultraVioletDigitalReleaseSchema
-      #+ FC.optional "series" series SeriesBase.seriesBaseSchema
-      #+ FC.optional "region4SlimlineReleaseDate" region4SlimlineReleaseDate Region4SlimlineReleaseDate.region4SlimlineReleaseDateSchema
-      #+ FC.optional "languages" languages (FC.list ContentLanguage.contentLanguageSchema)
+      #+ FC.optional "languagesSubtitles" languagesSubtitles (FC.list ContentLanguage.contentLanguageSchema)
       #+ FC.optional "season" season SeasonBase.seasonBaseSchema
-      #+ FC.optional "region2BReleaseDate" region2BReleaseDate Region2BReleaseDate.region2BReleaseDateSchema
-      #+ FC.optional "netflixDigitalRelease" netflixDigitalRelease NetflixDigitalRelease.netflixDigitalReleaseSchema
+      #+ FC.optional "ultraVioletDigitalRelease" ultraVioletDigitalRelease UltraVioletDigitalRelease.ultraVioletDigitalReleaseSchema
+      #+ FC.optional "iTunesDigitalRelease" iTunesDigitalRelease ITunesDigitalRelease.iTunesDigitalReleaseSchema
+      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
       #+ FC.optional "numberOfDataCarriers" numberOfDataCarriers NumberOfDataCarriers.numberOfDataCarriersSchema
-      #+ FC.optional "regionFreeReleaseDate" regionFreeReleaseDate RegionFreeReleaseDate.regionFreeReleaseDateSchema
       #+ FC.optional "numberOfEpisodes" numberOfEpisodes NumberOfEpisodes.numberOfEpisodesSchema
+      #+ FC.optional "ratings" ratings (FC.list ContentRating.contentRatingSchema)
+      #+ FC.optional "vimeoDigitalRelease" vimeoDigitalRelease VimeoDigitalRelease.vimeoDigitalReleaseSchema

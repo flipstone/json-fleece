@@ -15,10 +15,10 @@ import qualified StarTrek.Types.AstronomicalObjectType as AstronomicalObjectType
 
 data AstronomicalObjectFull = AstronomicalObjectFull
   { astronomicalObjectType :: AstronomicalObjectType.AstronomicalObjectType -- ^ Astronomical object type
-  , name :: Name.Name -- ^ Astronomical object name
+  , astronomicalObjects :: Maybe [AstronomicalObjectBase.AstronomicalObjectBase] -- ^ Base astronomical object, returned in search results
   , uid :: Uid.Uid -- ^ Astronomical object's unique ID
   , location :: Maybe AstronomicalObjectBase.AstronomicalObjectBase -- ^ Base astronomical object, returned in search results
-  , astronomicalObjects :: Maybe [AstronomicalObjectBase.AstronomicalObjectBase] -- ^ Base astronomical object, returned in search results
+  , name :: Name.Name -- ^ Astronomical object name
   }
   deriving (Eq, Show)
 
@@ -27,7 +27,7 @@ astronomicalObjectFullSchema =
   FC.object $
     FC.constructor AstronomicalObjectFull
       #+ FC.required "astronomicalObjectType" astronomicalObjectType AstronomicalObjectType.astronomicalObjectTypeSchema
-      #+ FC.required "name" name Name.nameSchema
+      #+ FC.optional "astronomicalObjects" astronomicalObjects (FC.list AstronomicalObjectBase.astronomicalObjectBaseSchema)
       #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.optional "location" location AstronomicalObjectBase.astronomicalObjectBaseSchema
-      #+ FC.optional "astronomicalObjects" astronomicalObjects (FC.list AstronomicalObjectBase.astronomicalObjectBaseSchema)
+      #+ FC.required "name" name Name.nameSchema

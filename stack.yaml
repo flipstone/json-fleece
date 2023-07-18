@@ -1,5 +1,5 @@
 resolver:
-  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/20/24.yaml
+  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/3.yaml
 system-ghc: true
 install-ghc: false
 
@@ -58,13 +58,12 @@ flags:
 
 extra-deps:
   - git: https://github.com/flipstone/beeline
-    commit: 0d29b3b6bf0d5a1775d6dc7d184a45bd2c8bc7a3
+    commit: d6336c2bb3a72f3475bbe8a7bcfe65bfd861ed5d
     subdirs:
       - beeline-routing
       - beeline-http-client
   - git: https://github.com/flipstone/shrubbery
-    commit: 350ab1bf6c62c63e4acad5004200879ecbe1f3cb
-  - attoparsec-iso8601-1.1.0.0@sha256:29d590f21adc4112973ad5e874d095f8b403b886932fe7e15567b239f5483539,1370
+    commit: 8cd0c45237be047a975d754859fc4b7fb24f49d4
   - non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
 
 

@@ -47,7 +47,7 @@ modeParser =
     Preview
     (Opt.long "preview" <> Opt.short 'p')
 
-codeGenMain :: Aeson.FromJSON a => (a -> CGU.CodeGen CGU.Modules) -> IO ()
+codeGenMain :: (Aeson.FromJSON a) => (a -> CGU.CodeGen CGU.Modules) -> IO ()
 codeGenMain generateModules = do
   options <- Opt.customExecParser parserPrefs optionsInfo
   mkConfig <- Dhall.inputFile Config.decoder (configFileName options)
@@ -81,7 +81,7 @@ parserPrefs =
     Opt.showHelpOnEmpty
       <> Opt.showHelpOnError
 
-loadSourceOrDie :: Aeson.FromJSON a => FilePath -> IO a
+loadSourceOrDie :: (Aeson.FromJSON a) => FilePath -> IO a
 loadSourceOrDie path = do
   let
     showYamlError =

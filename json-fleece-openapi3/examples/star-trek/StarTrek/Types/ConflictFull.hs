@@ -23,19 +23,19 @@ import qualified StarTrek.Types.OrganizationBase as OrganizationBase
 
 data ConflictFull = ConflictFull
   { alternateReality :: Maybe AlternateReality.AlternateReality -- ^ Whether this conflict is from alternate reality
-  , firstSideCommanders :: Maybe [CharacterBase.CharacterBase] -- ^ Base character, returned in search results
-  , name :: Name.Name -- ^ Conflict name
-  , secondSideCommanders :: Maybe [CharacterBase.CharacterBase] -- ^ Base character, returned in search results
-  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of the conflict
-  , earthConflict :: Maybe EarthConflict.EarthConflict -- ^ Whether it is an Earth conflict
-  , dominionWarBattle :: Maybe DominionWarBattle.DominionWarBattle -- ^ Whether this conflict is a Dominion war battle
-  , firstSideBelligerents :: Maybe [OrganizationBase.OrganizationBase] -- ^ Base organization, returned in search results
-  , uid :: Uid.Uid -- ^ Conflict unique ID
-  , secondSideBelligerents :: Maybe [OrganizationBase.OrganizationBase] -- ^ Base organization, returned in search results
-  , klingonWar :: Maybe KlingonWar.KlingonWar -- ^ Whether this conflict is a part of war involving the Klingons
-  , federationWar :: Maybe FederationWar.FederationWar -- ^ Whether this conflict is a part of war involving Federation
   , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of the conflict
+  , secondSideCommanders :: Maybe [CharacterBase.CharacterBase] -- ^ Base character, returned in search results
+  , uid :: Uid.Uid -- ^ Conflict unique ID
+  , federationWar :: Maybe FederationWar.FederationWar -- ^ Whether this conflict is a part of war involving Federation
+  , earthConflict :: Maybe EarthConflict.EarthConflict -- ^ Whether it is an Earth conflict
+  , firstSideCommanders :: Maybe [CharacterBase.CharacterBase] -- ^ Base character, returned in search results
   , locations :: Maybe [LocationBase.LocationBase] -- ^ Base location, returned in search results
+  , firstSideBelligerents :: Maybe [OrganizationBase.OrganizationBase] -- ^ Base organization, returned in search results
+  , secondSideBelligerents :: Maybe [OrganizationBase.OrganizationBase] -- ^ Base organization, returned in search results
+  , dominionWarBattle :: Maybe DominionWarBattle.DominionWarBattle -- ^ Whether this conflict is a Dominion war battle
+  , klingonWar :: Maybe KlingonWar.KlingonWar -- ^ Whether this conflict is a part of war involving the Klingons
+  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of the conflict
+  , name :: Name.Name -- ^ Conflict name
   }
   deriving (Eq, Show)
 
@@ -44,16 +44,16 @@ conflictFullSchema =
   FC.object $
     FC.constructor ConflictFull
       #+ FC.optional "alternateReality" alternateReality AlternateReality.alternateRealitySchema
-      #+ FC.optional "firstSideCommanders" firstSideCommanders (FC.list CharacterBase.characterBaseSchema)
-      #+ FC.required "name" name Name.nameSchema
-      #+ FC.optional "secondSideCommanders" secondSideCommanders (FC.list CharacterBase.characterBaseSchema)
-      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
-      #+ FC.optional "earthConflict" earthConflict EarthConflict.earthConflictSchema
-      #+ FC.optional "dominionWarBattle" dominionWarBattle DominionWarBattle.dominionWarBattleSchema
-      #+ FC.optional "firstSideBelligerents" firstSideBelligerents (FC.list OrganizationBase.organizationBaseSchema)
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "secondSideBelligerents" secondSideBelligerents (FC.list OrganizationBase.organizationBaseSchema)
-      #+ FC.optional "klingonWar" klingonWar KlingonWar.klingonWarSchema
-      #+ FC.optional "federationWar" federationWar FederationWar.federationWarSchema
       #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
+      #+ FC.optional "secondSideCommanders" secondSideCommanders (FC.list CharacterBase.characterBaseSchema)
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "federationWar" federationWar FederationWar.federationWarSchema
+      #+ FC.optional "earthConflict" earthConflict EarthConflict.earthConflictSchema
+      #+ FC.optional "firstSideCommanders" firstSideCommanders (FC.list CharacterBase.characterBaseSchema)
       #+ FC.optional "locations" locations (FC.list LocationBase.locationBaseSchema)
+      #+ FC.optional "firstSideBelligerents" firstSideBelligerents (FC.list OrganizationBase.organizationBaseSchema)
+      #+ FC.optional "secondSideBelligerents" secondSideBelligerents (FC.list OrganizationBase.organizationBaseSchema)
+      #+ FC.optional "dominionWarBattle" dominionWarBattle DominionWarBattle.dominionWarBattleSchema
+      #+ FC.optional "klingonWar" klingonWar KlingonWar.klingonWarSchema
+      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
+      #+ FC.required "name" name Name.nameSchema

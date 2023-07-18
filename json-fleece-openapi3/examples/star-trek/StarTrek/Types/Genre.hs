@@ -12,8 +12,8 @@ import qualified StarTrek.Types.Genre.Name as Name
 import qualified StarTrek.Types.Genre.Uid as Uid
 
 data Genre = Genre
-  { name :: Maybe Name.Name -- ^ Genre name
-  , uid :: Maybe Uid.Uid -- ^ Genre unique ID
+  { uid :: Maybe Uid.Uid -- ^ Genre unique ID
+  , name :: Maybe Name.Name -- ^ Genre name
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ genreSchema :: FC.Fleece schema => schema Genre
 genreSchema =
   FC.object $
     FC.constructor Genre
-      #+ FC.optional "name" name Name.nameSchema
       #+ FC.optional "uid" uid Uid.uidSchema
+      #+ FC.optional "name" name Name.nameSchema

@@ -12,8 +12,8 @@ import qualified StarTrek.Types.TechnologyHeader.Name as Name
 import qualified StarTrek.Types.TechnologyHeader.Uid as Uid
 
 data TechnologyHeader = TechnologyHeader
-  { name :: Name.Name -- ^ Technology name
-  , uid :: Uid.Uid -- ^ Technology unique ID
+  { uid :: Uid.Uid -- ^ Technology unique ID
+  , name :: Name.Name -- ^ Technology name
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ technologyHeaderSchema :: FC.Fleece schema => schema TechnologyHeader
 technologyHeaderSchema =
   FC.object $
     FC.constructor TechnologyHeader
-      #+ FC.required "name" name Name.nameSchema
       #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.required "name" name Name.nameSchema

@@ -21,18 +21,18 @@ import qualified StarTrek.Types.SeriesBase.Title as Title
 import qualified StarTrek.Types.SeriesBase.Uid as Uid
 
 data SeriesBase = SeriesBase
-  { productionCompany :: Maybe CompanyHeader.CompanyHeader -- ^ Header company, embedded in other objects
-  , originalRunStartDate :: Maybe OriginalRunStartDate.OriginalRunStartDate -- ^ Date the series originally ran from
-  , originalBroadcaster :: Maybe CompanyHeader.CompanyHeader -- ^ Header company, embedded in other objects
-  , productionStartYear :: Maybe ProductionStartYear.ProductionStartYear -- ^ Year the series production started
+  { originalBroadcaster :: Maybe CompanyHeader.CompanyHeader -- ^ Header company, embedded in other objects
   , uid :: Uid.Uid -- ^ Series unique ID
-  , episodesCount :: Maybe EpisodesCount.EpisodesCount -- ^ Number of episodes
-  , abbreviation :: Abbreviation.Abbreviation -- ^ Series abbreviation
-  , title :: Title.Title -- ^ Series title
+  , originalRunStartDate :: Maybe OriginalRunStartDate.OriginalRunStartDate -- ^ Date the series originally ran from
   , seasonsCount :: Maybe SeasonsCount.SeasonsCount -- ^ Number of seasons
   , featureLengthEpisodesCount :: Maybe FeatureLengthEpisodesCount.FeatureLengthEpisodesCount -- ^ Number of feature length episodes
-  , productionEndYear :: Maybe ProductionEndYear.ProductionEndYear -- ^ Year the series production ended
+  , episodesCount :: Maybe EpisodesCount.EpisodesCount -- ^ Number of episodes
   , originalRunEndDate :: Maybe OriginalRunEndDate.OriginalRunEndDate -- ^ Date the series originally ran to
+  , productionCompany :: Maybe CompanyHeader.CompanyHeader -- ^ Header company, embedded in other objects
+  , productionEndYear :: Maybe ProductionEndYear.ProductionEndYear -- ^ Year the series production ended
+  , productionStartYear :: Maybe ProductionStartYear.ProductionStartYear -- ^ Year the series production started
+  , title :: Title.Title -- ^ Series title
+  , abbreviation :: Abbreviation.Abbreviation -- ^ Series abbreviation
   }
   deriving (Eq, Show)
 
@@ -40,15 +40,15 @@ seriesBaseSchema :: FC.Fleece schema => schema SeriesBase
 seriesBaseSchema =
   FC.object $
     FC.constructor SeriesBase
-      #+ FC.optional "productionCompany" productionCompany CompanyHeader.companyHeaderSchema
-      #+ FC.optional "originalRunStartDate" originalRunStartDate OriginalRunStartDate.originalRunStartDateSchema
       #+ FC.optional "originalBroadcaster" originalBroadcaster CompanyHeader.companyHeaderSchema
-      #+ FC.optional "productionStartYear" productionStartYear ProductionStartYear.productionStartYearSchema
       #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "episodesCount" episodesCount EpisodesCount.episodesCountSchema
-      #+ FC.required "abbreviation" abbreviation Abbreviation.abbreviationSchema
-      #+ FC.required "title" title Title.titleSchema
+      #+ FC.optional "originalRunStartDate" originalRunStartDate OriginalRunStartDate.originalRunStartDateSchema
       #+ FC.optional "seasonsCount" seasonsCount SeasonsCount.seasonsCountSchema
       #+ FC.optional "featureLengthEpisodesCount" featureLengthEpisodesCount FeatureLengthEpisodesCount.featureLengthEpisodesCountSchema
-      #+ FC.optional "productionEndYear" productionEndYear ProductionEndYear.productionEndYearSchema
+      #+ FC.optional "episodesCount" episodesCount EpisodesCount.episodesCountSchema
       #+ FC.optional "originalRunEndDate" originalRunEndDate OriginalRunEndDate.originalRunEndDateSchema
+      #+ FC.optional "productionCompany" productionCompany CompanyHeader.companyHeaderSchema
+      #+ FC.optional "productionEndYear" productionEndYear ProductionEndYear.productionEndYearSchema
+      #+ FC.optional "productionStartYear" productionStartYear ProductionStartYear.productionStartYearSchema
+      #+ FC.required "title" title Title.titleSchema
+      #+ FC.required "abbreviation" abbreviation Abbreviation.abbreviationSchema

@@ -15,8 +15,8 @@ import qualified TestCases.Types.MixedInJustAdditionalPropertiesSchemaRef.Bar as
 import qualified TestCases.Types.MixedInJustAdditionalPropertiesSchemaRef.Foo as Foo
 
 data MixedInJustAdditionalPropertiesSchemaRef = MixedInJustAdditionalPropertiesSchemaRef
-  { foo :: Maybe Foo.Foo
-  , bar :: Maybe Bar.Bar
+  { bar :: Maybe Bar.Bar
+  , foo :: Maybe Foo.Foo
   , additionalProperties :: (Map.Map T.Text AStringType.AStringType)
   }
   deriving (Eq, Show)
@@ -25,6 +25,6 @@ mixedInJustAdditionalPropertiesSchemaRefSchema :: FC.Fleece schema => schema Mix
 mixedInJustAdditionalPropertiesSchemaRefSchema =
   FC.object $
     FC.constructor MixedInJustAdditionalPropertiesSchemaRef
-      #+ FC.optional "foo" foo Foo.fooSchema
       #+ FC.optional "bar" bar Bar.barSchema
+      #+ FC.optional "foo" foo Foo.fooSchema
       #* FC.additionalFields additionalProperties AStringType.aStringTypeSchema

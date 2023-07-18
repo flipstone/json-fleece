@@ -15,8 +15,8 @@ import qualified TestCases.Types.MixedInJustAdditionalPropertiesSchemaInline.Foo
 import qualified TestCases.Types.MixedInJustAdditionalPropertiesSchemaInlineItem as MixedInJustAdditionalPropertiesSchemaInlineItem
 
 data MixedInJustAdditionalPropertiesSchemaInline = MixedInJustAdditionalPropertiesSchemaInline
-  { foo :: Maybe Foo.Foo
-  , bar :: Maybe Bar.Bar
+  { bar :: Maybe Bar.Bar
+  , foo :: Maybe Foo.Foo
   , additionalProperties :: (Map.Map T.Text MixedInJustAdditionalPropertiesSchemaInlineItem.MixedInJustAdditionalPropertiesSchemaInlineItem)
   }
   deriving (Eq, Show)
@@ -25,6 +25,6 @@ mixedInJustAdditionalPropertiesSchemaInlineSchema :: FC.Fleece schema => schema 
 mixedInJustAdditionalPropertiesSchemaInlineSchema =
   FC.object $
     FC.constructor MixedInJustAdditionalPropertiesSchemaInline
-      #+ FC.optional "foo" foo Foo.fooSchema
       #+ FC.optional "bar" bar Bar.barSchema
+      #+ FC.optional "foo" foo Foo.fooSchema
       #* FC.additionalFields additionalProperties MixedInJustAdditionalPropertiesSchemaInlineItem.mixedInJustAdditionalPropertiesSchemaInlineItemSchema

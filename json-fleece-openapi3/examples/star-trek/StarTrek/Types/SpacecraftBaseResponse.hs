@@ -13,9 +13,9 @@ import qualified StarTrek.Types.ResponseSort as ResponseSort
 import qualified StarTrek.Types.SpacecraftBase as SpacecraftBase
 
 data SpacecraftBaseResponse = SpacecraftBaseResponse
-  { spacecrafts :: Maybe [SpacecraftBase.SpacecraftBase] -- ^ Base spacecraft, returned in search results
+  { page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
+  , spacecrafts :: Maybe [SpacecraftBase.SpacecraftBase] -- ^ Base spacecraft, returned in search results
   , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
-  , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ spacecraftBaseResponseSchema :: FC.Fleece schema => schema SpacecraftBaseRespons
 spacecraftBaseResponseSchema =
   FC.object $
     FC.constructor SpacecraftBaseResponse
+      #+ FC.optional "page" page ResponsePage.responsePageSchema
       #+ FC.optional "spacecrafts" spacecrafts (FC.list SpacecraftBase.spacecraftBaseSchema)
       #+ FC.optional "sort" sort ResponseSort.responseSortSchema
-      #+ FC.optional "page" page ResponsePage.responsePageSchema

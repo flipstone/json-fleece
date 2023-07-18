@@ -5,49 +5,42 @@
 
 packages:
 - completed:
-    commit: 0e2112e4828f333887b11532b6cd26196ca42c2c
+    commit: d6336c2bb3a72f3475bbe8a7bcfe65bfd861ed5d
     git: https://github.com/flipstone/beeline
     name: beeline-routing
     pantry-tree:
-      sha256: dc5631fe4b75e8bd6a190984804f7d620bef9665d83cbf7fc5cd031c8c5ea1fe
+      sha256: caa0acde7f52d38bbb7330acd7f0a3f468c4feb161d2e6c783275331a6905777
       size: 1174
     subdir: beeline-routing
     version: 0.2.4.0
   original:
-    commit: 0e2112e4828f333887b11532b6cd26196ca42c2c
+    commit: d6336c2bb3a72f3475bbe8a7bcfe65bfd861ed5d
     git: https://github.com/flipstone/beeline
     subdir: beeline-routing
 - completed:
-    commit: 0e2112e4828f333887b11532b6cd26196ca42c2c
+    commit: d6336c2bb3a72f3475bbe8a7bcfe65bfd861ed5d
     git: https://github.com/flipstone/beeline
     name: beeline-http-client
     pantry-tree:
-      sha256: 48d980adcaf6aeebc6713fff5df42fb69e8e30315fe88fce8c91a6fe02caf0f0
+      sha256: 588a0e1e9f147aab6ab7b52fccce07c2951c07d6d5339ffb3a03f50006f31204
       size: 718
     subdir: beeline-http-client
     version: 0.8.0.0
   original:
-    commit: 0e2112e4828f333887b11532b6cd26196ca42c2c
+    commit: d6336c2bb3a72f3475bbe8a7bcfe65bfd861ed5d
     git: https://github.com/flipstone/beeline
     subdir: beeline-http-client
 - completed:
-    commit: 94ae4dfe91fa03cf5863c6402c40a6d7967ac8b4
+    commit: 8cd0c45237be047a975d754859fc4b7fb24f49d4
     git: https://github.com/flipstone/shrubbery
     name: shrubbery
     pantry-tree:
-      sha256: 0fb6731198839e21baddc4e60138b94310e8befd334e19997f641bee8b2a7eb9
-      size: 1094
+      sha256: 48ab4b5d472409264e01166f5e993a98c874393b2caa145921faa7e47248acea
+      size: 1552
     version: 0.1.2.0
   original:
-    commit: 94ae4dfe91fa03cf5863c6402c40a6d7967ac8b4
+    commit: 8cd0c45237be047a975d754859fc4b7fb24f49d4
     git: https://github.com/flipstone/shrubbery
-- completed:
-    hackage: attoparsec-iso8601-1.1.0.0@sha256:29d590f21adc4112973ad5e874d095f8b403b886932fe7e15567b239f5483539,1370
-    pantry-tree:
-      sha256: 7eddd7d3bd0f3d51a3b0fe8284ed996bc2bf83effc8cf6afce360e5f0e54fbe5
-      size: 361
-  original:
-    hackage: attoparsec-iso8601-1.1.0.0@sha256:29d590f21adc4112973ad5e874d095f8b403b886932fe7e15567b239f5483539,1370
 - completed:
     hackage: non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
     pantry-tree:
@@ -57,8 +50,8 @@ packages:
     hackage: non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
 snapshots:
 - completed:
-    sha256: e019cd29e3f7f9dbad500225829a3f7a50f73c674614f2f452e21bb8bf5d99ea
-    size: 650253
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/20/24.yaml
+    sha256: 97710f56bf093fca0ee5d8dbe19d96b654c752e405b66795b4baedd84a794c60
+    size: 640010
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/3.yaml
   original:
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/20/24.yaml
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/3.yaml
