@@ -12,7 +12,7 @@ import qualified Data.Text as T
 import qualified Data.Vector as Vector
 import qualified Fleece.Core as FC
 
-aesonValue :: (FC.Fleece schema) => schema Aeson.Value
+aesonValue :: FC.Fleece schema => schema Aeson.Value
 aesonValue =
   FC.transform valueToAnyJSON anyJSONToValue FC.anyJSON
 

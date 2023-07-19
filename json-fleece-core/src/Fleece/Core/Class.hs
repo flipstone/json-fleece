@@ -123,7 +123,7 @@ class Fleece schema where
     schema a
 
   unionNamed ::
-    (KnownNat (Length types)) =>
+    KnownNat (Length types) =>
     Name ->
     UnionMembers schema types types ->
     schema (Union types)
@@ -142,11 +142,11 @@ class Fleece schema where
     schema a ->
     schema a
 
-instance (Fleece schema) => Functor (Field schema object) where
+instance Fleece schema => Functor (Field schema object) where
   fmap = mapField
 
 (#+) ::
-  (Fleece schema) =>
+  Fleece schema =>
   Object schema object (a -> b) ->
   Field schema object a ->
   Object schema object b
@@ -156,7 +156,7 @@ instance (Fleece schema) => Functor (Field schema object) where
 infixl 9 #+
 
 (#*) ::
-  (Fleece schema) =>
+  Fleece schema =>
   Object schema object (a -> object) ->
   AdditionalFields schema object a ->
   Object schema object object
@@ -166,7 +166,7 @@ infixl 9 #+
 infixl 9 #*
 
 (#|) ::
-  (Fleece schema) =>
+  Fleece schema =>
   UnionMembers schema types left ->
   UnionMembers schema types right ->
   UnionMembers schema types (AppendTypes left right)

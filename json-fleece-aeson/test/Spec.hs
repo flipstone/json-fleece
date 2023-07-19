@@ -675,7 +675,7 @@ encodeTestObject =
     . Aeson.pairs
     . mconcat
 
-encodeAesonText :: (Aeson.ToJSON a) => a -> T.Text
+encodeAesonText :: Aeson.ToJSON a => a -> T.Text
 encodeAesonText =
   LT.toStrict . AesonText.encodeToLazyText
 

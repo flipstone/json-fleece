@@ -22,7 +22,7 @@ import qualified Fleece.CodeGenUtil as CGU
 import qualified Fleece.CodeGenUtil.Config as Config
 
 loadTestConfig ::
-  (MIO.MonadIO m) =>
+  MIO.MonadIO m =>
   (FilePath -> m BS8.ByteString) ->
   FilePath ->
   m Config.Config
@@ -46,7 +46,7 @@ configPrelude =
   $(FileEmbed.embedFile "codegen-prelude.dhall")
 
 assertGoldenMatchesGenerated ::
-  (Monad m) =>
+  Monad m =>
   (forall a. (Eq a, Show a) => a -> a -> m ()) ->
   [(FilePath, BS8.ByteString)] ->
   CGU.Modules ->

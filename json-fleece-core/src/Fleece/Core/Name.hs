@@ -69,7 +69,7 @@ nameToString name =
     Nothing -> nameUnqualified name
 
 defaultSchemaName ::
-  (Typeable a) =>
+  Typeable a =>
   schema a ->
   Name
 defaultSchemaName schema =

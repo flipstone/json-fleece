@@ -247,8 +247,8 @@ newtype CodeGenAdditionalProperties = CodeGenAdditionalProperties
 data CodeGenObjectFieldType
   = TypeReference T.Text
   | CodeGenFieldArray
+      -- | whether the array itself is nullable
       Bool
-      -- ^ whether the array itself is nullable
       CodeGenObjectFieldType
 
 resolveFieldTypeInfo ::
@@ -1585,23 +1585,23 @@ fleeceCoreType :: T.Text -> HC.TypeName
 fleeceCoreType =
   HC.toTypeName "Fleece.Core" (Just "FC")
 
-fleeceCoreVar :: (HC.FromCode c) => T.Text -> c
+fleeceCoreVar :: HC.FromCode c => T.Text -> c
 fleeceCoreVar =
   HC.fromCode
     . HC.varNameToCodeDefaultQualification
     . HC.toVarName "Fleece.Core" (Just "FC")
 
-fleeceJSON :: (HC.FromCode c) => c
+fleeceJSON :: HC.FromCode c => c
 fleeceJSON =
   fleeceAesonBeelineConstructor "JSON"
 
-fleeceAesonBeelineConstructor :: (HC.FromCode c) => T.Text -> c
+fleeceAesonBeelineConstructor :: HC.FromCode c => T.Text -> c
 fleeceAesonBeelineConstructor =
   HC.fromCode
     . HC.varNameToCodeDefaultQualification
     . HC.toConstructorVarName "Fleece.Aeson.Beeline" (Just "FA")
 
-methodToBeelineFunction :: (HC.FromCode c) => T.Text -> CodeGen c
+methodToBeelineFunction :: HC.FromCode c => T.Text -> CodeGen c
 methodToBeelineFunction method =
   fmap beelineRoutingVar $
     case T.toLower method of
@@ -1615,11 +1615,11 @@ methodToBeelineFunction method =
       "trace" -> pure "trace"
       _ -> codeGenError ("Unsupported operation method: " <> show method)
 
-beelineMake :: (HC.FromCode c) => c
+beelineMake :: HC.FromCode c => c
 beelineMake =
   beelineRoutingVar "make"
 
-beelineRouter :: (HC.FromCode c) => c
+beelineRouter :: HC.FromCode c => c
 beelineRouter =
   beelineRoutingType "Router"
 
@@ -1631,23 +1631,23 @@ beelineParam :: (HC.FromCode c, HC.ToCode c) => c
 beelineParam =
   beelineRoutingOperator "/+"
 
-beelineMkParam :: (HC.FromCode c) => c
+beelineMkParam :: HC.FromCode c => c
 beelineMkParam =
   beelineRoutingConstructor "Param"
 
-beelineParamDef :: (HC.FromCode c) => c
+beelineParamDef :: HC.FromCode c => c
 beelineParamDef =
   beelineRoutingType "ParameterDefinition"
 
-beelineCoerceParam :: (HC.FromCode c) => c
+beelineCoerceParam :: HC.FromCode c => c
 beelineCoerceParam =
   beelineRoutingVar "coerceParam"
 
-beelineTextParam :: (HC.FromCode c) => c
+beelineTextParam :: HC.FromCode c => c
 beelineTextParam =
   beelineRoutingVar "textParam"
 
-beelineBooleanParam :: (HC.FromCode c) => c
+beelineBooleanParam :: HC.FromCode c => c
 beelineBooleanParam =
   beelineRoutingVar "booleanParam"
 
@@ -1657,55 +1657,55 @@ beelineEnumParam toTextName =
     <> HC.fromText " "
     <> HC.varNameToCodeDefaultQualification toTextName
 
-beelineIntegerParam :: (HC.FromCode c) => c
+beelineIntegerParam :: HC.FromCode c => c
 beelineIntegerParam =
   beelineRoutingVar "integerParam"
 
-beelineIntParam :: (HC.FromCode c) => c
+beelineIntParam :: HC.FromCode c => c
 beelineIntParam =
   beelineRoutingVar "intParam"
 
-beelineInt8Param :: (HC.FromCode c) => c
+beelineInt8Param :: HC.FromCode c => c
 beelineInt8Param =
   beelineRoutingVar "int8Param"
 
-beelineInt16Param :: (HC.FromCode c) => c
+beelineInt16Param :: HC.FromCode c => c
 beelineInt16Param =
   beelineRoutingVar "int16Param"
 
-beelineInt32Param :: (HC.FromCode c) => c
+beelineInt32Param :: HC.FromCode c => c
 beelineInt32Param =
   beelineRoutingVar "int32Param"
 
-beelineInt64Param :: (HC.FromCode c) => c
+beelineInt64Param :: HC.FromCode c => c
 beelineInt64Param =
   beelineRoutingVar "int32Param"
 
-beelineScientificParam :: (HC.FromCode c) => c
+beelineScientificParam :: HC.FromCode c => c
 beelineScientificParam =
   beelineRoutingVar "scientificParam"
 
-beelineDoubleParam :: (HC.FromCode c) => c
+beelineDoubleParam :: HC.FromCode c => c
 beelineDoubleParam =
   beelineRoutingVar "doubleParam"
 
-beelineFloatParam :: (HC.FromCode c) => c
+beelineFloatParam :: HC.FromCode c => c
 beelineFloatParam =
   beelineRoutingVar "floatParam"
 
-beelineRoutingVar :: (HC.FromCode c) => T.Text -> c
+beelineRoutingVar :: HC.FromCode c => T.Text -> c
 beelineRoutingVar =
   HC.fromCode
     . HC.varNameToCodeDefaultQualification
     . HC.toVarName "Beeline.Routing" (Just "R")
 
-beelineRoutingConstructor :: (HC.FromCode c) => T.Text -> c
+beelineRoutingConstructor :: HC.FromCode c => T.Text -> c
 beelineRoutingConstructor =
   HC.fromCode
     . HC.varNameToCodeDefaultQualification
     . HC.toConstructorVarName "Beeline.Routing" (Just "R")
 
-beelineRoutingType :: (HC.FromCode c) => T.Text -> c
+beelineRoutingType :: HC.FromCode c => T.Text -> c
 beelineRoutingType =
   HC.fromCode
     . HC.typeNameToCodeDefaultQualification
@@ -1717,11 +1717,11 @@ beelineRoutingOperator op =
     [HC.VarReference "Beeline.Routing" Nothing ("(" <> op <> ")")]
     (HC.fromText op)
 
-beelineParameterCollectionSchema :: (HC.FromCode c) => c
+beelineParameterCollectionSchema :: HC.FromCode c => c
 beelineParameterCollectionSchema =
   beelineHTTPType "ParameterCollectionSchema"
 
-beelineMakeParams :: (HC.FromCode c) => c
+beelineMakeParams :: HC.FromCode c => c
 beelineMakeParams =
   beelineHTTPVar "makeParams"
 
@@ -1729,115 +1729,115 @@ beelineQueryParam :: (HC.FromCode c, HC.ToCode c) => c
 beelineQueryParam =
   beelineHTTPOperator "?+"
 
-beelineRequired :: (HC.FromCode c) => c
+beelineRequired :: HC.FromCode c => c
 beelineRequired =
   beelineHTTPVar "required"
 
-beelineOptional :: (HC.FromCode c) => c
+beelineOptional :: HC.FromCode c => c
 beelineOptional =
   beelineHTTPVar "optional"
 
-beelineExplodedArray :: (HC.FromCode c) => c
+beelineExplodedArray :: HC.FromCode c => c
 beelineExplodedArray =
   beelineHTTPVar "explodedArray"
 
-beelineExplodedNonEmpty :: (HC.FromCode c) => c
+beelineExplodedNonEmpty :: HC.FromCode c => c
 beelineExplodedNonEmpty =
   beelineHTTPVar "explodedNonEmpty"
 
-beelineOperation :: (HC.FromCode c) => c
+beelineOperation :: HC.FromCode c => c
 beelineOperation =
   beelineHTTPType "Operation"
 
-beelineDefaultOperation :: (HC.FromCode c) => c
+beelineDefaultOperation :: HC.FromCode c => c
 beelineDefaultOperation =
   beelineHTTPVar "defaultOperation"
 
-beelineRequestRoute :: (HC.FromCode c) => c
+beelineRequestRoute :: HC.FromCode c => c
 beelineRequestRoute =
   beelineHTTPVar "requestRoute"
 
-beelineRequestQuerySchema :: (HC.FromCode c) => c
+beelineRequestQuerySchema :: HC.FromCode c => c
 beelineRequestQuerySchema =
   beelineHTTPVar "requestQuerySchema"
 
-beelineRequestHeaderSchema :: (HC.FromCode c) => c
+beelineRequestHeaderSchema :: HC.FromCode c => c
 beelineRequestHeaderSchema =
   beelineHTTPVar "requestHeaderSchema"
 
-beelineResponseSchemas :: (HC.FromCode c) => c
+beelineResponseSchemas :: HC.FromCode c => c
 beelineResponseSchemas =
   beelineHTTPVar "responseSchemas"
 
-beelineRequestBodySchema :: (HC.FromCode c) => c
+beelineRequestBodySchema :: HC.FromCode c => c
 beelineRequestBodySchema =
   beelineHTTPVar "requestBodySchema"
 
-beelineRequestBody :: (HC.FromCode c) => c
+beelineRequestBody :: HC.FromCode c => c
 beelineRequestBody =
   beelineHTTPVar "requestBody"
 
-beelineResponseBody :: (HC.FromCode c) => c
+beelineResponseBody :: HC.FromCode c => c
 beelineResponseBody =
   beelineHTTPVar "responseBody"
 
-beelineStatus :: (HC.FromCode c) => c
+beelineStatus :: HC.FromCode c => c
 beelineStatus =
   beelineHTTPConstructor "Status"
 
-beelineAnyStatus :: (HC.FromCode c) => c
+beelineAnyStatus :: HC.FromCode c => c
 beelineAnyStatus =
   beelineHTTPConstructor "AnyStatus"
 
-beelineContentTypeDecodingError :: (HC.FromCode c) => c
+beelineContentTypeDecodingError :: HC.FromCode c => c
 beelineContentTypeDecodingError =
   beelineHTTPConstructor "ContentTypeDecodingError"
 
-beelineStatusRange :: (HC.FromCode c) => c
+beelineStatusRange :: HC.FromCode c => c
 beelineStatusRange =
   beelineHTTPType "StatusRange"
 
-beelineResponseBodySchema :: (HC.FromCode c) => c
+beelineResponseBodySchema :: HC.FromCode c => c
 beelineResponseBodySchema =
   beelineHTTPType "ResponseBodySchema"
 
-beelineNoPathParamsType :: (HC.FromCode c) => c
+beelineNoPathParamsType :: HC.FromCode c => c
 beelineNoPathParamsType =
   beelineHTTPType "NoPathParams"
 
-beelineNoQueryParams :: (HC.FromCode c) => c
+beelineNoQueryParams :: HC.FromCode c => c
 beelineNoQueryParams =
   beelineHTTPType "NoQueryParams"
 
-beelineNoHeaderParams :: (HC.FromCode c) => c
+beelineNoHeaderParams :: HC.FromCode c => c
 beelineNoHeaderParams =
   beelineHTTPType "NoHeaderParams"
 
-beelineNoRequestBodyType :: (HC.FromCode c) => c
+beelineNoRequestBodyType :: HC.FromCode c => c
 beelineNoRequestBodyType =
   beelineHTTPType "NoRequestBody"
 
-beelineNoResponseBodyType :: (HC.FromCode c) => c
+beelineNoResponseBodyType :: HC.FromCode c => c
 beelineNoResponseBodyType =
   beelineHTTPType "NoResponseBody"
 
-beelineNoResponseBody :: (HC.FromCode c) => c
+beelineNoResponseBody :: HC.FromCode c => c
 beelineNoResponseBody =
   beelineHTTPVar "noResponseBody"
 
-beelineHTTPVar :: (HC.FromCode c) => T.Text -> c
+beelineHTTPVar :: HC.FromCode c => T.Text -> c
 beelineHTTPVar =
   HC.fromCode
     . HC.varNameToCodeDefaultQualification
     . HC.toVarName "Beeline.HTTP.Client" (Just "H")
 
-beelineHTTPConstructor :: (HC.FromCode c) => T.Text -> c
+beelineHTTPConstructor :: HC.FromCode c => T.Text -> c
 beelineHTTPConstructor =
   HC.fromCode
     . HC.varNameToCodeDefaultQualification
     . HC.toConstructorVarName "Beeline.HTTP.Client" (Just "H")
 
-beelineHTTPType :: (HC.FromCode c) => T.Text -> c
+beelineHTTPType :: HC.FromCode c => T.Text -> c
 beelineHTTPType =
   HC.fromCode
     . HC.typeNameToCodeDefaultQualification

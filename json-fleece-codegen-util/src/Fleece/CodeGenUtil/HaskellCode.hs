@@ -96,7 +96,7 @@ addReferences refs c =
         { codeReferences = Set.fromList refs <> codeReferences code
         }
 
-references :: (ToCode c) => c -> ExternalReferences
+references :: ToCode c => c -> ExternalReferences
 references =
   codeReferences . toCode
 
@@ -146,7 +146,7 @@ data TypeName = TypeName
   , typeNameSuggestedQualifier :: Maybe T.Text
   }
 
-typeNameToCode :: (FromCode c) => Maybe T.Text -> TypeName -> c
+typeNameToCode :: FromCode c => Maybe T.Text -> TypeName -> c
 typeNameToCode mbQualifier typeName =
   let
     nameText =
@@ -164,7 +164,7 @@ typeNameToCode mbQualifier typeName =
       . addReferences [TypeReference moduleName mbQualifier nameText]
       $ code
 
-typeNameToCodeDefaultQualification :: (FromCode c) => TypeName -> c
+typeNameToCodeDefaultQualification :: FromCode c => TypeName -> c
 typeNameToCodeDefaultQualification typeName =
   typeNameToCode (typeNameSuggestedQualifier typeName) typeName
 
@@ -198,7 +198,7 @@ data VarName = VarName
   }
   deriving (Eq, Ord)
 
-varNameToCode :: (FromCode c) => Maybe T.Text -> VarName -> c
+varNameToCode :: FromCode c => Maybe T.Text -> VarName -> c
 varNameToCode mbQualifier varName =
   let
     nameText =
@@ -216,11 +216,11 @@ varNameToCode mbQualifier varName =
       . addReferences [VarReference moduleName mbQualifier nameText]
       $ code
 
-varNameToCodeDefaultQualification :: (FromCode c) => VarName -> c
+varNameToCodeDefaultQualification :: FromCode c => VarName -> c
 varNameToCodeDefaultQualification varName =
   varNameToCode (varNameSuggestedQualifier varName) varName
 
-fromText :: (FromCode c) => T.Text -> c
+fromText :: FromCode c => T.Text -> c
 fromText t =
   fromCode $
     HaskellCode
@@ -228,29 +228,29 @@ fromText t =
       , codeBuilder = LTB.fromText t
       }
 
-renderLazyText :: (ToCode c) => c -> LT.Text
+renderLazyText :: ToCode c => c -> LT.Text
 renderLazyText =
   LTB.toLazyText . codeBuilder . toCode
 
-renderText :: (ToCode c) => c -> T.Text
+renderText :: ToCode c => c -> T.Text
 renderText =
   LT.toStrict . renderLazyText
 
-renderString :: (ToCode c) => c -> String
+renderString :: ToCode c => c -> String
 renderString =
   T.unpack . renderText
 
 newline :: HaskellCode
 newline = "\n"
 
-intercalate :: (Foldable f) => HaskellCode -> f HaskellCode -> HaskellCode
+intercalate :: Foldable f => HaskellCode -> f HaskellCode -> HaskellCode
 intercalate sep =
   mconcat . List.intersperse sep . toList
 
-lines :: (Foldable f) => f HaskellCode -> HaskellCode
+lines :: Foldable f => f HaskellCode -> HaskellCode
 lines = intercalate newline
 
-declarations :: (Foldable f) => f HaskellCode -> HaskellCode
+declarations :: Foldable f => f HaskellCode -> HaskellCode
 declarations = intercalate (newline <> newline)
 
 typeAnnotate :: VarName -> TypeExpression -> HaskellCode
@@ -348,7 +348,7 @@ transformDigitPrefixes original =
       then "Num" <> original
       else original
 
-delimitLines :: (Semigroup c) => c -> c -> [c] -> [c]
+delimitLines :: Semigroup c => c -> c -> [c] -> [c]
 delimitLines beforeFirst separator =
   let
     mkLine (n, line) =

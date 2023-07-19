@@ -191,7 +191,7 @@ newline :: LTB.Builder
 newline =
   "\n"
 
-showInline :: (Show s) => s -> Pretty
+showInline :: Show s => s -> Pretty
 showInline =
   Inline . Plain . LTB.fromString . show
 
