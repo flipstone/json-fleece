@@ -64,6 +64,8 @@ module Fleece.Core
   , float
   , realFloat
   , realFloatNamed
+  , SetDuplicateHandling (AllowInputDuplicates, RejectInputDuplicates)
+  , set
   , string
   , utcTime
   , localTime
