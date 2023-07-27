@@ -552,6 +552,10 @@ components:
         where:
           type: string
 
+    CustomDateFormat:
+      type: string
+      format: date
+
     DateTimeFormats:
       type: object
       properties:

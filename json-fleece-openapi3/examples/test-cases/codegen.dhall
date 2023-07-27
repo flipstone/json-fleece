@@ -9,7 +9,13 @@ in
       , inputFileName = "${rootDir}/test-cases.yaml"
       , destination = rootDir
       , typeOptions =
-          [ { type = "TestCases.Types.DateTimeFormats.DateTimeFormats"
+          [ { type = "TestCases.Types.CustomDateFormat.CustomDateFormat"
+            , options =
+                CodeGen.TypeOptions::
+                  { dateFormat = CodeGen.customDate "%m/%d/%y"
+                  }
+            }
+          , { type = "TestCases.Types.DateTimeFormats.DateTimeFormats"
             , options =
                 CodeGen.TypeOptions::
                   { deriveClasses = CodeGen.derive [ CodeGen.show ]
