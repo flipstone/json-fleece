@@ -74,6 +74,7 @@ library
       TestCases.Operations.TestCases.QueryParams.StringParam
       TestCases.Operations.TestCases.RequestBody
       TestCases.Types.AStringType
+      TestCases.Types.CustomDateFormat
       TestCases.Types.DateTimeFormats
       TestCases.Types.DateTimeFormats.DefaultTimeField
       TestCases.Types.DateTimeFormats.LocalTimeField

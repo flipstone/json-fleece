@@ -1921,6 +1921,7 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/StringParam.hs
     examples/test-cases/TestCases/Operations/TestCases/RequestBody.hs
     examples/test-cases/TestCases/Types/AStringType.hs
+    examples/test-cases/TestCases/Types/CustomDateFormat.hs
     examples/test-cases/TestCases/Types/DateTimeFormats.hs
     examples/test-cases/TestCases/Types/DateTimeFormats/DefaultTimeField.hs
     examples/test-cases/TestCases/Types/DateTimeFormats/LocalTimeField.hs

@@ -2,6 +2,9 @@ let
   DateTimeFormat = < UTCTime | ZonedTime | LocalTime >
 
 let
+  DateFormat = < ISO8601Date | CustomDate : Text >
+
+let
   DerivableClass = < Show | Eq | Ord | Enum | Bounded >
 
 let
@@ -11,10 +14,12 @@ let
   TypeOptions =
     { Type =
         { dateTimeFormat : DateTimeFormat
+        , dateFormat : DateFormat
         , deriveClasses : DeriveClasses
         }
     , default =
         { dateTimeFormat = DateTimeFormat.UTCTime
+        , dateFormat = DateFormat.ISO8601Date
         , deriveClasses = DeriveClasses.Default
         }
     }
@@ -44,6 +49,7 @@ in
   , utcTime = DateTimeFormat.UTCTime
   , zonedTime = DateTimeFormat.ZonedTime
   , localTime = DateTimeFormat.LocalTime
+  , customDate = DateFormat.CustomDate
   , show = DerivableClass.Show
   , eq = DerivableClass.Eq
   , ord = DerivableClass.Ord

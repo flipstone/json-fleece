@@ -32,6 +32,7 @@ module Fleece.Core.Schemas
   , localTime
   , zonedTime
   , day
+  , dayWithFormat
   , boundedIntegralNumber
   , boundedIntegralNumberNamed
   , unboundedIntegralNumber
@@ -435,6 +436,20 @@ localTime =
 zonedTime :: Fleece schema => schema Time.ZonedTime
 zonedTime =
   iso8601Formatted "ZonedTime" ISO8601.iso8601Format AttoTime.zonedTime
+
+dayWithFormat :: Fleece schema => String -> schema Time.Day
+dayWithFormat formatString =
+  let
+    decode raw =
+      case Time.parseTimeM False Time.defaultTimeLocale formatString raw of
+        Just success -> Right success
+        Nothing -> Left "Invalid date in custom format"
+  in
+    validateNamed
+      (unqualifiedName $ "Day in " <> formatString <> " format")
+      (Time.formatTime Time.defaultTimeLocale formatString)
+      decode
+      string
 
 day :: Fleece schema => schema Time.Day
 day =

@@ -4,6 +4,7 @@
 module Fleece.CodeGenUtil
   ( generateFleeceCode
   , CodeGenOptions (..)
+  , DateFormat (..)
   , DateTimeFormat (..)
   , TypeOptions (..)
   , DerivableClass (..)
@@ -50,6 +51,7 @@ module Fleece.CodeGenUtil
   , floatFormat
   , doubleFormat
   , dayFormat
+  , dayCustomFormat
   , utcTimeFormat
   , zonedTimeFormat
   , localTimeFormat
@@ -93,6 +95,7 @@ data CodeGenOptions = CodeGenOptions
 
 data TypeOptions = TypeOptions
   { dateTimeFormat :: DateTimeFormat
+  , dateFormat :: DateFormat
   , deriveClasses :: Maybe [DerivableClass]
   }
 
@@ -129,6 +132,10 @@ lookupTypeOptions typeName = do
   case Map.lookup key optionsMap of
     Nothing -> asks defaultTypeOptions
     Just typeOptions -> pure typeOptions
+
+data DateFormat
+  = ISO8601DateFormat
+  | CustomDateFormat T.Text
 
 data DateTimeFormat
   = UTCTimeFormat
@@ -305,6 +312,15 @@ dayFormat typeOptions =
     primitiveSchemaTypeInfo
       (HC.toTypeName "Data.Time" (Just "Time") "Day")
       (fleeceCoreVar "day")
+
+dayCustomFormat :: T.Text -> TypeOptions -> CodeGenDataFormat
+dayCustomFormat formatString typeOptions =
+  CodeGenNewType typeOptions
+    $ primitiveSchemaTypeInfo
+      (HC.toTypeName "Data.Time" (Just "Time") "Day")
+    $ HC.fromCode "("
+      <> fleeceCoreFunApp "dayWithFormat" formatString
+      <> HC.fromCode ")"
 
 utcTimeFormat :: TypeOptions -> CodeGenDataFormat
 utcTimeFormat typeOptions =
@@ -1590,6 +1606,15 @@ fleeceCoreVar =
   HC.fromCode
     . HC.varNameToCodeDefaultQualification
     . HC.toVarName "Fleece.Core" (Just "FC")
+
+fleeceCoreFunApp :: HC.FromCode c => T.Text -> T.Text -> c
+fleeceCoreFunApp functionName argument =
+  let
+    functionVar =
+      HC.varNameToCodeDefaultQualification $
+        HC.toVarName "Fleece.Core" (Just "FC") functionName
+  in
+    HC.fromCode $ functionVar <> HC.fromText " " <> HC.stringLiteral argument
 
 fleeceJSON :: HC.FromCode c => c
 fleeceJSON =
