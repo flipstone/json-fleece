@@ -43,6 +43,8 @@ module Fleece.Core.Schemas
   , union
   , unionMember
   , bareOrJSONString
+  , set
+  , SetDuplicateHandling (AllowInputDuplicates, RejectInputDuplicates)
   , NothingEncoding (EmitNull, OmitKey)
   ) where
 
@@ -54,6 +56,7 @@ import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map as Map
 import qualified Data.NonEmptyText as NET
 import Data.Scientific (floatingOrInteger, fromFloatDigits, toBoundedInteger, toRealFloat)
+import qualified Data.Set as Set
 import qualified Data.Text as T
 import qualified Data.Time as Time
 import qualified Data.Time.Format.ISO8601 as ISO8601
@@ -266,6 +269,35 @@ nonEmpty itemSchema =
       NEL.toList
       validateNonEmpty
       (list itemSchema)
+
+data SetDuplicateHandling
+  = AllowInputDuplicates
+  | RejectInputDuplicates
+
+set :: (Ord a, Fleece schema) => SetDuplicateHandling -> schema a -> schema (Set.Set a)
+set handling itemSchema =
+  case handling of
+    AllowInputDuplicates ->
+      transformNamed
+        (unqualifiedName $ "Set [" <> nameUnqualified (schemaName itemSchema) <> "]")
+        (V.fromList . Set.toList)
+        (Set.fromList . V.toList)
+        (array itemSchema)
+    RejectInputDuplicates ->
+      let
+        validateNoDuplicates items =
+          case Set.fromList $ V.toList items of
+            itemSet
+              | Set.size itemSet == length items ->
+                  Right itemSet
+            _ ->
+              Left "Unexpected duplicates found in input"
+      in
+        validateNamed
+          (unqualifiedName $ "Set [" <> nameUnqualified (schemaName itemSchema) <> "]")
+          (V.fromList . Set.toList)
+          validateNoDuplicates
+          (array itemSchema)
 
 nonEmptyText :: Fleece schema => schema NET.NonEmptyText
 nonEmptyText =
