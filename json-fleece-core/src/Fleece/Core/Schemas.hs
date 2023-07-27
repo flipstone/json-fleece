@@ -443,7 +443,9 @@ dayWithFormat formatString =
     decode raw =
       case Time.parseTimeM False Time.defaultTimeLocale formatString raw of
         Just success -> Right success
-        Nothing -> Left "Invalid date in custom format"
+        Nothing ->
+          Left $
+            "Invalid date in custom format, format is: " <> formatString
   in
     validateNamed
       (unqualifiedName $ "Day in " <> formatString <> " format")
