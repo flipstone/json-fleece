@@ -16,4 +16,4 @@ newtype JustAdditionalPropertiesSchemaRef = JustAdditionalPropertiesSchemaRef (M
 
 justAdditionalPropertiesSchemaRefSchema :: FC.Fleece schema => schema JustAdditionalPropertiesSchemaRef
 justAdditionalPropertiesSchemaRefSchema =
-  FC.coerceSchema (FC.map AStringType.aStringTypeSchema)
+  FC.coerceSchema (FC.jsonMap AStringType.aStringTypeSchema)

@@ -16,4 +16,4 @@ newtype JustAdditionalPropertiesSchemaInline = JustAdditionalPropertiesSchemaInl
 
 justAdditionalPropertiesSchemaInlineSchema :: FC.Fleece schema => schema JustAdditionalPropertiesSchemaInline
 justAdditionalPropertiesSchemaInlineSchema =
-  FC.coerceSchema (FC.map JustAdditionalPropertiesSchemaInlineItem.justAdditionalPropertiesSchemaInlineItemSchema)
+  FC.coerceSchema (FC.jsonMap JustAdditionalPropertiesSchemaInlineItem.justAdditionalPropertiesSchemaInlineItemSchema)

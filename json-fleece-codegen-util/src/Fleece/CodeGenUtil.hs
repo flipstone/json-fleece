@@ -34,7 +34,7 @@ module Fleece.CodeGenUtil
   , inferSchemaInfoForTypeName
   , inferTypeForInputName
   , arrayTypeInfo
-  , mapTypeInfo
+  , jsonMapTypeInfo
   , nullableTypeInfo
   , anyJSONSchemaTypeInfo
   , textFormat
@@ -423,8 +423,8 @@ arrayTypeInfo itemInfo =
           <> ")"
     }
 
-mapTypeInfo :: SchemaTypeInfo -> SchemaTypeInfo
-mapTypeInfo itemInfo =
+jsonMapTypeInfo :: SchemaTypeInfo -> SchemaTypeInfo
+jsonMapTypeInfo itemInfo =
   itemInfo
     { schemaTypeExpr =
         HC.mapOf
@@ -432,7 +432,7 @@ mapTypeInfo itemInfo =
           (schemaTypeExpr itemInfo)
     , schemaTypeSchema =
         "("
-          <> fleeceCoreVar "map"
+          <> fleeceCoreVar "jsonMap"
           <> " "
           <> schemaTypeSchema itemInfo
           <> ")"
@@ -1278,7 +1278,7 @@ generateFleeceObject typeMap typeName codeGenFields mbAdditionalProperties typeO
         Just (CodeGenAdditionalProperties additionalPropsTypeInfo) ->
           [
             ( additionalPropsFieldName
-            , schemaTypeExpr (mapTypeInfo additionalPropsTypeInfo)
+            , schemaTypeExpr (jsonMapTypeInfo additionalPropsTypeInfo)
             , Nothing
             )
           ]

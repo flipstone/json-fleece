@@ -15,4 +15,4 @@ newtype JustAdditionalPropertiesTrue = JustAdditionalPropertiesTrue (Map.Map T.T
 
 justAdditionalPropertiesTrueSchema :: FC.Fleece schema => schema JustAdditionalPropertiesTrue
 justAdditionalPropertiesTrueSchema =
-  FC.coerceSchema (FC.map FC.anyJSON)
+  FC.coerceSchema (FC.jsonMap FC.anyJSON)

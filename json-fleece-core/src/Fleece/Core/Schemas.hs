@@ -9,7 +9,10 @@ module Fleece.Core.Schemas
   , boundedEnum
   , validate
   , list
-  , Fleece.Core.Schemas.map
+  , jsonMap
+  , mapFrom
+  , strictMapFrom
+  , intMapFrom
   , nonEmpty
   , nonEmptyText
   , integer
@@ -53,8 +56,10 @@ import qualified Data.Attoparsec.Text as AttoText
 import qualified Data.Attoparsec.Time as AttoTime
 import Data.Coerce (Coercible, coerce)
 import qualified Data.Int as I
+import qualified Data.IntMap as IntMap
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map as Map
+import qualified Data.Map.Strict as StrictMap
 import qualified Data.NonEmptyText as NET
 import Data.Scientific (floatingOrInteger, fromFloatDigits, toBoundedInteger, toRealFloat)
 import qualified Data.Set as Set
@@ -251,11 +256,35 @@ list itemSchema =
     V.toList
     (array itemSchema)
 
-map :: (Fleece schema, Typeable a) => schema a -> schema (Map.Map T.Text a)
-map innerSchema =
+jsonMap :: (Fleece schema, Typeable a) => schema a -> schema (Map.Map T.Text a)
+jsonMap innerSchema =
   object $
     constructor id
       #* additionalFields id innerSchema
+
+mapFrom ::
+  (Fleece schema, Ord a, Typeable a, Typeable b) =>
+  (b -> b -> b) ->
+  schema (a, b) ->
+  schema (Map.Map a b)
+mapFrom combiner assocSchema =
+  transform Map.toList (Map.fromListWith combiner) (list assocSchema)
+
+strictMapFrom ::
+  (Fleece schema, Ord a, Typeable a, Typeable b) =>
+  (b -> b -> b) ->
+  schema (a, b) ->
+  schema (StrictMap.Map a b)
+strictMapFrom combiner assocSchema =
+  transform StrictMap.toList (StrictMap.fromListWith combiner) (list assocSchema)
+
+intMapFrom ::
+  (Fleece schema, Typeable a) =>
+  (a -> a -> a) ->
+  schema (Int, a) ->
+  schema (IntMap.IntMap a)
+intMapFrom combiner assocSchema =
+  transform IntMap.toList (IntMap.fromListWith combiner) (list assocSchema)
 
 nonEmpty :: Fleece schema => schema a -> schema (NEL.NonEmpty a)
 nonEmpty itemSchema =

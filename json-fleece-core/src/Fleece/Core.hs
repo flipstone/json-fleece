@@ -46,7 +46,10 @@ module Fleece.Core
   , boundedEnum
   , boundedEnumNamed
   , list
-  , Fleece.Core.Schemas.map
+  , jsonMap
+  , mapFrom
+  , strictMapFrom
+  , intMapFrom
   , nonEmpty
   , nonEmptyText
   , integer

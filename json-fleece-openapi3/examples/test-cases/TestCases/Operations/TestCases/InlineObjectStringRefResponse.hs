@@ -45,5 +45,5 @@ data Responses
 
 responseSchemas :: [(H.StatusRange, H.ResponseBodySchema H.ContentTypeDecodingError Responses)]
 responseSchemas =
-  [ (H.Status 200, fmap Response200 (H.responseBody FA.JSON (FC.map AStringType.aStringTypeSchema)))
+  [ (H.Status 200, fmap Response200 (H.responseBody FA.JSON (FC.jsonMap AStringType.aStringTypeSchema)))
   ]

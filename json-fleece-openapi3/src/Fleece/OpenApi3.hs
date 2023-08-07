@@ -1110,7 +1110,7 @@ mkAdditionalPropertiesMapSchema ::
   Maybe OA.AdditionalProperties ->
   CGU.CodeGen SchemaTypeInfoWithDeps
 mkAdditionalPropertiesMapSchema raiseError schemaKey mkInlineItemSchema mbAdditionalProperties =
-  fmap (fmapSchemaInfoAndDeps CGU.mapTypeInfo) $
+  fmap (fmapSchemaInfoAndDeps CGU.jsonMapTypeInfo) $
     mkAdditionalPropertiesSchema
       raiseError
       schemaKey
