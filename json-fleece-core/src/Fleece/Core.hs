@@ -76,6 +76,8 @@ module Fleece.Core
   , boundedIntegralNumberNamed
   , unboundedIntegralNumber
   , unboundedIntegralNumberNamed
+  , eitherOf
+  , eitherOfNamed
 
     -- * Functions for building schemas for anonymous unions
   , union
