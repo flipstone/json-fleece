@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 
@@ -41,6 +42,8 @@ module Fleece.Core.Schemas
   , transformNamed
   , coerceSchema
   , coerceSchemaNamed
+  , eitherOf
+  , eitherOfNamed
   , union
   , unionMember
   , bareOrJSONString
@@ -65,7 +68,7 @@ import Data.Typeable (Typeable)
 import qualified Data.Vector as V
 import qualified Data.Word as W
 import GHC.TypeLits (KnownNat)
-import Shrubbery (Union, branch, branchBuild, branchEnd, dissectUnion, firstIndexOfType, index0, index1, unifyWithIndex)
+import Shrubbery (Union, branch, branchBuild, branchEnd, dissectUnion, firstIndexOfType, index0, index1, unify, unifyWithIndex)
 import Shrubbery.TypeList (FirstIndexOf, Length)
 
 import Fleece.Core.Class
@@ -90,6 +93,7 @@ import Fleece.Core.Class
   , unionNamed
   , validateNamed
   , (#*)
+  , (#|)
   )
 import Fleece.Core.Name
   ( Name
@@ -99,6 +103,63 @@ import Fleece.Core.Name
   , nameUnqualified
   , unqualifiedName
   )
+
+eitherOf ::
+  forall schema a b.
+  ( Fleece schema
+  , FirstIndexOf b '[a, b] ~ 1
+  ) =>
+  schema a ->
+  schema b ->
+  schema (Either a b)
+eitherOf leftSchema rightSchema =
+  let
+    name =
+      unqualifiedName
+        ( "Either "
+            <> nameToString (schemaName leftSchema)
+            <> " "
+            <> nameToString (schemaName rightSchema)
+        )
+  in
+    eitherOfNamed name leftSchema rightSchema
+
+eitherOfNamed ::
+  forall schema a b.
+  ( Fleece schema
+  , FirstIndexOf b '[a, b] ~ 1
+  ) =>
+  Name ->
+  schema a ->
+  schema b ->
+  schema (Either a b)
+eitherOfNamed name leftSchema rightSchema =
+  let
+    toUnion :: Either a b -> Union '[a, b]
+    toUnion eitherAOrB =
+      case eitherAOrB of
+        Left a -> unify a
+        Right b -> unify b
+
+    fromUnion :: Union '[a, b] -> Either a b
+    fromUnion =
+      dissectUnion
+        . branchBuild
+        . branch Left
+        . branch Right
+        $ branchEnd
+
+    unionSchema :: schema (Union '[a, b])
+    unionSchema =
+      unionNamed name $
+        unionMember leftSchema
+          #| unionMember rightSchema
+  in
+    transformNamed
+      name
+      toUnion
+      fromUnion
+      unionSchema
 
 union ::
   (Typeable types, Fleece schema, KnownNat (Length types)) =>
