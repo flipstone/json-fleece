@@ -22,6 +22,7 @@ packages:
 - json-fleece-openapi3
 - json-fleece-swagger2
 - json-fleece-pretty-print
+- json-fleece-hermes
 # Dependency packages to be pulled from upstream that are not in the resolver.
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
@@ -56,6 +57,9 @@ flags:
   json-fleece-pretty-print:
     strict: true
 
+  json-fleece-hermes:
+    strict: true
+
 extra-deps:
   - git: https://github.com/flipstone/beeline
     commit: d6336c2bb3a72f3475bbe8a7bcfe65bfd861ed5d
@@ -65,6 +69,9 @@ extra-deps:
   - git: https://github.com/flipstone/shrubbery
     commit: 8cd0c45237be047a975d754859fc4b7fb24f49d4
   - non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
+  - hermes-json-0.6.1.0@sha256:ab54609e63a83a8e07900360de60ba1e197ea499fa5d3eb782eed980ee07545b,3856
+  - integer-conversion-0.1@sha256:9f77cc7711d3100a4483f2dd1a22f4be5b59d235a556d910d0e6c5e90a967551,2208
+  - text-iso8601-0.1@sha256:fc10d8de72fc094d0d299644f17421b9430d1c1092a1355c7f0c02d8b6edf6a7,2371
 
 
 # Extra package databases containing global packages

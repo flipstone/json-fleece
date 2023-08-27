@@ -1,0 +1,101 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.35.2.
+--
+-- see: https://github.com/sol/hpack
+
+name:           json-fleece-hermes
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-hermes#readme>
+homepage:       https://github.com/flipstone/json-fleece#readme
+bug-reports:    https://github.com/flipstone/json-fleece/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2023 Author name here
+license:        BSD3
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/flipstone/json-fleece
+  subdir: json-fleece-hermes
+
+flag strict
+  description: More strict ghc options used for development and ci, not intended for end-use.
+  manual: True
+  default: False
+
+library
+  exposed-modules:
+      Fleece.Hermes
+  other-modules:
+      Paths_json_fleece_hermes
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , bytestring ==0.11.*
+    , containers ==0.6.*
+    , hermes-json ==0.6.*
+    , json-fleece-core ==0.5.*
+    , shrubbery >=0.1.2 && <0.2
+    , text >=2.0
+  default-language: Haskell2010
+  if flag(strict)
+    ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations
+  else
+    ghc-options: -Wall
+
+test-suite json-fleece-hermes-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_json_fleece_hermes
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson >=2.0 && <2.2
+    , base >=4.7 && <5
+    , bytestring ==0.11.*
+    , containers ==0.6.*
+    , hedgehog
+    , json-fleece-core ==0.5.*
+    , json-fleece-examples
+    , json-fleece-hermes
+    , scientific >=0.3.7 && <0.4
+    , text >=2.0
+    , time >=1.11 && <1.13
+    , vector >=0.12 && <0.14
+  default-language: Haskell2010
+  if flag(strict)
+    ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations
+  else
+    ghc-options: -Wall
+
+benchmark json-fleece-hermes-bench
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Paths_json_fleece_hermes
+  hs-source-dirs:
+      bench
+  default-extensions:
+      OverloadedStrings
+  ghc-options: -Wall -rtsopts -with-rtsopts=-T +RTS -A32m -RTS
+  build-depends:
+      aeson >=2.0
+    , base
+    , bytestring
+    , deepseq
+    , hermes-json
+    , json-fleece-aeson
+    , json-fleece-core ==0.5.*
+    , json-fleece-hermes
+    , tasty-bench
+    , text
+  default-language: Haskell2010
+  if flag(strict)
+    ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations
+  else
+    ghc-options: -Wall
