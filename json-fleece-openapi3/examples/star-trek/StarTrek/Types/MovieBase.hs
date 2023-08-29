@@ -28,24 +28,24 @@ import qualified StarTrek.Types.MovieBase.YearTo as YearTo
 import qualified StarTrek.Types.StaffHeader as StaffHeader
 
 data MovieBase = MovieBase
-  { titleBulgarian :: Maybe TitleBulgarian.TitleBulgarian -- ^ Movie title in Bulgarian
-  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of movie story
-  , titleSerbian :: Maybe TitleSerbian.TitleSerbian -- ^ Movie title in Serbian
-  , titleRussian :: Maybe TitleRussian.TitleRussian -- ^ Movie title in Russian
-  , stardateTo :: Maybe StardateTo.StardateTo -- ^ Ending stardate of movie story
-  , titleGerman :: Maybe TitleGerman.TitleGerman -- ^ Movie title in German
-  , titleItalian :: Maybe TitleItalian.TitleItalian -- ^ Movie title in Italian
-  , uid :: Uid.Uid -- ^ Movie unique ID
-  , mainDirector :: Maybe StaffHeader.StaffHeader -- ^ Header staff, embedded in other objects
-  , titleCatalan :: Maybe TitleCatalan.TitleCatalan -- ^ Movie title in Catalan
-  , usReleaseDate :: Maybe UsReleaseDate.UsReleaseDate -- ^ Date the movie was first released in the United States
-  , titleChineseTraditional :: Maybe TitleChineseTraditional.TitleChineseTraditional -- ^ Movie title in Chinese traditional
-  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of movie story
-  , titleJapanese :: Maybe TitleJapanese.TitleJapanese -- ^ Movie title in Japanese
-  , titlePolish :: Maybe TitlePolish.TitlePolish -- ^ Movie title in Polish
-  , title :: Title.Title -- ^ Movie title
-  , titleSpanish :: Maybe TitleSpanish.TitleSpanish -- ^ Movie title in Spanish
+  { title :: Title.Title -- ^ Movie title
   , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of movie story
+  , titleGerman :: Maybe TitleGerman.TitleGerman -- ^ Movie title in German
+  , titlePolish :: Maybe TitlePolish.TitlePolish -- ^ Movie title in Polish
+  , titleChineseTraditional :: Maybe TitleChineseTraditional.TitleChineseTraditional -- ^ Movie title in Chinese traditional
+  , titleBulgarian :: Maybe TitleBulgarian.TitleBulgarian -- ^ Movie title in Bulgarian
+  , titleItalian :: Maybe TitleItalian.TitleItalian -- ^ Movie title in Italian
+  , titleSerbian :: Maybe TitleSerbian.TitleSerbian -- ^ Movie title in Serbian
+  , uid :: Uid.Uid -- ^ Movie unique ID
+  , titleCatalan :: Maybe TitleCatalan.TitleCatalan -- ^ Movie title in Catalan
+  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of movie story
+  , titleRussian :: Maybe TitleRussian.TitleRussian -- ^ Movie title in Russian
+  , titleJapanese :: Maybe TitleJapanese.TitleJapanese -- ^ Movie title in Japanese
+  , titleSpanish :: Maybe TitleSpanish.TitleSpanish -- ^ Movie title in Spanish
+  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of movie story
+  , stardateTo :: Maybe StardateTo.StardateTo -- ^ Ending stardate of movie story
+  , mainDirector :: Maybe StaffHeader.StaffHeader -- ^ Header staff, embedded in other objects
+  , usReleaseDate :: Maybe UsReleaseDate.UsReleaseDate -- ^ Date the movie was first released in the United States
   }
   deriving (Eq, Show)
 
@@ -53,21 +53,21 @@ movieBaseSchema :: FC.Fleece schema => schema MovieBase
 movieBaseSchema =
   FC.object $
     FC.constructor MovieBase
-      #+ FC.optional "titleBulgarian" titleBulgarian TitleBulgarian.titleBulgarianSchema
-      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
-      #+ FC.optional "titleSerbian" titleSerbian TitleSerbian.titleSerbianSchema
-      #+ FC.optional "titleRussian" titleRussian TitleRussian.titleRussianSchema
-      #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
-      #+ FC.optional "titleGerman" titleGerman TitleGerman.titleGermanSchema
-      #+ FC.optional "titleItalian" titleItalian TitleItalian.titleItalianSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "mainDirector" mainDirector StaffHeader.staffHeaderSchema
-      #+ FC.optional "titleCatalan" titleCatalan TitleCatalan.titleCatalanSchema
-      #+ FC.optional "usReleaseDate" usReleaseDate UsReleaseDate.usReleaseDateSchema
-      #+ FC.optional "titleChineseTraditional" titleChineseTraditional TitleChineseTraditional.titleChineseTraditionalSchema
-      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
-      #+ FC.optional "titleJapanese" titleJapanese TitleJapanese.titleJapaneseSchema
-      #+ FC.optional "titlePolish" titlePolish TitlePolish.titlePolishSchema
       #+ FC.required "title" title Title.titleSchema
-      #+ FC.optional "titleSpanish" titleSpanish TitleSpanish.titleSpanishSchema
       #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
+      #+ FC.optional "titleGerman" titleGerman TitleGerman.titleGermanSchema
+      #+ FC.optional "titlePolish" titlePolish TitlePolish.titlePolishSchema
+      #+ FC.optional "titleChineseTraditional" titleChineseTraditional TitleChineseTraditional.titleChineseTraditionalSchema
+      #+ FC.optional "titleBulgarian" titleBulgarian TitleBulgarian.titleBulgarianSchema
+      #+ FC.optional "titleItalian" titleItalian TitleItalian.titleItalianSchema
+      #+ FC.optional "titleSerbian" titleSerbian TitleSerbian.titleSerbianSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "titleCatalan" titleCatalan TitleCatalan.titleCatalanSchema
+      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
+      #+ FC.optional "titleRussian" titleRussian TitleRussian.titleRussianSchema
+      #+ FC.optional "titleJapanese" titleJapanese TitleJapanese.titleJapaneseSchema
+      #+ FC.optional "titleSpanish" titleSpanish TitleSpanish.titleSpanishSchema
+      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
+      #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
+      #+ FC.optional "mainDirector" mainDirector StaffHeader.staffHeaderSchema
+      #+ FC.optional "usReleaseDate" usReleaseDate UsReleaseDate.usReleaseDateSchema

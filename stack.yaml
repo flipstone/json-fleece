@@ -1,5 +1,5 @@
 resolver:
-  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/3.yaml
+  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/9.yaml
 system-ghc: true
 install-ghc: false
 
@@ -58,12 +58,12 @@ flags:
 
 extra-deps:
   - git: https://github.com/flipstone/beeline
-    commit: d6336c2bb3a72f3475bbe8a7bcfe65bfd861ed5d
+    commit: cbc8f138708d0404c18598a70d24cccde3545234
     subdirs:
       - beeline-routing
       - beeline-http-client
   - git: https://github.com/flipstone/shrubbery
-    commit: 8cd0c45237be047a975d754859fc4b7fb24f49d4
+    commit: 253a5a954b9117df6b06e32e955f293813db2489
   - non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
 
 

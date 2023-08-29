@@ -5,41 +5,41 @@
 
 packages:
 - completed:
-    commit: d6336c2bb3a72f3475bbe8a7bcfe65bfd861ed5d
+    commit: cbc8f138708d0404c18598a70d24cccde3545234
     git: https://github.com/flipstone/beeline
     name: beeline-routing
     pantry-tree:
-      sha256: caa0acde7f52d38bbb7330acd7f0a3f468c4feb161d2e6c783275331a6905777
+      sha256: f92a4e102a6ee4da494579778234dd86f228a9bb9fc945919f42764d11372516
       size: 1174
     subdir: beeline-routing
     version: 0.2.4.0
   original:
-    commit: d6336c2bb3a72f3475bbe8a7bcfe65bfd861ed5d
+    commit: cbc8f138708d0404c18598a70d24cccde3545234
     git: https://github.com/flipstone/beeline
     subdir: beeline-routing
 - completed:
-    commit: d6336c2bb3a72f3475bbe8a7bcfe65bfd861ed5d
+    commit: cbc8f138708d0404c18598a70d24cccde3545234
     git: https://github.com/flipstone/beeline
     name: beeline-http-client
     pantry-tree:
-      sha256: 588a0e1e9f147aab6ab7b52fccce07c2951c07d6d5339ffb3a03f50006f31204
+      sha256: 003653d3a0cfe9ead5e3e98ef277d32e9ac2000b4079069820b1d6cb597b9790
       size: 718
     subdir: beeline-http-client
     version: 0.8.0.0
   original:
-    commit: d6336c2bb3a72f3475bbe8a7bcfe65bfd861ed5d
+    commit: cbc8f138708d0404c18598a70d24cccde3545234
     git: https://github.com/flipstone/beeline
     subdir: beeline-http-client
 - completed:
-    commit: 8cd0c45237be047a975d754859fc4b7fb24f49d4
+    commit: 253a5a954b9117df6b06e32e955f293813db2489
     git: https://github.com/flipstone/shrubbery
     name: shrubbery
     pantry-tree:
-      sha256: 48ab4b5d472409264e01166f5e993a98c874393b2caa145921faa7e47248acea
-      size: 1552
+      sha256: dc804a41ddb2243d457b627953134352a45454cd43e4ed892ced0cf0a1ef7502
+      size: 1605
     version: 0.1.2.0
   original:
-    commit: 8cd0c45237be047a975d754859fc4b7fb24f49d4
+    commit: 253a5a954b9117df6b06e32e955f293813db2489
     git: https://github.com/flipstone/shrubbery
 - completed:
     hackage: non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
@@ -50,8 +50,8 @@ packages:
     hackage: non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
 snapshots:
 - completed:
-    sha256: 97710f56bf093fca0ee5d8dbe19d96b654c752e405b66795b4baedd84a794c60
-    size: 640010
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/3.yaml
+    sha256: 2fc12a405ab6f7eac73eb11a0ca5ccca0e956bd2848db780c140b7406ff9ebb5
+    size: 640035
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/9.yaml
   original:
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/3.yaml
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/9.yaml

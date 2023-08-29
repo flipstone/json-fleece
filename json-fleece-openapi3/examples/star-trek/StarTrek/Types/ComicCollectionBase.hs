@@ -25,19 +25,19 @@ import qualified StarTrek.Types.ComicCollectionBase.YearTo as YearTo
 
 data ComicCollectionBase = ComicCollectionBase
   { coverMonth :: Maybe CoverMonth.CoverMonth -- ^ Cover publication month
+  , title :: Title.Title -- ^ Comic collection title
+  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of comic collection stories
+  , publishedDay :: Maybe PublishedDay.PublishedDay -- ^ Day the comic collection was published
   , coverYear :: Maybe CoverYear.CoverYear -- ^ Cover publication year
+  , uid :: Uid.Uid -- ^ Comic collection unique ID
+  , numberOfPages :: Maybe NumberOfPages.NumberOfPages -- ^ Number of pages
+  , coverDay :: Maybe CoverDay.CoverDay -- ^ Cover publication day
+  , publishedYear :: Maybe PublishedYear.PublishedYear -- ^ Year the comic collection was published
+  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of comic collection stories
+  , photonovel :: Maybe Photonovel.Photonovel -- ^ Whether it's a photonovel collection
   , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of comic collection stories
   , stardateTo :: Maybe StardateTo.StardateTo -- ^ Ending stardate of comic collection stories
-  , uid :: Uid.Uid -- ^ Comic collection unique ID
   , publishedMonth :: Maybe PublishedMonth.PublishedMonth -- ^ Month the comic collection was published
-  , publishedDay :: Maybe PublishedDay.PublishedDay -- ^ Day the comic collection was published
-  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of comic collection stories
-  , title :: Title.Title -- ^ Comic collection title
-  , photonovel :: Maybe Photonovel.Photonovel -- ^ Whether it's a photonovel collection
-  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of comic collection stories
-  , coverDay :: Maybe CoverDay.CoverDay -- ^ Cover publication day
-  , numberOfPages :: Maybe NumberOfPages.NumberOfPages -- ^ Number of pages
-  , publishedYear :: Maybe PublishedYear.PublishedYear -- ^ Year the comic collection was published
   }
   deriving (Eq, Show)
 
@@ -46,16 +46,16 @@ comicCollectionBaseSchema =
   FC.object $
     FC.constructor ComicCollectionBase
       #+ FC.optional "coverMonth" coverMonth CoverMonth.coverMonthSchema
+      #+ FC.required "title" title Title.titleSchema
+      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
+      #+ FC.optional "publishedDay" publishedDay PublishedDay.publishedDaySchema
       #+ FC.optional "coverYear" coverYear CoverYear.coverYearSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "numberOfPages" numberOfPages NumberOfPages.numberOfPagesSchema
+      #+ FC.optional "coverDay" coverDay CoverDay.coverDaySchema
+      #+ FC.optional "publishedYear" publishedYear PublishedYear.publishedYearSchema
+      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
+      #+ FC.optional "photonovel" photonovel Photonovel.photonovelSchema
       #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
       #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
-      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.optional "publishedMonth" publishedMonth PublishedMonth.publishedMonthSchema
-      #+ FC.optional "publishedDay" publishedDay PublishedDay.publishedDaySchema
-      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
-      #+ FC.required "title" title Title.titleSchema
-      #+ FC.optional "photonovel" photonovel Photonovel.photonovelSchema
-      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
-      #+ FC.optional "coverDay" coverDay CoverDay.coverDaySchema
-      #+ FC.optional "numberOfPages" numberOfPages NumberOfPages.numberOfPagesSchema
-      #+ FC.optional "publishedYear" publishedYear PublishedYear.publishedYearSchema

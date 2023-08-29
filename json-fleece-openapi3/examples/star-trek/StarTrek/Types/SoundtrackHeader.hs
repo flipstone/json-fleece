@@ -12,8 +12,8 @@ import qualified StarTrek.Types.SoundtrackHeader.Title as Title
 import qualified StarTrek.Types.SoundtrackHeader.Uid as Uid
 
 data SoundtrackHeader = SoundtrackHeader
-  { uid :: Uid.Uid -- ^ Soundtrack unique ID
-  , title :: Title.Title -- ^ Soundtrack title
+  { title :: Title.Title -- ^ Soundtrack title
+  , uid :: Uid.Uid -- ^ Soundtrack unique ID
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ soundtrackHeaderSchema :: FC.Fleece schema => schema SoundtrackHeader
 soundtrackHeaderSchema =
   FC.object $
     FC.constructor SoundtrackHeader
-      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.required "title" title Title.titleSchema
+      #+ FC.required "uid" uid Uid.uidSchema

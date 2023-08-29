@@ -14,8 +14,8 @@ import qualified StarTrek.Types.TechnologyBase as TechnologyBase
 
 data TechnologyBaseResponse = TechnologyBaseResponse
   { page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
-  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
   , technology :: Maybe [TechnologyBase.TechnologyBase] -- ^ Base technology, returned in search results
+  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
   }
   deriving (Eq, Show)
 
@@ -24,5 +24,5 @@ technologyBaseResponseSchema =
   FC.object $
     FC.constructor TechnologyBaseResponse
       #+ FC.optional "page" page ResponsePage.responsePageSchema
-      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
       #+ FC.optional "technology" technology (FC.list TechnologyBase.technologyBaseSchema)
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema

@@ -22,18 +22,18 @@ import qualified StarTrek.Types.FoodBase.Tea as Tea
 import qualified StarTrek.Types.FoodBase.Uid as Uid
 
 data FoodBase = FoodBase
-  { herbOrSpice :: Maybe HerbOrSpice.HerbOrSpice -- ^ Whether it's a herb or a spice
+  { beverage :: Maybe Beverage.Beverage -- ^ Whether it's a beverage
   , juice :: Maybe Juice.Juice -- ^ Whether it's a juice
-  , uid :: Uid.Uid -- ^ Food unique ID
-  , alcoholicBeverage :: Maybe AlcoholicBeverage.AlcoholicBeverage -- ^ Whether it's an alcoholic beverage
-  , beverage :: Maybe Beverage.Beverage -- ^ Whether it's a beverage
+  , tea :: Maybe Tea.Tea -- ^ Whether it's a tea
+  , earthlyOrigin :: Maybe EarthlyOrigin.EarthlyOrigin -- ^ Whether it's of earthly origin
   , dessert :: Maybe Dessert.Dessert -- ^ Whether it's a dessert
   , sauce :: Maybe Sauce.Sauce -- ^ Whether it's a sauce
-  , earthlyOrigin :: Maybe EarthlyOrigin.EarthlyOrigin -- ^ Whether it's of earthly origin
-  , soup :: Maybe Soup.Soup -- ^ Whether it's a soup
+  , uid :: Uid.Uid -- ^ Food unique ID
   , fruit :: Maybe Fruit.Fruit -- ^ Whether it's a fruit
-  , tea :: Maybe Tea.Tea -- ^ Whether it's a tea
   , name :: Name.Name -- ^ Food name
+  , soup :: Maybe Soup.Soup -- ^ Whether it's a soup
+  , herbOrSpice :: Maybe HerbOrSpice.HerbOrSpice -- ^ Whether it's a herb or a spice
+  , alcoholicBeverage :: Maybe AlcoholicBeverage.AlcoholicBeverage -- ^ Whether it's an alcoholic beverage
   }
   deriving (Eq, Show)
 
@@ -41,15 +41,15 @@ foodBaseSchema :: FC.Fleece schema => schema FoodBase
 foodBaseSchema =
   FC.object $
     FC.constructor FoodBase
-      #+ FC.optional "herbOrSpice" herbOrSpice HerbOrSpice.herbOrSpiceSchema
-      #+ FC.optional "juice" juice Juice.juiceSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "alcoholicBeverage" alcoholicBeverage AlcoholicBeverage.alcoholicBeverageSchema
       #+ FC.optional "beverage" beverage Beverage.beverageSchema
+      #+ FC.optional "juice" juice Juice.juiceSchema
+      #+ FC.optional "tea" tea Tea.teaSchema
+      #+ FC.optional "earthlyOrigin" earthlyOrigin EarthlyOrigin.earthlyOriginSchema
       #+ FC.optional "dessert" dessert Dessert.dessertSchema
       #+ FC.optional "sauce" sauce Sauce.sauceSchema
-      #+ FC.optional "earthlyOrigin" earthlyOrigin EarthlyOrigin.earthlyOriginSchema
-      #+ FC.optional "soup" soup Soup.soupSchema
+      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.optional "fruit" fruit Fruit.fruitSchema
-      #+ FC.optional "tea" tea Tea.teaSchema
       #+ FC.required "name" name Name.nameSchema
+      #+ FC.optional "soup" soup Soup.soupSchema
+      #+ FC.optional "herbOrSpice" herbOrSpice HerbOrSpice.herbOrSpiceSchema
+      #+ FC.optional "alcoholicBeverage" alcoholicBeverage AlcoholicBeverage.alcoholicBeverageSchema

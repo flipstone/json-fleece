@@ -14,10 +14,10 @@ import qualified TestCases.Types.DateTimeFormats.UtcTimeField as UtcTimeField
 import qualified TestCases.Types.DateTimeFormats.ZonedTimeField as ZonedTimeField
 
 data DateTimeFormats = DateTimeFormats
-  { defaultTimeField :: Maybe DefaultTimeField.DefaultTimeField
-  , utcTimeField :: Maybe UtcTimeField.UtcTimeField
-  , zonedTimeField :: Maybe ZonedTimeField.ZonedTimeField
+  { zonedTimeField :: Maybe ZonedTimeField.ZonedTimeField
+  , defaultTimeField :: Maybe DefaultTimeField.DefaultTimeField
   , localTimeField :: Maybe LocalTimeField.LocalTimeField
+  , utcTimeField :: Maybe UtcTimeField.UtcTimeField
   }
   deriving (Show)
 
@@ -25,7 +25,7 @@ dateTimeFormatsSchema :: FC.Fleece schema => schema DateTimeFormats
 dateTimeFormatsSchema =
   FC.object $
     FC.constructor DateTimeFormats
-      #+ FC.optional "defaultTimeField" defaultTimeField DefaultTimeField.defaultTimeFieldSchema
-      #+ FC.optional "utcTimeField" utcTimeField UtcTimeField.utcTimeFieldSchema
       #+ FC.optional "zonedTimeField" zonedTimeField ZonedTimeField.zonedTimeFieldSchema
+      #+ FC.optional "defaultTimeField" defaultTimeField DefaultTimeField.defaultTimeFieldSchema
       #+ FC.optional "localTimeField" localTimeField LocalTimeField.localTimeFieldSchema
+      #+ FC.optional "utcTimeField" utcTimeField UtcTimeField.utcTimeFieldSchema

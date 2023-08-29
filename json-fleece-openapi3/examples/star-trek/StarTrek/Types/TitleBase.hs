@@ -18,11 +18,11 @@ import qualified StarTrek.Types.TitleBase.Uid as Uid
 
 data TitleBase = TitleBase
   { mirror :: Maybe Mirror.Mirror -- ^ Whether this title is from mirror universe
+  , religiousTitle :: Maybe ReligiousTitle.ReligiousTitle -- ^ Whether it's a religious title
   , uid :: Uid.Uid -- ^ Title unique ID
   , fleetRank :: Maybe FleetRank.FleetRank -- ^ Whether it's a fleet rank
-  , militaryRank :: Maybe MilitaryRank.MilitaryRank -- ^ Whether it's a military rank
-  , religiousTitle :: Maybe ReligiousTitle.ReligiousTitle -- ^ Whether it's a religious title
   , name :: Name.Name -- ^ Title name
+  , militaryRank :: Maybe MilitaryRank.MilitaryRank -- ^ Whether it's a military rank
   , position :: Maybe Position.Position -- ^ Whether it's a position
   }
   deriving (Eq, Show)
@@ -32,9 +32,9 @@ titleBaseSchema =
   FC.object $
     FC.constructor TitleBase
       #+ FC.optional "mirror" mirror Mirror.mirrorSchema
+      #+ FC.optional "religiousTitle" religiousTitle ReligiousTitle.religiousTitleSchema
       #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.optional "fleetRank" fleetRank FleetRank.fleetRankSchema
-      #+ FC.optional "militaryRank" militaryRank MilitaryRank.militaryRankSchema
-      #+ FC.optional "religiousTitle" religiousTitle ReligiousTitle.religiousTitleSchema
       #+ FC.required "name" name Name.nameSchema
+      #+ FC.optional "militaryRank" militaryRank MilitaryRank.militaryRankSchema
       #+ FC.optional "position" position Position.positionSchema

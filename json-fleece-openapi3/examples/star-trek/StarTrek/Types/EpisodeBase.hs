@@ -27,23 +27,23 @@ import qualified StarTrek.Types.SeasonHeader as SeasonHeader
 import qualified StarTrek.Types.SeriesHeader as SeriesHeader
 
 data EpisodeBase = EpisodeBase
-  { yearTo :: Maybe YearTo.YearTo -- ^ Ending year of episode story
+  { title :: Title.Title -- ^ Episode title
+  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of episode story
+  , titleGerman :: Maybe TitleGerman.TitleGerman -- ^ Episode title in German
+  , episodeNumber :: Maybe EpisodeNumber.EpisodeNumber -- ^ Episode number in season
+  , productionSerialNumber :: Maybe ProductionSerialNumber.ProductionSerialNumber -- ^ Production serial number
+  , featureLength :: Maybe FeatureLength.FeatureLength -- ^ Whether it's a feature length episode
+  , titleItalian :: Maybe TitleItalian.TitleItalian -- ^ Episode title in Italian
+  , season :: Maybe SeasonHeader.SeasonHeader -- ^ Header season, embedded in other objects
   , finalScriptDate :: Maybe FinalScriptDate.FinalScriptDate -- ^ Date the episode script was completed
+  , usAirDate :: Maybe UsAirDate.UsAirDate -- ^ Date the episode was first aired in the United States
+  , uid :: Uid.Uid -- ^ Episode unique ID
+  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of episode story
+  , seasonNumber :: Maybe SeasonNumber.SeasonNumber -- ^ Season number
+  , titleJapanese :: Maybe TitleJapanese.TitleJapanese -- ^ Episode title in Japanese
+  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of episode story
   , stardateTo :: Maybe StardateTo.StardateTo -- ^ Ending stardate of episode story
   , series :: Maybe SeriesHeader.SeriesHeader -- ^ Header series, embedded in other objects
-  , titleGerman :: Maybe TitleGerman.TitleGerman -- ^ Episode title in German
-  , titleItalian :: Maybe TitleItalian.TitleItalian -- ^ Episode title in Italian
-  , uid :: Uid.Uid -- ^ Episode unique ID
-  , productionSerialNumber :: Maybe ProductionSerialNumber.ProductionSerialNumber -- ^ Production serial number
-  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of episode story
-  , titleJapanese :: Maybe TitleJapanese.TitleJapanese -- ^ Episode title in Japanese
-  , usAirDate :: Maybe UsAirDate.UsAirDate -- ^ Date the episode was first aired in the United States
-  , seasonNumber :: Maybe SeasonNumber.SeasonNumber -- ^ Season number
-  , title :: Title.Title -- ^ Episode title
-  , season :: Maybe SeasonHeader.SeasonHeader -- ^ Header season, embedded in other objects
-  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of episode story
-  , featureLength :: Maybe FeatureLength.FeatureLength -- ^ Whether it's a feature length episode
-  , episodeNumber :: Maybe EpisodeNumber.EpisodeNumber -- ^ Episode number in season
   }
   deriving (Eq, Show)
 
@@ -51,20 +51,20 @@ episodeBaseSchema :: FC.Fleece schema => schema EpisodeBase
 episodeBaseSchema =
   FC.object $
     FC.constructor EpisodeBase
-      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
+      #+ FC.required "title" title Title.titleSchema
+      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
+      #+ FC.optional "titleGerman" titleGerman TitleGerman.titleGermanSchema
+      #+ FC.optional "episodeNumber" episodeNumber EpisodeNumber.episodeNumberSchema
+      #+ FC.optional "productionSerialNumber" productionSerialNumber ProductionSerialNumber.productionSerialNumberSchema
+      #+ FC.optional "featureLength" featureLength FeatureLength.featureLengthSchema
+      #+ FC.optional "titleItalian" titleItalian TitleItalian.titleItalianSchema
+      #+ FC.optional "season" season SeasonHeader.seasonHeaderSchema
       #+ FC.optional "finalScriptDate" finalScriptDate FinalScriptDate.finalScriptDateSchema
+      #+ FC.optional "usAirDate" usAirDate UsAirDate.usAirDateSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
+      #+ FC.optional "seasonNumber" seasonNumber SeasonNumber.seasonNumberSchema
+      #+ FC.optional "titleJapanese" titleJapanese TitleJapanese.titleJapaneseSchema
+      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
       #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
       #+ FC.optional "series" series SeriesHeader.seriesHeaderSchema
-      #+ FC.optional "titleGerman" titleGerman TitleGerman.titleGermanSchema
-      #+ FC.optional "titleItalian" titleItalian TitleItalian.titleItalianSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "productionSerialNumber" productionSerialNumber ProductionSerialNumber.productionSerialNumberSchema
-      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
-      #+ FC.optional "titleJapanese" titleJapanese TitleJapanese.titleJapaneseSchema
-      #+ FC.optional "usAirDate" usAirDate UsAirDate.usAirDateSchema
-      #+ FC.optional "seasonNumber" seasonNumber SeasonNumber.seasonNumberSchema
-      #+ FC.required "title" title Title.titleSchema
-      #+ FC.optional "season" season SeasonHeader.seasonHeaderSchema
-      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
-      #+ FC.optional "featureLength" featureLength FeatureLength.featureLengthSchema
-      #+ FC.optional "episodeNumber" episodeNumber EpisodeNumber.episodeNumberSchema

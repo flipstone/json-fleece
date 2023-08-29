@@ -12,8 +12,8 @@ import qualified StarTrek.Types.BookSeriesHeader.Title as Title
 import qualified StarTrek.Types.BookSeriesHeader.Uid as Uid
 
 data BookSeriesHeader = BookSeriesHeader
-  { uid :: Maybe Uid.Uid -- ^ Book series unique ID
-  , title :: Maybe Title.Title -- ^ Book series title
+  { title :: Maybe Title.Title -- ^ Book series title
+  , uid :: Maybe Uid.Uid -- ^ Book series unique ID
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ bookSeriesHeaderSchema :: FC.Fleece schema => schema BookSeriesHeader
 bookSeriesHeaderSchema =
   FC.object $
     FC.constructor BookSeriesHeader
-      #+ FC.optional "uid" uid Uid.uidSchema
       #+ FC.optional "title" title Title.titleSchema
+      #+ FC.optional "uid" uid Uid.uidSchema

@@ -31,28 +31,28 @@ import qualified StarTrek.Types.StaffBase as StaffBase
 
 data ComicCollectionFull = ComicCollectionFull
   { coverMonth :: Maybe CoverMonth.CoverMonth -- ^ Cover publication month
-  , coverYear :: Maybe CoverYear.CoverYear -- ^ Cover publication year
-  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of comic collection stories
-  , comicSeries :: Maybe [ComicSeriesBase.ComicSeriesBase] -- ^ Base comic series, returned in search results
-  , characters :: Maybe [CharacterBase.CharacterBase] -- ^ Base character, returned in search results
-  , stardateTo :: Maybe StardateTo.StardateTo -- ^ Ending stardate of comic collection stories
-  , uid :: Uid.Uid -- ^ Comic collection unique ID
-  , writers :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
-  , publishedMonth :: Maybe PublishedMonth.PublishedMonth -- ^ Month the comic collection was published
-  , publishedDay :: Maybe PublishedDay.PublishedDay -- ^ Day the comic collection was published
-  , references :: Maybe [Reference.Reference] -- ^ Reference of book, comics, video release, etc.
-  , publishers :: Maybe [CompanyBase.CompanyBase] -- ^ Base company, returned in search results
-  , editors :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
-  , comics :: Maybe [ComicsBase.ComicsBase] -- ^ Base comics, returned in search results
-  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of comic collection stories
   , title :: Title.Title -- ^ Comic collection title
-  , artists :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
-  , photonovel :: Maybe Photonovel.Photonovel -- ^ Whether it's a photonovel collection
   , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of comic collection stories
+  , editors :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
+  , artists :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
   , staff :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
-  , coverDay :: Maybe CoverDay.CoverDay -- ^ Cover publication day
+  , comicSeries :: Maybe [ComicSeriesBase.ComicSeriesBase] -- ^ Base comic series, returned in search results
+  , writers :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
+  , characters :: Maybe [CharacterBase.CharacterBase] -- ^ Base character, returned in search results
+  , publishedDay :: Maybe PublishedDay.PublishedDay -- ^ Day the comic collection was published
+  , coverYear :: Maybe CoverYear.CoverYear -- ^ Cover publication year
+  , uid :: Uid.Uid -- ^ Comic collection unique ID
+  , references :: Maybe [Reference.Reference] -- ^ Reference of book, comics, video release, etc.
   , numberOfPages :: Maybe NumberOfPages.NumberOfPages -- ^ Number of pages
+  , coverDay :: Maybe CoverDay.CoverDay -- ^ Cover publication day
+  , publishers :: Maybe [CompanyBase.CompanyBase] -- ^ Base company, returned in search results
   , publishedYear :: Maybe PublishedYear.PublishedYear -- ^ Year the comic collection was published
+  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of comic collection stories
+  , photonovel :: Maybe Photonovel.Photonovel -- ^ Whether it's a photonovel collection
+  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of comic collection stories
+  , stardateTo :: Maybe StardateTo.StardateTo -- ^ Ending stardate of comic collection stories
+  , comics :: Maybe [ComicsBase.ComicsBase] -- ^ Base comics, returned in search results
+  , publishedMonth :: Maybe PublishedMonth.PublishedMonth -- ^ Month the comic collection was published
   }
   deriving (Eq, Show)
 
@@ -61,25 +61,25 @@ comicCollectionFullSchema =
   FC.object $
     FC.constructor ComicCollectionFull
       #+ FC.optional "coverMonth" coverMonth CoverMonth.coverMonthSchema
-      #+ FC.optional "coverYear" coverYear CoverYear.coverYearSchema
-      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
-      #+ FC.optional "comicSeries" comicSeries (FC.list ComicSeriesBase.comicSeriesBaseSchema)
-      #+ FC.optional "characters" characters (FC.list CharacterBase.characterBaseSchema)
-      #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "writers" writers (FC.list StaffBase.staffBaseSchema)
-      #+ FC.optional "publishedMonth" publishedMonth PublishedMonth.publishedMonthSchema
-      #+ FC.optional "publishedDay" publishedDay PublishedDay.publishedDaySchema
-      #+ FC.optional "references" references (FC.list Reference.referenceSchema)
-      #+ FC.optional "publishers" publishers (FC.list CompanyBase.companyBaseSchema)
-      #+ FC.optional "editors" editors (FC.list StaffBase.staffBaseSchema)
-      #+ FC.optional "comics" comics (FC.list ComicsBase.comicsBaseSchema)
-      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
       #+ FC.required "title" title Title.titleSchema
-      #+ FC.optional "artists" artists (FC.list StaffBase.staffBaseSchema)
-      #+ FC.optional "photonovel" photonovel Photonovel.photonovelSchema
       #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
+      #+ FC.optional "editors" editors (FC.list StaffBase.staffBaseSchema)
+      #+ FC.optional "artists" artists (FC.list StaffBase.staffBaseSchema)
       #+ FC.optional "staff" staff (FC.list StaffBase.staffBaseSchema)
-      #+ FC.optional "coverDay" coverDay CoverDay.coverDaySchema
+      #+ FC.optional "comicSeries" comicSeries (FC.list ComicSeriesBase.comicSeriesBaseSchema)
+      #+ FC.optional "writers" writers (FC.list StaffBase.staffBaseSchema)
+      #+ FC.optional "characters" characters (FC.list CharacterBase.characterBaseSchema)
+      #+ FC.optional "publishedDay" publishedDay PublishedDay.publishedDaySchema
+      #+ FC.optional "coverYear" coverYear CoverYear.coverYearSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "references" references (FC.list Reference.referenceSchema)
       #+ FC.optional "numberOfPages" numberOfPages NumberOfPages.numberOfPagesSchema
+      #+ FC.optional "coverDay" coverDay CoverDay.coverDaySchema
+      #+ FC.optional "publishers" publishers (FC.list CompanyBase.companyBaseSchema)
       #+ FC.optional "publishedYear" publishedYear PublishedYear.publishedYearSchema
+      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
+      #+ FC.optional "photonovel" photonovel Photonovel.photonovelSchema
+      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
+      #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
+      #+ FC.optional "comics" comics (FC.list ComicsBase.comicsBaseSchema)
+      #+ FC.optional "publishedMonth" publishedMonth PublishedMonth.publishedMonthSchema

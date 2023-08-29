@@ -16,12 +16,12 @@ import qualified StarTrek.Types.OccupationFull.ScientificOccupation as Scientifi
 import qualified StarTrek.Types.OccupationFull.Uid as Uid
 
 data OccupationFull = OccupationFull
-  { medicalOccupation :: Maybe MedicalOccupation.MedicalOccupation -- ^ Whether it's a medical occupation
+  { legalOccupation :: Maybe LegalOccupation.LegalOccupation -- ^ Whether it's a legal occupation
   , characters :: Maybe [CharacterBase.CharacterBase] -- ^ Base character, returned in search results
   , uid :: Uid.Uid -- ^ Occupation unique ID
-  , scientificOccupation :: Maybe ScientificOccupation.ScientificOccupation -- ^ Whether it's a scientific occupation
-  , legalOccupation :: Maybe LegalOccupation.LegalOccupation -- ^ Whether it's a legal occupation
+  , medicalOccupation :: Maybe MedicalOccupation.MedicalOccupation -- ^ Whether it's a medical occupation
   , name :: Name.Name -- ^ Occupation name
+  , scientificOccupation :: Maybe ScientificOccupation.ScientificOccupation -- ^ Whether it's a scientific occupation
   }
   deriving (Eq, Show)
 
@@ -29,9 +29,9 @@ occupationFullSchema :: FC.Fleece schema => schema OccupationFull
 occupationFullSchema =
   FC.object $
     FC.constructor OccupationFull
-      #+ FC.optional "medicalOccupation" medicalOccupation MedicalOccupation.medicalOccupationSchema
+      #+ FC.optional "legalOccupation" legalOccupation LegalOccupation.legalOccupationSchema
       #+ FC.optional "characters" characters (FC.list CharacterBase.characterBaseSchema)
       #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "scientificOccupation" scientificOccupation ScientificOccupation.scientificOccupationSchema
-      #+ FC.optional "legalOccupation" legalOccupation LegalOccupation.legalOccupationSchema
+      #+ FC.optional "medicalOccupation" medicalOccupation MedicalOccupation.medicalOccupationSchema
       #+ FC.required "name" name Name.nameSchema
+      #+ FC.optional "scientificOccupation" scientificOccupation ScientificOccupation.scientificOccupationSchema

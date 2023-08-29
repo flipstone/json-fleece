@@ -73,69 +73,69 @@ import qualified StarTrek.Types.StaffBase.VideoGameProductionStaff as VideoGameP
 import qualified StarTrek.Types.StaffBase.Writer as Writer
 
 data StaffBase = StaffBase
-  { studioExecutive :: Maybe StudioExecutive.StudioExecutive -- ^ Whether this person is a studio executive
-  , publicityArtist :: Maybe PublicityArtist.PublicityArtist -- ^ Whether this person is a publication artist
-  , costumeDepartment :: Maybe CostumeDepartment.CostumeDepartment -- ^ Whether this person is from costume department
-  , locationStaff :: Maybe LocationStaff.LocationStaff -- ^ Whether this person is a location staff
-  , scienceConsultant :: Maybe ScienceConsultant.ScienceConsultant -- ^ Whether this person is a science consultant
-  , castingDepartment :: Maybe CastingDepartment.CastingDepartment -- ^ Whether this person is from casting department
-  , novelAuthor :: Maybe NovelAuthor.NovelAuthor -- ^ Whether this person is a novel author
-  , birthName :: Maybe BirthName.BirthName -- ^ Staff birth name
-  , storyEditor :: Maybe StoryEditor.StoryEditor -- ^ Whether this person is a story editor
-  , comicLetterArtist :: Maybe ComicLetterArtist.ComicLetterArtist -- ^ Whether this person is a comic letter artist
-  , linguist :: Maybe Linguist.Linguist -- ^ Whether this person is a linguist
-  , costumeDesigner :: Maybe CostumeDesigner.CostumeDesigner -- ^ Whether this person is a custume designer
-  , specialFeaturesStaff :: Maybe SpecialFeaturesStaff.SpecialFeaturesStaff -- ^ Whether this person is a special features artist
-  , dateOfBirth :: Maybe DateOfBirth.DateOfBirth -- ^ Date the staff was born
-  , placeOfBirth :: Maybe PlaceOfBirth.PlaceOfBirth -- ^ Place the staff was born
-  , productionAssociate :: Maybe ProductionAssociate.ProductionAssociate -- ^ Whether this person is a production associate
-  , referenceAuthor :: Maybe ReferenceAuthor.ReferenceAuthor -- ^ Whether this person is a reference author
-  , uid :: Uid.Uid -- ^ Staff unique ID
-  , gameArtist :: Maybe GameArtist.GameArtist -- ^ Whether this person is a game artist
-  , publicationStaff :: Maybe PublicationStaff.PublicationStaff -- ^ Whether this person is a publication staff
-  , assistantOrSecondUnitDirector :: Maybe AssistantOrSecondUnitDirector.AssistantOrSecondUnitDirector -- ^ Whether this person is an assistant or secound unit director director
-  , soundDepartment :: Maybe SoundDepartment.SoundDepartment -- ^ Whether this person is from sound department
-  , publicationEditor :: Maybe PublicationEditor.PublicationEditor -- ^ Whether this person is a publication editor
-  , audioAuthor :: Maybe AudioAuthor.AudioAuthor -- ^ Whether this person is an audio author
-  , comicPencilArtist :: Maybe ComicPencilArtist.ComicPencilArtist -- ^ Whether this person is a comic pencil artist
-  , director :: Maybe Director.Director -- ^ Whether this person is a director
-  , videoGameProductionStaff :: Maybe VideoGameProductionStaff.VideoGameProductionStaff -- ^ Whether this person is video game production staff
-  , author :: Maybe Author.Author -- ^ Whether this person is an author
-  , cbsDigitalStaff :: Maybe CbsDigitalStaff.CbsDigitalStaff -- ^ Whether this person is a part of CBS digital staff
-  , comicInkArtist :: Maybe ComicInkArtist.ComicInkArtist -- ^ Whether this person is a comic ink artist
-  , producer :: Maybe Producer.Producer -- ^ Whether this person is a producer
-  , makeupStaff :: Maybe MakeupStaff.MakeupStaff -- ^ Whether this person is a make-up staff
-  , comicAuthor :: Maybe ComicAuthor.ComicAuthor -- ^ Whether this person is a comic author
+  { cameraAndElectricalDepartment :: Maybe CameraAndElectricalDepartment.CameraAndElectricalDepartment -- ^ Whether this person is from camera and electrical department
   , comicArtist :: Maybe ComicArtist.ComicArtist -- ^ Whether this person is a comic artist
-  , exhibitAndAttractionStaff :: Maybe ExhibitAndAttractionStaff.ExhibitAndAttractionStaff -- ^ Whether this person is an exhibit and tttraction staff
-  , artDepartment :: Maybe ArtDepartment.ArtDepartment -- ^ Whether this person if from art department
-  , transportationDepartment :: Maybe TransportationDepartment.TransportationDepartment -- ^ Whether this person is from transportation department
-  , composer :: Maybe Composer.Composer -- ^ Whether this person is a composer
-  , comicColorArtist :: Maybe ComicColorArtist.ComicColorArtist -- ^ Whether this person is a comic color artist
-  , gameAuthor :: Maybe GameAuthor.GameAuthor -- ^ Whether this person is a game author
-  , personalAssistant :: Maybe PersonalAssistant.PersonalAssistant -- ^ Whether this person is a personal assistant
-  , referenceArtist :: Maybe ReferenceArtist.ReferenceArtist -- ^ Whether this person is a reference artist
-  , productionDesigner :: Maybe ProductionDesigner.ProductionDesigner -- ^ Whether this person is a production designer
-  , filmEditor :: Maybe FilmEditor.FilmEditor -- ^ Whether this person is a film editor
-  , gender :: Maybe Gender.Gender -- ^ Gender
-  , stuntDepartment :: Maybe StuntDepartment.StuntDepartment -- ^ Whether this person is from stunt department
-  , cameraAndElectricalDepartment :: Maybe CameraAndElectricalDepartment.CameraAndElectricalDepartment -- ^ Whether this person is from camera and electrical department
-  , ilmProductionStaff :: Maybe IlmProductionStaff.IlmProductionStaff -- ^ Whether this person is a part of ILM production staff
-  , publicationArtist :: Maybe PublicationArtist.PublicationArtist -- ^ Whether this person is a publication artist
-  , placeOfDeath :: Maybe PlaceOfDeath.PlaceOfDeath -- ^ Place the staff died
-  , dateOfDeath :: Maybe DateOfDeath.DateOfDeath -- ^ Date the staff died
-  , cinematographer :: Maybe Cinematographer.Cinematographer -- ^ Whether this person is a cinematographer
-  , novelArtist :: Maybe NovelArtist.NovelArtist -- ^ Whether this person is a novel artist
-  , writer :: Maybe Writer.Writer -- ^ Whether this person is a writer
-  , publicationDesigner :: Maybe PublicationDesigner.PublicationDesigner -- ^ Whether this person is a publication designer
-  , productionStaff :: Maybe ProductionStaff.ProductionStaff -- ^ Whether this person is a production staff
-  , comicStripArtist :: Maybe ComicStripArtist.ComicStripArtist -- ^ Whether this person is a comic strip artist
-  , calendarArtist :: Maybe CalendarArtist.CalendarArtist -- ^ Whether this person is a calendar artist
-  , name :: Name.Name -- ^ Staff name
-  , comicInteriorArtist :: Maybe ComicInteriorArtist.ComicInteriorArtist -- ^ Whether this person is a comic interior artist
-  , specialAndVisualEffectsStaff :: Maybe SpecialAndVisualEffectsStaff.SpecialAndVisualEffectsStaff -- ^ Whether this person is a special and visual effects staff
+  , director :: Maybe Director.Director -- ^ Whether this person is a director
   , artDirector :: Maybe ArtDirector.ArtDirector -- ^ Whether this person is an art director
+  , writer :: Maybe Writer.Writer -- ^ Whether this person is a writer
+  , makeupStaff :: Maybe MakeupStaff.MakeupStaff -- ^ Whether this person is a make-up staff
+  , publicationArtist :: Maybe PublicationArtist.PublicationArtist -- ^ Whether this person is a publication artist
+  , gender :: Maybe Gender.Gender -- ^ Gender
+  , comicColorArtist :: Maybe ComicColorArtist.ComicColorArtist -- ^ Whether this person is a comic color artist
+  , stuntDepartment :: Maybe StuntDepartment.StuntDepartment -- ^ Whether this person is from stunt department
+  , novelArtist :: Maybe NovelArtist.NovelArtist -- ^ Whether this person is a novel artist
+  , artDepartment :: Maybe ArtDepartment.ArtDepartment -- ^ Whether this person if from art department
+  , publicityArtist :: Maybe PublicityArtist.PublicityArtist -- ^ Whether this person is a publication artist
+  , storyEditor :: Maybe StoryEditor.StoryEditor -- ^ Whether this person is a story editor
+  , comicStripArtist :: Maybe ComicStripArtist.ComicStripArtist -- ^ Whether this person is a comic strip artist
+  , comicAuthor :: Maybe ComicAuthor.ComicAuthor -- ^ Whether this person is a comic author
+  , comicPencilArtist :: Maybe ComicPencilArtist.ComicPencilArtist -- ^ Whether this person is a comic pencil artist
+  , transportationDepartment :: Maybe TransportationDepartment.TransportationDepartment -- ^ Whether this person is from transportation department
+  , producer :: Maybe Producer.Producer -- ^ Whether this person is a producer
+  , composer :: Maybe Composer.Composer -- ^ Whether this person is a composer
+  , calendarArtist :: Maybe CalendarArtist.CalendarArtist -- ^ Whether this person is a calendar artist
+  , referenceAuthor :: Maybe ReferenceAuthor.ReferenceAuthor -- ^ Whether this person is a reference author
+  , publicationEditor :: Maybe PublicationEditor.PublicationEditor -- ^ Whether this person is a publication editor
+  , publicationStaff :: Maybe PublicationStaff.PublicationStaff -- ^ Whether this person is a publication staff
+  , novelAuthor :: Maybe NovelAuthor.NovelAuthor -- ^ Whether this person is a novel author
+  , castingDepartment :: Maybe CastingDepartment.CastingDepartment -- ^ Whether this person is from casting department
   , musicDepartment :: Maybe MusicDepartment.MusicDepartment -- ^ Whether this person is from music department
+  , cbsDigitalStaff :: Maybe CbsDigitalStaff.CbsDigitalStaff -- ^ Whether this person is a part of CBS digital staff
+  , costumeDesigner :: Maybe CostumeDesigner.CostumeDesigner -- ^ Whether this person is a custume designer
+  , comicInteriorArtist :: Maybe ComicInteriorArtist.ComicInteriorArtist -- ^ Whether this person is a comic interior artist
+  , uid :: Uid.Uid -- ^ Staff unique ID
+  , gameAuthor :: Maybe GameAuthor.GameAuthor -- ^ Whether this person is a game author
+  , scienceConsultant :: Maybe ScienceConsultant.ScienceConsultant -- ^ Whether this person is a science consultant
+  , dateOfDeath :: Maybe DateOfDeath.DateOfDeath -- ^ Date the staff died
+  , filmEditor :: Maybe FilmEditor.FilmEditor -- ^ Whether this person is a film editor
+  , productionStaff :: Maybe ProductionStaff.ProductionStaff -- ^ Whether this person is a production staff
+  , specialFeaturesStaff :: Maybe SpecialFeaturesStaff.SpecialFeaturesStaff -- ^ Whether this person is a special features artist
+  , comicInkArtist :: Maybe ComicInkArtist.ComicInkArtist -- ^ Whether this person is a comic ink artist
+  , personalAssistant :: Maybe PersonalAssistant.PersonalAssistant -- ^ Whether this person is a personal assistant
+  , soundDepartment :: Maybe SoundDepartment.SoundDepartment -- ^ Whether this person is from sound department
+  , audioAuthor :: Maybe AudioAuthor.AudioAuthor -- ^ Whether this person is an audio author
+  , videoGameProductionStaff :: Maybe VideoGameProductionStaff.VideoGameProductionStaff -- ^ Whether this person is video game production staff
+  , linguist :: Maybe Linguist.Linguist -- ^ Whether this person is a linguist
+  , author :: Maybe Author.Author -- ^ Whether this person is an author
+  , placeOfBirth :: Maybe PlaceOfBirth.PlaceOfBirth -- ^ Place the staff was born
+  , name :: Name.Name -- ^ Staff name
+  , gameArtist :: Maybe GameArtist.GameArtist -- ^ Whether this person is a game artist
+  , costumeDepartment :: Maybe CostumeDepartment.CostumeDepartment -- ^ Whether this person is from costume department
+  , assistantOrSecondUnitDirector :: Maybe AssistantOrSecondUnitDirector.AssistantOrSecondUnitDirector -- ^ Whether this person is an assistant or secound unit director director
+  , productionDesigner :: Maybe ProductionDesigner.ProductionDesigner -- ^ Whether this person is a production designer
+  , cinematographer :: Maybe Cinematographer.Cinematographer -- ^ Whether this person is a cinematographer
+  , locationStaff :: Maybe LocationStaff.LocationStaff -- ^ Whether this person is a location staff
+  , birthName :: Maybe BirthName.BirthName -- ^ Staff birth name
+  , ilmProductionStaff :: Maybe IlmProductionStaff.IlmProductionStaff -- ^ Whether this person is a part of ILM production staff
+  , publicationDesigner :: Maybe PublicationDesigner.PublicationDesigner -- ^ Whether this person is a publication designer
+  , productionAssociate :: Maybe ProductionAssociate.ProductionAssociate -- ^ Whether this person is a production associate
+  , dateOfBirth :: Maybe DateOfBirth.DateOfBirth -- ^ Date the staff was born
+  , referenceArtist :: Maybe ReferenceArtist.ReferenceArtist -- ^ Whether this person is a reference artist
+  , placeOfDeath :: Maybe PlaceOfDeath.PlaceOfDeath -- ^ Place the staff died
+  , specialAndVisualEffectsStaff :: Maybe SpecialAndVisualEffectsStaff.SpecialAndVisualEffectsStaff -- ^ Whether this person is a special and visual effects staff
+  , exhibitAndAttractionStaff :: Maybe ExhibitAndAttractionStaff.ExhibitAndAttractionStaff -- ^ Whether this person is an exhibit and tttraction staff
+  , comicLetterArtist :: Maybe ComicLetterArtist.ComicLetterArtist -- ^ Whether this person is a comic letter artist
+  , studioExecutive :: Maybe StudioExecutive.StudioExecutive -- ^ Whether this person is a studio executive
   }
   deriving (Eq, Show)
 
@@ -143,66 +143,66 @@ staffBaseSchema :: FC.Fleece schema => schema StaffBase
 staffBaseSchema =
   FC.object $
     FC.constructor StaffBase
-      #+ FC.optional "studioExecutive" studioExecutive StudioExecutive.studioExecutiveSchema
-      #+ FC.optional "publicityArtist" publicityArtist PublicityArtist.publicityArtistSchema
-      #+ FC.optional "costumeDepartment" costumeDepartment CostumeDepartment.costumeDepartmentSchema
-      #+ FC.optional "locationStaff" locationStaff LocationStaff.locationStaffSchema
-      #+ FC.optional "scienceConsultant" scienceConsultant ScienceConsultant.scienceConsultantSchema
-      #+ FC.optional "castingDepartment" castingDepartment CastingDepartment.castingDepartmentSchema
-      #+ FC.optional "novelAuthor" novelAuthor NovelAuthor.novelAuthorSchema
-      #+ FC.optional "birthName" birthName BirthName.birthNameSchema
-      #+ FC.optional "storyEditor" storyEditor StoryEditor.storyEditorSchema
-      #+ FC.optional "comicLetterArtist" comicLetterArtist ComicLetterArtist.comicLetterArtistSchema
-      #+ FC.optional "linguist" linguist Linguist.linguistSchema
-      #+ FC.optional "costumeDesigner" costumeDesigner CostumeDesigner.costumeDesignerSchema
-      #+ FC.optional "specialFeaturesStaff" specialFeaturesStaff SpecialFeaturesStaff.specialFeaturesStaffSchema
-      #+ FC.optional "dateOfBirth" dateOfBirth DateOfBirth.dateOfBirthSchema
-      #+ FC.optional "placeOfBirth" placeOfBirth PlaceOfBirth.placeOfBirthSchema
-      #+ FC.optional "productionAssociate" productionAssociate ProductionAssociate.productionAssociateSchema
-      #+ FC.optional "referenceAuthor" referenceAuthor ReferenceAuthor.referenceAuthorSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "gameArtist" gameArtist GameArtist.gameArtistSchema
-      #+ FC.optional "publicationStaff" publicationStaff PublicationStaff.publicationStaffSchema
-      #+ FC.optional "assistantOrSecondUnitDirector" assistantOrSecondUnitDirector AssistantOrSecondUnitDirector.assistantOrSecondUnitDirectorSchema
-      #+ FC.optional "soundDepartment" soundDepartment SoundDepartment.soundDepartmentSchema
-      #+ FC.optional "publicationEditor" publicationEditor PublicationEditor.publicationEditorSchema
-      #+ FC.optional "audioAuthor" audioAuthor AudioAuthor.audioAuthorSchema
-      #+ FC.optional "comicPencilArtist" comicPencilArtist ComicPencilArtist.comicPencilArtistSchema
-      #+ FC.optional "director" director Director.directorSchema
-      #+ FC.optional "videoGameProductionStaff" videoGameProductionStaff VideoGameProductionStaff.videoGameProductionStaffSchema
-      #+ FC.optional "author" author Author.authorSchema
-      #+ FC.optional "cbsDigitalStaff" cbsDigitalStaff CbsDigitalStaff.cbsDigitalStaffSchema
-      #+ FC.optional "comicInkArtist" comicInkArtist ComicInkArtist.comicInkArtistSchema
-      #+ FC.optional "producer" producer Producer.producerSchema
-      #+ FC.optional "makeupStaff" makeupStaff MakeupStaff.makeupStaffSchema
-      #+ FC.optional "comicAuthor" comicAuthor ComicAuthor.comicAuthorSchema
-      #+ FC.optional "comicArtist" comicArtist ComicArtist.comicArtistSchema
-      #+ FC.optional "exhibitAndAttractionStaff" exhibitAndAttractionStaff ExhibitAndAttractionStaff.exhibitAndAttractionStaffSchema
-      #+ FC.optional "artDepartment" artDepartment ArtDepartment.artDepartmentSchema
-      #+ FC.optional "transportationDepartment" transportationDepartment TransportationDepartment.transportationDepartmentSchema
-      #+ FC.optional "composer" composer Composer.composerSchema
-      #+ FC.optional "comicColorArtist" comicColorArtist ComicColorArtist.comicColorArtistSchema
-      #+ FC.optional "gameAuthor" gameAuthor GameAuthor.gameAuthorSchema
-      #+ FC.optional "personalAssistant" personalAssistant PersonalAssistant.personalAssistantSchema
-      #+ FC.optional "referenceArtist" referenceArtist ReferenceArtist.referenceArtistSchema
-      #+ FC.optional "productionDesigner" productionDesigner ProductionDesigner.productionDesignerSchema
-      #+ FC.optional "filmEditor" filmEditor FilmEditor.filmEditorSchema
-      #+ FC.optional "gender" gender Gender.genderSchema
-      #+ FC.optional "stuntDepartment" stuntDepartment StuntDepartment.stuntDepartmentSchema
       #+ FC.optional "cameraAndElectricalDepartment" cameraAndElectricalDepartment CameraAndElectricalDepartment.cameraAndElectricalDepartmentSchema
-      #+ FC.optional "ilmProductionStaff" ilmProductionStaff IlmProductionStaff.ilmProductionStaffSchema
-      #+ FC.optional "publicationArtist" publicationArtist PublicationArtist.publicationArtistSchema
-      #+ FC.optional "placeOfDeath" placeOfDeath PlaceOfDeath.placeOfDeathSchema
-      #+ FC.optional "dateOfDeath" dateOfDeath DateOfDeath.dateOfDeathSchema
-      #+ FC.optional "cinematographer" cinematographer Cinematographer.cinematographerSchema
-      #+ FC.optional "novelArtist" novelArtist NovelArtist.novelArtistSchema
-      #+ FC.optional "writer" writer Writer.writerSchema
-      #+ FC.optional "publicationDesigner" publicationDesigner PublicationDesigner.publicationDesignerSchema
-      #+ FC.optional "productionStaff" productionStaff ProductionStaff.productionStaffSchema
-      #+ FC.optional "comicStripArtist" comicStripArtist ComicStripArtist.comicStripArtistSchema
-      #+ FC.optional "calendarArtist" calendarArtist CalendarArtist.calendarArtistSchema
-      #+ FC.required "name" name Name.nameSchema
-      #+ FC.optional "comicInteriorArtist" comicInteriorArtist ComicInteriorArtist.comicInteriorArtistSchema
-      #+ FC.optional "specialAndVisualEffectsStaff" specialAndVisualEffectsStaff SpecialAndVisualEffectsStaff.specialAndVisualEffectsStaffSchema
+      #+ FC.optional "comicArtist" comicArtist ComicArtist.comicArtistSchema
+      #+ FC.optional "director" director Director.directorSchema
       #+ FC.optional "artDirector" artDirector ArtDirector.artDirectorSchema
+      #+ FC.optional "writer" writer Writer.writerSchema
+      #+ FC.optional "makeupStaff" makeupStaff MakeupStaff.makeupStaffSchema
+      #+ FC.optional "publicationArtist" publicationArtist PublicationArtist.publicationArtistSchema
+      #+ FC.optional "gender" gender Gender.genderSchema
+      #+ FC.optional "comicColorArtist" comicColorArtist ComicColorArtist.comicColorArtistSchema
+      #+ FC.optional "stuntDepartment" stuntDepartment StuntDepartment.stuntDepartmentSchema
+      #+ FC.optional "novelArtist" novelArtist NovelArtist.novelArtistSchema
+      #+ FC.optional "artDepartment" artDepartment ArtDepartment.artDepartmentSchema
+      #+ FC.optional "publicityArtist" publicityArtist PublicityArtist.publicityArtistSchema
+      #+ FC.optional "storyEditor" storyEditor StoryEditor.storyEditorSchema
+      #+ FC.optional "comicStripArtist" comicStripArtist ComicStripArtist.comicStripArtistSchema
+      #+ FC.optional "comicAuthor" comicAuthor ComicAuthor.comicAuthorSchema
+      #+ FC.optional "comicPencilArtist" comicPencilArtist ComicPencilArtist.comicPencilArtistSchema
+      #+ FC.optional "transportationDepartment" transportationDepartment TransportationDepartment.transportationDepartmentSchema
+      #+ FC.optional "producer" producer Producer.producerSchema
+      #+ FC.optional "composer" composer Composer.composerSchema
+      #+ FC.optional "calendarArtist" calendarArtist CalendarArtist.calendarArtistSchema
+      #+ FC.optional "referenceAuthor" referenceAuthor ReferenceAuthor.referenceAuthorSchema
+      #+ FC.optional "publicationEditor" publicationEditor PublicationEditor.publicationEditorSchema
+      #+ FC.optional "publicationStaff" publicationStaff PublicationStaff.publicationStaffSchema
+      #+ FC.optional "novelAuthor" novelAuthor NovelAuthor.novelAuthorSchema
+      #+ FC.optional "castingDepartment" castingDepartment CastingDepartment.castingDepartmentSchema
       #+ FC.optional "musicDepartment" musicDepartment MusicDepartment.musicDepartmentSchema
+      #+ FC.optional "cbsDigitalStaff" cbsDigitalStaff CbsDigitalStaff.cbsDigitalStaffSchema
+      #+ FC.optional "costumeDesigner" costumeDesigner CostumeDesigner.costumeDesignerSchema
+      #+ FC.optional "comicInteriorArtist" comicInteriorArtist ComicInteriorArtist.comicInteriorArtistSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "gameAuthor" gameAuthor GameAuthor.gameAuthorSchema
+      #+ FC.optional "scienceConsultant" scienceConsultant ScienceConsultant.scienceConsultantSchema
+      #+ FC.optional "dateOfDeath" dateOfDeath DateOfDeath.dateOfDeathSchema
+      #+ FC.optional "filmEditor" filmEditor FilmEditor.filmEditorSchema
+      #+ FC.optional "productionStaff" productionStaff ProductionStaff.productionStaffSchema
+      #+ FC.optional "specialFeaturesStaff" specialFeaturesStaff SpecialFeaturesStaff.specialFeaturesStaffSchema
+      #+ FC.optional "comicInkArtist" comicInkArtist ComicInkArtist.comicInkArtistSchema
+      #+ FC.optional "personalAssistant" personalAssistant PersonalAssistant.personalAssistantSchema
+      #+ FC.optional "soundDepartment" soundDepartment SoundDepartment.soundDepartmentSchema
+      #+ FC.optional "audioAuthor" audioAuthor AudioAuthor.audioAuthorSchema
+      #+ FC.optional "videoGameProductionStaff" videoGameProductionStaff VideoGameProductionStaff.videoGameProductionStaffSchema
+      #+ FC.optional "linguist" linguist Linguist.linguistSchema
+      #+ FC.optional "author" author Author.authorSchema
+      #+ FC.optional "placeOfBirth" placeOfBirth PlaceOfBirth.placeOfBirthSchema
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.optional "gameArtist" gameArtist GameArtist.gameArtistSchema
+      #+ FC.optional "costumeDepartment" costumeDepartment CostumeDepartment.costumeDepartmentSchema
+      #+ FC.optional "assistantOrSecondUnitDirector" assistantOrSecondUnitDirector AssistantOrSecondUnitDirector.assistantOrSecondUnitDirectorSchema
+      #+ FC.optional "productionDesigner" productionDesigner ProductionDesigner.productionDesignerSchema
+      #+ FC.optional "cinematographer" cinematographer Cinematographer.cinematographerSchema
+      #+ FC.optional "locationStaff" locationStaff LocationStaff.locationStaffSchema
+      #+ FC.optional "birthName" birthName BirthName.birthNameSchema
+      #+ FC.optional "ilmProductionStaff" ilmProductionStaff IlmProductionStaff.ilmProductionStaffSchema
+      #+ FC.optional "publicationDesigner" publicationDesigner PublicationDesigner.publicationDesignerSchema
+      #+ FC.optional "productionAssociate" productionAssociate ProductionAssociate.productionAssociateSchema
+      #+ FC.optional "dateOfBirth" dateOfBirth DateOfBirth.dateOfBirthSchema
+      #+ FC.optional "referenceArtist" referenceArtist ReferenceArtist.referenceArtistSchema
+      #+ FC.optional "placeOfDeath" placeOfDeath PlaceOfDeath.placeOfDeathSchema
+      #+ FC.optional "specialAndVisualEffectsStaff" specialAndVisualEffectsStaff SpecialAndVisualEffectsStaff.specialAndVisualEffectsStaffSchema
+      #+ FC.optional "exhibitAndAttractionStaff" exhibitAndAttractionStaff ExhibitAndAttractionStaff.exhibitAndAttractionStaffSchema
+      #+ FC.optional "comicLetterArtist" comicLetterArtist ComicLetterArtist.comicLetterArtistSchema
+      #+ FC.optional "studioExecutive" studioExecutive StudioExecutive.studioExecutiveSchema

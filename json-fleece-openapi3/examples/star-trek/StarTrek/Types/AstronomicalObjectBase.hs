@@ -14,10 +14,10 @@ import qualified StarTrek.Types.AstronomicalObjectHeader as AstronomicalObjectHe
 import qualified StarTrek.Types.AstronomicalObjectType as AstronomicalObjectType
 
 data AstronomicalObjectBase = AstronomicalObjectBase
-  { astronomicalObjectType :: AstronomicalObjectType.AstronomicalObjectType -- ^ Astronomical object type
+  { location :: Maybe AstronomicalObjectHeader.AstronomicalObjectHeader -- ^ Header astronomical object, embedded in other objects
   , uid :: Uid.Uid -- ^ Astronomical object's unique ID
-  , location :: Maybe AstronomicalObjectHeader.AstronomicalObjectHeader -- ^ Header astronomical object, embedded in other objects
   , name :: Name.Name -- ^ Astronomical object name
+  , astronomicalObjectType :: AstronomicalObjectType.AstronomicalObjectType -- ^ Astronomical object type
   }
   deriving (Eq, Show)
 
@@ -25,7 +25,7 @@ astronomicalObjectBaseSchema :: FC.Fleece schema => schema AstronomicalObjectBas
 astronomicalObjectBaseSchema =
   FC.object $
     FC.constructor AstronomicalObjectBase
-      #+ FC.required "astronomicalObjectType" astronomicalObjectType AstronomicalObjectType.astronomicalObjectTypeSchema
-      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.optional "location" location AstronomicalObjectHeader.astronomicalObjectHeaderSchema
+      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.required "name" name Name.nameSchema
+      #+ FC.required "astronomicalObjectType" astronomicalObjectType AstronomicalObjectType.astronomicalObjectTypeSchema

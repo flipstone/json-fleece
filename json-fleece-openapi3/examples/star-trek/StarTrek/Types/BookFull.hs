@@ -40,41 +40,41 @@ import qualified StarTrek.Types.Reference as Reference
 import qualified StarTrek.Types.StaffBase as StaffBase
 
 data BookFull = BookFull
-  { yearTo :: Maybe YearTo.YearTo -- ^ Ending year of book story
-  , rolePlayingBook :: RolePlayingBook.RolePlayingBook -- ^ Whether it's a role playing book
-  , bookSeries :: Maybe [BookSeriesBase.BookSeriesBase] -- ^ Base book series, returned in search results
+  { biographyBook :: BiographyBook.BiographyBook -- ^ Whether it's a biography book
   , audiobookPublishedDay :: Maybe AudiobookPublishedDay.AudiobookPublishedDay -- ^ Day the audiobook was published
-  , characters :: Maybe [CharacterBase.CharacterBase] -- ^ Base character, returned in search results
-  , productionNumber :: Maybe ProductionNumber.ProductionNumber -- ^ Book production number
-  , stardateTo :: Maybe StardateTo.StardateTo -- ^ Ending stardate of book story
-  , biographyBook :: BiographyBook.BiographyBook -- ^ Whether it's a biography book
-  , authors :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
-  , audiobookAbridged :: AudiobookAbridged.AudiobookAbridged -- ^ If it's an audiobook, whether it's been abridged
-  , referenceBook :: ReferenceBook.ReferenceBook -- ^ Whether it's a reference book
-  , uid :: Uid.Uid -- ^ Book unique ID
-  , audiobookReferences :: Maybe [Reference.Reference] -- ^ Reference of book, comics, video release, etc.
-  , eBook :: EBook.EBook -- ^ Whether it's an e-book
-  , publishedMonth :: Maybe PublishedMonth.PublishedMonth -- ^ Month the book was published
-  , publishedDay :: Maybe PublishedDay.PublishedDay -- ^ Day the book was published
-  , references :: Maybe [Reference.Reference] -- ^ Reference of book, comics, video release, etc.
-  , novel :: Novel.Novel -- ^ Whether it's a novel
-  , publishers :: Maybe [CompanyBase.CompanyBase] -- ^ Base company, returned in search results
-  , bookCollections :: Maybe [BookCollectionBase.BookCollectionBase] -- ^ Base book collection, returned in search results
-  , editors :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
-  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of book story
-  , audiobookPublishedYear :: Maybe AudiobookPublishedYear.AudiobookPublishedYear -- ^ Year the audiobook was published
-  , audiobookPublishers :: Maybe [CompanyBase.CompanyBase] -- ^ Base company, returned in search results
   , title :: Title.Title -- ^ Book title
-  , audiobookNarrators :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
-  , artists :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
-  , audiobookRunTime :: Maybe AudiobookRunTime.AudiobookRunTime -- ^ Audiobook run time, in minutes
-  , audiobookPublishedMonth :: Maybe AudiobookPublishedMonth.AudiobookPublishedMonth -- ^ Month the audiobook was published
-  , anthology :: Anthology.Anthology -- ^ Whether it's an anthology
-  , audiobook :: Audiobook.Audiobook -- ^ Whether it's an audiobook, or has been release as an audiobook in addition to other form
   , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of book story
-  , novelization :: Novelization.Novelization -- ^ Whether it's a novelization
+  , audiobookAbridged :: AudiobookAbridged.AudiobookAbridged -- ^ If it's an audiobook, whether it's been abridged
+  , anthology :: Anthology.Anthology -- ^ Whether it's an anthology
+  , editors :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
+  , rolePlayingBook :: RolePlayingBook.RolePlayingBook -- ^ Whether it's a role playing book
+  , referenceBook :: ReferenceBook.ReferenceBook -- ^ Whether it's a reference book
+  , bookCollections :: Maybe [BookCollectionBase.BookCollectionBase] -- ^ Base book collection, returned in search results
+  , artists :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
+  , characters :: Maybe [CharacterBase.CharacterBase] -- ^ Base character, returned in search results
+  , publishedDay :: Maybe PublishedDay.PublishedDay -- ^ Day the book was published
+  , eBook :: EBook.EBook -- ^ Whether it's an e-book
+  , uid :: Uid.Uid -- ^ Book unique ID
+  , audiobook :: Audiobook.Audiobook -- ^ Whether it's an audiobook, or has been release as an audiobook in addition to other form
+  , references :: Maybe [Reference.Reference] -- ^ Reference of book, comics, video release, etc.
+  , authors :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
   , numberOfPages :: Maybe NumberOfPages.NumberOfPages -- ^ Number of pages
+  , publishers :: Maybe [CompanyBase.CompanyBase] -- ^ Base company, returned in search results
   , publishedYear :: Maybe PublishedYear.PublishedYear -- ^ Year the book was published
+  , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of book story
+  , novel :: Novel.Novel -- ^ Whether it's a novel
+  , audiobookNarrators :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
+  , audiobookPublishers :: Maybe [CompanyBase.CompanyBase] -- ^ Base company, returned in search results
+  , audiobookRunTime :: Maybe AudiobookRunTime.AudiobookRunTime -- ^ Audiobook run time, in minutes
+  , novelization :: Novelization.Novelization -- ^ Whether it's a novelization
+  , productionNumber :: Maybe ProductionNumber.ProductionNumber -- ^ Book production number
+  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of book story
+  , audiobookPublishedMonth :: Maybe AudiobookPublishedMonth.AudiobookPublishedMonth -- ^ Month the audiobook was published
+  , stardateTo :: Maybe StardateTo.StardateTo -- ^ Ending stardate of book story
+  , audiobookPublishedYear :: Maybe AudiobookPublishedYear.AudiobookPublishedYear -- ^ Year the audiobook was published
+  , audiobookReferences :: Maybe [Reference.Reference] -- ^ Reference of book, comics, video release, etc.
+  , publishedMonth :: Maybe PublishedMonth.PublishedMonth -- ^ Month the book was published
+  , bookSeries :: Maybe [BookSeriesBase.BookSeriesBase] -- ^ Base book series, returned in search results
   }
   deriving (Eq, Show)
 
@@ -82,38 +82,38 @@ bookFullSchema :: FC.Fleece schema => schema BookFull
 bookFullSchema =
   FC.object $
     FC.constructor BookFull
-      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
-      #+ FC.required "rolePlayingBook" rolePlayingBook RolePlayingBook.rolePlayingBookSchema
-      #+ FC.optional "bookSeries" bookSeries (FC.list BookSeriesBase.bookSeriesBaseSchema)
-      #+ FC.optional "audiobookPublishedDay" audiobookPublishedDay AudiobookPublishedDay.audiobookPublishedDaySchema
-      #+ FC.optional "characters" characters (FC.list CharacterBase.characterBaseSchema)
-      #+ FC.optional "productionNumber" productionNumber ProductionNumber.productionNumberSchema
-      #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
       #+ FC.required "biographyBook" biographyBook BiographyBook.biographyBookSchema
-      #+ FC.optional "authors" authors (FC.list StaffBase.staffBaseSchema)
-      #+ FC.required "audiobookAbridged" audiobookAbridged AudiobookAbridged.audiobookAbridgedSchema
-      #+ FC.required "referenceBook" referenceBook ReferenceBook.referenceBookSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "audiobookReferences" audiobookReferences (FC.list Reference.referenceSchema)
-      #+ FC.required "eBook" eBook EBook.eBookSchema
-      #+ FC.optional "publishedMonth" publishedMonth PublishedMonth.publishedMonthSchema
-      #+ FC.optional "publishedDay" publishedDay PublishedDay.publishedDaySchema
-      #+ FC.optional "references" references (FC.list Reference.referenceSchema)
-      #+ FC.required "novel" novel Novel.novelSchema
-      #+ FC.optional "publishers" publishers (FC.list CompanyBase.companyBaseSchema)
-      #+ FC.optional "bookCollections" bookCollections (FC.list BookCollectionBase.bookCollectionBaseSchema)
-      #+ FC.optional "editors" editors (FC.list StaffBase.staffBaseSchema)
-      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
-      #+ FC.optional "audiobookPublishedYear" audiobookPublishedYear AudiobookPublishedYear.audiobookPublishedYearSchema
-      #+ FC.optional "audiobookPublishers" audiobookPublishers (FC.list CompanyBase.companyBaseSchema)
+      #+ FC.optional "audiobookPublishedDay" audiobookPublishedDay AudiobookPublishedDay.audiobookPublishedDaySchema
       #+ FC.required "title" title Title.titleSchema
-      #+ FC.optional "audiobookNarrators" audiobookNarrators (FC.list StaffBase.staffBaseSchema)
-      #+ FC.optional "artists" artists (FC.list StaffBase.staffBaseSchema)
-      #+ FC.optional "audiobookRunTime" audiobookRunTime AudiobookRunTime.audiobookRunTimeSchema
-      #+ FC.optional "audiobookPublishedMonth" audiobookPublishedMonth AudiobookPublishedMonth.audiobookPublishedMonthSchema
-      #+ FC.required "anthology" anthology Anthology.anthologySchema
-      #+ FC.required "audiobook" audiobook Audiobook.audiobookSchema
       #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
-      #+ FC.required "novelization" novelization Novelization.novelizationSchema
+      #+ FC.required "audiobookAbridged" audiobookAbridged AudiobookAbridged.audiobookAbridgedSchema
+      #+ FC.required "anthology" anthology Anthology.anthologySchema
+      #+ FC.optional "editors" editors (FC.list StaffBase.staffBaseSchema)
+      #+ FC.required "rolePlayingBook" rolePlayingBook RolePlayingBook.rolePlayingBookSchema
+      #+ FC.required "referenceBook" referenceBook ReferenceBook.referenceBookSchema
+      #+ FC.optional "bookCollections" bookCollections (FC.list BookCollectionBase.bookCollectionBaseSchema)
+      #+ FC.optional "artists" artists (FC.list StaffBase.staffBaseSchema)
+      #+ FC.optional "characters" characters (FC.list CharacterBase.characterBaseSchema)
+      #+ FC.optional "publishedDay" publishedDay PublishedDay.publishedDaySchema
+      #+ FC.required "eBook" eBook EBook.eBookSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.required "audiobook" audiobook Audiobook.audiobookSchema
+      #+ FC.optional "references" references (FC.list Reference.referenceSchema)
+      #+ FC.optional "authors" authors (FC.list StaffBase.staffBaseSchema)
       #+ FC.optional "numberOfPages" numberOfPages NumberOfPages.numberOfPagesSchema
+      #+ FC.optional "publishers" publishers (FC.list CompanyBase.companyBaseSchema)
       #+ FC.optional "publishedYear" publishedYear PublishedYear.publishedYearSchema
+      #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
+      #+ FC.required "novel" novel Novel.novelSchema
+      #+ FC.optional "audiobookNarrators" audiobookNarrators (FC.list StaffBase.staffBaseSchema)
+      #+ FC.optional "audiobookPublishers" audiobookPublishers (FC.list CompanyBase.companyBaseSchema)
+      #+ FC.optional "audiobookRunTime" audiobookRunTime AudiobookRunTime.audiobookRunTimeSchema
+      #+ FC.required "novelization" novelization Novelization.novelizationSchema
+      #+ FC.optional "productionNumber" productionNumber ProductionNumber.productionNumberSchema
+      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
+      #+ FC.optional "audiobookPublishedMonth" audiobookPublishedMonth AudiobookPublishedMonth.audiobookPublishedMonthSchema
+      #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
+      #+ FC.optional "audiobookPublishedYear" audiobookPublishedYear AudiobookPublishedYear.audiobookPublishedYearSchema
+      #+ FC.optional "audiobookReferences" audiobookReferences (FC.list Reference.referenceSchema)
+      #+ FC.optional "publishedMonth" publishedMonth PublishedMonth.publishedMonthSchema
+      #+ FC.optional "bookSeries" bookSeries (FC.list BookSeriesBase.bookSeriesBaseSchema)

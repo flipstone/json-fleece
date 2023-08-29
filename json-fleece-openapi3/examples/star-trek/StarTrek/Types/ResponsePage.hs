@@ -17,13 +17,13 @@ import qualified StarTrek.Types.ResponsePage.TotalElements as TotalElements
 import qualified StarTrek.Types.ResponsePage.TotalPages as TotalPages
 
 data ResponsePage = ResponsePage
-  { firstPage :: Maybe FirstPage.FirstPage -- ^ Whether it is the first page
+  { pageSize :: Maybe PageSize.PageSize -- ^ Page size
   , pageNumber :: Maybe PageNumber.PageNumber -- ^ Zero-based page number
+  , firstPage :: Maybe FirstPage.FirstPage -- ^ Whether it is the first page
+  , numberOfElements :: Maybe NumberOfElements.NumberOfElements -- ^ Number of elements in page
   , lastPage :: Maybe LastPage.LastPage -- ^ Whether it is the last page
   , totalPages :: Maybe TotalPages.TotalPages -- ^ Total pages found
   , totalElements :: Maybe TotalElements.TotalElements -- ^ Total elements found
-  , numberOfElements :: Maybe NumberOfElements.NumberOfElements -- ^ Number of elements in page
-  , pageSize :: Maybe PageSize.PageSize -- ^ Page size
   }
   deriving (Eq, Show)
 
@@ -31,10 +31,10 @@ responsePageSchema :: FC.Fleece schema => schema ResponsePage
 responsePageSchema =
   FC.object $
     FC.constructor ResponsePage
-      #+ FC.optional "firstPage" firstPage FirstPage.firstPageSchema
+      #+ FC.optional "pageSize" pageSize PageSize.pageSizeSchema
       #+ FC.optional "pageNumber" pageNumber PageNumber.pageNumberSchema
+      #+ FC.optional "firstPage" firstPage FirstPage.firstPageSchema
+      #+ FC.optional "numberOfElements" numberOfElements NumberOfElements.numberOfElementsSchema
       #+ FC.optional "lastPage" lastPage LastPage.lastPageSchema
       #+ FC.optional "totalPages" totalPages TotalPages.totalPagesSchema
       #+ FC.optional "totalElements" totalElements TotalElements.totalElementsSchema
-      #+ FC.optional "numberOfElements" numberOfElements NumberOfElements.numberOfElementsSchema
-      #+ FC.optional "pageSize" pageSize PageSize.pageSizeSchema

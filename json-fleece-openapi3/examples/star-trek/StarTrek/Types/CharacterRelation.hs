@@ -13,8 +13,8 @@ import qualified StarTrek.Types.CharacterRelation.Type as Type
 
 data CharacterRelation = CharacterRelation
   { target :: Maybe CharacterHeader.CharacterHeader -- ^ Header character, embedded in other objects
-  , source :: Maybe CharacterHeader.CharacterHeader -- ^ Header character, embedded in other objects
   , type_ :: Maybe Type.Type -- ^ Relation type
+  , source :: Maybe CharacterHeader.CharacterHeader -- ^ Header character, embedded in other objects
   }
   deriving (Eq, Show)
 
@@ -23,5 +23,5 @@ characterRelationSchema =
   FC.object $
     FC.constructor CharacterRelation
       #+ FC.optional "target" target CharacterHeader.characterHeaderSchema
-      #+ FC.optional "source" source CharacterHeader.characterHeaderSchema
       #+ FC.optional "type" type_ Type.typeSchema
+      #+ FC.optional "source" source CharacterHeader.characterHeaderSchema

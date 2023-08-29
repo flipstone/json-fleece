@@ -15,10 +15,10 @@ import qualified StarTrek.Types.TradingCardDeckFull.Uid as Uid
 import qualified StarTrek.Types.TradingCardSetHeader as TradingCardSetHeader
 
 data TradingCardDeckFull = TradingCardDeckFull
-  { uid :: Uid.Uid -- ^ Trading card deck unique ID
-  , tradingCardSet :: Maybe TradingCardSetHeader.TradingCardSetHeader -- ^ Header trading card set, embedded in other objects
-  , tradingCards :: Maybe [TradingCardBase.TradingCardBase] -- ^ Base trading card, returned in search results
+  { tradingCards :: Maybe [TradingCardBase.TradingCardBase] -- ^ Base trading card, returned in search results
   , frequency :: Maybe Frequency.Frequency -- ^ Frequency with which this deck occur in it's set
+  , tradingCardSet :: Maybe TradingCardSetHeader.TradingCardSetHeader -- ^ Header trading card set, embedded in other objects
+  , uid :: Uid.Uid -- ^ Trading card deck unique ID
   , name :: Name.Name -- ^ Trading card deck name
   }
   deriving (Eq, Show)
@@ -27,8 +27,8 @@ tradingCardDeckFullSchema :: FC.Fleece schema => schema TradingCardDeckFull
 tradingCardDeckFullSchema =
   FC.object $
     FC.constructor TradingCardDeckFull
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "tradingCardSet" tradingCardSet TradingCardSetHeader.tradingCardSetHeaderSchema
       #+ FC.optional "tradingCards" tradingCards (FC.list TradingCardBase.tradingCardBaseSchema)
       #+ FC.optional "frequency" frequency Frequency.frequencySchema
+      #+ FC.optional "tradingCardSet" tradingCardSet TradingCardSetHeader.tradingCardSetHeaderSchema
+      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.required "name" name Name.nameSchema

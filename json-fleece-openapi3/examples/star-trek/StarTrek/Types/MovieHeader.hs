@@ -12,8 +12,8 @@ import qualified StarTrek.Types.MovieHeader.Title as Title
 import qualified StarTrek.Types.MovieHeader.Uid as Uid
 
 data MovieHeader = MovieHeader
-  { uid :: Uid.Uid -- ^ Movie unique ID
-  , title :: Title.Title -- ^ Movie title
+  { title :: Title.Title -- ^ Movie title
+  , uid :: Uid.Uid -- ^ Movie unique ID
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ movieHeaderSchema :: FC.Fleece schema => schema MovieHeader
 movieHeaderSchema =
   FC.object $
     FC.constructor MovieHeader
-      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.required "title" title Title.titleSchema
+      #+ FC.required "uid" uid Uid.uidSchema
