@@ -7,3 +7,4 @@ module Fleece.Aeson
 import Fleece.Aeson.AnyJSON as Export
 import Fleece.Aeson.Decoder as Export
 import Fleece.Aeson.Encoder as Export
+import Fleece.Aeson.EncoderDecoder as Export

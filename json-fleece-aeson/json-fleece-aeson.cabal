@@ -32,6 +32,7 @@ library
       Fleece.Aeson.Encoder
   other-modules:
       Fleece.Aeson.AnyJSON
+      Fleece.Aeson.EncoderDecoder
       Paths_json_fleece_aeson
   hs-source-dirs:
       src

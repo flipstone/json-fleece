@@ -1,7 +1,7 @@
 {-# LANGUAGE TypeFamilies #-}
 
 module Fleece.Aeson.Decoder
-  ( Decoder
+  ( Decoder (..)
   , decode
   , fromValue
   , toParser

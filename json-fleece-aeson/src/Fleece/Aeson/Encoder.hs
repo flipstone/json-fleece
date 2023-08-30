@@ -1,7 +1,7 @@
 {-# LANGUAGE TypeFamilies #-}
 
 module Fleece.Aeson.Encoder
-  ( Encoder
+  ( Encoder (..)
   , encode
   ) where
 
