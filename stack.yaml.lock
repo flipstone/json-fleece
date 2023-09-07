@@ -48,6 +48,27 @@ packages:
       size: 400
   original:
     hackage: non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
+- completed:
+    hackage: hermes-json-0.6.1.0@sha256:ab54609e63a83a8e07900360de60ba1e197ea499fa5d3eb782eed980ee07545b,3856
+    pantry-tree:
+      sha256: f7d164e4949316aec0ec1364fcaa2b7bcb52249c60d0ecb5f323d91d3a22b75b
+      size: 1387
+  original:
+    hackage: hermes-json-0.6.1.0@sha256:ab54609e63a83a8e07900360de60ba1e197ea499fa5d3eb782eed980ee07545b,3856
+- completed:
+    hackage: integer-conversion-0.1@sha256:9f77cc7711d3100a4483f2dd1a22f4be5b59d235a556d910d0e6c5e90a967551,2208
+    pantry-tree:
+      sha256: 17063e15091711b54f9a4a9ccb032f3c2ed68bb4ba097243333469ad8462b748
+      size: 509
+  original:
+    hackage: integer-conversion-0.1@sha256:9f77cc7711d3100a4483f2dd1a22f4be5b59d235a556d910d0e6c5e90a967551,2208
+- completed:
+    hackage: text-iso8601-0.1@sha256:fc10d8de72fc094d0d299644f17421b9430d1c1092a1355c7f0c02d8b6edf6a7,2371
+    pantry-tree:
+      sha256: f72aa62f5f4d1155b3d3f35e8227548a27cee83fb5d0742564b5ef26597f1431
+      size: 427
+  original:
+    hackage: text-iso8601-0.1@sha256:fc10d8de72fc094d0d299644f17421b9430d1c1092a1355c7f0c02d8b6edf6a7,2371
 snapshots:
 - completed:
     sha256: 2fc12a405ab6f7eac73eb11a0ca5ccca0e956bd2848db780c140b7406ff9ebb5
