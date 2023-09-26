@@ -3,6 +3,7 @@
 module Fleece.Aeson.Decoder
   ( Decoder (..)
   , decode
+  , decodeStrict
   , fromValue
   , toParser
   ) where
@@ -13,6 +14,7 @@ import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Key as AesonKey
 import qualified Data.Aeson.KeyMap as AesonKeyMap
 import qualified Data.Aeson.Types as AesonTypes
+import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as LBS
 import qualified Data.Map.Strict as Map
 import qualified Data.Text.Encoding as Enc
@@ -34,6 +36,10 @@ toParser (Decoder _name f) =
 decode :: Decoder a -> LBS.ByteString -> Either String a
 decode decoder =
   fromValue decoder <=< Aeson.eitherDecode
+
+decodeStrict :: Decoder a -> BS.ByteString -> Either String a
+decodeStrict decoder =
+  fromValue decoder <=< Aeson.eitherDecodeStrict
 
 instance FC.Fleece Decoder where
   data Object Decoder _object a = Object

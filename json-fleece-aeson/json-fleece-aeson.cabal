@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-aeson
-version:        0.3.2.0
+version:        0.3.3.0
 description:    Please see the README on GitHub at <https://github.com/githubuser/json-fleece-aeson#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
