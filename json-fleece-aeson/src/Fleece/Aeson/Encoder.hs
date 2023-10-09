@@ -99,12 +99,19 @@ instance FC.Fleece Encoder where
     Object $ \object ->
       mkStart object <> mkNext object
 
+  inlineObject (Object mkStart) (FC.InlineObject accessor (Object mkNext)) =
+    Object $ \object ->
+      mkStart object <> mkNext (accessor object)
+
   additional (Object mkStart) (AdditionalFields mkRest) =
     Object $ \object ->
       mkStart object <> mkRest object
 
   objectNamed name (Object toSeries) =
     Encoder name (Aeson.pairs . toSeries)
+
+  resolveObjectValidation (Object toSeries) =
+    Object toSeries
 
   boundedEnumNamed name toText =
     Encoder name (Aeson.toEncoding . toText)

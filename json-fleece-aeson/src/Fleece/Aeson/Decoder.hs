@@ -129,6 +129,15 @@ instance FC.Fleece Decoder where
               <*> fieldDecoder field object
       }
 
+  inlineObject (Object fieldNames parseF) (FC.InlineObject _accessor inlineSchema) =
+    Object
+      { objectFields = objectFields inlineSchema <> fieldNames
+      , objectDecoder =
+          \object ->
+            parseF object
+              <*> objectDecoder inlineSchema object
+      }
+
   additional (Object fieldNames parseF) fields =
     Object
       { objectFields = fieldNames
@@ -141,6 +150,17 @@ instance FC.Fleece Decoder where
   objectNamed name (Object _definedFields parseObject) =
     Decoder name $
       Aeson.withObject (FC.nameToString name) parseObject
+
+  resolveObjectValidation (Object definedFields parseErrOrObject) =
+    Object
+      { objectFields = definedFields
+      , objectDecoder =
+          \aesonObject -> do
+            errOrObject <- parseErrOrObject aesonObject
+            case errOrObject of
+              Left err -> fail err
+              Right object -> pure object
+      }
 
   boundedEnumNamed name toText =
     let

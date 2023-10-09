@@ -20,6 +20,11 @@ module Fleece.Examples
   , abnormalNumbersExampleSchema
   , ListFieldExample (..)
   , listFieldExampleSchema
+  , CrossFieldValidationExample (..)
+  , mkCrossFieldValidationExample
+  , crossFieldValidationExampleSchema
+  , InlineObjectExample (..)
+  , inlineObjectExampleSchema
   ) where
 
 import qualified Data.Map as Map
@@ -28,12 +33,15 @@ import qualified Data.Text as T
 
 import Fleece.Core
   ( Fleece
+  , InlineObject (InlineObject)
   , NothingEncoding (EmitNull, OmitKey)
   , Null
+  , Object
   , additionalFields
   , bareOrJSONString
   , boundedEnum
   , constructor
+  , int
   , jsonString
   , list
   , nullable
@@ -44,8 +52,10 @@ import Fleece.Core
   , required
   , text
   , validate
+  , validateObject
   , (#*)
   , (#+)
+  , (#:)
   )
 
 data FooBar = FooBar
@@ -174,3 +184,51 @@ listFieldExampleSchema =
   object $
     constructor ListFieldExample
       #+ required "listField" listField (list boundedEnumSchema)
+
+data CrossFieldValidationExample = CrossFieldValidationExample
+  { validationLengthField :: Int
+  , validationTextField :: T.Text
+  }
+
+{- |
+  A validating constructor for a 'CrossFieldValidationExample' that is used in
+  'crossFieldValidationExampleSchema'.
+-}
+mkCrossFieldValidationExample ::
+  Int ->
+  T.Text ->
+  Either String CrossFieldValidationExample
+mkCrossFieldValidationExample len txt =
+  if T.length txt == len
+    then Right (CrossFieldValidationExample len txt)
+    else Left "'length' field must be equal to the length of the 'text' field"
+
+crossFieldValidationExampleSchema :: Fleece schema => schema CrossFieldValidationExample
+crossFieldValidationExampleSchema =
+  validateObject $
+    constructor mkCrossFieldValidationExample
+      #+ required "length" validationLengthField int
+      #+ required "text" validationTextField text
+
+data InlineObjectExample = InlineObjectExample
+  { inlineObjectNormalField :: T.Text
+  , inlineObjectSubObject :: InlineObjectSubObject
+  }
+
+data InlineObjectSubObject = InlineObjectSubObject
+  { subObjectField1 :: T.Text
+  , subObjectField2 :: T.Text
+  }
+
+inlineObjectExampleSchema :: Fleece schema => schema InlineObjectExample
+inlineObjectExampleSchema =
+  object $
+    constructor InlineObjectExample
+      #+ required "normalField" inlineObjectNormalField text
+      #: InlineObject inlineObjectSubObject subObjectSchema
+
+subObjectSchema :: Fleece schema => Object schema InlineObjectSubObject InlineObjectSubObject
+subObjectSchema =
+  constructor InlineObjectSubObject
+    #+ required "field1" subObjectField1 text
+    #+ required "field2" subObjectField2 text

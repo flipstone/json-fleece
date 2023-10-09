@@ -18,8 +18,10 @@ module Fleece.Core.Class
       , required
       , optional
       , mapField
+      , inlineObject
       , additionalFields
       , objectNamed
+      , resolveObjectValidation
       , constructor
       , nullable
       , field
@@ -33,8 +35,10 @@ module Fleece.Core.Class
       )
   , (#+)
   , (#*)
+  , (#:)
   , (#|)
   , Null (Null)
+  , InlineObject (InlineObject, inlineObjectAccessor, inlineObjectSchema)
   ) where
 
 import Data.Kind (Type)
@@ -95,6 +99,10 @@ class Fleece schema where
     Object schema a a ->
     schema a
 
+  resolveObjectValidation ::
+    Object schema a (Either String a) ->
+    Object schema a a
+
   constructor ::
     constructor ->
     Object schema object constructor
@@ -102,6 +110,11 @@ class Fleece schema where
   field ::
     Object schema object (a -> b) ->
     Field schema object a ->
+    Object schema object b
+
+  inlineObject ::
+    Object schema object (a -> b) ->
+    InlineObject schema object a ->
     Object schema object b
 
   additional ::
@@ -113,8 +126,8 @@ class Fleece schema where
     Name ->
     (a -> b) ->
     (b -> Either String a) ->
-    (schema b) ->
-    (schema a)
+    schema b ->
+    schema a
 
   boundedEnumNamed ::
     (Bounded a, Enum a) =>
@@ -165,6 +178,16 @@ infixl 9 #+
 
 infixl 9 #*
 
+(#:) ::
+  Fleece schema =>
+  Object schema object (a -> b) ->
+  InlineObject schema object a ->
+  Object schema object b
+(#:) =
+  inlineObject
+
+infixl 9 #:
+
 (#|) ::
   Fleece schema =>
   UnionMembers schema types left ->
@@ -178,3 +201,8 @@ infixl 9 #|
 data Null
   = Null
   deriving (Eq, Show)
+
+data InlineObject schema object a = InlineObject
+  { inlineObjectAccessor :: object -> a
+  , inlineObjectSchema :: Object schema a a
+  }

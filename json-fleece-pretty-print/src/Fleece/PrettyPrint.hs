@@ -152,6 +152,9 @@ instance FC.Fleece PrettyPrinter where
   field (Object fields) (Field renderField) =
     Object (DList.snoc fields renderField)
 
+  inlineObject (Object fields) (FC.InlineObject accessor (Object moreFields)) =
+    Object (fields <> fmap (. accessor) moreFields)
+
   additional (Object fields) (AdditionalFields renderAdditional) =
     Object (DList.snoc fields renderAdditional)
 
@@ -161,6 +164,9 @@ instance FC.Fleece PrettyPrinter where
         [ Inline (Plain (renderName name))
         , Indent (Block (map (\f -> f object) (DList.toList fields)))
         ]
+
+  resolveObjectValidation (Object fields) =
+    Object fields
 
   validateNamed name unvalidate _check (PrettyPrinter _name toPretty) =
     PrettyPrinter name $ \value ->

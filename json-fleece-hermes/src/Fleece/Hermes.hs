@@ -118,6 +118,13 @@ instance FC.Fleece Decoder where
           parseF <*> fieldDecoder field
       }
 
+  {-# INLINE inlineObject #-}
+  inlineObject (Object fieldNames parseF) (FC.InlineObject _accessor inlineSchema) =
+    Object
+      { objectFields = objectFields inlineSchema <> fieldNames
+      , objectDecoder = parseF <*> objectDecoder inlineSchema
+      }
+
   {-# INLINE additional #-}
   additional (Object fieldNames parseF) fields =
     Object
@@ -129,6 +136,17 @@ instance FC.Fleece Decoder where
   {-# INLINE objectNamed #-}
   objectNamed name (Object _definedFields parseObject) =
     Decoder name $ H.object parseObject
+
+  {-# INLINE resolveObjectValidation #-}
+  resolveObjectValidation (Object fieldNames parseErrOrObject) =
+    Object
+      { objectFields = fieldNames
+      , objectDecoder = do
+          errOrObject <- parseErrOrObject
+          case errOrObject of
+            Left err -> fail err
+            Right object -> pure object
+      }
 
   {-# INLINE boundedEnumNamed #-}
   boundedEnumNamed name toText =

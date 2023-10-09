@@ -114,6 +114,18 @@ instance FC.Fleece EncoderDecoder where
       , objectDecoder = FC.field (objectDecoder object) (fieldDecoder field)
       }
 
+  inlineObject object (FC.InlineObject accessor inlined) =
+    Object
+      { objectEncoder =
+          FC.inlineObject
+            (objectEncoder object)
+            (FC.InlineObject accessor (objectEncoder inlined))
+      , objectDecoder =
+          FC.inlineObject
+            (objectDecoder object)
+            (FC.InlineObject accessor (objectDecoder inlined))
+      }
+
   additional object addFields =
     Object
       { objectEncoder =
@@ -126,6 +138,12 @@ instance FC.Fleece EncoderDecoder where
     EncoderDecoder
       { encoder = FC.validateNamed name uncheck check $ encoder itemEncoderDecoder
       , decoder = FC.validateNamed name uncheck check $ decoder itemEncoderDecoder
+      }
+
+  resolveObjectValidation object =
+    Object
+      { objectEncoder = FC.resolveObjectValidation (objectEncoder object)
+      , objectDecoder = FC.resolveObjectValidation (objectDecoder object)
       }
 
   boundedEnumNamed name toText =

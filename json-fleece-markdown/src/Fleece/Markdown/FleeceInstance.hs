@@ -104,6 +104,9 @@ instance FC.Fleece Markdown where
   field (Object fields) (Field fieldDocs) =
     Object (DList.snoc fields fieldDocs)
 
+  inlineObject (Object fields) (FC.InlineObject _accessor (Object moreFields)) =
+    Object (fields <> moreFields)
+
   additional (Object fields) (AdditionalFields fieldDocs) =
     Object (DList.snoc fields fieldDocs)
 
@@ -116,6 +119,9 @@ instance FC.Fleece Markdown where
         , schemaMainEntry = Fields fields
         , schemaReferences = foldMap (schemaSelfReference . fieldSchemaDocs) fields
         }
+
+  resolveObjectValidation (Object fields) =
+    Object fields
 
   validateNamed _name _check _unvalidate (Markdown schemaDocs) =
     Markdown schemaDocs

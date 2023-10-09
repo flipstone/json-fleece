@@ -7,6 +7,8 @@
 module Fleece.Core.Schemas
   ( optionalNullable
   , object
+  , validateObject
+  , validateObjectNamed
   , boundedEnum
   , validate
   , list
@@ -86,6 +88,7 @@ import Fleece.Core.Class
   , number
   , objectNamed
   , optional
+  , resolveObjectValidation
   , schemaName
   , text
   , unionCombine
@@ -198,6 +201,28 @@ object o =
       objectNamed name o
   in
     schema
+
+validateObject ::
+  (Fleece schema, Typeable a) =>
+  Object schema a (Either String a) ->
+  schema a
+validateObject o =
+  let
+    name =
+      defaultSchemaName schema
+
+    schema =
+      validateObjectNamed name o
+  in
+    schema
+
+validateObjectNamed ::
+  Fleece schema =>
+  Name ->
+  Object schema a (Either String a) ->
+  schema a
+validateObjectNamed name =
+  objectNamed name . resolveObjectValidation
 
 boundedEnum ::
   (Fleece schema, Typeable a, Enum a, Bounded a) =>

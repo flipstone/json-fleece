@@ -17,6 +17,9 @@ module Fleece.Core
   , Object
   , object
   , objectNamed
+  , validateObject
+  , validateObjectNamed
+  , resolveObjectValidation
   , constructor
   , field
   , (#+)
@@ -26,6 +29,9 @@ module Fleece.Core
   , optionalNullable
   , NothingEncoding (EmitNull, OmitKey)
   , mapField
+  , inlineObject
+  , InlineObject (InlineObject, inlineObjectAccessor, inlineObjectSchema)
+  , (#:)
   , additional
   , (#*)
   , AdditionalFields
