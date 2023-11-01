@@ -1,5 +1,5 @@
 resolver:
-  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/9.yaml
+  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/19.yaml
 system-ghc: true
 install-ghc: false
 
@@ -28,12 +28,12 @@ extra-deps:
   - ../../../json-fleece-aeson
   - ../../../json-fleece-aeson-beeline
   - git: https://github.com/flipstone/beeline
-    commit: cbc8f138708d0404c18598a70d24cccde3545234
+    commit: 5bc5bf7a6244339c8b1c791309978c992cfe79bc
     subdirs:
       - beeline-routing
       - beeline-http-client
   - git: https://github.com/flipstone/shrubbery
-    commit: 253a5a954b9117df6b06e32e955f293813db2489
+    commit: 328107d50990f9ba7e63974cabab0575813af2cc
   - non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
 
 # Override default flag values for local packages and extra-deps
