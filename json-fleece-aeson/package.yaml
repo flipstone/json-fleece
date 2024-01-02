@@ -57,6 +57,7 @@ library:
     - Fleece.Aeson.Decoder
     - Fleece.Aeson.Encoder
   dependencies:
+    - either == 5.0.2
     - shrubbery >= 0.1.2 && < 0.2
 
 tests:
