@@ -3,6 +3,7 @@
 module Fleece.Aeson.Decoder
   ( Decoder (..)
   , decode
+  , decodePretty
   , decodeStrict
   , fromValue
   , toParser
@@ -16,6 +17,7 @@ import qualified Data.Aeson.KeyMap as AesonKeyMap
 import qualified Data.Aeson.Types as AesonTypes
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as LBS
+import Data.Either.Combinators (mapLeft)
 import qualified Data.Map.Strict as Map
 import qualified Data.Text.Encoding as Enc
 import qualified Shrubbery
@@ -25,9 +27,10 @@ import qualified Fleece.Core as FC
 data Decoder a
   = Decoder FC.Name (Aeson.Value -> AesonTypes.Parser a)
 
-fromValue :: Decoder a -> Aeson.Value -> Either String a
-fromValue =
-  AesonTypes.parseEither . toParser
+fromValue :: Decoder a -> Aeson.Value -> Either (String, String) a
+fromValue decoder value =
+  mapLeft (\(path, err) -> (AesonTypes.formatError path err, err)) $
+    AesonTypes.iparseEither (toParser decoder) value
 
 toParser :: Decoder a -> Aeson.Value -> AesonTypes.Parser a
 toParser (Decoder _name f) =
@@ -35,11 +38,15 @@ toParser (Decoder _name f) =
 
 decode :: Decoder a -> LBS.ByteString -> Either String a
 decode decoder =
-  fromValue decoder <=< Aeson.eitherDecode
+  mapLeft fst . fromValue decoder <=< Aeson.eitherDecode
+
+decodePretty :: Decoder a -> LBS.ByteString -> Either String a
+decodePretty decoder =
+  mapLeft snd . fromValue decoder <=< Aeson.eitherDecode
 
 decodeStrict :: Decoder a -> BS.ByteString -> Either String a
 decodeStrict decoder =
-  fromValue decoder <=< Aeson.eitherDecodeStrict
+  mapLeft fst . fromValue decoder <=< Aeson.eitherDecodeStrict
 
 instance FC.Fleece Decoder where
   data Object Decoder _object a = Object
