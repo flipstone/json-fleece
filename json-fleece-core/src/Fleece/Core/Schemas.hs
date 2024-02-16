@@ -46,6 +46,8 @@ module Fleece.Core.Schemas
   , eitherOfNamed
   , union
   , unionMember
+  , taggedUnion
+  , taggedUnionMember
   , bareOrJSONString
   , set
   , SetDuplicateHandling (AllowInputDuplicates, RejectInputDuplicates)
@@ -59,6 +61,7 @@ import qualified Data.Int as I
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map as Map
 import qualified Data.NonEmptyText as NET
+import Data.Proxy (Proxy (Proxy))
 import Data.Scientific (floatingOrInteger, fromFloatDigits, toBoundedInteger, toRealFloat)
 import qualified Data.Set as Set
 import qualified Data.Text as T
@@ -67,8 +70,8 @@ import qualified Data.Time.Format.ISO8601 as ISO8601
 import Data.Typeable (Typeable)
 import qualified Data.Vector as V
 import qualified Data.Word as W
-import GHC.TypeLits (KnownNat)
-import Shrubbery (Union, branch, branchBuild, branchEnd, dissectUnion, firstIndexOfType, index0, index1, unify, unifyWithIndex)
+import GHC.TypeLits (KnownNat, KnownSymbol, Symbol)
+import Shrubbery (Tag, TagIndex, TagType, TaggedTypes, TaggedUnion, TypeAtIndex, Union, branch, branchBuild, branchEnd, dissectUnion, firstIndexOfType, index0, index1, unify, unifyWithIndex, type (@=))
 import Shrubbery.TypeList (FirstIndexOf, Length)
 
 import Fleece.Core.Class
@@ -76,6 +79,7 @@ import Fleece.Core.Class
   , Fleece
   , Null (Null)
   , Object
+  , TaggedUnionMembers
   , UnionMembers
   , additionalFields
   , array
@@ -87,6 +91,8 @@ import Fleece.Core.Class
   , objectNamed
   , optional
   , schemaName
+  , taggedUnionMemberWithTag
+  , taggedUnionNamed
   , text
   , unionCombine
   , unionMemberWithIndex
@@ -184,6 +190,40 @@ unionMember ::
   UnionMembers schema types '[a]
 unionMember =
   unionMemberWithIndex firstIndexOfType
+
+taggedUnion ::
+  forall (tags :: [Tag]) schema.
+  (Typeable tags, Fleece schema, KnownNat (Length (TaggedTypes tags))) =>
+  String ->
+  TaggedUnionMembers schema tags tags ->
+  schema (TaggedUnion tags)
+taggedUnion tagProperty members =
+  let
+    name =
+      defaultSchemaName schema
+
+    schema =
+      taggedUnionNamed name tagProperty members
+  in
+    schema
+
+taggedUnionMember ::
+  forall (tag :: Symbol) (tags :: [Tag]) schema a n.
+  ( KnownSymbol tag
+  , n ~ TagIndex tag tags
+  , KnownNat n
+  , TagType tag tags ~ a
+  , TypeAtIndex n (TaggedTypes tags) ~ a
+  ) =>
+  Fleece schema =>
+  Object schema a a ->
+  TaggedUnionMembers schema tags '[tag @= a]
+taggedUnionMember =
+  let
+    tagProxy :: Proxy tag
+    tagProxy = Proxy
+  in
+    taggedUnionMemberWithTag tagProxy
 
 object ::
   (Fleece schema, Typeable a) =>

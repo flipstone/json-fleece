@@ -1,4 +1,6 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeApplications #-}
 
 module Main
   ( main
@@ -11,6 +13,7 @@ import GHC.Stack (withFrozenCallStack)
 import Hedgehog ((===))
 import qualified Hedgehog as HH
 import qualified Hedgehog.Main as HHM
+import qualified Shrubbery
 
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
@@ -35,6 +38,8 @@ tests =
   , ("prop_jsonObjectArray", prop_jsonObjectArray)
   , ("prop_jsonObject", prop_jsonObject)
   , ("prop_jsonNull", prop_jsonNull)
+  , ("prop_union", prop_union)
+  , ("prop_taggedUnion", prop_taggedUnion)
   , ("prop_validate", prop_validate)
   , ("prop_optional", prop_optional)
   , ("prop_optionalNullableFieldEmitNull", prop_optionalNullableFieldEmitNull)
@@ -209,6 +214,39 @@ prop_jsonNull =
       FC.mkJSONNull
       [ "AnyJSON Null"
       ]
+
+prop_union :: HH.Property
+prop_union =
+  HH.withTests 1 . HH.property $
+    let
+      value =
+        Shrubbery.unify @T.Text "foo"
+
+      expected =
+        [ "\"foo\""
+        ]
+    in
+      assertPrettyPrintEquals Examples.unionExampleSchema value expected
+
+prop_taggedUnion :: HH.Property
+prop_taggedUnion =
+  HH.withTests 1 . HH.property $
+    let
+      value =
+        Shrubbery.unifyTaggedUnion @"person" $
+          Examples.Person
+            { Examples.personName = "Alice"
+            , Examples.personAge = 42
+            }
+
+      expected =
+        [ "TaggedUnionExample"
+        , "  type = \"person\""
+        , "  name = \"Alice\""
+        , "  age = Int 42"
+        ]
+    in
+      assertPrettyPrintEquals Examples.taggedUnionExampleSchema value expected
 
 prop_validate :: HH.Property
 prop_validate =

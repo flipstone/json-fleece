@@ -1,3 +1,7 @@
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TypeOperators #-}
+
 module Fleece.Examples
   ( FooBar (..)
   , fooBarSchema
@@ -20,20 +24,33 @@ module Fleece.Examples
   , abnormalNumbersExampleSchema
   , ListFieldExample (..)
   , listFieldExampleSchema
+  , UnionExample
+  , unionExampleSchema
+  , TaggedUnionExample
+  , taggedUnionExampleSchema
+  , Person (..)
+  , personObject
+  , Company (..)
+  , companyObject
   ) where
 
 import qualified Data.Map as Map
 import Data.Scientific (Scientific)
 import qualified Data.Text as T
+import Shrubbery (type (@=))
+import qualified Shrubbery
 
 import Fleece.Core
   ( Fleece
   , NothingEncoding (EmitNull, OmitKey)
   , Null
+  , Object
   , additionalFields
   , bareOrJSONString
+  , boolean
   , boundedEnum
   , constructor
+  , int
   , jsonString
   , list
   , nullable
@@ -42,10 +59,17 @@ import Fleece.Core
   , optional
   , optionalNullable
   , required
+  , taggedUnionMember
+  , taggedUnionNamed
   , text
+  , unionMember
+  , unionNamed
+  , unqualifiedName
   , validate
   , (#*)
   , (#+)
+  , (#@)
+  , (#|)
   )
 
 data FooBar = FooBar
@@ -174,3 +198,48 @@ listFieldExampleSchema =
   object $
     constructor ListFieldExample
       #+ required "listField" listField (list boundedEnumSchema)
+
+type UnionExample =
+  Shrubbery.Union [T.Text, Scientific]
+
+unionExampleSchema :: Fleece schema => schema UnionExample
+unionExampleSchema =
+  unionNamed (unqualifiedName "UnionExample") $
+    unionMember text
+      #| unionMember number
+
+type TaggedUnionExample =
+  Shrubbery.TaggedUnion
+    [ "person" @= Person
+    , "company" @= Company
+    ]
+
+taggedUnionExampleSchema :: Fleece schema => schema TaggedUnionExample
+taggedUnionExampleSchema =
+  taggedUnionNamed (unqualifiedName "TaggedUnionExample") "type" $
+    taggedUnionMember @"person" personObject
+      #@ taggedUnionMember @"company" companyObject
+
+data Person = Person
+  { personName :: T.Text
+  , personAge :: Int
+  }
+  deriving (Eq, Show)
+
+personObject :: Fleece schema => Object schema Person Person
+personObject =
+  constructor Person
+    #+ required "name" personName text
+    #+ required "age" personAge int
+
+data Company = Company
+  { companyName :: T.Text
+  , companyIsToBigToFail :: Bool
+  }
+  deriving (Eq, Show)
+
+companyObject :: Fleece schema => Object schema Company Company
+companyObject =
+  constructor Company
+    #+ required "name" companyName text
+    #+ required "tooBigToFail" companyIsToBigToFail boolean

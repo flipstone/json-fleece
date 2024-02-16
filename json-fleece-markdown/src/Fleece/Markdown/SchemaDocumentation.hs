@@ -10,7 +10,7 @@ module Fleece.Markdown.SchemaDocumentation
   , schemaSelfReference
   , schemaReferencesWithDescendants
   , SchemaNullability (NotNull, Nullable)
-  , MainEntry (NameOnly, Fields, EnumValues, ArrayEntry, NullableEntry, UnionEntry)
+  , MainEntry (NameOnly, Fields, EnumValues, ArrayEntry, NullableEntry, UnionEntry, TaggedUnionEntry)
   , FieldDocumentation
     ( FieldDocumentation
     , fieldName
@@ -19,6 +19,11 @@ module Fleece.Markdown.SchemaDocumentation
     , fieldSchemaDocs
     )
   , FieldList
+  , TaggedUnionMemberDocumentation
+    ( TaggedUnionMemberDocumentation
+    , tagValue
+    , tagFields
+    )
   ) where
 
 import qualified Data.DList as DList
@@ -70,6 +75,7 @@ data MainEntry
   | ArrayEntry MainEntry
   | NullableEntry MainEntry
   | UnionEntry [FC.Name]
+  | TaggedUnionEntry T.Text [TaggedUnionMemberDocumentation]
 
 data FieldDocumentation = FieldDocumentation
   { fieldName :: T.Text
@@ -79,3 +85,8 @@ data FieldDocumentation = FieldDocumentation
   }
 
 type FieldList = DList.DList FieldDocumentation
+
+data TaggedUnionMemberDocumentation = TaggedUnionMemberDocumentation
+  { tagValue :: T.Text
+  , tagFields :: FieldList
+  }

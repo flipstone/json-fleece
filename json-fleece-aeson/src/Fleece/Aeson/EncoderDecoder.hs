@@ -34,6 +34,11 @@ instance FC.Fleece EncoderDecoder where
     , unionMembersDecoder :: FC.UnionMembers Decoder allTypes handledTypes
     }
 
+  data TaggedUnionMembers EncoderDecoder allTags handledTags = TaggedUnionMembers
+    { taggedUnionMembersEncoder :: FC.TaggedUnionMembers Encoder allTags handledTags
+    , taggedUnionMembersDecoder :: FC.TaggedUnionMembers Decoder allTags handledTags
+    }
+
   schemaName = FC.schemaName . encoder
 
   number =
@@ -156,6 +161,30 @@ instance FC.Fleece EncoderDecoder where
           FC.unionCombine
             (unionMembersDecoder leftMembers)
             (unionMembersDecoder rightMembers)
+      }
+
+  taggedUnionNamed name tagProperty members =
+    EncoderDecoder
+      { encoder = FC.taggedUnionNamed name tagProperty $ taggedUnionMembersEncoder members
+      , decoder = FC.taggedUnionNamed name tagProperty $ taggedUnionMembersDecoder members
+      }
+
+  taggedUnionMemberWithTag tag membersEncoderDecoder =
+    TaggedUnionMembers
+      { taggedUnionMembersEncoder = FC.taggedUnionMemberWithTag tag $ objectEncoder membersEncoderDecoder
+      , taggedUnionMembersDecoder = FC.taggedUnionMemberWithTag tag $ objectDecoder membersEncoderDecoder
+      }
+
+  taggedUnionCombine leftMembers rightMembers =
+    TaggedUnionMembers
+      { taggedUnionMembersEncoder =
+          FC.taggedUnionCombine
+            (taggedUnionMembersEncoder leftMembers)
+            (taggedUnionMembersEncoder rightMembers)
+      , taggedUnionMembersDecoder =
+          FC.taggedUnionCombine
+            (taggedUnionMembersDecoder leftMembers)
+            (taggedUnionMembersDecoder rightMembers)
       }
 
   jsonString itemEncoderDecoder =

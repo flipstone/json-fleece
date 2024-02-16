@@ -1,5 +1,5 @@
 name:                json-fleece-core
-version:             0.5.6.0
+version:             0.6.0.0
 github:              "flipstone/json-fleece/json-fleece-core"
 license:             BSD3
 author:              "Author name here"
@@ -22,7 +22,7 @@ dependencies:
 - containers >= 0.6 &&  < 0.7
 - non-empty-text >= 0.2 && < 0.3
 - scientific >= 0.3.7 && < 0.4
-- shrubbery >= 0.1.2 && < 0.2
+- shrubbery >= 0.2 && < 0.3
 - text >= 1.2 && < 2.1
 - time >= 1.11 && < 1.13
 - vector >= 0.12 && < 0.14
@@ -50,6 +50,7 @@ when:
         - -Wno-missing-deriving-strategies
         - -Wno-all-missed-specialisations
         - -Wno-missed-specialisations
+        - -Wno-unticked-promoted-constructors
     else:
       ghc-options:
         - -Wall

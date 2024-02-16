@@ -1,4 +1,10 @@
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE InstanceSigs #-}
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Fleece.Hermes
   ( Decoder
@@ -14,6 +20,8 @@ import qualified Data.Map.Strict as Map
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as Enc
+import GHC.TypeLits (KnownNat, KnownSymbol, symbolVal)
+import Shrubbery (type (@=))
 import qualified Shrubbery
 
 import qualified Fleece.Core as FC
@@ -46,6 +54,9 @@ instance FC.Fleece Decoder where
 
   newtype UnionMembers Decoder allTypes _handledTypes
     = UnionMembers (FC.Name -> H.Decoder (Shrubbery.Union allTypes))
+
+  newtype TaggedUnionMembers Decoder allTags _handledTags
+    = TaggedUnionMembers (Map.Map T.Text (H.FieldsDecoder (Shrubbery.TaggedUnion allTags)))
 
   schemaName (Decoder name _parseValue) =
     name
@@ -170,6 +181,49 @@ instance FC.Fleece Decoder where
       parseLeft name
         <|> parseRight name
         <|> fail ("All union parsing options for " <> FC.nameUnqualified name <> " failed.")
+
+  taggedUnionNamed name tagProperty (TaggedUnionMembers parserMap) =
+    let
+      tagPropKey =
+        T.pack tagProperty
+
+      nameString =
+        FC.nameToString name
+    in
+      Decoder name $
+        H.object $ do
+          tagValue <- H.atKey tagPropKey H.text
+          pure ()
+          case Map.lookup tagValue parserMap of
+            Just parseFields -> parseFields
+            Nothing -> fail ("Invalid tag found for tagged union " <> nameString <> ": " <> T.unpack tagValue)
+
+  taggedUnionMemberWithTag ::
+    forall tag allTags a proxy n.
+    ( KnownSymbol tag
+    , n ~ Shrubbery.TagIndex tag allTags
+    , KnownNat n
+    , Shrubbery.TagType tag allTags ~ a
+    , Shrubbery.TypeAtIndex n (Shrubbery.TaggedTypes allTags) ~ a
+    ) =>
+    proxy tag ->
+    FC.Object Decoder a a ->
+    FC.TaggedUnionMembers Decoder allTags '[tag @= a]
+  taggedUnionMemberWithTag tag object =
+    let
+      tagValue =
+        T.pack (symbolVal tag)
+
+      parseUnion =
+        fmap (Shrubbery.unifyTaggedUnion @tag)
+          . objectDecoder
+          $ object
+    in
+      TaggedUnionMembers (Map.singleton tagValue parseUnion)
+
+  {-# INLINE taggedUnionCombine #-}
+  taggedUnionCombine (TaggedUnionMembers left) (TaggedUnionMembers right) =
+    TaggedUnionMembers (Map.union left right)
 
   jsonString (Decoder name parseValue) =
     Decoder name $

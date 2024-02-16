@@ -17,6 +17,7 @@ import qualified Data.String as String
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
 import qualified Data.Text.Lazy.Builder as LTB
+import GHC.TypeLits (symbolVal)
 import qualified Shrubbery
 
 import qualified Fleece.Core as FC
@@ -83,6 +84,9 @@ instance FC.Fleece PrettyPrinter where
 
   newtype UnionMembers PrettyPrinter _allTypes handledTypes
     = UnionMembers (Shrubbery.BranchBuilder handledTypes Pretty)
+
+  newtype TaggedUnionMembers PrettyPrinter _allTags handledTags
+    = TaggedUnionMembers (Shrubbery.TaggedBranchBuilder handledTags (T.Text, DList.DList Pretty))
 
   schemaName (PrettyPrinter name _toBuilder) =
     name
@@ -179,6 +183,33 @@ instance FC.Fleece PrettyPrinter where
 
   unionCombine (UnionMembers leftBranches) (UnionMembers rightBranches) =
     UnionMembers (Shrubbery.appendBranches leftBranches rightBranches)
+
+  taggedUnionNamed name tagProperty (TaggedUnionMembers branches) =
+    PrettyPrinter name $ \value ->
+      let
+        (tagValue, memberFields) =
+          Shrubbery.dissectTaggedUnion
+            (Shrubbery.taggedBranchBuild branches)
+            value
+
+        fields =
+          prettyPrintField tagProperty (showInline tagValue)
+            : DList.toList memberFields
+      in
+        Block
+          [ Inline (Plain (renderName name))
+          , Indent (Block fields)
+          ]
+
+  taggedUnionMemberWithTag tag (Object fields) =
+    let
+      tagValue =
+        T.pack (symbolVal tag)
+    in
+      TaggedUnionMembers (Shrubbery.taggedSingleBranch (\a -> (tagValue, fmap ($ a) fields)))
+
+  taggedUnionCombine (TaggedUnionMembers leftBranches) (TaggedUnionMembers rightBranches) =
+    TaggedUnionMembers (Shrubbery.appendTaggedBranches leftBranches rightBranches)
 
   jsonString schema =
     schema

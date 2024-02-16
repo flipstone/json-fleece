@@ -20,7 +20,7 @@ import Fleece.Markdown.SchemaDocumentation
       , fieldName
       , fieldSchemaDocs
       )
-  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, UnionEntry)
+  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, TaggedUnionEntry, UnionEntry)
   , SchemaDocumentation
     ( schemaExcludeFromRender
     , schemaMainEntry
@@ -28,6 +28,7 @@ import Fleece.Markdown.SchemaDocumentation
     , schemaNullability
     )
   , SchemaNullability (NotNull, Nullable)
+  , TaggedUnionMemberDocumentation (tagFields, tagValue)
   , schemaReferencesWithDescendants
   )
 
@@ -134,10 +135,13 @@ mainEntryDocs nameContext entry =
         <> newline
         <> newline
         <> foldMap (listItem . renderName nameContext) memberNames
-
-h1 :: LTB.Builder -> LTB.Builder
-h1 builder =
-  markdownText "# " <> builder
+    TaggedUnionEntry tagProperty memberDocs ->
+      "One of the following field structures, depending on the value found in the "
+        <> markdownText tagProperty
+        <> " field."
+        <> newline
+        <> newline
+        <> foldMap (taggedUnionMember nameContext tagProperty) memberDocs
 
 fieldsHeader :: LTB.Builder
 fieldsHeader =
@@ -158,6 +162,28 @@ fieldRow nameContext fieldDocs =
     <> schemaFieldTypeDocs nameContext (fieldSchemaDocs fieldDocs)
     <> pipe
     <> newline
+
+taggedUnionMember :: NameContext -> T.Text -> TaggedUnionMemberDocumentation -> LTB.Builder
+taggedUnionMember nameContext tagProperty memberDocs =
+  let
+    headerText =
+      markdownText (tagProperty)
+        <> " = "
+        <> markdownText (tagValue memberDocs)
+  in
+    h2 headerText
+      <> newline
+      <> newline
+      <> "When the \""
+      <> markdownText tagProperty
+      <> "\" field has the value \""
+      <> markdownText (tagValue memberDocs)
+      <> "\", the object has the following fields:"
+      <> newline
+      <> newline
+      <> fieldsHeader
+      <> foldMap (fieldRow nameContext) (tagFields memberDocs)
+      <> newline
 
 pipe :: LTB.Builder
 pipe =
@@ -188,3 +214,11 @@ listItem item =
 markdownText :: T.Text -> LTB.Builder
 markdownText =
   LTB.fromText . T.replace "_" "\\_"
+
+h1 :: LTB.Builder -> LTB.Builder
+h1 builder =
+  markdownText "# " <> builder
+
+h2 :: LTB.Builder -> LTB.Builder
+h2 builder =
+  markdownText "## " <> builder

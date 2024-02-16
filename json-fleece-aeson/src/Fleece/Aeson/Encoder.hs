@@ -1,4 +1,10 @@
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE InstanceSigs #-}
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Fleece.Aeson.Encoder
   ( Encoder (..)
@@ -12,10 +18,14 @@ import qualified Data.Aeson.Types as AesonTypes
 import qualified Data.ByteString.Lazy as LBS
 import Data.Coerce (coerce)
 import qualified Data.Map.Strict as Map
+import qualified Data.Text as T
 import qualified Data.Text.Lazy.Encoding as LEnc
 import qualified Data.Vector as V
+import GHC.TypeLits (KnownSymbol, symbolVal)
+import Shrubbery (type (@=))
+import qualified Shrubbery
+
 import qualified Fleece.Core as FC
-import qualified Shrubbery as Shrubbery
 
 data Encoder a
   = Encoder FC.Name (a -> Aeson.Encoding)
@@ -34,8 +44,11 @@ instance FC.Fleece Encoder where
   newtype AdditionalFields Encoder object _a
     = AdditionalFields (object -> Aeson.Series)
 
-  data UnionMembers Encoder _allTypes handledTypes
+  newtype UnionMembers Encoder _allTypes handledTypes
     = UnionMembers (Shrubbery.BranchBuilder handledTypes Aeson.Encoding)
+
+  newtype TaggedUnionMembers Encoder _allTags handledTags
+    = TaggedUnionMembers (Shrubbery.TaggedBranchBuilder handledTags (T.Text, Aeson.Series))
 
   schemaName (Encoder name _toEncoding) =
     name
@@ -131,6 +144,43 @@ instance FC.Fleece Encoder where
 
   unionCombine (UnionMembers left) (UnionMembers right) =
     UnionMembers (Shrubbery.appendBranches left right)
+
+  taggedUnionNamed name tagProperty (TaggedUnionMembers builder) =
+    let
+      branches =
+        Shrubbery.taggedBranchBuild builder
+
+      tagPropText =
+        T.pack tagProperty
+
+      addTag (tagValue, aesonSeries) =
+        Aeson.pairs $
+          AesonEncoding.pair (AesonKey.fromText tagPropText) (Aeson.toEncoding tagValue)
+            <> aesonSeries
+    in
+      Encoder name (addTag . Shrubbery.dissectTaggedUnion branches)
+
+  taggedUnionMemberWithTag ::
+    forall tag allTags a proxy.
+    KnownSymbol tag =>
+    proxy tag ->
+    FC.Object Encoder a a ->
+    FC.TaggedUnionMembers Encoder allTags '[tag @= a]
+  taggedUnionMemberWithTag tag object =
+    TaggedUnionMembers $
+      let
+        -- It's important that this let is _inside_ the 'UnionMembers'
+        -- constructor so that it lazy enough to allow the recursive reference
+        -- of 'anyJSON' to itself within arrays.
+        Object toSeries = object
+
+        tagValue =
+          T.pack (symbolVal tag)
+      in
+        Shrubbery.taggedSingleBranch @tag (\a -> (tagValue, toSeries a))
+
+  taggedUnionCombine (TaggedUnionMembers left) (TaggedUnionMembers right) =
+    TaggedUnionMembers (Shrubbery.appendTaggedBranches left right)
 
   jsonString (Encoder name toEncoding) =
     Encoder

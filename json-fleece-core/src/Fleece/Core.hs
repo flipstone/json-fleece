@@ -88,6 +88,16 @@ module Fleece.Core
   , unionCombine
   , (#|)
 
+    -- * Functions for building schemas for tagged unions
+
+  -- , union
+  , taggedUnionNamed
+  , TaggedUnionMembers
+  , taggedUnionMember
+  , taggedUnionMemberWithTag
+  , taggedUnionCombine
+  , (#@)
+
     -- * A type and schema for handling arbitrary JSON
   , AnyJSON (AnyJSON)
   , anyJSON

@@ -2,6 +2,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Fleece.Core.Class
   ( Fleece
@@ -9,6 +10,7 @@ module Fleece.Core.Class
       , AdditionalFields
       , Object
       , UnionMembers
+      , TaggedUnionMembers
       , schemaName
       , text
       , number
@@ -29,11 +31,15 @@ module Fleece.Core.Class
       , unionNamed
       , unionMemberWithIndex
       , unionCombine
+      , taggedUnionNamed
+      , taggedUnionMemberWithTag
+      , taggedUnionCombine
       , jsonString
       )
   , (#+)
   , (#*)
   , (#|)
+  , (#@)
   , Null (Null)
   ) where
 
@@ -42,9 +48,9 @@ import qualified Data.Map as Map
 import Data.Scientific (Scientific)
 import qualified Data.Text as T
 import qualified Data.Vector as V
-import GHC.TypeLits (KnownNat)
-import Shrubbery (BranchIndex, Union)
-import Shrubbery.TypeList (AppendTypes, Length)
+import GHC.TypeLits (KnownNat, KnownSymbol)
+import Shrubbery (BranchIndex, Tag, TagIndex, TagType, TaggedTypes, TaggedUnion, TypeAtIndex, Union, type (@=))
+import Shrubbery.TypeList (Append, Length)
 
 import Fleece.Core.Name (Name)
 
@@ -53,6 +59,7 @@ class Fleece schema where
   data Field schema :: Type -> Type -> Type
   data AdditionalFields schema :: Type -> Type -> Type
   data UnionMembers schema :: [Type] -> [Type] -> Type
+  data TaggedUnionMembers schema :: [Tag] -> [Tag] -> Type
 
   schemaName :: schema a -> Name
 
@@ -136,7 +143,32 @@ class Fleece schema where
   unionCombine ::
     UnionMembers schema types left ->
     UnionMembers schema types right ->
-    UnionMembers schema types (AppendTypes left right)
+    UnionMembers schema types (Append left right)
+
+  taggedUnionNamed ::
+    KnownNat (Length (TaggedTypes tags)) =>
+    Name ->
+    String ->
+    TaggedUnionMembers schema tags tags ->
+    schema (TaggedUnion tags)
+
+  taggedUnionMemberWithTag ::
+    ( KnownSymbol tag
+    , n ~ TagIndex tag tags
+    , KnownNat n
+    , TagType tag tags ~ a
+    , TypeAtIndex n (TaggedTypes tags) ~ a
+    ) =>
+    proxy tag ->
+    Object schema a a ->
+    TaggedUnionMembers schema tags '[tag @= a]
+
+  taggedUnionCombine ::
+    Append (TaggedTypes left) (TaggedTypes right)
+      ~ TaggedTypes (Append left right) =>
+    TaggedUnionMembers schema tags left ->
+    TaggedUnionMembers schema tags right ->
+    TaggedUnionMembers schema tags (Append left right)
 
   jsonString ::
     schema a ->
@@ -169,9 +201,19 @@ infixl 9 #*
   Fleece schema =>
   UnionMembers schema types left ->
   UnionMembers schema types right ->
-  UnionMembers schema types (AppendTypes left right)
+  UnionMembers schema types (Append left right)
 (#|) =
   unionCombine
+
+(#@) ::
+  ( Fleece schema
+  , Append (TaggedTypes left) (TaggedTypes right) ~ TaggedTypes (Append left right)
+  ) =>
+  TaggedUnionMembers schema types left ->
+  TaggedUnionMembers schema types right ->
+  TaggedUnionMembers schema types (Append left right)
+(#@) =
+  taggedUnionCombine
 
 infixl 9 #|
 

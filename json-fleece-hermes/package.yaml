@@ -1,5 +1,5 @@
 name:                json-fleece-hermes
-version:             0.1.0.0
+version:             0.1.1.0
 github:              "flipstone/json-fleece/json-fleece-hermes"
 license:             BSD3
 author:              "Author name here"
@@ -18,7 +18,7 @@ description: Please see the README on GitHub at <https://github.com/flipstone/js
 dependencies:
 - base >= 4.7 && < 5
 - bytestring >= 0.11 && < 0.12
-- json-fleece-core >= 0.5 && < 0.6
+- json-fleece-core >= 0.6 && < 0.7
 - text >= 2.0 # This could be problematic for anyone using LTS 20 or below
 
 flags:
@@ -44,6 +44,7 @@ when:
         - -Wno-missing-deriving-strategies
         - -Wno-all-missed-specialisations
         - -Wno-missed-specialisations
+        - -Wno-unticked-promoted-constructors
     else:
       ghc-options:
         - -Wall
@@ -54,7 +55,7 @@ library:
   dependencies:
     - containers >= 0.6 && < 0.7
     - hermes-json >= 0.6 && < 0.7
-    - shrubbery >= 0.1.2 && < 0.2
+    - shrubbery >= 0.2 && < 0.3
 
 tests:
   json-fleece-hermes-test:
@@ -71,6 +72,7 @@ tests:
     - json-fleece-examples
     - hedgehog
     - scientific >= 0.3.7 && < 0.4
+    - shrubbery >= 0.2 && < 0.3
     - time >= 1.11 && < 1.13
     - vector >= 0.12 && < 0.14
 

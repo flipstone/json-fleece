@@ -1,4 +1,6 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeApplications #-}
 
 module Main
   ( main
@@ -22,6 +24,7 @@ import qualified Hedgehog as HH
 import qualified Hedgehog.Gen as Gen
 import qualified Hedgehog.Main as HHM
 import qualified Hedgehog.Range as Range
+import qualified Shrubbery
 
 import qualified Fleece.Aeson as FA
 import qualified Fleece.Core as FC
@@ -64,6 +67,10 @@ tests =
   , ("prop_encode_abnormalNumbers", prop_encode_abnormalNumbers)
   , ("prop_decode_listField", prop_decode_listField)
   , ("prop_encode_listField", prop_encode_listField)
+  , ("prop_decode_union", prop_decode_union)
+  , ("prop_encode_union", prop_encode_union)
+  , ("prop_decode_taggedUnion", prop_decode_taggedUnion)
+  , ("prop_encode_taggedUnion", prop_encode_taggedUnion)
   , ("prop_utcTimeAndZonedTime", prop_utcTimeAndZonedTime)
   ]
 
@@ -619,6 +626,120 @@ prop_encode_listField =
           }
 
     FA.encode Examples.listFieldExampleSchema input === expected
+
+prop_decode_union :: HH.Property
+prop_decode_union =
+  HH.property $ do
+    expected <- HH.forAll unionGen
+
+    let
+      jsonValue =
+        Shrubbery.dissectUnion
+          ( Shrubbery.branchBuild
+              . Shrubbery.branch @T.Text Aeson.encode
+              . Shrubbery.branch @Scientific Aeson.encode
+              $ Shrubbery.branchEnd
+          )
+          expected
+
+    FA.decode Examples.unionExampleSchema jsonValue === Right expected
+
+prop_encode_union :: HH.Property
+prop_encode_union =
+  HH.property $ do
+    input <- HH.forAll unionGen
+
+    let
+      expected =
+        Shrubbery.dissectUnion
+          ( Shrubbery.branchBuild
+              . Shrubbery.branch @T.Text Aeson.encode
+              . Shrubbery.branch @Scientific Aeson.encode
+              $ Shrubbery.branchEnd
+          )
+          input
+
+    FA.encode Examples.unionExampleSchema input === expected
+
+unionGen :: HH.Gen Examples.UnionExample
+unionGen =
+  Gen.choice
+    [ fmap Shrubbery.unify genText
+    , fmap Shrubbery.unify genScientific
+    ]
+
+prop_decode_taggedUnion :: HH.Property
+prop_decode_taggedUnion =
+  HH.property $ do
+    expected <- HH.forAll taggedUnionGen
+
+    let
+      jsonValue =
+        encodeTestObject $
+          Shrubbery.dissectTaggedUnion
+            ( Shrubbery.taggedBranchBuild
+                . Shrubbery.taggedBranch @"person"
+                  ( \p ->
+                      [ "type" .= Aeson.String "person"
+                      , "name" .= Examples.personName p
+                      , "age" .= Examples.personAge p
+                      ]
+                  )
+                . Shrubbery.taggedBranch @"company"
+                  ( \c ->
+                      [ "type" .= Aeson.String "company"
+                      , "name" .= Examples.companyName c
+                      , "tooBigToFail" .= Examples.companyIsToBigToFail c
+                      ]
+                  )
+                $ Shrubbery.taggedBranchEnd
+            )
+            expected
+
+    FA.decode Examples.taggedUnionExampleSchema jsonValue === Right expected
+
+prop_encode_taggedUnion :: HH.Property
+prop_encode_taggedUnion =
+  HH.property $ do
+    input <- HH.forAll taggedUnionGen
+
+    let
+      expected =
+        encodeTestObject $
+          Shrubbery.dissectTaggedUnion
+            ( Shrubbery.taggedBranchBuild
+                . Shrubbery.taggedBranch @"person"
+                  ( \p ->
+                      [ "type" .= Aeson.String "person"
+                      , "name" .= Examples.personName p
+                      , "age" .= Examples.personAge p
+                      ]
+                  )
+                . Shrubbery.taggedBranch @"company"
+                  ( \c ->
+                      [ "type" .= Aeson.String "company"
+                      , "name" .= Examples.companyName c
+                      , "tooBigToFail" .= Examples.companyIsToBigToFail c
+                      ]
+                  )
+                $ Shrubbery.taggedBranchEnd
+            )
+            input
+
+    FA.encode Examples.taggedUnionExampleSchema input === expected
+
+taggedUnionGen :: HH.Gen Examples.TaggedUnionExample
+taggedUnionGen =
+  Gen.choice
+    [ fmap (Shrubbery.unifyTaggedUnion @"person") $
+        Examples.Person
+          <$> genText
+          <*> Gen.int (Range.linear 0 99)
+    , fmap (Shrubbery.unifyTaggedUnion @"company") $
+        Examples.Company
+          <$> genText
+          <*> Gen.bool
+    ]
 
 prop_utcTimeAndZonedTime :: HH.Property
 prop_utcTimeAndZonedTime =

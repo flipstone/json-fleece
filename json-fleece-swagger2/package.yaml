@@ -42,6 +42,7 @@ when:
         - -Wno-missing-deriving-strategies
         - -Wno-all-missed-specialisations
         - -Wno-missed-specialisations
+        - -Wno-unticked-promoted-constructors
     else:
       ghc-options:
         - -Wall

@@ -33,6 +33,8 @@ tests =
   , ("prop_additional", prop_additional)
   , ("prop_abnormalNumbers", prop_abnormalNumbers)
   , ("prop_listField", prop_listField)
+  , ("prop_union", prop_union)
+  , ("prop_taggedUnion", prop_taggedUnion)
   , ("prop_nestedObject", prop_nestedObject)
   , ("prop_nameDisambiguation", prop_nameDisambiguation)
   ]
@@ -197,6 +199,48 @@ prop_listField =
       , "- apple"
       , "- orange"
       , "- kumquat"
+      ]
+
+prop_union :: HH.Property
+prop_union =
+  HH.withTests 1 . HH.property $
+    assertMarkdownEquals
+      Examples.unionExampleSchema
+      [ "# UnionExample"
+      , ""
+      , "Any one of the following"
+      , ""
+      , "- string"
+      , "- number"
+      ]
+
+prop_taggedUnion :: HH.Property
+prop_taggedUnion =
+  HH.withTests 1 . HH.property $
+    assertMarkdownEquals
+      Examples.taggedUnionExampleSchema
+      [ "# TaggedUnionExample"
+      , ""
+      , "One of the following field structures, depending on the value found in the type field."
+      , ""
+      , "## type = person"
+      , ""
+      , "When the \"type\" field has the value \"person\", the object has the following fields:"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|name|yes|no|string|"
+      , "|age|yes|no|number|"
+      , ""
+      , "## type = company"
+      , ""
+      , "When the \"type\" field has the value \"company\", the object has the following fields:"
+      , ""
+      , "|Field|Key Required|Null Allowed|Type|"
+      , "|---|---|---|---|"
+      , "|name|yes|no|string|"
+      , "|tooBigToFail|yes|no|boolean|"
+      , ""
       ]
 
 prop_nestedObject :: HH.Property

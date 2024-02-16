@@ -10,6 +10,7 @@ import qualified Data.DList as DList
 import qualified Data.Map.Strict as Map
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
+import GHC.TypeLits (symbolVal)
 
 import qualified Fleece.Core as FC
 import Fleece.Markdown.Render (schemaDocumentationToMarkdown)
@@ -22,7 +23,7 @@ import Fleece.Markdown.SchemaDocumentation
       , fieldSchemaDocs
       )
   , FieldList
-  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, UnionEntry)
+  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, TaggedUnionEntry, UnionEntry)
   , SchemaDocumentation
     ( SchemaDocumentation
     , schemaExcludeFromRender
@@ -32,6 +33,7 @@ import Fleece.Markdown.SchemaDocumentation
     , schemaReferences
     )
   , SchemaNullability (NotNull, Nullable)
+  , TaggedUnionMemberDocumentation (TaggedUnionMemberDocumentation, tagFields, tagValue)
   , schemaSelfReference
   )
 
@@ -51,8 +53,11 @@ instance FC.Fleece Markdown where
   newtype AdditionalFields Markdown _object _a
     = AdditionalFields FieldDocumentation
 
-  data UnionMembers Markdown _allTypes _handledTypes
+  newtype UnionMembers Markdown _allTypes _handledTypes
     = UnionMembers (DList.DList SchemaDocumentation)
+
+  newtype TaggedUnionMembers Markdown _allTags _handledTags
+    = TaggedUnionMembers (DList.DList TaggedUnionMemberDocumentation)
 
   schemaName (Markdown schemaDoc) =
     schemaName schemaDoc
@@ -160,6 +165,37 @@ instance FC.Fleece Markdown where
 
   unionCombine (UnionMembers left) (UnionMembers right) =
     UnionMembers (left <> right)
+
+  taggedUnionNamed name tagProperty (TaggedUnionMembers membersDList) =
+    Markdown $
+      let
+        members =
+          DList.toList membersDList
+
+        memberSchemaReferences =
+          foldMap (schemaSelfReference . fieldSchemaDocs) . tagFields
+      in
+        SchemaDocumentation
+          { schemaName = name
+          , schemaExcludeFromRender = False
+          , schemaNullability = NotNull
+          , schemaMainEntry = TaggedUnionEntry (T.pack tagProperty) members
+          , schemaReferences = foldMap memberSchemaReferences members
+          }
+
+  taggedUnionMemberWithTag tag object =
+    TaggedUnionMembers $
+      let
+        Object fields = object
+      in
+        DList.singleton
+          TaggedUnionMemberDocumentation
+            { tagValue = T.pack (symbolVal tag)
+            , tagFields = fields
+            }
+
+  taggedUnionCombine (TaggedUnionMembers left) (TaggedUnionMembers right) =
+    TaggedUnionMembers (left <> right)
 
   jsonString (Markdown schemaDocs) =
     Markdown $

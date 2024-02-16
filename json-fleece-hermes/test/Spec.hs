@@ -1,4 +1,6 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeApplications #-}
 
 module Main
   ( main
@@ -23,6 +25,7 @@ import qualified Hedgehog as HH
 import qualified Hedgehog.Gen as Gen
 import qualified Hedgehog.Main as HHM
 import qualified Hedgehog.Range as Range
+import qualified Shrubbery
 
 import qualified Fleece.Core as FC
 import qualified Fleece.Examples as Examples
@@ -49,6 +52,8 @@ tests =
   , ("prop_decode_additional", prop_decode_additional)
   , ("prop_decode_abnormalNumbers", prop_decode_abnormalNumbers)
   , ("prop_decode_listField", prop_decode_listField)
+  , ("prop_decode_union", prop_decode_union)
+  , ("prop_decode_taggedUnion", prop_decode_taggedUnion)
   , ("prop_utcTimeAndZonedTime", prop_utcTimeAndZonedTime)
   ]
 
@@ -363,6 +368,70 @@ prop_decode_listField =
           }
 
     FH.decode Examples.listFieldExampleSchema jsonObject === Right expected
+
+prop_decode_union :: HH.Property
+prop_decode_union =
+  HH.property $ do
+    expected <-
+      HH.forAll $
+        Gen.choice
+          [ fmap Shrubbery.unify genText
+          , fmap Shrubbery.unify genScientific
+          ]
+
+    let
+      jsonValue =
+        encodeTestObject $
+          Shrubbery.dissectUnion
+            ( Shrubbery.branchBuild
+                . Shrubbery.branch @T.Text (\t -> ["foo" .= t])
+                . Shrubbery.branch @Scientific (\s -> ["foo" .= s])
+                $ Shrubbery.branchEnd
+            )
+            expected
+
+    FH.decode (dummyObj "foo" Examples.unionExampleSchema) jsonValue === Right expected
+
+prop_decode_taggedUnion :: HH.Property
+prop_decode_taggedUnion =
+  HH.property $ do
+    expected <-
+      HH.forAll $
+        Gen.choice
+          [ fmap (Shrubbery.unifyTaggedUnion @"person") $
+              Examples.Person
+                <$> genText
+                <*> Gen.int (Range.linear 0 99)
+          , fmap (Shrubbery.unifyTaggedUnion @"company") $
+              Examples.Company
+                <$> genText
+                <*> Gen.bool
+          ]
+
+    let
+      jsonValue =
+        encodeTestObject $
+          Shrubbery.dissectTaggedUnion
+            ( Shrubbery.taggedBranchBuild
+                . Shrubbery.taggedBranch @"person"
+                  ( \p ->
+                      [ "type" .= Aeson.String "person"
+                      , "name" .= Examples.personName p
+                      , "age" .= Examples.personAge p
+                      ]
+                  )
+                . Shrubbery.taggedBranch @"company"
+                  ( \c ->
+                      [ "type" .= Aeson.String "company"
+                      , "name" .= Examples.companyName c
+                      , "tooBigToFail" .= Examples.companyIsToBigToFail c
+                      ]
+                  )
+                $ Shrubbery.taggedBranchEnd
+            )
+            expected
+
+    FH.decode Examples.taggedUnionExampleSchema jsonValue === Right expected
 
 prop_utcTimeAndZonedTime :: HH.Property
 prop_utcTimeAndZonedTime =
