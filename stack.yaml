@@ -67,8 +67,8 @@ extra-deps:
       - beeline-routing
       - beeline-http-client
   - git: https://github.com/flipstone/shrubbery
-    commit: 730255546c2eb99071380db44b5e349318dead68
-  - non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
+    commit: 629750cccdf9ac2110eab8ee52218b1e62032ef7
+  - non-empty-text-0.2.1
   - hermes-json-0.6.1.0@sha256:ab54609e63a83a8e07900360de60ba1e197ea499fa5d3eb782eed980ee07545b,3856
   - integer-conversion-0.1.0.1
   - text-iso8601-0.1@sha256:fc10d8de72fc094d0d299644f17421b9430d1c1092a1355c7f0c02d8b6edf6a7,2371

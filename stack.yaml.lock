@@ -31,23 +31,23 @@ packages:
     git: https://github.com/flipstone/beeline
     subdir: beeline-http-client
 - completed:
-    commit: 730255546c2eb99071380db44b5e349318dead68
+    commit: 629750cccdf9ac2110eab8ee52218b1e62032ef7
     git: https://github.com/flipstone/shrubbery
     name: shrubbery
     pantry-tree:
-      sha256: f6778fb34b67dd92ed69d302377b1873a29ce8b29bae5ffcca4ef3bb20f11dd4
+      sha256: b3c533a32106f822be41996bcd00c6b1993ad6c95f0ad830c48ac39059a291be
       size: 1737
     version: 0.2.0.0
   original:
-    commit: 730255546c2eb99071380db44b5e349318dead68
+    commit: 629750cccdf9ac2110eab8ee52218b1e62032ef7
     git: https://github.com/flipstone/shrubbery
 - completed:
-    hackage: non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
+    hackage: non-empty-text-0.2.1@sha256:df9629af4ad53af59dc0bfb5995c0500aaa656c884485560e9115152f7495c20,2438
     pantry-tree:
-      sha256: 303f637d7ca4c4573c8d861282b07b172959c8d3f3aa531b0462f3d08b9669d1
+      sha256: d8304ffcf168785e1a9d91c9f49bec92eacb43890ad31a48893861ff8de223ed
       size: 400
   original:
-    hackage: non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
+    hackage: non-empty-text-0.2.1
 - completed:
     hackage: hermes-json-0.6.1.0@sha256:ab54609e63a83a8e07900360de60ba1e197ea499fa5d3eb782eed980ee07545b,3856
     pantry-tree:
