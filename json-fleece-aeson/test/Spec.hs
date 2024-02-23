@@ -50,6 +50,8 @@ tests =
   , ("prop_encode_object", prop_encode_object)
   , ("prop_decode_boundedEnum", prop_decode_boundedEnum)
   , ("prop_encode_boundedEnum", prop_encode_boundedEnum)
+  , ("prop_decode_boundedEnumModifyText", prop_decode_boundedEnumModifyText)
+  , ("prop_encode_boundedEnumModifyText", prop_encode_boundedEnumModifyText)
   , ("prop_encode_nullableField", prop_encode_nullableField)
   , ("prop_decode_nullableField", prop_decode_nullableField)
   , ("prop_encode_validate", prop_encode_validate)
@@ -241,6 +243,40 @@ prop_decode_boundedEnum =
 
     decoded === expected
 
+prop_decode_boundedEnumModifyText :: HH.Property
+prop_decode_boundedEnumModifyText =
+  HH.property $ do
+    textValue <-
+      HH.forAll $
+        Gen.choice
+          [ pure "APPLE"
+          , pure "oRanGe"
+          , pure "orange"
+          , pure "ORANGE"
+          , pure "kumquat"
+          , genText
+          ]
+
+    let
+      testInput =
+        Aeson.encode textValue
+
+      expected =
+        case textValue of
+          "APPLE" -> Right Examples.Apple
+          "oRanGe" -> Right Examples.Orange
+          "orange" -> Right Examples.Orange
+          "ORANGE" -> Right Examples.Orange
+          "kumquat" -> Right Examples.Kumquat
+          _ -> Left $ "Error in $: Unrecognized value for Fleece.Examples.BoundedEnum enum: " <> show textValue
+
+      decoded =
+        FA.decode
+          Examples.boundedEnumToLowerSchema
+          testInput
+
+    decoded === expected
+
 prop_encode_boundedEnum :: HH.Property
 prop_encode_boundedEnum =
   HH.property $ do
@@ -255,6 +291,24 @@ prop_encode_boundedEnum =
       encoded =
         FA.encode
           Examples.boundedEnumSchema
+          enumValue
+
+    encoded === expected
+
+prop_encode_boundedEnumModifyText :: HH.Property
+prop_encode_boundedEnumModifyText =
+  HH.property $ do
+    enumValue <- HH.forAll Gen.enumBounded
+
+    let
+      expected =
+        Aeson.encode
+          . Examples.boundedEnumToText
+          $ enumValue
+
+      encoded =
+        FA.encode
+          Examples.boundedEnumToLowerSchema
           enumValue
 
     encoded === expected

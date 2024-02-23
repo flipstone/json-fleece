@@ -44,6 +44,7 @@ tests =
   , ("prop_decode_array", prop_decode_array)
   , ("prop_decode_object", prop_decode_object)
   , ("prop_decode_boundedEnum", prop_decode_boundedEnum)
+  , ("prop_decode_boundedEnumModifyText", prop_decode_boundedEnumModifyText)
   , ("prop_decode_nullableField", prop_decode_nullableField)
   , ("prop_decode_validate", prop_decode_validate)
   , ("prop_decode_nullableField_Failure", prop_decode_nullableField_Failure)
@@ -167,6 +168,45 @@ prop_decode_boundedEnum =
       decoded =
         FH.decode
           (dummyObj "foo" Examples.boundedEnumSchema)
+          testInput
+
+    decoded === expected
+
+prop_decode_boundedEnumModifyText :: HH.Property
+prop_decode_boundedEnumModifyText =
+  HH.property $ do
+    textValue <-
+      HH.forAll $
+        Gen.choice
+          [ pure "APPLE"
+          , pure "oRanGe"
+          , pure "orange"
+          , pure "ORANGE"
+          , pure "kumquat"
+          , genText
+          ]
+
+    let
+      testInput =
+        encodeTestObject
+          [ "foo" .= Aeson.String textValue
+          ]
+
+      expected =
+        case textValue of
+          "APPLE" -> Right Examples.Apple
+          "oRanGe" -> Right Examples.Orange
+          "orange" -> Right Examples.Orange
+          "ORANGE" -> Right Examples.Orange
+          "kumquat" -> Right Examples.Kumquat
+          _ ->
+            Left $
+              "Error in /foo: Unrecognized value for Fleece.Examples.BoundedEnum enum: "
+                <> show textValue
+
+      decoded =
+        FH.decode
+          (dummyObj "foo" Examples.boundedEnumToLowerSchema)
           testInput
 
     decoded === expected

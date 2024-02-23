@@ -154,7 +154,7 @@ instance FC.Fleece Decoder where
     Decoder name $
       Aeson.withObject (FC.nameToString name) parseObject
 
-  boundedEnumNamed name toText =
+  boundedEnumNamedModifyText name toText modifyText =
     let
       decodingMap =
         Map.fromList
@@ -163,7 +163,7 @@ instance FC.Fleece Decoder where
     in
       Decoder name $
         Aeson.withText (FC.nameToString name) $ \textValue ->
-          case Map.lookup textValue decodingMap of
+          case Map.lookup (modifyText textValue) decodingMap of
             Just enumValue -> pure enumValue
             Nothing ->
               fail $

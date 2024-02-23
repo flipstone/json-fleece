@@ -125,7 +125,7 @@ instance FC.Fleece Markdown where
   validateNamed _name _check _unvalidate (Markdown schemaDocs) =
     Markdown schemaDocs
 
-  boundedEnumNamed name toText =
+  boundedEnumNamedModifyText name toText _modifyText =
     let
       enumValues =
         map toText [minBound .. maxBound]

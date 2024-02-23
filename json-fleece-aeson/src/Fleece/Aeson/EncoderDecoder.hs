@@ -133,10 +133,10 @@ instance FC.Fleece EncoderDecoder where
       , decoder = FC.validateNamed name uncheck check $ decoder itemEncoderDecoder
       }
 
-  boundedEnumNamed name toText =
+  boundedEnumNamedModifyText name toText modifyText =
     EncoderDecoder
-      { encoder = FC.boundedEnumNamed name toText
-      , decoder = FC.boundedEnumNamed name toText
+      { encoder = FC.boundedEnumNamedModifyText name toText modifyText
+      , decoder = FC.boundedEnumNamedModifyText name toText modifyText
       }
 
   unionNamed name members =

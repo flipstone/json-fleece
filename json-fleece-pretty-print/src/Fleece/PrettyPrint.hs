@@ -172,7 +172,7 @@ instance FC.Fleece PrettyPrinter where
         (renderName name)
         (toPretty (unvalidate value))
 
-  boundedEnumNamed name toText =
+  boundedEnumNamedModifyText name toText _modifyText =
     PrettyPrinter name (showInline . toText)
 
   unionNamed name (UnionMembers branches) =

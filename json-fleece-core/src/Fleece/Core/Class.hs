@@ -27,7 +27,7 @@ module Fleece.Core.Class
       , field
       , additional
       , validateNamed
-      , boundedEnumNamed
+      , boundedEnumNamedModifyText
       , unionNamed
       , unionMemberWithIndex
       , unionCombine
@@ -123,10 +123,11 @@ class Fleece schema where
     (schema b) ->
     (schema a)
 
-  boundedEnumNamed ::
+  boundedEnumNamedModifyText ::
     (Bounded a, Enum a) =>
     Name ->
     (a -> T.Text) ->
+    (T.Text -> T.Text) ->
     schema a
 
   unionNamed ::

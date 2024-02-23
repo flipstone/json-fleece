@@ -119,7 +119,7 @@ instance FC.Fleece Encoder where
   objectNamed name (Object toSeries) =
     Encoder name (Aeson.pairs . toSeries)
 
-  boundedEnumNamed name toText =
+  boundedEnumNamedModifyText name toText _modifyText =
     Encoder name (Aeson.toEncoding . toText)
 
   validateNamed name uncheck _check (Encoder _unvalidatedName toEncoding) =

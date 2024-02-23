@@ -141,8 +141,8 @@ instance FC.Fleece Decoder where
   objectNamed name (Object _definedFields parseObject) =
     Decoder name $ H.object parseObject
 
-  {-# INLINE boundedEnumNamed #-}
-  boundedEnumNamed name toText =
+  {-# INLINE boundedEnumNamedModifyText #-}
+  boundedEnumNamedModifyText name toText modifyText =
     let
       decodingMap =
         Map.fromList
@@ -151,7 +151,7 @@ instance FC.Fleece Decoder where
     in
       Decoder name $
         H.withText $ \textValue ->
-          case Map.lookup textValue decodingMap of
+          case Map.lookup (modifyText textValue) decodingMap of
             Just enumValue -> pure enumValue
             Nothing ->
               fail $

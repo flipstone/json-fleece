@@ -8,6 +8,8 @@ module Fleece.Core.Schemas
   ( optionalNullable
   , object
   , boundedEnum
+  , boundedEnumNamed
+  , boundedEnumModifyText
   , validate
   , list
   , Fleece.Core.Schemas.map
@@ -83,7 +85,7 @@ import Fleece.Core.Class
   , UnionMembers
   , additionalFields
   , array
-  , boundedEnumNamed
+  , boundedEnumNamedModifyText
   , constructor
   , jsonString
   , nullable
@@ -244,12 +246,28 @@ boundedEnum ::
   (a -> T.Text) ->
   schema a
 boundedEnum toText =
+  boundedEnumModifyText toText id
+
+boundedEnumNamed ::
+  (Fleece schema, Enum a, Bounded a) =>
+  Name ->
+  (a -> T.Text) ->
+  schema a
+boundedEnumNamed name toText =
+  boundedEnumNamedModifyText name toText id
+
+boundedEnumModifyText ::
+  (Fleece schema, Typeable a, Enum a, Bounded a) =>
+  (a -> T.Text) ->
+  (T.Text -> T.Text) ->
+  schema a
+boundedEnumModifyText toText modifyText =
   let
     name =
       defaultSchemaName schema
 
     schema =
-      boundedEnumNamed name toText
+      boundedEnumNamedModifyText name toText modifyText
   in
     schema
 

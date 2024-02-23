@@ -45,6 +45,8 @@ module Fleece.Core
     -- * Schemas for common Haskell data types that are useful with JSON
   , boundedEnum
   , boundedEnumNamed
+  , boundedEnumNamedModifyText
+  , boundedEnumModifyText
   , list
   , Fleece.Core.Schemas.map
   , nonEmpty

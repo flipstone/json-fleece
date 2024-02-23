@@ -17,6 +17,7 @@ module Fleece.Examples
   , optionalNullableFieldOmitKeySchema
   , BoundedEnum (..)
   , boundedEnumSchema
+  , boundedEnumToLowerSchema
   , boundedEnumToText
   , AdditionalFieldsExample (..)
   , additionalFieldsExampleSchema
@@ -49,6 +50,7 @@ import Fleece.Core
   , bareOrJSONString
   , boolean
   , boundedEnum
+  , boundedEnumModifyText
   , constructor
   , int
   , jsonString
@@ -152,6 +154,10 @@ data BoundedEnum
 boundedEnumSchema :: Fleece schema => schema BoundedEnum
 boundedEnumSchema =
   boundedEnum boundedEnumToText
+
+boundedEnumToLowerSchema :: Fleece schema => schema BoundedEnum
+boundedEnumToLowerSchema =
+  boundedEnumModifyText boundedEnumToText T.toLower
 
 boundedEnumToText :: BoundedEnum -> T.Text
 boundedEnumToText e =
