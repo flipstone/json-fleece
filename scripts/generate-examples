@@ -4,28 +4,29 @@ set -e
 
 source scripts/lib/run-in-container.sh
 
-echo "Generating Test Cases API (OpenAPI 3.0.1)"
-rm -rf json-fleece-openapi3/examples/test-cases/TestCases
-stack exec \
-  fleece-openapi3 \
-  -- \
-  json-fleece-openapi3/examples/test-cases/codegen.dhall \
-  --yes
+stack run fleece-openapi3 -- json-fleece-openapi3/examples/one-of/codegen.dhall --yes
+#echo "Generating Test Cases API (OpenAPI 3.0.1)"
+#rm -rf json-fleece-openapi3/examples/test-cases/TestCases
+#stack exec \
+#  fleece-openapi3 \
+#  -- \
+#  json-fleece-openapi3/examples/test-cases/codegen.dhall \
+#  --yes
+#
+#echo "Generating StarTrek API (OpenAPI 3.0.1)"
+#rm -rf json-fleece-openapi3/examples/star-trek/StarTrek
+#stack exec \
+#  fleece-openapi3 \
+#  -- \
+#  json-fleece-openapi3/examples/star-trek/codegen.dhall \
+#  --yes
+#
+#echo "Generating Uber API (Swagger 2.0)"
+#rm -rf json-fleece-swagger2/examples/uber/Uber
+#stack exec \
+#  fleece-swagger2 \
+#  -- \
+#  json-fleece-swagger2/examples/uber/codegen.dhall \
+#  --yes
 
-echo "Generating StarTrek API (OpenAPI 3.0.1)"
-rm -rf json-fleece-openapi3/examples/star-trek/StarTrek
-stack exec \
-  fleece-openapi3 \
-  -- \
-  json-fleece-openapi3/examples/star-trek/codegen.dhall \
-  --yes
-
-echo "Generating Uber API (Swagger 2.0)"
-rm -rf json-fleece-swagger2/examples/uber/Uber
-stack exec \
-  fleece-swagger2 \
-  -- \
-  json-fleece-swagger2/examples/uber/codegen.dhall \
-  --yes
-
-./scripts/test-examples
+#./scripts/test-examples

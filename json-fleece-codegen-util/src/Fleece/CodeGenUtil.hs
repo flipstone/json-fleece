@@ -240,6 +240,7 @@ data CodeGenDataFormat
   | CodeGenEnum TypeOptions [T.Text]
   | CodeGenObject TypeOptions [CodeGenObjectField] (Maybe CodeGenAdditionalProperties)
   | CodeGenArray TypeOptions CodeGenObjectFieldType
+  | CodeGenUnionMembers [CodeGenDataFormat]
 
 data CodeGenObjectField = CodeGenObjectField
   { codeGenFieldName :: T.Text
@@ -1079,6 +1080,7 @@ generateSchemaCode typeMap codeGenType = do
         generateFleeceObject typeMap typeName fields mbAdditionalProperties typeOptions
       CodeGenArray typeOptions itemType ->
         generateFleeceArray typeMap typeName itemType typeOptions
+      CodeGenUnionMembers _types -> pure ([], HC.fromText "unionMembers")
 
   let
     header =

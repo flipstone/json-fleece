@@ -1,0 +1,16 @@
+openapi: 3.0.1
+info:
+  title: Fleece TestCases
+  version: 1.0.0
+components:
+  schemas:
+    AStringType:
+      oneOf:
+        - type: string
+        - type: integer
+        - $ref: "#/components/schemas/Obj"
+    Obj:
+      type: object
+      properties:
+        foobar:
+          type: integer

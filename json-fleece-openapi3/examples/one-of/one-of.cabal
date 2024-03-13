@@ -1,0 +1,165 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.36.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           one-of
+version:        0.1.0.0
+category:       Web
+homepage:       https://github.com/githubuser/one-of
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2023 Author name here
+license:        BSD3
+build-type:     Simple
+
+library
+  exposed-modules:
+      OneOfTest.Operations.GetMultiplePathsParams
+      OneOfTest.Operations.GetMultiplePathsParams.Param1
+      OneOfTest.Operations.GetMultiplePathsParams.Param2
+      OneOfTest.Operations.Num2GetAResultNamedNumberSomething
+      OneOfTest.Operations.ParamSchemaReference
+      OneOfTest.Operations.ParamSchemaReference.EnumIntParam
+      OneOfTest.Operations.ParamSchemaReference.EnumParam
+      OneOfTest.Operations.ParamSchemaReference.StringParam
+      OneOfTest.Operations.ParamSchemaReferenceArray
+      OneOfTest.Operations.ParamSchemaReferenceArray.ArrayParam
+      OneOfTest.Operations.TestCases.AnyJsonResponse
+      OneOfTest.Operations.TestCases.HeaderParams
+      OneOfTest.Operations.TestCases.HeaderParams.BooleanParam
+      OneOfTest.Operations.TestCases.HeaderParams.InlineEnumIntParam
+      OneOfTest.Operations.TestCases.HeaderParams.InlineEnumParam
+      OneOfTest.Operations.TestCases.HeaderParams.OptionalArrayParam
+      OneOfTest.Operations.TestCases.HeaderParams.RequiredArrayParam
+      OneOfTest.Operations.TestCases.HeaderParams.StringParam
+      OneOfTest.Operations.TestCases.InlineArrayResponse
+      OneOfTest.Operations.TestCases.InlineBooleanResponse
+      OneOfTest.Operations.TestCases.InlineEnumArrayRequestBody
+      OneOfTest.Operations.TestCases.InlineEnumArrayRequestBody.RequestBodyItem
+      OneOfTest.Operations.TestCases.InlineEnumResponses
+      OneOfTest.Operations.TestCases.InlineEnumResponses.Response200Body
+      OneOfTest.Operations.TestCases.InlineEnumResponses.Response201Body
+      OneOfTest.Operations.TestCases.InlineInt32Response
+      OneOfTest.Operations.TestCases.InlineInt64Response
+      OneOfTest.Operations.TestCases.InlineIntegerResponse
+      OneOfTest.Operations.TestCases.InlineObjectAdditionalPropertiesJsonResponse
+      OneOfTest.Operations.TestCases.InlineObjectJsonResponse
+      OneOfTest.Operations.TestCases.InlineObjectStringArrayResponse
+      OneOfTest.Operations.TestCases.InlineObjectStringRefResponse
+      OneOfTest.Operations.TestCases.InlineObjectStringResponse
+      OneOfTest.Operations.TestCases.InlineObjectWithPropertiesAndAdditionalJsonResponse
+      OneOfTest.Operations.TestCases.InlineObjectWithPropertiesAndAdditionalJsonResponse.Response200Body
+      OneOfTest.Operations.TestCases.InlineObjectWithPropertiesAndAdditionalJsonResponse.Response200Body.Bar
+      OneOfTest.Operations.TestCases.InlineObjectWithPropertiesAndAdditionalJsonResponse.Response200Body.Foo
+      OneOfTest.Operations.TestCases.InlineObjectWithPropertiesAndAdditionalJsonResponse.Response200BodyItem
+      OneOfTest.Operations.TestCases.InlineObjectWithPropertiesJsonResponse
+      OneOfTest.Operations.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body
+      OneOfTest.Operations.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body.Bar
+      OneOfTest.Operations.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body.Baz
+      OneOfTest.Operations.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body.Foo
+      OneOfTest.Operations.TestCases.InlineStringResponse
+      OneOfTest.Operations.TestCases.MultipleResponsesCodes
+      OneOfTest.Operations.TestCases.NoContentResponse
+      OneOfTest.Operations.TestCases.OperationTypeOptions.PathParam
+      OneOfTest.Operations.TestCases.OperationTypeOptions.PathParam.PathParam
+      OneOfTest.Operations.TestCases.OperationTypeOptions.PathParam.QueryParam
+      OneOfTest.Operations.TestCases.QueryParams
+      OneOfTest.Operations.TestCases.QueryParams.BooleanParam
+      OneOfTest.Operations.TestCases.QueryParams.InlineEnumIntParam
+      OneOfTest.Operations.TestCases.QueryParams.InlineEnumParam
+      OneOfTest.Operations.TestCases.QueryParams.OptionalArrayParam
+      OneOfTest.Operations.TestCases.QueryParams.RequiredArrayParam
+      OneOfTest.Operations.TestCases.QueryParams.StringParam
+      OneOfTest.Operations.TestCases.RequestBody
+      OneOfTest.Types.AStringType
+      OneOfTest.Types.CustomDateFormat
+      OneOfTest.Types.DateTimeFormats
+      OneOfTest.Types.DateTimeFormats.DefaultTimeField
+      OneOfTest.Types.DateTimeFormats.LocalTimeField
+      OneOfTest.Types.DateTimeFormats.UtcTimeField
+      OneOfTest.Types.DateTimeFormats.ZonedTimeField
+      OneOfTest.Types.DefaultTimeType
+      OneOfTest.Types.DerivingNothing
+      OneOfTest.Types.EnumIntParam
+      OneOfTest.Types.EnumParam
+      OneOfTest.Types.FieldDescriptions
+      OneOfTest.Types.FieldDescriptions.EmptyDescription
+      OneOfTest.Types.FieldDescriptions.NoDescription
+      OneOfTest.Types.FieldDescriptions.WithDescription
+      OneOfTest.Types.FieldTestCases
+      OneOfTest.Types.FieldTestCases.ArrayFieldItem
+      OneOfTest.Types.FieldTestCases.NullableArrayFieldItem
+      OneOfTest.Types.FieldTestCases.OptionalArrayFieldItem
+      OneOfTest.Types.FieldTestCases.OptionalField
+      OneOfTest.Types.FieldTestCases.OptionalNullableArrayFieldItem
+      OneOfTest.Types.FieldTestCases.OptionalNullableField
+      OneOfTest.Types.FieldTestCases.RequiredField
+      OneOfTest.Types.FieldTestCases.RequiredNullableField
+      OneOfTest.Types.JustAdditionalPropertiesSchemaInline
+      OneOfTest.Types.JustAdditionalPropertiesSchemaInlineItem
+      OneOfTest.Types.JustAdditionalPropertiesSchemaRef
+      OneOfTest.Types.JustAdditionalPropertiesTrue
+      OneOfTest.Types.LocalTimeType
+      OneOfTest.Types.MixedInAdditionalPropertiesTrue
+      OneOfTest.Types.MixedInAdditionalPropertiesTrue.Bar
+      OneOfTest.Types.MixedInAdditionalPropertiesTrue.Foo
+      OneOfTest.Types.MixedInJustAdditionalPropertiesSchemaInline
+      OneOfTest.Types.MixedInJustAdditionalPropertiesSchemaInline.Bar
+      OneOfTest.Types.MixedInJustAdditionalPropertiesSchemaInline.Foo
+      OneOfTest.Types.MixedInJustAdditionalPropertiesSchemaInlineItem
+      OneOfTest.Types.MixedInJustAdditionalPropertiesSchemaRef
+      OneOfTest.Types.MixedInJustAdditionalPropertiesSchemaRef.Bar
+      OneOfTest.Types.MixedInJustAdditionalPropertiesSchemaRef.Foo
+      OneOfTest.Types.NameConflicts
+      OneOfTest.Types.NameConflicts.Case
+      OneOfTest.Types.NameConflicts.Class
+      OneOfTest.Types.NameConflicts.Data
+      OneOfTest.Types.NameConflicts.Deriving
+      OneOfTest.Types.NameConflicts.Do
+      OneOfTest.Types.NameConflicts.Else
+      OneOfTest.Types.NameConflicts.If
+      OneOfTest.Types.NameConflicts.Import
+      OneOfTest.Types.NameConflicts.In
+      OneOfTest.Types.NameConflicts.Infix
+      OneOfTest.Types.NameConflicts.Infixl
+      OneOfTest.Types.NameConflicts.Infixr
+      OneOfTest.Types.NameConflicts.Instance
+      OneOfTest.Types.NameConflicts.Int32
+      OneOfTest.Types.NameConflicts.Int64
+      OneOfTest.Types.NameConflicts.Let
+      OneOfTest.Types.NameConflicts.Module
+      OneOfTest.Types.NameConflicts.NameConflicts
+      OneOfTest.Types.NameConflicts.Newtype
+      OneOfTest.Types.NameConflicts.Of
+      OneOfTest.Types.NameConflicts.Scientific
+      OneOfTest.Types.NameConflicts.Text
+      OneOfTest.Types.NameConflicts.Then
+      OneOfTest.Types.NameConflicts.Type
+      OneOfTest.Types.NameConflicts.Where
+      OneOfTest.Types.Num2SchemaStartingWithNumber
+      OneOfTest.Types.StringParam
+      OneOfTest.Types.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body.Baz.Bax
+      OneOfTest.Types.TopLevelArray
+      OneOfTest.Types.TopLevelArray.TopLevelArrayItem
+      OneOfTest.Types.TopLevelArrayNullable
+      OneOfTest.Types.TopLevelArrayNullable.TopLevelArrayNullableItem
+      OneOfTest.Types.UtcTimeType
+      OneOfTest.Types.ZonedTimeType
+  other-modules:
+      Paths_one_of
+  hs-source-dirs:
+      ./
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      base >=4.7 && <5
+    , beeline-http-client ==0.8.*
+    , beeline-routing >=0.2.4 && <0.3
+    , containers
+    , json-fleece-aeson-beeline ==0.1.*
+    , json-fleece-core >=0.1.3 && <0.7
+    , scientific
+    , text
+    , time
+  default-language: Haskell2010

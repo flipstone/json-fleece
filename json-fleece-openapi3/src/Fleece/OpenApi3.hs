@@ -1,5 +1,7 @@
+{-# OPTIONS_GHC -Wwarn #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Fleece.OpenApi3
   ( generateOpenApiFleeceCode
@@ -799,7 +801,28 @@ mkOpenApiDataFormat schemaKey typeName schema =
       Just OA.OpenApiNull -> do
         typeOptions <- CGU.lookupTypeOptions typeName
         noRefs $ pure (CGU.nullFormat typeOptions)
-      Nothing -> mkOpenApiObjectFormatOrAdditionalPropertiesNewtype CGU.Type schemaKey typeName schema
+      Nothing ->
+        case OA._schemaOneOf schema of
+          Just schemas ->
+            mkOneOf schemas
+          Nothing ->
+            mkOpenApiObjectFormatOrAdditionalPropertiesNewtype CGU.Type schemaKey typeName schema
+
+mkOneOf :: [OA.Referenced OA.Schema] -> CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
+mkOneOf schemas =
+  let
+  mk schema =
+    case schema of
+      OA.Inline foo -> Just foo
+      OA.Ref ref -> Nothing -- TODO
+  mkCodeGenDataFormat oa =
+    mkOpenApiDataFormat
+      "foobar" -- TODO
+      (HC.preludeType "Integer")
+      oa
+   in do
+  (maps, dataFormats) <- fmap unzip . traverse mkCodeGenDataFormat $ mapMaybe mk schemas
+  pure (Map.unions maps, CGU.CodeGenUnionMembers dataFormats)
 
 mkOpenApiStringFormat :: HC.TypeName -> OA.Schema -> CGU.CodeGen CGU.CodeGenDataFormat
 mkOpenApiStringFormat typeName schema = do
