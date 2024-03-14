@@ -31,6 +31,9 @@ module Fleece.CodeGenUtil.HaskellCode
   , renderText
   , renderString
   , newline
+  , taggedUnion
+  , typeList
+  , taggedUnionTypeList
   , intercalate
   , lines
   , indent
@@ -62,16 +65,18 @@ module Fleece.CodeGenUtil.HaskellCode
   , enumClass
   , boundedClass
   , preludeType
+  , shrubberyType
   ) where
 
 -- import prelude explicitly since we want to define our own 'lines' function
 
 import Data.Maybe (fromMaybe)
-import Prelude (Eq ((==)), Foldable, Int, Maybe (Just, Nothing), Monoid (mempty), Ord, Semigroup ((<>)), String, any, flip, fmap, id, map, maybe, mconcat, show, zip, ($), (.))
+import Prelude (Eq ((==)), Foldable, Int, Maybe (Just, Nothing), Monoid (mempty), Ord, Semigroup ((<>)), String, any, const, flip, fmap, id, map, maybe, mconcat, show, zip, ($), (.))
 
 import qualified Data.Char as Char
 import Data.Foldable (toList)
 import qualified Data.List as List
+import qualified Data.List.NonEmpty as NEL
 import qualified Data.NonEmptyText as NET
 import qualified Data.Set as Set
 import qualified Data.String as String
@@ -409,6 +414,46 @@ deriving_ :: [TypeName] -> HaskellCode
 deriving_ classes =
   "deriving (" <> intercalate ", " (map (typeNameToCode Nothing) classes) <> ")"
 
+taggedUnion :: TypeExpression -> TypeExpression
+taggedUnion unionName =
+  typeNameToCodeDefaultQualification (shrubberyType "TaggedUnion")
+    <> " "
+    <> unionName
+
+typeList :: TypeName -> NEL.NonEmpty TypeExpression -> HaskellCode
+typeList =
+  prefixedTypeList Nothing
+
+taggedUnionTypeList :: TypeName -> NEL.NonEmpty TypeExpression -> HaskellCode
+taggedUnionTypeList =
+  prefixedTypeList (Just $ \member -> "\"" <> member <> "\" @= ")
+
+prefixedTypeList ::
+  Maybe (HaskellCode -> HaskellCode) ->
+  TypeName ->
+  NEL.NonEmpty TypeExpression ->
+  HaskellCode
+prefixedTypeList mbPrefixFn typeListName members =
+  let
+    first = toCode $ NEL.head members
+    rest = map toCode $ NEL.tail members
+    prefix =
+      case mbPrefixFn of
+        Just prefixFn -> prefixFn
+        Nothing -> const mempty
+
+    firstMember = "[ " <> prefix first <> first
+    restMembers = map (\member -> ", \"" <> member <> member) rest
+  in
+    lines
+      [ "type "
+          <> typeNameToCode Nothing typeListName
+          <> " ="
+      , indent 2 firstMember
+      , lines $ map (indent 2) restMembers
+      , indent 2 "]"
+      ]
+
 listOf :: TypeExpression -> TypeExpression
 listOf itemName =
   TypeExpression ("[" <> toCode itemName <> "]")
@@ -528,3 +573,7 @@ boundedClass =
 preludeType :: T.Text -> TypeName
 preludeType =
   toTypeName "Prelude" Nothing
+
+shrubberyType :: T.Text -> TypeName
+shrubberyType =
+  toTypeName "Shrubbery" (Just "Shrubbery")

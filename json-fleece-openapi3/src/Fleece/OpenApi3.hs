@@ -2,6 +2,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+<<<<<<< Updated upstream
+=======
+{-# OPTIONS_GHC -Wwarn #-}
+>>>>>>> Stashed changes
 
 module Fleece.OpenApi3
   ( generateOpenApiFleeceCode
@@ -803,6 +807,7 @@ mkOpenApiDataFormat schemaKey typeName schema =
         noRefs $ pure (CGU.nullFormat typeOptions)
       Nothing ->
         case OA._schemaOneOf schema of
+<<<<<<< Updated upstream
           Just schemas ->
             mkOneOf schemas
           Nothing ->
@@ -822,6 +827,33 @@ mkOneOf schemas =
       oa
    in do
   (maps, dataFormats) <- fmap unzip . traverse mkCodeGenDataFormat $ mapMaybe mk schemas
+=======
+          Just schemas -> mkOneOf schemas
+          Nothing -> mkOpenApiObjectFormatOrAdditionalPropertiesNewtype CGU.Type schemaKey typeName schema
+
+mkOneOf ::
+  [OA.Referenced OA.Schema] ->
+  CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
+mkOneOf schemas = do
+  let
+    mk :: OA.Referenced OA.Schema -> Maybe OA.Schema
+    mk schema =
+      case schema of
+        OA.Inline foo -> Just foo
+        OA.Ref ref -> Nothing -- TODO
+    mkCodeGenDataFormat ::
+      OA.Schema ->
+      CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
+    mkCodeGenDataFormat oa =
+      mkOpenApiDataFormat
+        "foobar" -- TODO
+        (HC.preludeType "Integer")
+        oa
+
+  (maps, dataFormats) <-
+    fmap unzip . traverse mkCodeGenDataFormat $ mapMaybe mk schemas
+
+>>>>>>> Stashed changes
   pure (Map.unions maps, CGU.CodeGenUnionMembers dataFormats)
 
 mkOpenApiStringFormat :: HC.TypeName -> OA.Schema -> CGU.CodeGen CGU.CodeGenDataFormat

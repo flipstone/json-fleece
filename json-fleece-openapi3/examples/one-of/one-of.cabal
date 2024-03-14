@@ -16,6 +16,7 @@ build-type:     Simple
 
 library
   exposed-modules:
+<<<<<<< Updated upstream
       OneOfTest.Operations.GetMultiplePathsParams
       OneOfTest.Operations.GetMultiplePathsParams.Param1
       OneOfTest.Operations.GetMultiplePathsParams.Param2
@@ -147,6 +148,11 @@ library
       OneOfTest.Types.TopLevelArrayNullable.TopLevelArrayNullableItem
       OneOfTest.Types.UtcTimeType
       OneOfTest.Types.ZonedTimeType
+=======
+      OneOfTest.Types.AStringType
+      OneOfTest.Types.Obj
+      OneOfTest.Types.Obj.Foobar
+>>>>>>> Stashed changes
   other-modules:
       Paths_one_of
   hs-source-dirs:
