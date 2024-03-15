@@ -18,6 +18,7 @@ dependencies:
   - json-fleece-aeson-beeline >= 0.1 && < 0.2
   - beeline-routing >= 0.2.4 && < 0.3
   - beeline-http-client >= 0.8 && < 0.9
+  - shrubbery >= 0.2 && < 0.3
   - time
 
 ghc-options:

@@ -492,6 +492,64 @@ mkInlineBodySchema raiseError schemaKey schemaMap schema =
       Nothing ->
         raiseError "Inline schema doesn't have a type."
 
+mkInlineOneOfSchema ::
+  (forall a. String -> CGU.CodeGen a) ->
+  T.Text ->
+  SchemaMap ->
+  OA.Schema ->
+  CGU.CodeGen SchemaTypeInfoWithDeps
+mkInlineOneOfSchema raiseError schemaKey schemaMap schema =
+  case OA._schemaType schema of
+    Just OA.OpenApiArray ->
+      case OA._schemaItems schema of
+        Just (OA.OpenApiItemsObject (OA.Ref ref)) -> do
+          (_modName, refTypeName) <- CGU.inferTypeForInputName CGU.Type $ OA.getReference ref
+          itemSchemaInfo <- CGU.inferSchemaInfoForTypeName refTypeName
+          pure . schemaInfoWithoutDependencies . CGU.arrayTypeInfo $ itemSchemaInfo
+        Just (OA.OpenApiItemsObject (OA.Inline innerSchema)) ->
+          let
+            itemKey =
+              schemaKey <> "Item"
+          in
+            fmap
+              (fmapSchemaInfoAndDeps CGU.arrayTypeInfo)
+              (mkInlineOneOfSchema raiseError itemKey schemaMap innerSchema)
+        otherItemType ->
+          raiseError $
+            "Unsupported schema array item type found: "
+              <> show otherItemType
+    Just OA.OpenApiString ->
+      case OA._schemaEnum schema of
+        Nothing -> pure . schemaInfoWithoutDependencies $ CGU.textSchemaTypeInfo
+        Just _values -> do
+          (_moduleName, typeName) <- CGU.inferTypeForInputName CGU.Operation schemaKey
+          (inlinedTypes, schemaTypeInfo) <-
+            mkSchemaTypeInfo
+              schemaKey
+              typeName
+              schema
+
+          pure $
+            SchemaTypeInfoWithDeps
+              { schemaTypeInfoDependent = schemaTypeInfo
+              , schemaTypeInfoDependencies = inlinedTypes
+              }
+    Just OA.OpenApiBoolean ->
+      pure . schemaInfoWithoutDependencies $ CGU.boolSchemaTypeInfo
+    Just OA.OpenApiInteger ->
+      pure . schemaInfoWithoutDependencies $
+        case OA._schemaFormat schema of
+          Just "int32" -> CGU.int32SchemaTypeInfo
+          Just "int64" -> CGU.int64SchemaTypeInfo
+          Just _ -> CGU.integerSchemaTypeInfo
+          Nothing -> CGU.integerSchemaTypeInfo
+    Just OA.OpenApiObject ->
+      raiseError "Inline OpenApiObject schemas are not currently supported in oneOf."
+    Just s ->
+      raiseError $ "Inline " <> show s <> " schemas are not currently supported."
+    Nothing ->
+      raiseError "Inline schema doesn't have a type."
+
 mkOperationParams ::
   SchemaMap ->
   T.Text ->
@@ -799,7 +857,37 @@ mkOpenApiDataFormat schemaKey typeName schema =
       Just OA.OpenApiNull -> do
         typeOptions <- CGU.lookupTypeOptions typeName
         noRefs $ pure (CGU.nullFormat typeOptions)
-      Nothing -> mkOpenApiObjectFormatOrAdditionalPropertiesNewtype CGU.Type schemaKey typeName schema
+      Nothing ->
+        case OA._schemaOneOf schema of
+          Just schemas ->
+            mkOneOf schemaKey schemas
+          Nothing ->
+            mkOpenApiObjectFormatOrAdditionalPropertiesNewtype CGU.Type schemaKey typeName schema
+
+mkOneOf ::
+  T.Text ->
+  [OA.Referenced OA.Schema] ->
+  CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
+mkOneOf schemaKey refSchemas =
+  let
+    processRefSchema refSchema =
+      case refSchema of
+        OA.Inline schema -> do
+          typeInfoWithDeps <-
+            mkInlineOneOfSchema
+              (\err -> CGU.codeGenError $ "Inside inline oneOf: " <> err)
+              schemaKey
+              mempty
+              schema
+          pure (schemaTypeInfoDependencies typeInfoWithDeps, schemaTypeInfoDependent typeInfoWithDeps)
+        OA.Ref ref -> do
+          (_modName, refTypeName) <- CGU.inferTypeForInputName CGU.Type $ OA.getReference ref
+          schemaInfo <- CGU.inferSchemaInfoForTypeName refTypeName
+          pure (Map.empty, schemaInfo)
+  in
+    do
+      (maps, schemaTypeInfos) <- fmap unzip . traverse processRefSchema $ refSchemas
+      pure (Map.unions maps, CGU.CodeGenUnion schemaTypeInfos)
 
 mkOpenApiStringFormat :: HC.TypeName -> OA.Schema -> CGU.CodeGen CGU.CodeGenDataFormat
 mkOpenApiStringFormat typeName schema = do
@@ -927,7 +1015,7 @@ mkOpenApiObjectFormat section schemaKey typeName schema = do
   (fieldDependencies, fields) <-
     fmap unzip
       . traverse (uncurry $ propertyToCodeGenField section schemaKey requiredParams)
-      . filter (\(prop, _) -> not (prop `elem` unsupportedProperties))
+      . filter (\(prop, _) -> prop `notElem` unsupportedProperties)
       . IOHM.toList
       . OA._schemaProperties
       $ schema

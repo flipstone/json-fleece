@@ -31,6 +31,11 @@ module Fleece.CodeGenUtil.HaskellCode
   , renderText
   , renderString
   , newline
+  , quote
+  , taggedUnion
+  , union
+  , typeList
+  , taggedUnionTypeList
   , intercalate
   , lines
   , indent
@@ -62,6 +67,7 @@ module Fleece.CodeGenUtil.HaskellCode
   , enumClass
   , boundedClass
   , preludeType
+  , shrubberyType
   ) where
 
 -- import prelude explicitly since we want to define our own 'lines' function
@@ -247,6 +253,10 @@ intercalate :: Foldable f => HaskellCode -> f HaskellCode -> HaskellCode
 intercalate sep =
   mconcat . List.intersperse sep . toList
 
+intercalateTypes :: Foldable f => TypeExpression -> f TypeExpression -> TypeExpression
+intercalateTypes sep =
+  mconcat . List.intersperse sep . toList
+
 lines :: Foldable f => f HaskellCode -> HaskellCode
 lines = intercalate newline
 
@@ -427,6 +437,38 @@ mapOf keyName itemName =
     <> itemName
     <> ")"
 
+taggedUnion :: TypeExpression
+taggedUnion =
+  typeNameToCodeDefaultQualification (shrubberyType "TaggedUnion")
+
+union :: TypeExpression
+union =
+  typeNameToCodeDefaultQualification (shrubberyType "Union")
+
+typeList :: [TypeExpression] -> TypeExpression
+typeList =
+  prefixedTypeList Nothing
+
+quote :: HaskellCode -> HaskellCode
+quote code =
+  "\"" <> code <> "\""
+
+taggedUnionTypeList :: [TypeExpression] -> TypeExpression
+taggedUnionTypeList =
+  prefixedTypeList (Just $ \member -> quote member <> " @= ")
+
+prefixedTypeList ::
+  Maybe (HaskellCode -> HaskellCode) ->
+  [TypeExpression] ->
+  TypeExpression
+prefixedTypeList mbPrefixFn members =
+  case mbPrefixFn of
+    Just _ -> taggedUnion
+    Nothing -> union
+    <> " '["
+    <> intercalateTypes ", " members
+    <> "]"
+
 maybeOf :: TypeExpression -> TypeExpression
 maybeOf itemName =
   typeNameToCode Nothing (preludeType "Maybe")
@@ -528,3 +570,7 @@ boundedClass =
 preludeType :: T.Text -> TypeName
 preludeType =
   toTypeName "Prelude" Nothing
+
+shrubberyType :: T.Text -> TypeName
+shrubberyType =
+  toTypeName "Shrubbery" (Just "Shrubbery")
