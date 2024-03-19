@@ -1986,12 +1986,16 @@ extra-source-files:
     examples/test-cases/TestCases/Types/NameConflicts/Type.hs
     examples/test-cases/TestCases/Types/NameConflicts/Where.hs
     examples/test-cases/TestCases/Types/Num2SchemaStartingWithNumber.hs
+    examples/test-cases/TestCases/Types/ReferenceOneOf.hs
+    examples/test-cases/TestCases/Types/ReferenceOneOfInsideOneOf.hs
     examples/test-cases/TestCases/Types/StringParam.hs
     examples/test-cases/TestCases/Types/TestCases/InlineObjectWithPropertiesJsonResponse/Response200Body/Baz/Bax.hs
     examples/test-cases/TestCases/Types/TopLevelArray.hs
     examples/test-cases/TestCases/Types/TopLevelArray/TopLevelArrayItem.hs
     examples/test-cases/TestCases/Types/TopLevelArrayNullable.hs
     examples/test-cases/TestCases/Types/TopLevelArrayNullable/TopLevelArrayNullableItem.hs
+    examples/test-cases/TestCases/Types/TopLevelOneOf.hs
+    examples/test-cases/TestCases/Types/TopLevelOneOfOneOption.hs
     examples/test-cases/TestCases/Types/UtcTimeType.hs
     examples/test-cases/TestCases/Types/ZonedTimeType.hs
 

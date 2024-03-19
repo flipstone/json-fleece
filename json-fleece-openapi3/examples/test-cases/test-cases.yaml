@@ -483,6 +483,42 @@ components:
         - arrayField
         - nullableArrayField
 
+    ReferenceOneOfInsideOneOf:
+      oneOf:
+        - $ref: "#/components/schemas/ReferenceOneOf"
+        - $ref: "#/components/schemas/TopLevelOneOfOneOption"
+        - items:
+            $ref: "#/components/schemas/TopLevelOneOfOneOption"
+          type: array
+
+    ReferenceOneOf:
+      type: object
+      properties:
+        oneOfRef:
+          $ref: "#/components/schemas/TopLevelOneOfOneOption"
+
+    TopLevelOneOf:
+      oneOf:
+        - type: string
+        - type: integer
+        - items:
+            type: string
+          type: array
+        - $ref: "#/components/schemas/AStringType"
+        - $ref: "#/components/schemas/2_SchemaStartingWithNumber"
+        - items:
+            $ref: "#/components/schemas/FieldDescriptions"
+          type: array
+        - items:
+            items:
+              $ref: "#/components/schemas/MixedInJustAdditionalPropertiesSchemaInline"
+            type: array
+          type: array
+
+    TopLevelOneOfOneOption:
+      oneOf:
+        - type: string
+
     TopLevelArray:
       type: array
       description: A schema that defines a top level array

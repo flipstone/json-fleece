@@ -7,6 +7,7 @@ module Fleece.OpenApi3
 
 import Control.Monad (join, (<=<))
 import qualified Data.Aeson as Aeson
+import Data.Bifunctor (bimap, first)
 import qualified Data.HashMap.Strict.InsOrd as IOHM
 import qualified Data.Map.Strict as Map
 import Data.Maybe (catMaybes, mapMaybe)
@@ -241,24 +242,24 @@ lookupRequestBody operationKey operation =
       pure Nothing
 
 data SchemaTypeInfoWithDeps = SchemaTypeInfoWithDeps
-  { schemaTypeInfoDependent :: CGU.SchemaTypeInfo
+  { schemaTypeInfoDependent :: CGU.SchemaTypeInfoOrRef
   , schemaTypeInfoDependencies :: SchemaMap
   }
 
 schemaInfoWithoutDependencies :: CGU.SchemaTypeInfo -> SchemaTypeInfoWithDeps
 schemaInfoWithoutDependencies schemaTypeInfo =
   SchemaTypeInfoWithDeps
-    { schemaTypeInfoDependent = schemaTypeInfo
+    { schemaTypeInfoDependent = Left schemaTypeInfo
     , schemaTypeInfoDependencies = Map.empty
     }
 
 fmapSchemaInfoAndDeps ::
-  (CGU.SchemaTypeInfo -> CGU.SchemaTypeInfo) ->
+  (CGU.SchemaTypeInfoOrRef -> CGU.SchemaTypeInfoOrRef) ->
   SchemaTypeInfoWithDeps ->
   SchemaTypeInfoWithDeps
 fmapSchemaInfoAndDeps f schemaTypeInfoWithDeps =
   schemaTypeInfoWithDeps
-    { schemaTypeInfoDependent = f (schemaTypeInfoDependent schemaTypeInfoWithDeps)
+    { schemaTypeInfoDependent = f $ schemaTypeInfoDependent schemaTypeInfoWithDeps
     }
 
 lookupRequestBodySchema ::
@@ -380,13 +381,102 @@ lookupResponseBodySchema operationKey schemaMap responseStatus responseRef =
                   -- the media type.
                   pure (schemaInfoWithoutDependencies CGU.anyJSONSchemaTypeInfo)
 
-mkInlineBodySchema ::
+mkInlineStringSchema ::
+  T.Text ->
+  OA.Schema ->
+  CGU.CodeGen SchemaTypeInfoWithDeps
+mkInlineStringSchema schemaKey schema = do
+  case OA._schemaEnum schema of
+    Nothing -> pure . schemaInfoWithoutDependencies $ CGU.textSchemaTypeInfo
+    Just _values -> do
+      (_moduleName, typeName) <- CGU.inferTypeForInputName CGU.Operation schemaKey
+      (inlinedTypes, schemaTypeInfo) <-
+        mkSchemaTypeInfo
+          schemaKey
+          typeName
+          schema
+
+      pure $
+        SchemaTypeInfoWithDeps
+          { schemaTypeInfoDependent = Left schemaTypeInfo
+          , schemaTypeInfoDependencies = inlinedTypes
+          }
+
+mkInlineBoolSchema :: CGU.CodeGen SchemaTypeInfoWithDeps
+mkInlineBoolSchema =
+  pure . schemaInfoWithoutDependencies $ CGU.boolSchemaTypeInfo
+
+mkInlineIntegerSchema ::
+  OA.Schema ->
+  CGU.CodeGen SchemaTypeInfoWithDeps
+mkInlineIntegerSchema schema =
+  pure . schemaInfoWithoutDependencies $
+    case OA._schemaFormat schema of
+      Just "int32" -> CGU.int32SchemaTypeInfo
+      Just "int64" -> CGU.int64SchemaTypeInfo
+      Just _ -> CGU.integerSchemaTypeInfo
+      Nothing -> CGU.integerSchemaTypeInfo
+
+mkInlineBodyObjectSchema ::
   (forall a. String -> CGU.CodeGen a) ->
   T.Text ->
   SchemaMap ->
   OA.Schema ->
   CGU.CodeGen SchemaTypeInfoWithDeps
-mkInlineBodySchema raiseError schemaKey schemaMap schema =
+mkInlineBodyObjectSchema raiseError schemaKey schemaMap schema =
+  if IOHM.null (OA._schemaProperties schema)
+    then
+      mkAdditionalPropertiesMapSchema
+        raiseError
+        schemaKey
+        (\key itemSchema -> mkInlineBodySchema raiseError key schemaMap itemSchema)
+        (OA._schemaAdditionalProperties schema)
+    else do
+      (_moduleName, typeName) <- CGU.inferTypeForInputName CGU.Operation schemaKey
+      (fieldsSchemaMap, dataFormat) <-
+        mkOpenApiObjectFormat
+          CGU.Operation
+          schemaKey
+          typeName
+          schema
+
+      schemaTypeInfo <- CGU.inferSchemaInfoForTypeName typeName
+
+      let
+        codeGenType =
+          CGU.CodeGenType
+            { CGU.codeGenTypeOriginalName = schemaKey
+            , CGU.codeGenTypeName = typeName
+            , CGU.codeGenTypeSchemaInfo = schemaTypeInfo
+            , CGU.codeGenTypeDescription = NET.fromText =<< OA._schemaDescription schema
+            , CGU.codeGenTypeDataFormat = dataFormat
+            }
+
+        schemaEntry =
+          SchemaEntry
+            { schemaOpenApiSchema = schema
+            , schemaCodeGenType = codeGenType
+            }
+
+        codeGenModules =
+          Map.insert
+            (CGU.SchemaKey schemaKey)
+            schemaEntry
+            fieldsSchemaMap
+
+      pure $
+        SchemaTypeInfoWithDeps
+          { schemaTypeInfoDependent = Left schemaTypeInfo
+          , schemaTypeInfoDependencies = codeGenModules
+          }
+
+mkInlineArraySchema ::
+  (forall a. String -> CGU.CodeGen a) ->
+  T.Text ->
+  SchemaMap ->
+  OA.Schema ->
+  CGU.CodeGen SchemaTypeInfoWithDeps
+mkInlineArraySchema raiseError schemaKey schemaMap schema =
   let
     lookupCodeGenType refKey =
       case Map.lookup (CGU.SchemaKey refKey) schemaMap of
@@ -398,99 +488,84 @@ mkInlineBodySchema raiseError schemaKey schemaMap schema =
               <> show refKey
               <> "."
   in
-    case OA._schemaType schema of
-      Just OA.OpenApiArray ->
-        case OA._schemaItems schema of
-          Just (OA.OpenApiItemsObject (OA.Ref (OA.Reference itemRefKey))) -> do
-            itemSchemaInfo <- lookupCodeGenType itemRefKey
-            pure . schemaInfoWithoutDependencies . CGU.arrayTypeInfo $ itemSchemaInfo
-          Just (OA.OpenApiItemsObject (OA.Inline innerSchema)) ->
-            let
-              itemKey =
-                schemaKey <> "Item"
-            in
-              fmap
-                (fmapSchemaInfoAndDeps CGU.arrayTypeInfo)
-                (mkInlineBodySchema raiseError itemKey schemaMap innerSchema)
-          otherItemType ->
-            raiseError $
-              "Unsupported schema array item type found: "
-                <> show otherItemType
-      Just OA.OpenApiString ->
-        case OA._schemaEnum schema of
-          Nothing -> pure . schemaInfoWithoutDependencies $ CGU.textSchemaTypeInfo
-          Just _values -> do
-            (_moduleName, typeName) <- CGU.inferTypeForInputName CGU.Operation schemaKey
-            (inlinedTypes, schemaTypeInfo) <-
-              mkSchemaTypeInfo
-                schemaKey
-                typeName
-                schema
+    case OA._schemaItems schema of
+      Just (OA.OpenApiItemsObject (OA.Ref (OA.Reference itemRefKey))) -> do
+        itemSchemaInfo <- lookupCodeGenType itemRefKey
+        pure . schemaInfoWithoutDependencies . CGU.arrayTypeInfo $ itemSchemaInfo
+      Just (OA.OpenApiItemsObject (OA.Inline innerSchema)) ->
+        let
+          itemKey =
+            schemaKey <> "Item"
+        in
+          fmap
+            (fmapSchemaInfoAndDeps $ first CGU.arrayTypeInfo)
+            (mkInlineBodySchema raiseError itemKey schemaMap innerSchema)
+      otherItemType ->
+        raiseError $
+          "Unsupported schema array item type found: "
+            <> show otherItemType
 
-            pure $
-              SchemaTypeInfoWithDeps
-                { schemaTypeInfoDependent = schemaTypeInfo
-                , schemaTypeInfoDependencies = inlinedTypes
-                }
-      Just OA.OpenApiBoolean ->
-        pure . schemaInfoWithoutDependencies $ CGU.boolSchemaTypeInfo
-      Just OA.OpenApiInteger ->
-        pure . schemaInfoWithoutDependencies $
-          case OA._schemaFormat schema of
-            Just "int32" -> CGU.int32SchemaTypeInfo
-            Just "int64" -> CGU.int64SchemaTypeInfo
-            Just _ -> CGU.integerSchemaTypeInfo
-            Nothing -> CGU.integerSchemaTypeInfo
-      Just OA.OpenApiObject ->
-        if IOHM.null (OA._schemaProperties schema)
-          then
-            mkAdditionalPropertiesMapSchema
-              raiseError
-              schemaKey
-              (\key itemSchema -> mkInlineBodySchema raiseError key schemaMap itemSchema)
-              (OA._schemaAdditionalProperties schema)
-          else do
-            (_moduleName, typeName) <- CGU.inferTypeForInputName CGU.Operation schemaKey
-            (fieldsSchemaMap, dataFormat) <-
-              mkOpenApiObjectFormat
-                CGU.Operation
-                schemaKey
-                typeName
-                schema
+mkInlineArrayOneOfSchema ::
+  (forall a. String -> CGU.CodeGen a) ->
+  T.Text ->
+  SchemaMap ->
+  OA.Schema ->
+  CGU.CodeGen SchemaTypeInfoWithDeps
+mkInlineArrayOneOfSchema raiseError schemaKey schemaMap schema =
+  case OA._schemaItems schema of
+    Just (OA.OpenApiItemsObject (OA.Ref ref)) -> do
+      pure $
+        -- We don't currently have a good way to get the nullability of the referenced schema
+        SchemaTypeInfoWithDeps
+          { schemaTypeInfoDependent = Right $ CGU.CodeGenRefArray False $ CGU.TypeReference $ OA.getReference ref
+          , schemaTypeInfoDependencies = mempty
+          }
+    Just (OA.OpenApiItemsObject (OA.Inline innerSchema)) ->
+      let
+        itemKey =
+          schemaKey <> "Item"
+        nullable =
+          OA._schemaNullable innerSchema == Just True
+      in
+        fmap
+          (fmapSchemaInfoAndDeps (bimap CGU.arrayTypeInfo (CGU.CodeGenRefArray nullable)))
+          (mkInlineOneOfSchema raiseError itemKey schemaMap innerSchema)
+    otherItemType ->
+      raiseError $
+        "Unsupported schema array item type found: "
+          <> show otherItemType
 
-            schemaTypeInfo <- CGU.inferSchemaInfoForTypeName typeName
+mkInlineBodySchema ::
+  (forall a. String -> CGU.CodeGen a) ->
+  T.Text ->
+  SchemaMap ->
+  OA.Schema ->
+  CGU.CodeGen SchemaTypeInfoWithDeps
+mkInlineBodySchema raiseError schemaKey schemaMap schema =
+  case OA._schemaType schema of
+    Just OA.OpenApiArray -> mkInlineArraySchema raiseError schemaKey schemaMap schema
+    Just OA.OpenApiString -> mkInlineStringSchema schemaKey schema
+    Just OA.OpenApiBoolean -> mkInlineBoolSchema
+    Just OA.OpenApiInteger -> mkInlineIntegerSchema schema
+    Just OA.OpenApiObject -> mkInlineBodyObjectSchema raiseError schemaKey schemaMap schema
+    Just s -> raiseError $ "Inline " <> show s <> " schemas are not currently supported."
+    Nothing -> raiseError "Inline schema doesn't have a type."
 
-            let
-              codeGenType =
-                CGU.CodeGenType
-                  { CGU.codeGenTypeOriginalName = schemaKey
-                  , CGU.codeGenTypeName = typeName
-                  , CGU.codeGenTypeSchemaInfo = schemaTypeInfo
-                  , CGU.codeGenTypeDescription = NET.fromText =<< OA._schemaDescription schema
-                  , CGU.codeGenTypeDataFormat = dataFormat
-                  }
-
-              schemaEntry =
-                SchemaEntry
-                  { schemaOpenApiSchema = schema
-                  , schemaCodeGenType = codeGenType
-                  }
-
-              codeGenModules =
-                Map.insert
-                  (CGU.SchemaKey schemaKey)
-                  schemaEntry
-                  fieldsSchemaMap
-
-            pure $
-              SchemaTypeInfoWithDeps
-                { schemaTypeInfoDependent = schemaTypeInfo
-                , schemaTypeInfoDependencies = codeGenModules
-                }
-      Just s ->
-        raiseError $ "Inline " <> show s <> " schemas are not currently supported."
-      Nothing ->
-        raiseError "Inline schema doesn't have a type."
+mkInlineOneOfSchema ::
+  (forall a. String -> CGU.CodeGen a) ->
+  T.Text ->
+  SchemaMap ->
+  OA.Schema ->
+  CGU.CodeGen SchemaTypeInfoWithDeps
+mkInlineOneOfSchema raiseError schemaKey schemaMap schema =
+  case OA._schemaType schema of
+    Just OA.OpenApiArray -> mkInlineArrayOneOfSchema raiseError schemaKey schemaMap schema
+    Just OA.OpenApiString -> mkInlineStringSchema schemaKey schema
+    Just OA.OpenApiBoolean -> mkInlineBoolSchema
+    Just OA.OpenApiInteger -> mkInlineIntegerSchema schema
+    Just OA.OpenApiObject -> raiseError "Inline OpenApiObject schemas are not currently supported in oneOf."
+    Just s -> raiseError $ "Inline " <> show s <> " schemas are not currently supported."
+    Nothing -> raiseError "Inline schema doesn't have a type."
 
 mkOperationParams ::
   SchemaMap ->
@@ -799,7 +874,46 @@ mkOpenApiDataFormat schemaKey typeName schema =
       Just OA.OpenApiNull -> do
         typeOptions <- CGU.lookupTypeOptions typeName
         noRefs $ pure (CGU.nullFormat typeOptions)
-      Nothing -> mkOpenApiObjectFormatOrAdditionalPropertiesNewtype CGU.Type schemaKey typeName schema
+      Nothing ->
+        case OA._schemaOneOf schema of
+          Just schemas ->
+            mkOneOf schemaKey schemas
+          Nothing ->
+            mkOpenApiObjectFormatOrAdditionalPropertiesNewtype CGU.Type schemaKey typeName schema
+
+mkOneOf ::
+  T.Text ->
+  [OA.Referenced OA.Schema] ->
+  CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
+mkOneOf schemaKey refSchemas =
+  let
+    processRefSchema refSchema =
+      case refSchema of
+        OA.Inline schema -> do
+          typeInfoWithDeps <-
+            mkInlineOneOfSchema
+              (\err -> CGU.codeGenError $ "Inside inline oneOf: " <> err)
+              schemaKey
+              mempty
+              schema
+          let
+            unionMember =
+              CGU.CodeGenUnionMember
+                { CGU.codeGenUnionMemberType = schemaTypeInfoDependent typeInfoWithDeps
+                }
+          pure (schemaTypeInfoDependencies typeInfoWithDeps, unionMember)
+        OA.Ref ref -> do
+          let
+            unionMember =
+              CGU.CodeGenUnionMember
+                { CGU.codeGenUnionMemberType = Right $ CGU.TypeReference $ OA.getReference ref
+                }
+          pure (mempty, unionMember)
+  in
+    do
+      (maps, codeGenUnionMembers) <- fmap unzip . traverse processRefSchema $ refSchemas
+      schemaMap <- unionsErrorOnConflict maps
+      pure (schemaMap, CGU.CodeGenUnion codeGenUnionMembers)
 
 mkOpenApiStringFormat :: HC.TypeName -> OA.Schema -> CGU.CodeGen CGU.CodeGenDataFormat
 mkOpenApiStringFormat typeName schema = do
@@ -901,7 +1015,6 @@ mkOpenApiAdditionalPropertiesNewtype section schemaKey typeName schema = do
       CGU.CodeGenNewType
         typeOptions
         (schemaTypeInfoDependent schemaTypeInfoWithDeps)
-
   pure (schemaTypeInfoDependencies schemaTypeInfoWithDeps, format)
 
 mkOpenApiObjectFormat ::
@@ -927,7 +1040,7 @@ mkOpenApiObjectFormat section schemaKey typeName schema = do
   (fieldDependencies, fields) <-
     fmap unzip
       . traverse (uncurry $ propertyToCodeGenField section schemaKey requiredParams)
-      . filter (\(prop, _) -> not (prop `elem` unsupportedProperties))
+      . filter (\(prop, _) -> prop `notElem` unsupportedProperties)
       . IOHM.toList
       . OA._schemaProperties
       $ schema
@@ -969,7 +1082,7 @@ mkAdditionalPropertiesInlineItemSchema section itemKey itemSchema = do
   itemSchemaInfo <- CGU.inferSchemaInfoForTypeName itemTypeName
   pure $
     SchemaTypeInfoWithDeps
-      { schemaTypeInfoDependent = itemSchemaInfo
+      { schemaTypeInfoDependent = Left itemSchemaInfo
       , schemaTypeInfoDependencies = itemDependencies
       }
 
@@ -1019,7 +1132,7 @@ schemaRefToFieldType ::
   T.Text ->
   OA.ParamName ->
   OA.Referenced OA.Schema ->
-  CGU.CodeGen (SchemaMap, CGU.CodeGenObjectFieldType)
+  CGU.CodeGen (SchemaMap, CGU.CodeGenRefType)
 schemaRefToFieldType section parentKey fieldName schemaRef =
   case schemaRef of
     OA.Ref ref ->
@@ -1031,7 +1144,7 @@ schemaRefToFieldType section parentKey fieldName schemaRef =
             nullable =
               OA._schemaNullable inlineSchema == Just True
           in
-            fmap (fmap (CGU.CodeGenFieldArray nullable)) $
+            fmap (fmap (CGU.CodeGenRefArray nullable)) $
               schemaArrayItemsToFieldType
                 section
                 parentKey
@@ -1055,7 +1168,7 @@ schemaArrayItemsToFieldType ::
   OA.Schema ->
   OA.ParamName ->
   Maybe OA.OpenApiItems ->
-  CGU.CodeGen (SchemaMap, CGU.CodeGenObjectFieldType)
+  CGU.CodeGen (SchemaMap, CGU.CodeGenRefType)
 schemaArrayItemsToFieldType section parentKey schema fieldName arrayItems =
   let
     fieldError err =
@@ -1110,7 +1223,7 @@ mkAdditionalPropertiesMapSchema ::
   Maybe OA.AdditionalProperties ->
   CGU.CodeGen SchemaTypeInfoWithDeps
 mkAdditionalPropertiesMapSchema raiseError schemaKey mkInlineItemSchema mbAdditionalProperties =
-  fmap (fmapSchemaInfoAndDeps CGU.mapTypeInfo) $
+  fmap (fmapSchemaInfoAndDeps $ bimap CGU.mapTypeInfo CGU.CodeGenRefMap) $
     mkAdditionalPropertiesSchema
       raiseError
       schemaKey
@@ -1139,12 +1252,12 @@ mkAdditionalPropertiesSchema raiseError schemaKey mkInlineItemSchema mbAdditiona
         $ CGU.anyJSONSchemaTypeInfo
     Just (OA.AdditionalPropertiesAllowed False) ->
       raiseError "Schemas for objects with additional properties disallowed are not yet supported."
-    Just (OA.AdditionalPropertiesSchema (OA.Ref (OA.Reference refKey))) -> do
-      (_moduleName, typeName) <- CGU.inferTypeForInputName CGU.Type refKey
-      schemaInfo <- CGU.inferSchemaInfoForTypeName typeName
-      pure
-        . schemaInfoWithoutDependencies
-        $ schemaInfo
+    Just (OA.AdditionalPropertiesSchema (OA.Ref ref)) ->
+      pure $
+        SchemaTypeInfoWithDeps
+          { schemaTypeInfoDependent = Right $ CGU.TypeReference $ OA.getReference ref
+          , schemaTypeInfoDependencies = Map.empty
+          }
     Just (OA.AdditionalPropertiesSchema (OA.Inline innerSchema)) ->
       let
         itemKey =

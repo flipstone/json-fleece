@@ -26,11 +26,13 @@ module Fleece.CodeGenUtil
   , CodeGenDataFormat (..)
   , CodeGenObjectField (..)
   , CodeGenAdditionalProperties (..)
-  , CodeGenObjectFieldType (..)
+  , CodeGenRefType (..)
   , CodeGenKey (..)
   , CodeGenMap
   , SchemaTypeInfo (..)
+  , SchemaTypeInfoOrRef
   , CodeSection (Type, Operation)
+  , CodeGenUnionMember (..)
   , inferSchemaInfoForTypeName
   , inferTypeForInputName
   , arrayTypeInfo
@@ -63,7 +65,7 @@ module Fleece.CodeGenUtil
   , Modules
   ) where
 
-import Control.Monad.Reader (ReaderT, ask, asks, runReaderT)
+import Control.Monad.Reader (ReaderT, ask, asks, forM, runReaderT)
 import Control.Monad.Trans (lift)
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map.Strict as Map
@@ -188,8 +190,8 @@ data CodeGenOperation = CodeGenOperation
   , codeGenOperationMethod :: T.Text
   , codeGenOperationPath :: [OperationPathPiece]
   , codeGenOperationParams :: [CodeGenOperationParam]
-  , codeGenOperationRequestBody :: Maybe SchemaTypeInfo
-  , codeGenOperationResponses :: Map.Map ResponseStatus (Maybe SchemaTypeInfo)
+  , codeGenOperationRequestBody :: Maybe SchemaTypeInfoOrRef
+  , codeGenOperationResponses :: Map.Map ResponseStatus (Maybe SchemaTypeInfoOrRef)
   }
 
 data CodeGenOperationParam = CodeGenOperationParam
@@ -236,33 +238,44 @@ data OperationParamLocation
   deriving (Show, Eq)
 
 data CodeGenDataFormat
-  = CodeGenNewType TypeOptions SchemaTypeInfo
+  = CodeGenNewType TypeOptions SchemaTypeInfoOrRef
   | CodeGenEnum TypeOptions [T.Text]
   | CodeGenObject TypeOptions [CodeGenObjectField] (Maybe CodeGenAdditionalProperties)
-  | CodeGenArray TypeOptions CodeGenObjectFieldType
+  | CodeGenArray TypeOptions CodeGenRefType
+  | CodeGenUnion [CodeGenUnionMember]
+
+codeGenNewTypeSchemaTypeInfo :: TypeOptions -> SchemaTypeInfo -> CodeGenDataFormat
+codeGenNewTypeSchemaTypeInfo typeOptions = CodeGenNewType typeOptions . Left
 
 data CodeGenObjectField = CodeGenObjectField
   { codeGenFieldName :: T.Text
-  , codeGenFieldType :: CodeGenObjectFieldType
+  , codeGenFieldType :: CodeGenRefType
   , codeGenFieldRequired :: Bool
   }
 
-newtype CodeGenAdditionalProperties = CodeGenAdditionalProperties
-  { codeGenAdditionalPropertiesSchemaInfo :: SchemaTypeInfo
+type SchemaTypeInfoOrRef = Either SchemaTypeInfo CodeGenRefType
+
+newtype CodeGenUnionMember = CodeGenUnionMember
+  { codeGenUnionMemberType :: SchemaTypeInfoOrRef
   }
 
-data CodeGenObjectFieldType
+newtype CodeGenAdditionalProperties = CodeGenAdditionalProperties
+  { codeGenAdditionalPropertiesSchemaInfoOrRef :: SchemaTypeInfoOrRef
+  }
+
+data CodeGenRefType
   = TypeReference T.Text
-  | CodeGenFieldArray
+  | CodeGenRefMap CodeGenRefType
+  | CodeGenRefArray
       -- | whether the array itself is nullable
       Bool
-      CodeGenObjectFieldType
+      CodeGenRefType
 
-resolveFieldTypeInfo ::
+resolveRefTypeInfo ::
   CodeGenMap ->
-  CodeGenObjectFieldType ->
+  CodeGenRefType ->
   CodeGen SchemaTypeInfo
-resolveFieldTypeInfo typeMap =
+resolveRefTypeInfo typeMap =
   let
     go fieldType =
       case fieldType of
@@ -272,7 +285,7 @@ resolveFieldTypeInfo typeMap =
               pure (codeGenTypeSchemaInfo codeGenType)
             _ ->
               codeGenError $ "Type " <> show ref <> " not found."
-        CodeGenFieldArray nullable itemType ->
+        CodeGenRefArray nullable itemType ->
           let
             modifier =
               if nullable
@@ -280,12 +293,14 @@ resolveFieldTypeInfo typeMap =
                 else id
           in
             fmap (modifier . arrayTypeInfo) (go itemType)
+        CodeGenRefMap itemType ->
+          fmap mapTypeInfo (go itemType)
   in
     go
 
 resolveFieldDescription ::
   CodeGenMap ->
-  CodeGenObjectFieldType ->
+  CodeGenRefType ->
   Maybe NET.NonEmptyText
 resolveFieldDescription typeMap =
   let
@@ -301,21 +316,33 @@ resolveFieldDescription typeMap =
               Nothing
             Nothing ->
               Nothing
-        CodeGenFieldArray _nullable itemType ->
+        CodeGenRefArray _nullable itemType ->
+          go itemType
+        CodeGenRefMap itemType ->
           go itemType
   in
     go
 
+schemaInfoOrRefToSchemaTypeInfo ::
+  CodeGenMap ->
+  SchemaTypeInfoOrRef ->
+  CodeGen SchemaTypeInfo
+schemaInfoOrRefToSchemaTypeInfo typeMap refOrInfo =
+  case refOrInfo of
+    Left info -> pure info
+    Right refType ->
+      resolveRefTypeInfo typeMap refType
+
 dayFormat :: TypeOptions -> CodeGenDataFormat
 dayFormat typeOptions =
-  CodeGenNewType typeOptions $
+  codeGenNewTypeSchemaTypeInfo typeOptions $
     primitiveSchemaTypeInfo
       (HC.toTypeName "Data.Time" (Just "Time") "Day")
       (fleeceCoreVar "day")
 
 dayCustomFormat :: T.Text -> TypeOptions -> CodeGenDataFormat
 dayCustomFormat formatString typeOptions =
-  CodeGenNewType typeOptions
+  codeGenNewTypeSchemaTypeInfo typeOptions
     $ primitiveSchemaTypeInfo
       (HC.toTypeName "Data.Time" (Just "Time") "Day")
     $ HC.fromCode "("
@@ -324,28 +351,28 @@ dayCustomFormat formatString typeOptions =
 
 utcTimeFormat :: TypeOptions -> CodeGenDataFormat
 utcTimeFormat typeOptions =
-  CodeGenNewType typeOptions $
+  codeGenNewTypeSchemaTypeInfo typeOptions $
     primitiveSchemaTypeInfo
       (HC.toTypeName "Data.Time" (Just "Time") "UTCTime")
       (fleeceCoreVar "utcTime")
 
 zonedTimeFormat :: TypeOptions -> CodeGenDataFormat
 zonedTimeFormat typeOptions =
-  CodeGenNewType typeOptions $
+  codeGenNewTypeSchemaTypeInfo typeOptions $
     primitiveSchemaTypeInfo
       (HC.toTypeName "Data.Time" (Just "Time") "ZonedTime")
       (fleeceCoreVar "zonedTime")
 
 localTimeFormat :: TypeOptions -> CodeGenDataFormat
 localTimeFormat typeOptions =
-  CodeGenNewType typeOptions $
+  codeGenNewTypeSchemaTypeInfo typeOptions $
     primitiveSchemaTypeInfo
       (HC.toTypeName "Data.Time" (Just "Time") "LocalTime")
       (fleeceCoreVar "localTime")
 
 textFormat :: TypeOptions -> CodeGenDataFormat
 textFormat typeOptions =
-  CodeGenNewType typeOptions textSchemaTypeInfo
+  codeGenNewTypeSchemaTypeInfo typeOptions textSchemaTypeInfo
 
 textSchemaTypeInfo :: SchemaTypeInfo
 textSchemaTypeInfo =
@@ -353,25 +380,25 @@ textSchemaTypeInfo =
 
 floatFormat :: TypeOptions -> CodeGenDataFormat
 floatFormat typeOptions =
-  CodeGenNewType
+  codeGenNewTypeSchemaTypeInfo
     typeOptions
     (primitiveSchemaTypeInfo floatType (fleeceCoreVar "float"))
 
 doubleFormat :: TypeOptions -> CodeGenDataFormat
 doubleFormat typeOptions =
-  CodeGenNewType
+  codeGenNewTypeSchemaTypeInfo
     typeOptions
     (primitiveSchemaTypeInfo doubleType (fleeceCoreVar "double"))
 
 scientificFormat :: TypeOptions -> CodeGenDataFormat
 scientificFormat typeOptions =
-  CodeGenNewType
+  codeGenNewTypeSchemaTypeInfo
     typeOptions
     (primitiveSchemaTypeInfo scientificType (fleeceCoreVar "number"))
 
 int32Format :: TypeOptions -> CodeGenDataFormat
 int32Format typeOptions =
-  CodeGenNewType typeOptions int32SchemaTypeInfo
+  codeGenNewTypeSchemaTypeInfo typeOptions int32SchemaTypeInfo
 
 int32SchemaTypeInfo :: SchemaTypeInfo
 int32SchemaTypeInfo =
@@ -379,7 +406,7 @@ int32SchemaTypeInfo =
 
 int64Format :: TypeOptions -> CodeGenDataFormat
 int64Format typeOptions =
-  CodeGenNewType typeOptions int64SchemaTypeInfo
+  codeGenNewTypeSchemaTypeInfo typeOptions int64SchemaTypeInfo
 
 int64SchemaTypeInfo :: SchemaTypeInfo
 int64SchemaTypeInfo =
@@ -387,7 +414,7 @@ int64SchemaTypeInfo =
 
 integerFormat :: TypeOptions -> CodeGenDataFormat
 integerFormat typeOptions =
-  CodeGenNewType typeOptions integerSchemaTypeInfo
+  codeGenNewTypeSchemaTypeInfo typeOptions integerSchemaTypeInfo
 
 integerSchemaTypeInfo :: SchemaTypeInfo
 integerSchemaTypeInfo =
@@ -395,7 +422,7 @@ integerSchemaTypeInfo =
 
 boolFormat :: TypeOptions -> CodeGenDataFormat
 boolFormat typeOptions =
-  CodeGenNewType typeOptions boolSchemaTypeInfo
+  codeGenNewTypeSchemaTypeInfo typeOptions boolSchemaTypeInfo
 
 boolSchemaTypeInfo :: SchemaTypeInfo
 boolSchemaTypeInfo =
@@ -407,7 +434,7 @@ enumFormat =
 
 nullFormat :: TypeOptions -> CodeGenDataFormat
 nullFormat typeOptions =
-  CodeGenNewType
+  codeGenNewTypeSchemaTypeInfo
     typeOptions
     (primitiveSchemaTypeInfo (fleeceCoreType "Null") (fleeceCoreVar "null"))
 
@@ -481,7 +508,7 @@ generateOperationCode ::
   CodeGenMap ->
   CodeGenOperation ->
   CodeGen (FilePath, HC.HaskellCode)
-generateOperationCode _typeMap codeGenOperation = do
+generateOperationCode typeMap codeGenOperation = do
   moduleName <-
     generatedModuleName
       Operation
@@ -574,8 +601,8 @@ generateOperationCode _typeMap codeGenOperation = do
         Nothing -> beelineNoPathParamsType
         Just name -> HC.typeNameToCode Nothing name
 
-    mbRequestBodySchemaType = codeGenOperationRequestBody codeGenOperation
-
+  mbRequestBodySchemaType <- mapM (schemaInfoOrRefToSchemaTypeInfo typeMap) $ codeGenOperationRequestBody codeGenOperation
+  let
     mkRequestBody requestBodySchema =
       beelineRequestBodySchema
         <> " = "
@@ -665,13 +692,18 @@ generateOperationCode _typeMap codeGenOperation = do
       ( responseConstructorName responseType responseStatus
       , maybe beelineNoResponseBodyType schemaTypeExpr mbSchemaTypeInfo
       )
+    statusAndSchemaOrRef =
+      Map.toList
+        . codeGenOperationResponses
+        $ codeGenOperation
+    toSchemaTypeInfo (status, schemaOrRef) = do
+      schema <- mapM (schemaInfoOrRefToSchemaTypeInfo typeMap) schemaOrRef
+      pure (status, schema)
 
+  statusAndSchema <- forM statusAndSchemaOrRef toSchemaTypeInfo
+  let
     responses =
       let
-        statusAndSchema =
-          Map.toList
-            . codeGenOperationResponses
-            $ codeGenOperation
         addResponseType (status, schema) = (responsesTypeName, status, schema)
       in
         map addResponseType statusAndSchema
@@ -1046,6 +1078,36 @@ operationParamHeader moduleName typeName paramDef =
           : map (HC.indent 2) (exportLines <> [") where"])
       )
 
+generateCodeGenDataFormat ::
+  CodeGenMap ->
+  HC.TypeName ->
+  CodeGenDataFormat ->
+  CodeGen ([HC.VarName], HC.HaskellCode)
+generateCodeGenDataFormat typeMap typeName format = do
+  case format of
+    CodeGenNewType typeOptions schemaTypeInfoOrRef ->
+      generateFleeceNewtype
+        typeMap
+        typeName
+        schemaTypeInfoOrRef
+        typeOptions
+    CodeGenEnum typeOptions values ->
+      pure $ generateFleeceEnum typeName values typeOptions
+    CodeGenObject typeOptions fields mbAdditionalProperties ->
+      generateFleeceObject typeMap typeName fields mbAdditionalProperties typeOptions
+    CodeGenArray typeOptions itemType ->
+      generateFleeceArray typeMap typeName itemType typeOptions
+    CodeGenUnion members ->
+      generateFleeceUnion typeMap typeName members
+
+formatRequiresDataKinds ::
+  CodeGenDataFormat ->
+  Bool
+formatRequiresDataKinds format =
+  case format of
+    CodeGenUnion _ -> True
+    _ -> False
+
 generateSchemaCode ::
   CodeGenMap ->
   CodeGenType ->
@@ -1065,28 +1127,23 @@ generateSchemaCode typeMap codeGenType = do
       codeGenTypeDataFormat codeGenType
 
   (extraExports, moduleBody) <-
-    case format of
-      CodeGenNewType typeOptions baseTypeInfo ->
-        pure $
-          generateFleeceNewtype
-            typeName
-            (schemaTypeExpr baseTypeInfo)
-            (schemaTypeSchema baseTypeInfo)
-            typeOptions
-      CodeGenEnum typeOptions values ->
-        pure $ generateFleeceEnum typeName values typeOptions
-      CodeGenObject typeOptions fields mbAdditionalProperties ->
-        generateFleeceObject typeMap typeName fields mbAdditionalProperties typeOptions
-      CodeGenArray typeOptions itemType ->
-        generateFleeceArray typeMap typeName itemType typeOptions
+    generateCodeGenDataFormat typeMap typeName format
 
   let
     header =
       schemaTypeModuleHeader moduleName typeName extraExports
 
+    pragmas =
+      HC.lines $
+        ( if formatRequiresDataKinds format
+            then ["{-# LANGUAGE DataKinds #-}"]
+            else []
+        )
+          <> ["{-# LANGUAGE NoImplicitPrelude #-}"]
+
     code =
-      HC.declarations $
-        [ "{-# LANGUAGE NoImplicitPrelude #-}"
+      HC.declarations
+        [ pragmas
         , header
         , importDeclarations moduleName moduleBody
         , moduleBody
@@ -1203,13 +1260,16 @@ importDeclarations thisModuleName code =
     HC.lines importLines
 
 generateFleeceNewtype ::
+  CodeGenMap ->
   HC.TypeName ->
-  HC.TypeExpression ->
-  HC.HaskellCode ->
+  SchemaTypeInfoOrRef ->
   TypeOptions ->
-  ([HC.VarName], HC.HaskellCode)
-generateFleeceNewtype wrapperName baseType schemaName typeOptions =
+  CodeGen ([HC.VarName], HC.HaskellCode)
+generateFleeceNewtype typeMap wrapperName schemaTypeOrRef typeOptions = do
+  schemaTypeInfo <- schemaInfoOrRefToSchemaTypeInfo typeMap schemaTypeOrRef
   let
+    baseType = schemaTypeExpr schemaTypeInfo
+    schemaName = schemaTypeSchema schemaTypeInfo
     newtypeDecl =
       HC.newtype_
         wrapperName
@@ -1229,8 +1289,7 @@ generateFleeceNewtype wrapperName baseType schemaName typeOptions =
         [ newtypeDecl
         , fleeceSchema
         ]
-  in
-    (extraExports, body)
+  pure (extraExports, body)
 
 generateFleeceEnum ::
   HC.TypeName ->
@@ -1249,6 +1308,59 @@ generateFleeceEnum typeName enumValues typeOptions =
   in
     ([toTextName], HC.declarations [enum, fleeceSchema])
 
+generateFleeceUnion ::
+  CodeGenMap ->
+  HC.TypeName ->
+  [CodeGenUnionMember] ->
+  CodeGen ([HC.VarName], HC.HaskellCode)
+generateFleeceUnion typeMap typeName members = do
+  typeInfos <- forM members $ schemaInfoOrRefToSchemaTypeInfo typeMap . codeGenUnionMemberType
+  let
+    moduleName =
+      HC.typeNameModule typeName
+    mapIgnoringFirst _ [] = []
+    mapIgnoringFirst _ [x] = [x]
+    mapIgnoringFirst f (x : xs) = x : map f xs
+    unionMemberSchema schema =
+      fleeceCoreVar "unionMember" <> " " <> schema
+    unionMemberSchemas =
+      map unionMemberSchema $ schemaTypeSchema <$> typeInfos
+    unionName =
+      fleeceCoreVar "unionNamed"
+        <> " ("
+        <> fleeceCoreVar "qualifiedName"
+        <> " "
+        <> HC.quote (HC.toCode moduleName)
+        <> " "
+        <> HC.quote (HC.typeNameToCode Nothing typeName)
+        <> ") "
+        <> HC.dollar
+    fleeceSchema =
+      (if length typeInfos > 1 then HC.addReferences [HC.VarReference "Fleece.Core" Nothing "(#|)"] else id) $
+        fleeceSchemaForType
+          typeName
+          ( fleeceCoreVar "coerceSchema" <> " " <> HC.dollar
+              : HC.indent 2 unionName
+              : map (HC.indent 4) (mapIgnoringFirst (HC.indent 2 . (<>) "#| ") unionMemberSchemas)
+          )
+
+    unionNewType =
+      HC.newtype_
+        typeName
+        ("(" <> HC.typeList (schemaTypeExpr <$> typeInfos) <> ")")
+        Nothing
+
+    extraExports =
+      []
+
+    body =
+      HC.declarations
+        [ unionNewType
+        , fleeceSchema
+        ]
+
+  pure (extraExports, body)
+
 generateFleeceObject ::
   CodeGenMap ->
   HC.TypeName ->
@@ -1261,27 +1373,30 @@ generateFleeceObject typeMap typeName codeGenFields mbAdditionalProperties typeO
     moduleName =
       HC.typeNameModule typeName
 
-  fields <-
-    traverse (mkFleeceSchemaField typeMap moduleName) codeGenFields
-
-  let
-    fieldNameAndType field =
-      (fieldName field, fieldTypeName field, fieldDescription field)
-
     additionalPropsFieldName =
       HC.toVarName moduleName Nothing "additionalProperties"
 
-    additionalPropsFieldNameAndType =
-      case mbAdditionalProperties of
-        Nothing ->
-          []
-        Just (CodeGenAdditionalProperties additionalPropsTypeInfo) ->
+  fields <-
+    traverse (mkFleeceSchemaField typeMap moduleName) codeGenFields
+
+  mbAdditionalPropertiesSchemaTypeInfo <- mapM (schemaInfoOrRefToSchemaTypeInfo typeMap . codeGenAdditionalPropertiesSchemaInfoOrRef) mbAdditionalProperties
+
+  additionalPropsFieldNameAndType <-
+    case mbAdditionalPropertiesSchemaTypeInfo of
+      Nothing ->
+        pure []
+      Just additionalPropsTypeInfo -> do
+        pure
           [
             ( additionalPropsFieldName
             , schemaTypeExpr (mapTypeInfo additionalPropsTypeInfo)
             , Nothing
             )
           ]
+
+  let
+    fieldNameAndType field =
+      (fieldName field, fieldTypeName field, fieldDescription field)
 
     recordDecl =
       HC.record
@@ -1301,10 +1416,10 @@ generateFleeceObject typeMap typeName codeGenFields mbAdditionalProperties typeO
           <> fieldFleeceSchemaCode field
 
     fleeceAdditionalProps =
-      case mbAdditionalProperties of
+      case mbAdditionalPropertiesSchemaTypeInfo of
         Nothing ->
           []
-        Just (CodeGenAdditionalProperties additionalPropsTypeInfo) ->
+        Just additionalPropsTypeInfo ->
           [ HC.addReferences [HC.VarReference "Fleece.Core" Nothing "(#*)"] $
               "#* "
                 <> fleeceCoreVar "additionalFields"
@@ -1330,22 +1445,21 @@ generateFleeceObject typeMap typeName codeGenFields mbAdditionalProperties typeO
         , fleeceSchema
         ]
 
-  pure $ (extraExports, body)
+  pure (extraExports, body)
 
 generateFleeceArray ::
   CodeGenMap ->
   HC.TypeName ->
-  CodeGenObjectFieldType ->
+  CodeGenRefType ->
   TypeOptions ->
   CodeGen ([HC.VarName], HC.HaskellCode)
 generateFleeceArray typeMap typeName itemType typeOptions = do
-  typeInfo <- fmap arrayTypeInfo (resolveFieldTypeInfo typeMap itemType)
-  pure $
-    generateFleeceNewtype
-      typeName
-      (schemaTypeExpr typeInfo)
-      (schemaTypeSchema typeInfo)
-      typeOptions
+  typeInfo <- fmap arrayTypeInfo (resolveRefTypeInfo typeMap itemType)
+  generateFleeceNewtype
+    typeMap
+    typeName
+    (Left typeInfo)
+    typeOptions
 
 data FleeceSchemaField = FleeceSchemaField
   { fieldName :: HC.VarName
@@ -1396,7 +1510,7 @@ mkFleeceSchemaField typeMap moduleName codeGenField = do
     fieldType =
       codeGenFieldType codeGenField
 
-  typeInfo <- resolveFieldTypeInfo typeMap fieldType
+  typeInfo <- resolveRefTypeInfo typeMap fieldType
 
   pure $
     FleeceSchemaField
