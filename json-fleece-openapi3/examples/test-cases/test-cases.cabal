@@ -44,6 +44,8 @@ library
       TestCases.Operations.TestCases.InlineInt32Response
       TestCases.Operations.TestCases.InlineInt64Response
       TestCases.Operations.TestCases.InlineIntegerResponse
+      TestCases.Operations.TestCases.InlineNullableIntegerArrayResponse
+      TestCases.Operations.TestCases.InlineNullableIntegerResponse
       TestCases.Operations.TestCases.InlineObjectAdditionalPropertiesJsonResponse
       TestCases.Operations.TestCases.InlineObjectJsonResponse
       TestCases.Operations.TestCases.InlineObjectStringArrayResponse
@@ -139,6 +141,7 @@ library
       TestCases.Types.NameConflicts.Type
       TestCases.Types.NameConflicts.Where
       TestCases.Types.Num2SchemaStartingWithNumber
+      TestCases.Types.OneOfWithNullable
       TestCases.Types.ReferenceOneOf
       TestCases.Types.ReferenceOneOfInsideOneOf
       TestCases.Types.StringParam

@@ -515,25 +515,28 @@ mkInlineArrayOneOfSchema raiseError schemaKey schemaMap schema =
   case OA._schemaItems schema of
     Just (OA.OpenApiItemsObject (OA.Ref ref)) -> do
       pure $
-        -- We don't currently have a good way to get the nullability of the referenced schema
         SchemaTypeInfoWithDeps
-          { schemaTypeInfoDependent = Right $ CGU.CodeGenRefArray False $ CGU.TypeReference $ OA.getReference ref
+          { schemaTypeInfoDependent = Right $ CGU.CodeGenRefArray $ CGU.TypeReference $ OA.getReference ref
           , schemaTypeInfoDependencies = mempty
           }
     Just (OA.OpenApiItemsObject (OA.Inline innerSchema)) ->
       let
         itemKey =
           schemaKey <> "Item"
-        nullable =
-          OA._schemaNullable innerSchema == Just True
       in
         fmap
-          (fmapSchemaInfoAndDeps (bimap CGU.arrayTypeInfo (CGU.CodeGenRefArray nullable)))
+          (fmapSchemaInfoAndDeps (bimap CGU.arrayTypeInfo CGU.CodeGenRefArray))
           (mkInlineOneOfSchema raiseError itemKey schemaMap innerSchema)
     otherItemType ->
       raiseError $
         "Unsupported schema array item type found: "
           <> show otherItemType
+
+applyNullable :: OA.Schema -> SchemaTypeInfoWithDeps -> SchemaTypeInfoWithDeps
+applyNullable schema =
+  if OA._schemaNullable schema == Just True
+    then fmapSchemaInfoAndDeps (bimap CGU.nullableTypeInfo CGU.CodeGenRefNullable)
+    else id
 
 mkInlineBodySchema ::
   (forall a. String -> CGU.CodeGen a) ->
@@ -542,7 +545,7 @@ mkInlineBodySchema ::
   OA.Schema ->
   CGU.CodeGen SchemaTypeInfoWithDeps
 mkInlineBodySchema raiseError schemaKey schemaMap schema =
-  case OA._schemaType schema of
+  applyNullable schema <$> case OA._schemaType schema of
     Just OA.OpenApiArray -> mkInlineArraySchema raiseError schemaKey schemaMap schema
     Just OA.OpenApiString -> mkInlineStringSchema schemaKey schema
     Just OA.OpenApiBoolean -> mkInlineBoolSchema
@@ -558,7 +561,7 @@ mkInlineOneOfSchema ::
   OA.Schema ->
   CGU.CodeGen SchemaTypeInfoWithDeps
 mkInlineOneOfSchema raiseError schemaKey schemaMap schema =
-  case OA._schemaType schema of
+  applyNullable schema <$> case OA._schemaType schema of
     Just OA.OpenApiArray -> mkInlineArrayOneOfSchema raiseError schemaKey schemaMap schema
     Just OA.OpenApiString -> mkInlineStringSchema schemaKey schema
     Just OA.OpenApiBoolean -> mkInlineBoolSchema
@@ -1143,8 +1146,12 @@ schemaRefToFieldType section parentKey fieldName schemaRef =
           let
             nullable =
               OA._schemaNullable inlineSchema == Just True
+            applyNull =
+              if nullable
+                then CGU.CodeGenRefNullable
+                else id
           in
-            fmap (fmap (CGU.CodeGenRefArray nullable)) $
+            fmap (fmap (applyNull . CGU.CodeGenRefArray)) $
               schemaArrayItemsToFieldType
                 section
                 parentKey

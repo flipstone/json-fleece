@@ -32,10 +32,8 @@ module Fleece.CodeGenUtil.HaskellCode
   , renderString
   , newline
   , quote
-  , taggedUnion
   , union
-  , typeList
-  , taggedUnionTypeList
+  , unionTypeList
   , intercalate
   , lines
   , indent
@@ -73,7 +71,7 @@ module Fleece.CodeGenUtil.HaskellCode
 -- import prelude explicitly since we want to define our own 'lines' function
 
 import Data.Maybe (fromMaybe)
-import Prelude (Eq ((==)), Foldable, Int, Maybe (Just, Nothing), Monoid (mempty), Ord, Semigroup ((<>)), String, any, flip, fmap, id, map, maybe, mconcat, show, zip, ($), (.))
+import Prelude (Eq ((==)), Foldable, Int, Maybe (Just, Nothing), Monoid (mempty), Ord, Semigroup ((<>)), String, any, flip, fmap, id, map, maybe, mconcat, show, zip, ($), (+), (-), (.))
 
 import qualified Data.Char as Char
 import Data.Foldable (toList)
@@ -251,10 +249,6 @@ newline = "\n"
 
 intercalate :: Foldable f => HaskellCode -> f HaskellCode -> HaskellCode
 intercalate sep =
-  mconcat . List.intersperse sep . toList
-
-intercalateTypes :: Foldable f => TypeExpression -> f TypeExpression -> TypeExpression
-intercalateTypes sep =
   mconcat . List.intersperse sep . toList
 
 lines :: Foldable f => f HaskellCode -> HaskellCode
@@ -437,37 +431,21 @@ mapOf keyName itemName =
     <> itemName
     <> ")"
 
-taggedUnion :: TypeExpression
-taggedUnion =
-  typeNameToCodeDefaultQualification (shrubberyType "TaggedUnion")
-
 union :: TypeExpression
 union =
   typeNameToCodeDefaultQualification (shrubberyType "Union")
 
-typeList :: [TypeExpression] -> TypeExpression
-typeList =
-  prefixedTypeList Nothing
+unionTypeList :: [TypeExpression] -> TypeExpression
+unionTypeList members =
+  fromCode $
+    lines
+      ( toCode union
+          : map (indent 2 . toCode) (delimitLines "'[ " " , " members <> ["]"])
+      )
 
 quote :: HaskellCode -> HaskellCode
 quote code =
   "\"" <> code <> "\""
-
-taggedUnionTypeList :: [TypeExpression] -> TypeExpression
-taggedUnionTypeList =
-  prefixedTypeList (Just $ \member -> quote member <> " @= ")
-
-prefixedTypeList ::
-  Maybe (HaskellCode -> HaskellCode) ->
-  [TypeExpression] ->
-  TypeExpression
-prefixedTypeList mbPrefixFn members =
-  case mbPrefixFn of
-    Just _ -> taggedUnion
-    Nothing -> union
-    <> " '["
-    <> intercalateTypes ", " members
-    <> "]"
 
 maybeOf :: TypeExpression -> TypeExpression
 maybeOf itemName =
@@ -486,8 +464,24 @@ eitherOf left right =
 guardParens :: TypeExpression -> TypeExpression
 guardParens name =
   let
+    removeTextInsideChars openChar closeChar t =
+      let
+        go text numParens =
+          case (T.uncons text, numParens) of
+            (Nothing, _) -> ""
+            (Just (c, rest), n) | c == openChar -> go rest (n + 1)
+            (Just (c, rest), n) | c == closeChar -> go rest (n - 1)
+            (Just (c, rest), 0) -> T.cons c $ go rest 0
+            (Just (_, rest), n) -> go rest n
+      in
+        go t (0 :: Int)
+    removeTextInsideParens = removeTextInsideChars '(' ')'
+    removeTextInsideBrackets = removeTextInsideChars '[' ']'
     needsParens =
-      T.elem ' ' (renderText name)
+      T.elem ' '
+        . removeTextInsideBrackets
+        . removeTextInsideParens
+        $ renderText name
   in
     if needsParens
       then fromCode "(" <> name <> fromCode ")"
@@ -522,7 +516,7 @@ sumType :: TypeName -> [(ConstructorName, TypeExpression)] -> Maybe [TypeName] -
 sumType typeName constructors mbDeriveClasses =
   let
     mkConstructor (conName, conArgType) =
-      toCode conName <> " " <> toCode conArgType
+      toCode conName <> " " <> toCode (guardParens conArgType)
 
     constructorLines =
       delimitLines "= " "| " (map mkConstructor constructors)

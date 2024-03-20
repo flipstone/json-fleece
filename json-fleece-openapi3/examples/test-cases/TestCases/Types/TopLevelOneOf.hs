@@ -16,7 +16,15 @@ import qualified TestCases.Types.FieldDescriptions as FieldDescriptions
 import qualified TestCases.Types.MixedInJustAdditionalPropertiesSchemaInline as MixedInJustAdditionalPropertiesSchemaInline
 import qualified TestCases.Types.Num2SchemaStartingWithNumber as Num2SchemaStartingWithNumber
 
-newtype TopLevelOneOf = TopLevelOneOf (Shrubbery.Union '[T.Text, Integer, [T.Text], AStringType.AStringType, Num2SchemaStartingWithNumber.Num2SchemaStartingWithNumber, [FieldDescriptions.FieldDescriptions], [[MixedInJustAdditionalPropertiesSchemaInline.MixedInJustAdditionalPropertiesSchemaInline]]])
+newtype TopLevelOneOf = TopLevelOneOf (Shrubbery.Union
+  '[ T.Text
+   , Integer
+   , [T.Text]
+   , AStringType.AStringType
+   , Num2SchemaStartingWithNumber.Num2SchemaStartingWithNumber
+   , [FieldDescriptions.FieldDescriptions]
+   , [[MixedInJustAdditionalPropertiesSchemaInline.MixedInJustAdditionalPropertiesSchemaInline]]
+  ])
   deriving (Show, Eq)
 
 topLevelOneOfSchema :: FC.Fleece schema => schema TopLevelOneOf

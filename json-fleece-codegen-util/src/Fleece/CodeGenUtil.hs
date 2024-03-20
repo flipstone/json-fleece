@@ -266,10 +266,8 @@ newtype CodeGenAdditionalProperties = CodeGenAdditionalProperties
 data CodeGenRefType
   = TypeReference T.Text
   | CodeGenRefMap CodeGenRefType
-  | CodeGenRefArray
-      -- | whether the array itself is nullable
-      Bool
-      CodeGenRefType
+  | CodeGenRefArray CodeGenRefType
+  | CodeGenRefNullable CodeGenRefType
 
 resolveRefTypeInfo ::
   CodeGenMap ->
@@ -285,16 +283,12 @@ resolveRefTypeInfo typeMap =
               pure (codeGenTypeSchemaInfo codeGenType)
             _ ->
               codeGenError $ "Type " <> show ref <> " not found."
-        CodeGenRefArray nullable itemType ->
-          let
-            modifier =
-              if nullable
-                then nullableTypeInfo
-                else id
-          in
-            fmap (modifier . arrayTypeInfo) (go itemType)
+        CodeGenRefArray itemType ->
+          fmap arrayTypeInfo (go itemType)
         CodeGenRefMap itemType ->
           fmap mapTypeInfo (go itemType)
+        CodeGenRefNullable itemType ->
+          fmap nullableTypeInfo (go itemType)
   in
     go
 
@@ -316,9 +310,11 @@ resolveFieldDescription typeMap =
               Nothing
             Nothing ->
               Nothing
-        CodeGenRefArray _nullable itemType ->
+        CodeGenRefArray itemType ->
           go itemType
         CodeGenRefMap itemType ->
+          go itemType
+        CodeGenRefNullable itemType ->
           go itemType
   in
     go
@@ -1347,7 +1343,7 @@ generateFleeceUnion typeMap typeName members = do
     unionNewType =
       HC.newtype_
         typeName
-        ("(" <> HC.typeList (schemaTypeExpr <$> typeInfos) <> ")")
+        ("(" <> HC.unionTypeList (schemaTypeExpr <$> typeInfos) <> ")")
         Nothing
 
     extraExports =
@@ -1381,18 +1377,18 @@ generateFleeceObject typeMap typeName codeGenFields mbAdditionalProperties typeO
 
   mbAdditionalPropertiesSchemaTypeInfo <- mapM (schemaInfoOrRefToSchemaTypeInfo typeMap . codeGenAdditionalPropertiesSchemaInfoOrRef) mbAdditionalProperties
 
-  additionalPropsFieldNameAndType <-
-    case mbAdditionalPropertiesSchemaTypeInfo of
-      Nothing ->
-        pure []
-      Just additionalPropsTypeInfo -> do
-        pure
+  let
+    additionalPropsFieldNameAndType =
+      case mbAdditionalPropertiesSchemaTypeInfo of
+        Nothing ->
+          []
+        Just additionalPropsTypeInfo -> do
           [
             ( additionalPropsFieldName
             , schemaTypeExpr (mapTypeInfo additionalPropsTypeInfo)
             , Nothing
             )
-          ]
+            ]
 
   let
     fieldNameAndType field =

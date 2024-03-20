@@ -13,7 +13,11 @@ import qualified Shrubbery as Shrubbery
 import qualified TestCases.Types.ReferenceOneOf as ReferenceOneOf
 import qualified TestCases.Types.TopLevelOneOfOneOption as TopLevelOneOfOneOption
 
-newtype ReferenceOneOfInsideOneOf = ReferenceOneOfInsideOneOf (Shrubbery.Union '[ReferenceOneOf.ReferenceOneOf, TopLevelOneOfOneOption.TopLevelOneOfOneOption, [TopLevelOneOfOneOption.TopLevelOneOfOneOption]])
+newtype ReferenceOneOfInsideOneOf = ReferenceOneOfInsideOneOf (Shrubbery.Union
+  '[ ReferenceOneOf.ReferenceOneOf
+   , TopLevelOneOfOneOption.TopLevelOneOfOneOption
+   , [TopLevelOneOfOneOption.TopLevelOneOfOneOption]
+  ])
   deriving (Show, Eq)
 
 referenceOneOfInsideOneOfSchema :: FC.Fleece schema => schema ReferenceOneOfInsideOneOf
