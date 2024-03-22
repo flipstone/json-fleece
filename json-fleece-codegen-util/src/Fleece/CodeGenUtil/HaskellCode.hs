@@ -440,7 +440,7 @@ unionTypeList members =
   fromCode $
     lines
       ( toCode union
-          : map (indent 2 . toCode) (delimitLines "'[ " " , " members <> ["]"])
+          : map (indent 2 . toCode) (delimitLines "'[ " " , " members <> [" ]"])
       )
 
 quote :: HaskellCode -> HaskellCode

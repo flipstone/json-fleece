@@ -1382,15 +1382,14 @@ generateFleeceObject typeMap typeName codeGenFields mbAdditionalProperties typeO
       case mbAdditionalPropertiesSchemaTypeInfo of
         Nothing ->
           []
-        Just additionalPropsTypeInfo -> do
+        Just additionalPropsTypeInfo ->
           [
             ( additionalPropsFieldName
             , schemaTypeExpr (mapTypeInfo additionalPropsTypeInfo)
             , Nothing
             )
-            ]
+          ]
 
-  let
     fieldNameAndType field =
       (fieldName field, fieldTypeName field, fieldDescription field)
 

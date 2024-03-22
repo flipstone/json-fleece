@@ -20,7 +20,7 @@ newtype OneOfWithNullable = OneOfWithNullable (Shrubbery.Union
    , [AStringType.AStringType]
    , Either FC.Null [AStringType.AStringType]
    , [Either FC.Null [AStringType.AStringType]]
-  ])
+   ])
   deriving (Show, Eq)
 
 oneOfWithNullableSchema :: FC.Fleece schema => schema OneOfWithNullable

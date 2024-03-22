@@ -17,7 +17,7 @@ newtype ReferenceOneOfInsideOneOf = ReferenceOneOfInsideOneOf (Shrubbery.Union
   '[ ReferenceOneOf.ReferenceOneOf
    , TopLevelOneOfOneOption.TopLevelOneOfOneOption
    , [TopLevelOneOfOneOption.TopLevelOneOfOneOption]
-  ])
+   ])
   deriving (Show, Eq)
 
 referenceOneOfInsideOneOfSchema :: FC.Fleece schema => schema ReferenceOneOfInsideOneOf

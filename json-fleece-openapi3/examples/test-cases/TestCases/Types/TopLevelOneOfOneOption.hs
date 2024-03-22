@@ -13,7 +13,7 @@ import qualified Shrubbery as Shrubbery
 
 newtype TopLevelOneOfOneOption = TopLevelOneOfOneOption (Shrubbery.Union
   '[ T.Text
-  ])
+   ])
   deriving (Show, Eq)
 
 topLevelOneOfOneOptionSchema :: FC.Fleece schema => schema TopLevelOneOfOneOption

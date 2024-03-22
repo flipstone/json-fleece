@@ -24,7 +24,7 @@ newtype TopLevelOneOf = TopLevelOneOf (Shrubbery.Union
    , Num2SchemaStartingWithNumber.Num2SchemaStartingWithNumber
    , [FieldDescriptions.FieldDescriptions]
    , [[MixedInJustAdditionalPropertiesSchemaInline.MixedInJustAdditionalPropertiesSchemaInline]]
-  ])
+   ])
   deriving (Show, Eq)
 
 topLevelOneOfSchema :: FC.Fleece schema => schema TopLevelOneOf
