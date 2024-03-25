@@ -9,12 +9,14 @@
 module Fleece.Aeson.Encoder
   ( Encoder (..)
   , encode
+  , encodeStrict
   ) where
 
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Encoding as AesonEncoding
 import qualified Data.Aeson.Key as AesonKey
 import qualified Data.Aeson.Types as AesonTypes
+import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as LBS
 import Data.Coerce (coerce)
 import qualified Data.Map.Strict as Map
@@ -33,6 +35,10 @@ data Encoder a
 encode :: Encoder a -> a -> LBS.ByteString
 encode (Encoder _name toEncoding) =
   AesonEncoding.encodingToLazyByteString . toEncoding
+
+encodeStrict :: Encoder a -> a -> BS.ByteString
+encodeStrict (Encoder _name toEncoding) =
+  LBS.toStrict . AesonEncoding.encodingToLazyByteString . toEncoding
 
 instance FC.Fleece Encoder where
   newtype Object Encoder object _constructor
