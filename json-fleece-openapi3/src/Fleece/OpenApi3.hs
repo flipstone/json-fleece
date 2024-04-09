@@ -749,7 +749,7 @@ schemaTypeToParamInfo schemaMap paramName paramLocation operationKey schema =
                 Just text -> pure text
 
           enumTexts <-
-            traverse (rejectNull <=< enumValueToText schema) enumValues
+            traverse (rejectNull <=< enumValueToText paramName schema) enumValues
 
           pure
             . primitiveParamInfo
@@ -925,7 +925,7 @@ mkOpenApiStringFormat typeName schema = do
     Just enumValues ->
       fmap
         (CGU.enumFormat typeOptions . catMaybes)
-        (traverse (enumValueToText schema) enumValues)
+        (traverse (enumValueToText (HC.typeNameText typeName) schema) enumValues)
     Nothing ->
       pure $
         case OA._schemaFormat schema of
@@ -940,15 +940,20 @@ mkOpenApiStringFormat typeName schema = do
               CGU.LocalTimeFormat -> CGU.localTimeFormat typeOptions
           _ -> CGU.textFormat typeOptions
 
-enumValueToText :: OA.Schema -> Aeson.Value -> CGU.CodeGen (Maybe T.Text)
-enumValueToText schema value =
+enumValueToText :: T.Text -> OA.Schema -> Aeson.Value -> CGU.CodeGen (Maybe T.Text)
+enumValueToText name schema value =
   case value of
     Aeson.String text -> pure (Just text)
     Aeson.Null ->
       case OA._schemaNullable schema of
         Just True -> pure Nothing
         _ -> CGU.codeGenError "null listed as enum value in a non-nullable schema"
-    _ -> CGU.codeGenError "Non-string value found for enum"
+    _ ->
+      CGU.codeGenError $
+        "Non-string value found for enum in schema/parameter titled '"
+          <> T.unpack name
+          <> "', value is "
+          <> show value
 
 mkOpenApiNumberFormat :: HC.TypeName -> OA.Schema -> CGU.CodeGen CGU.CodeGenDataFormat
 mkOpenApiNumberFormat typeName schema = do
