@@ -63,6 +63,7 @@ library:
     - aeson >= 2.0 && < 2.2
     - insert-ordered-containers >= 0.2 && < 0.3
     - containers >= 0.6 && < 0.7
+    - mtl >= 2.2 && < 2.3
     - non-empty-text >= 0.2 && < 0.3
     - openapi3 >= 3.2 && < 3.3
     - text >= 1.2 && < 2.1

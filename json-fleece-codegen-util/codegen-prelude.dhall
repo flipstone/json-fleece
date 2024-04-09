@@ -34,6 +34,7 @@ let
   baseConfig =
     { defaultTypeOptions = TypeOptions.default
     , typeOptions = [] : List SpecificTypeOptions
+    , ignoreAdditionalProperties = True
     }
 
 in

@@ -6,6 +6,7 @@ module Fleece.OpenApi3
   ) where
 
 import Control.Monad (join, (<=<))
+import Control.Monad.Reader (asks)
 import qualified Data.Aeson as Aeson
 import Data.Bifunctor (bimap, first)
 import qualified Data.HashMap.Strict.InsOrd as IOHM
@@ -1257,8 +1258,19 @@ mkAdditionalPropertiesSchema raiseError schemaKey mkInlineItemSchema mbAdditiona
       pure
         . schemaInfoWithoutDependencies
         $ CGU.anyJSONSchemaTypeInfo
-    Just (OA.AdditionalPropertiesAllowed False) ->
-      raiseError "Schemas for objects with additional properties disallowed are not yet supported."
+    Just (OA.AdditionalPropertiesAllowed False) -> do
+      ignoreAdditionalProperties <- asks CGU.ignoreAdditionalProperties
+      if ignoreAdditionalProperties
+        then
+          pure
+            . schemaInfoWithoutDependencies
+            $ CGU.anyJSONSchemaTypeInfo
+        else
+          raiseError $
+            "Schemas for objects with additional properties disallowed are"
+              <> " not yet supported. `additionalProperties: false` can be"
+              <> " ignored by setting the `ignoreAdditionalProperties` field"
+              <> " in the Fleece code gen config to false."
     Just (OA.AdditionalPropertiesSchema (OA.Ref ref)) ->
       pure $
         SchemaTypeInfoWithDeps
