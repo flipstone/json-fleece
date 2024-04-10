@@ -715,6 +715,16 @@ components:
           type: string
       additionalProperties: true
 
+    MixedInAdditionalPropertiesFalse:
+      type: object
+      description: An object with additionalProperties = false mixed in with other properties. This will produce an error if `strictAdditionalProperties` is set to `True`.
+      properties:
+        foo:
+          type: string
+        bar:
+          type: string
+      additionalProperties: false
+
     MixedInJustAdditionalPropertiesSchemaRef:
       type: object
       description: An object with additionalProperties as a schema ref mixed in with other properties

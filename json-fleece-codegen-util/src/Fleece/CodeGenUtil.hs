@@ -93,6 +93,7 @@ data CodeGenOptions = CodeGenOptions
   { moduleBaseName :: T.Text
   , defaultTypeOptions :: TypeOptions
   , typeOptionsMap :: Map.Map T.Text TypeOptions
+  , strictAdditionalProperties :: Bool
   }
 
 data TypeOptions = TypeOptions
