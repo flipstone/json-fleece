@@ -8,6 +8,7 @@ in
       { moduleBaseName = "TestCases"
       , inputFileName = "${rootDir}/test-cases.yaml"
       , destination = rootDir
+      , strictAdditionalProperties = False
       , typeOptions =
           [ { type = "TestCases.Types.CustomDateFormat.CustomDateFormat"
             , options =
