@@ -67,6 +67,8 @@ library
       TestCases.Operations.TestCases.OperationTypeOptions.PathParam
       TestCases.Operations.TestCases.OperationTypeOptions.PathParam.PathParam
       TestCases.Operations.TestCases.OperationTypeOptions.PathParam.QueryParam
+      TestCases.Operations.TestCases.ParamRef
+      TestCases.Operations.TestCases.ParamRef.XSampleHeaderParam
       TestCases.Operations.TestCases.QueryParams
       TestCases.Operations.TestCases.QueryParams.BooleanParam
       TestCases.Operations.TestCases.QueryParams.InlineEnumIntParam

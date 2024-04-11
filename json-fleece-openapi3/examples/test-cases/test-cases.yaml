@@ -133,6 +133,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FieldTestCases'
+  /test-cases/param-ref:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/AParam'
+      responses:
+        '204':
+          description: Successfully got nothing
   /test-cases/param-ref/{string-param}:
     get:
       operationId: ParamSchemaReference
@@ -453,6 +460,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/2_SchemaStartingWithNumber'
 components:
+  parameters:
+    AParam:
+      in: header
+      name: X-Sample-Header-Param
+      schema:
+        type: boolean
+      required: true
   schemas:
     string-param:
       type: string

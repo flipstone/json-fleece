@@ -1914,6 +1914,8 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/TestCases/OperationTypeOptions/PathParam.hs
     examples/test-cases/TestCases/Operations/TestCases/OperationTypeOptions/PathParam/PathParam.hs
     examples/test-cases/TestCases/Operations/TestCases/OperationTypeOptions/PathParam/QueryParam.hs
+    examples/test-cases/TestCases/Operations/TestCases/ParamRef.hs
+    examples/test-cases/TestCases/Operations/TestCases/ParamRef/XSampleHeaderParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/BooleanParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/InlineEnumIntParam.hs
