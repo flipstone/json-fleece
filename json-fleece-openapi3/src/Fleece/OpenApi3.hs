@@ -50,12 +50,13 @@ unionsErrorOnConflict maps =
 
 mkCodeGenTypes :: OA.OpenApi -> CGU.CodeGen CGU.CodeGenMap
 mkCodeGenTypes openApi = do
+  let
+    components = OA._openApiComponents openApi
+
   schemaMaps <-
     traverse (uncurry (mkSchemaMap CGU.Type))
       . IOHM.toList
-      . OA._componentsSchemas
-      . OA._openApiComponents
-      $ openApi
+      $ OA._componentsSchemas components
 
   schemaMap <- unionsErrorOnConflict schemaMaps
 
@@ -68,11 +69,11 @@ mkCodeGenTypes openApi = do
     codeGenMap =
       fmap (CGU.CodeGenItemType . schemaCodeGenType) schemaMap
 
-  pathTypes <- traverse (uncurry $ mkPathItem schemaMap) pathItems
+  pathTypes <- traverse (uncurry $ mkPathItem (OA._componentsParameters components) schemaMap) pathItems
   unionsErrorOnConflict (codeGenMap : pathTypes)
 
-mkPathItem :: SchemaMap -> FilePath -> OA.PathItem -> CGU.CodeGen CGU.CodeGenMap
-mkPathItem schemaMap filePath pathItem = do
+mkPathItem :: OA.Definitions OA.Param -> SchemaMap -> FilePath -> OA.PathItem -> CGU.CodeGen CGU.CodeGenMap
+mkPathItem paramDefs schemaMap filePath pathItem = do
   let
     methodOperations =
       pathItemOperations pathItem
@@ -84,7 +85,7 @@ mkPathItem schemaMap filePath pathItem = do
 
   operationCodeGenMaps <-
     traverse
-      (uncurry $ mkOperation schemaMap filePath pathItem nameStrategy)
+      (uncurry $ mkOperation paramDefs schemaMap filePath pathItem nameStrategy)
       methodOperations
 
   unionsErrorOnConflict operationCodeGenMaps
@@ -114,6 +115,7 @@ data FallbackOperationNamingStrategy
   | FallbackOperationNameOmitMethod
 
 mkOperation ::
+  OA.Definitions OA.Param ->
   SchemaMap ->
   FilePath ->
   OA.PathItem ->
@@ -121,7 +123,7 @@ mkOperation ::
   T.Text ->
   OA.Operation ->
   CGU.CodeGen CGU.CodeGenMap
-mkOperation schemaMap filePath pathItem nameStrategy method operation = do
+mkOperation paramDefs schemaMap filePath pathItem nameStrategy method operation = do
   let
     pathTextParts =
       filter (not . T.null)
@@ -142,7 +144,7 @@ mkOperation schemaMap filePath pathItem nameStrategy method operation = do
               FallbackOperationNameIncludeMethod -> pathKey <> "." <> method
 
   params <-
-    mkOperationParams schemaMap operationKey pathItem operation
+    mkOperationParams paramDefs schemaMap operationKey pathItem operation
 
   let
     lookupParamRef name =
@@ -587,15 +589,16 @@ mkInlineOneOfSchema raiseError schemaKey schemaMap schema =
     Nothing -> raiseError "Inline schema doesn't have a type."
 
 mkOperationParams ::
+  OA.Definitions OA.Param ->
   SchemaMap ->
   T.Text ->
   OA.PathItem ->
   OA.Operation ->
   CGU.CodeGen (Map.Map T.Text CGU.CodeGenOperationParam)
-mkOperationParams schemaMap operationKey pathItem operation = do
+mkOperationParams paramDefs schemaMap operationKey pathItem operation = do
   paramList <-
     traverse
-      (mkOperationParam schemaMap operationKey)
+      (mkOperationParam paramDefs schemaMap operationKey)
       (OA._pathItemParameters pathItem <> OA._operationParameters operation)
 
   let
@@ -607,14 +610,25 @@ mkOperationParams schemaMap operationKey pathItem operation = do
   pure paramMap
 
 mkOperationParam ::
+  OA.Definitions OA.Param ->
   SchemaMap ->
   T.Text ->
   OA.Referenced OA.Param ->
   CGU.CodeGen CGU.CodeGenOperationParam
-mkOperationParam schemaMap operationKey paramRef = do
+mkOperationParam paramDefs schemaMap operationKey paramRef = do
   param <-
     case paramRef of
-      OA.Ref _ -> CGU.codeGenError "Param refs not yet implemeted."
+      OA.Ref name -> do
+        let
+          txtName = OA.getReference name
+        case IOHM.lookup txtName paramDefs of
+          Nothing ->
+            CGU.codeGenError $
+              "Couldn't not find param def '"
+                <> T.unpack txtName
+                <> "', keys are: "
+                <> show (IOHM.keys paramDefs)
+          Just x -> pure x
       OA.Inline param -> pure param
 
   let
