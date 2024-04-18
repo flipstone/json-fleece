@@ -242,7 +242,7 @@ data CodeGenDataFormat
   = CodeGenNewType TypeOptions SchemaTypeInfoOrRef
   | CodeGenEnum TypeOptions [T.Text]
   | CodeGenObject TypeOptions [CodeGenObjectField] (Maybe CodeGenAdditionalProperties)
-  | CodeGenArray TypeOptions CodeGenRefType
+  | CodeGenArray TypeOptions (Maybe Integer) CodeGenRefType
   | CodeGenUnion [CodeGenUnionMember]
 
 codeGenNewTypeSchemaTypeInfo :: TypeOptions -> SchemaTypeInfo -> CodeGenDataFormat
@@ -442,6 +442,18 @@ arrayTypeInfo itemInfo =
     , schemaTypeSchema =
         "("
           <> fleeceCoreVar "list"
+          <> " "
+          <> schemaTypeSchema itemInfo
+          <> ")"
+    }
+
+nonEmptyTypeInfo :: SchemaTypeInfo -> SchemaTypeInfo
+nonEmptyTypeInfo itemInfo =
+  itemInfo
+    { schemaTypeExpr = HC.nonEmptyOf (schemaTypeExpr itemInfo)
+    , schemaTypeSchema =
+        "("
+          <> fleeceCoreVar "nonEmpty"
           <> " "
           <> schemaTypeSchema itemInfo
           <> ")"
@@ -814,7 +826,7 @@ mkParameterCollectionCode moduleName typeName schemaName params = do
           AtMostOne -> HC.maybeOf paramTypeName
           AtLeastZero -> HC.listOf paramTypeName
           AtLeastOne ->
-            HC.typeNameToCodeDefaultQualification nonEmptyType
+            HC.typeNameToCodeDefaultQualification HC.nonEmptyType
               <> " "
               <> paramTypeName
 
@@ -1092,8 +1104,8 @@ generateCodeGenDataFormat typeMap typeName format = do
       pure $ generateFleeceEnum typeName values typeOptions
     CodeGenObject typeOptions fields mbAdditionalProperties ->
       generateFleeceObject typeMap typeName fields mbAdditionalProperties typeOptions
-    CodeGenArray typeOptions itemType ->
-      generateFleeceArray typeMap typeName itemType typeOptions
+    CodeGenArray typeOptions mbMinLength itemType ->
+      generateFleeceArray typeMap typeName mbMinLength itemType typeOptions
     CodeGenUnion members ->
       generateFleeceUnion typeMap typeName members
 
@@ -1446,11 +1458,20 @@ generateFleeceObject typeMap typeName codeGenFields mbAdditionalProperties typeO
 generateFleeceArray ::
   CodeGenMap ->
   HC.TypeName ->
+  Maybe Integer ->
   CodeGenRefType ->
   TypeOptions ->
   CodeGen ([HC.VarName], HC.HaskellCode)
-generateFleeceArray typeMap typeName itemType typeOptions = do
-  typeInfo <- fmap arrayTypeInfo (resolveRefTypeInfo typeMap itemType)
+generateFleeceArray typeMap typeName mbMinLength itemType typeOptions = do
+  let
+    elemTypeInfo =
+      case mbMinLength of
+        Just minLength
+          | minLength >= 1 ->
+              nonEmptyTypeInfo
+        _ ->
+          arrayTypeInfo
+  typeInfo <- fmap elemTypeInfo (resolveRefTypeInfo typeMap itemType)
   generateFleeceNewtype
     typeMap
     typeName
@@ -1698,10 +1719,6 @@ integerType =
 boolType :: HC.TypeName
 boolType =
   HC.preludeType "Bool"
-
-nonEmptyType :: HC.TypeName
-nonEmptyType =
-  HC.toTypeName "Data.List.NonEmpty" (Just "NEL") "NonEmpty"
 
 fleeceClass :: HC.TypeName
 fleeceClass =

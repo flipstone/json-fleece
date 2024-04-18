@@ -764,3 +764,9 @@ components:
     AStringType:
       description: An explicit type that is just a string for use in other test cases
       type: string
+
+    MinLengthOne:
+      type: array
+      items:
+        type: boolean
+      minLength: 1

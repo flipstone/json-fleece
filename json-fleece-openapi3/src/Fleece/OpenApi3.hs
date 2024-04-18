@@ -1148,7 +1148,7 @@ mkOpenApiArrayFormat ::
   CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
 mkOpenApiArrayFormat schemaKey typeName schema = do
   typeOptions <- CGU.lookupTypeOptions typeName
-  fmap (fmap (CGU.CodeGenArray typeOptions)) $
+  fmap (fmap (CGU.CodeGenArray typeOptions (OA._schemaMinLength schema))) $
     schemaArrayItemsToFieldType
       CGU.Type
       schemaKey
