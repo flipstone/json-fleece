@@ -44,6 +44,7 @@ module Fleece.CodeGenUtil.HaskellCode
   , toVarName
   , toConstructorVarName
   , listOf
+  , nonEmptyOf
   , mapOf
   , maybeOf
   , eitherOf
@@ -66,6 +67,7 @@ module Fleece.CodeGenUtil.HaskellCode
   , boundedClass
   , preludeType
   , shrubberyType
+  , nonEmptyType
   ) where
 
 -- import prelude explicitly since we want to define our own 'lines' function
@@ -416,6 +418,18 @@ deriving_ classes =
 listOf :: TypeExpression -> TypeExpression
 listOf itemName =
   TypeExpression ("[" <> toCode itemName <> "]")
+
+nonEmptyType :: TypeName
+nonEmptyType =
+  toTypeName "Data.List.NonEmpty" (Just "NEL") "NonEmpty"
+
+nonEmptyOf :: TypeExpression -> TypeExpression
+nonEmptyOf itemName =
+  "("
+    <> typeNameToCodeDefaultQualification nonEmptyType
+    <> " "
+    <> itemName
+    <> ")"
 
 mapType :: TypeName
 mapType =

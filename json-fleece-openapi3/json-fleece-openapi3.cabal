@@ -1953,6 +1953,8 @@ extra-source-files:
     examples/test-cases/TestCases/Types/JustAdditionalPropertiesSchemaRef.hs
     examples/test-cases/TestCases/Types/JustAdditionalPropertiesTrue.hs
     examples/test-cases/TestCases/Types/LocalTimeType.hs
+    examples/test-cases/TestCases/Types/MinLengthOne.hs
+    examples/test-cases/TestCases/Types/MinLengthOne/MinLengthOneItem.hs
     examples/test-cases/TestCases/Types/MixedInAdditionalPropertiesFalse.hs
     examples/test-cases/TestCases/Types/MixedInAdditionalPropertiesFalse/Bar.hs
     examples/test-cases/TestCases/Types/MixedInAdditionalPropertiesFalse/Foo.hs

@@ -106,6 +106,8 @@ library
       TestCases.Types.JustAdditionalPropertiesSchemaRef
       TestCases.Types.JustAdditionalPropertiesTrue
       TestCases.Types.LocalTimeType
+      TestCases.Types.MinLengthOne
+      TestCases.Types.MinLengthOne.MinLengthOneItem
       TestCases.Types.MixedInAdditionalPropertiesFalse
       TestCases.Types.MixedInAdditionalPropertiesFalse.Bar
       TestCases.Types.MixedInAdditionalPropertiesFalse.Foo
