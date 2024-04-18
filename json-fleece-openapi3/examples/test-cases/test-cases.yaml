@@ -668,6 +668,15 @@ components:
         localTimeField:
           type: string
           format: date-time
+        customUtcTimeField:
+          type: string
+          format: date-time
+        customZonedTimeField:
+          type: string
+          format: date-time
+        customLocalTimeField:
+          type: string
+          format: date-time
 
     DefaultTimeType:
       type: string

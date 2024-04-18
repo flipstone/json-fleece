@@ -13,7 +13,7 @@ in
           [ { type = "TestCases.Types.CustomDateFormat.CustomDateFormat"
             , options =
                 CodeGen.TypeOptions::
-                  { dateFormat = CodeGen.customDate "%m/%d/%y"
+                  { formatSpecifier = Some "%m/%d/%y"
                   }
             }
           , { type = "TestCases.Types.DateTimeFormats.DateTimeFormats"
@@ -39,6 +39,28 @@ in
             , options =
                 CodeGen.TypeOptions::
                   { dateTimeFormat = CodeGen.localTime
+                  }
+            }
+          , { type = "TestCases.Types.DateTimeFormats.CustomUtcTimeField.CustomUtcTimeField"
+            , options =
+                CodeGen.TypeOptions::
+                  { dateTimeFormat = CodeGen.utcTime
+                  , formatSpecifier = Some "utc"
+                  }
+            }
+          , { type = "TestCases.Types.DateTimeFormats.CustomZonedTimeField.CustomZonedTimeField"
+            , options =
+                CodeGen.TypeOptions::
+                  { dateTimeFormat = CodeGen.zonedTime
+                  , formatSpecifier = Some "zoned"
+                  , deriveClasses = CodeGen.derive [ CodeGen.show ]
+                  }
+            }
+          , { type = "TestCases.Types.DateTimeFormats.CustomLocalTimeField.CustomLocalTimeField"
+            , options =
+                CodeGen.TypeOptions::
+                  { dateTimeFormat = CodeGen.localTime
+                  , formatSpecifier = Some "local"
                   }
             }
           , { type = "TestCases.Types.UtcTimeType.UtcTimeType"

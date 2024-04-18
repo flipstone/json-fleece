@@ -4,7 +4,6 @@
 module Fleece.CodeGenUtil
   ( generateFleeceCode
   , CodeGenOptions (..)
-  , DateFormat (..)
   , DateTimeFormat (..)
   , TypeOptions (..)
   , DerivableClass (..)
@@ -53,7 +52,6 @@ module Fleece.CodeGenUtil
   , floatFormat
   , doubleFormat
   , dayFormat
-  , dayCustomFormat
   , utcTimeFormat
   , zonedTimeFormat
   , localTimeFormat
@@ -98,7 +96,7 @@ data CodeGenOptions = CodeGenOptions
 
 data TypeOptions = TypeOptions
   { dateTimeFormat :: DateTimeFormat
-  , dateFormat :: DateFormat
+  , formatSpecifier :: Maybe T.Text
   , deriveClasses :: Maybe [DerivableClass]
   }
 
@@ -135,10 +133,6 @@ lookupTypeOptions typeName = do
   case Map.lookup key optionsMap of
     Nothing -> asks defaultTypeOptions
     Just typeOptions -> pure typeOptions
-
-data DateFormat
-  = ISO8601DateFormat
-  | CustomDateFormat T.Text
 
 data DateTimeFormat
   = UTCTimeFormat
@@ -332,40 +326,51 @@ schemaInfoOrRefToSchemaTypeInfo typeMap refOrInfo =
 
 dayFormat :: TypeOptions -> CodeGenDataFormat
 dayFormat typeOptions =
-  codeGenNewTypeSchemaTypeInfo typeOptions $
-    primitiveSchemaTypeInfo
-      (HC.toTypeName "Data.Time" (Just "Time") "Day")
-      (fleeceCoreVar "day")
-
-dayCustomFormat :: T.Text -> TypeOptions -> CodeGenDataFormat
-dayCustomFormat formatString typeOptions =
   codeGenNewTypeSchemaTypeInfo typeOptions
     $ primitiveSchemaTypeInfo
       (HC.toTypeName "Data.Time" (Just "Time") "Day")
-    $ HC.fromCode "("
-      <> fleeceCoreFunApp "dayWithFormat" formatString
-      <> HC.fromCode ")"
+    $ case formatSpecifier typeOptions of
+      Just formatString ->
+        HC.fromCode "("
+          <> fleeceCoreFunApp "dayWithFormat" formatString
+          <> HC.fromCode ")"
+      Nothing -> fleeceCoreVar "day"
 
 utcTimeFormat :: TypeOptions -> CodeGenDataFormat
 utcTimeFormat typeOptions =
-  codeGenNewTypeSchemaTypeInfo typeOptions $
-    primitiveSchemaTypeInfo
+  codeGenNewTypeSchemaTypeInfo typeOptions
+    $ primitiveSchemaTypeInfo
       (HC.toTypeName "Data.Time" (Just "Time") "UTCTime")
-      (fleeceCoreVar "utcTime")
+    $ case formatSpecifier typeOptions of
+      Just formatString ->
+        HC.fromCode "("
+          <> fleeceCoreFunApp "utcTimeWithFormat" formatString
+          <> HC.fromCode ")"
+      Nothing -> fleeceCoreVar "utcTime"
 
 zonedTimeFormat :: TypeOptions -> CodeGenDataFormat
 zonedTimeFormat typeOptions =
-  codeGenNewTypeSchemaTypeInfo typeOptions $
-    primitiveSchemaTypeInfo
+  codeGenNewTypeSchemaTypeInfo typeOptions
+    $ primitiveSchemaTypeInfo
       (HC.toTypeName "Data.Time" (Just "Time") "ZonedTime")
-      (fleeceCoreVar "zonedTime")
+    $ case formatSpecifier typeOptions of
+      Just formatString ->
+        HC.fromCode "("
+          <> fleeceCoreFunApp "zonedTimeWithFormat" formatString
+          <> HC.fromCode ")"
+      Nothing -> fleeceCoreVar "zonedTime"
 
 localTimeFormat :: TypeOptions -> CodeGenDataFormat
 localTimeFormat typeOptions =
-  codeGenNewTypeSchemaTypeInfo typeOptions $
-    primitiveSchemaTypeInfo
+  codeGenNewTypeSchemaTypeInfo typeOptions
+    $ primitiveSchemaTypeInfo
       (HC.toTypeName "Data.Time" (Just "Time") "LocalTime")
-      (fleeceCoreVar "localTime")
+    $ case formatSpecifier typeOptions of
+      Just formatString ->
+        HC.fromCode "("
+          <> fleeceCoreFunApp "localTimeWithFormat" formatString
+          <> HC.fromCode ")"
+      Nothing -> fleeceCoreVar "localTime"
 
 textFormat :: TypeOptions -> CodeGenDataFormat
 textFormat typeOptions =

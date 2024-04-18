@@ -68,8 +68,11 @@ module Fleece.Core
   , set
   , string
   , utcTime
+  , utcTimeWithFormat
   , localTime
+  , localTimeWithFormat
   , zonedTime
+  , zonedTimeWithFormat
   , day
   , dayWithFormat
   , boundedIntegralNumber

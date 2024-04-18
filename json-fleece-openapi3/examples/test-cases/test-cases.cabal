@@ -80,6 +80,9 @@ library
       TestCases.Types.AStringType
       TestCases.Types.CustomDateFormat
       TestCases.Types.DateTimeFormats
+      TestCases.Types.DateTimeFormats.CustomLocalTimeField
+      TestCases.Types.DateTimeFormats.CustomUtcTimeField
+      TestCases.Types.DateTimeFormats.CustomZonedTimeField
       TestCases.Types.DateTimeFormats.DefaultTimeField
       TestCases.Types.DateTimeFormats.LocalTimeField
       TestCases.Types.DateTimeFormats.UtcTimeField

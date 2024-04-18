@@ -45,15 +45,11 @@ typeOptionsDecoder =
   Dhall.record $
     CGU.TypeOptions
       <$> Dhall.field "dateTimeFormat" dateTimeFormatDecoder
-      <*> Dhall.field "dateFormat" dateFormatDecoder
+      <*> Dhall.field "formatSpecifier" formatSpecifierDecoder
       <*> Dhall.field "deriveClasses" deriveClassesDecoder
 
-dateFormatDecoder :: Dhall.Decoder CGU.DateFormat
-dateFormatDecoder =
-  Dhall.union
-    ( (fmap (\() -> CGU.ISO8601DateFormat) (Dhall.constructor "ISO8601Date" Dhall.unit))
-        <> (fmap CGU.CustomDateFormat (Dhall.constructor "CustomDate" Dhall.strictText))
-    )
+formatSpecifierDecoder :: Dhall.Decoder (Maybe T.Text)
+formatSpecifierDecoder = Dhall.maybe Dhall.strictText
 
 dateTimeFormatDecoder :: Dhall.Decoder CGU.DateTimeFormat
 dateTimeFormatDecoder =

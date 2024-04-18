@@ -30,10 +30,14 @@ module Fleece.Core.Schemas
   , realFloatNamed
   , string
   , utcTime
+  , utcTimeWithFormat
   , localTime
+  , localTimeWithFormat
   , zonedTime
+  , zonedTimeWithFormat
   , day
   , dayWithFormat
+  , timeWithFormat
   , boundedIntegralNumber
   , boundedIntegralNumberNamed
   , unboundedIntegralNumber
@@ -562,33 +566,45 @@ utcTime :: Fleece schema => schema Time.UTCTime
 utcTime =
   iso8601Formatted "UTCTime" ISO8601.iso8601Format AttoTime.utcTime
 
+utcTimeWithFormat :: Fleece schema => String -> schema Time.UTCTime
+utcTimeWithFormat = timeWithFormat "UTCTime"
+
 localTime :: Fleece schema => schema Time.LocalTime
 localTime =
   iso8601Formatted "LocalTime" ISO8601.iso8601Format AttoTime.localTime
+
+localTimeWithFormat :: Fleece schema => String -> schema Time.LocalTime
+localTimeWithFormat = timeWithFormat "LocalTime"
 
 zonedTime :: Fleece schema => schema Time.ZonedTime
 zonedTime =
   iso8601Formatted "ZonedTime" ISO8601.iso8601Format AttoTime.zonedTime
 
+zonedTimeWithFormat :: Fleece schema => String -> schema Time.ZonedTime
+zonedTimeWithFormat = timeWithFormat "ZonedTime"
+
+day :: Fleece schema => schema Time.Day
+day =
+  iso8601Formatted "Day" ISO8601.iso8601Format AttoTime.day
+
 dayWithFormat :: Fleece schema => String -> schema Time.Day
-dayWithFormat formatString =
+dayWithFormat = timeWithFormat "Day"
+
+timeWithFormat :: (Time.FormatTime t, Time.ParseTime t) => Fleece schema => String -> String -> schema t
+timeWithFormat typeName formatString =
   let
     decode raw =
       case Time.parseTimeM False Time.defaultTimeLocale formatString raw of
         Just success -> Right success
         Nothing ->
           Left $
-            "Invalid date in custom format, format is: " <> formatString
+            "Invalid " <> typeName <> ", custom format is: " <> formatString
   in
     validateNamed
-      (unqualifiedName $ "Day in " <> formatString <> " format")
+      (unqualifiedName $ typeName <> " in " <> formatString <> " format")
       (Time.formatTime Time.defaultTimeLocale formatString)
       decode
       string
-
-day :: Fleece schema => schema Time.Day
-day =
-  iso8601Formatted "Day" ISO8601.iso8601Format AttoTime.day
 
 bareOrJSONString :: Fleece schema => schema a -> schema a
 bareOrJSONString baseSchema =

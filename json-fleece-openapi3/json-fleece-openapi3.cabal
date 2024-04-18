@@ -1927,6 +1927,9 @@ extra-source-files:
     examples/test-cases/TestCases/Types/AStringType.hs
     examples/test-cases/TestCases/Types/CustomDateFormat.hs
     examples/test-cases/TestCases/Types/DateTimeFormats.hs
+    examples/test-cases/TestCases/Types/DateTimeFormats/CustomLocalTimeField.hs
+    examples/test-cases/TestCases/Types/DateTimeFormats/CustomUtcTimeField.hs
+    examples/test-cases/TestCases/Types/DateTimeFormats/CustomZonedTimeField.hs
     examples/test-cases/TestCases/Types/DateTimeFormats/DefaultTimeField.hs
     examples/test-cases/TestCases/Types/DateTimeFormats/LocalTimeField.hs
     examples/test-cases/TestCases/Types/DateTimeFormats/UtcTimeField.hs

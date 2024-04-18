@@ -974,9 +974,7 @@ mkOpenApiStringFormat typeName schema = do
       pure $
         case OA._schemaFormat schema of
           Just "date" ->
-            case CGU.dateFormat typeOptions of
-              CGU.ISO8601DateFormat -> CGU.dayFormat typeOptions
-              CGU.CustomDateFormat formatString -> CGU.dayCustomFormat formatString typeOptions
+            CGU.dayFormat typeOptions
           Just "date-time" ->
             case CGU.dateTimeFormat typeOptions of
               CGU.UTCTimeFormat -> CGU.utcTimeFormat typeOptions
