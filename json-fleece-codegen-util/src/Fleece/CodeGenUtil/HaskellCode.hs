@@ -428,7 +428,7 @@ nonEmptyOf itemName =
   "("
     <> typeNameToCodeDefaultQualification nonEmptyType
     <> " "
-    <> itemName
+    <> guardParens itemName
     <> ")"
 
 mapType :: TypeName

@@ -112,8 +112,16 @@ library
       TestCases.Types.JustAdditionalPropertiesSchemaRef
       TestCases.Types.JustAdditionalPropertiesTrue
       TestCases.Types.LocalTimeType
-      TestCases.Types.MinLengthOne
-      TestCases.Types.MinLengthOne.MinLengthOneItem
+      TestCases.Types.MinItemsOne
+      TestCases.Types.MinItemsOne.MinItemsOneItem
+      TestCases.Types.MinItemsOneInline
+      TestCases.Types.MinItemsOneInline.SomeArrayItem
+      TestCases.Types.MinItemsOneInlineArrayNullableOneOf
+      TestCases.Types.MinItemsOneInlineArrayNullableOneOf.MinItemsOneInlineArrayNullableOneOfItem
+      TestCases.Types.MinItemsOneInlineArrayOneOf
+      TestCases.Types.MinItemsOneInlineArrayOneOf.MinItemsOneInlineArrayOneOfItem
+      TestCases.Types.MinItemsOneInlineObjectOneOf
+      TestCases.Types.MinItemsOneInlineObjectOneOf.SomeArrayItem
       TestCases.Types.MixedInAdditionalPropertiesFalse
       TestCases.Types.MixedInAdditionalPropertiesFalse.Bar
       TestCases.Types.MixedInAdditionalPropertiesFalse.Foo
