@@ -78,6 +78,12 @@ library
       TestCases.Operations.TestCases.QueryParams.StringParam
       TestCases.Operations.TestCases.RequestBody
       TestCases.Types.AStringType
+      TestCases.Types.Bar
+      TestCases.Types.Bar.BarName
+      TestCases.Types.Bar.Type
+      TestCases.Types.Baz
+      TestCases.Types.Baz.BazName
+      TestCases.Types.Baz.Type
       TestCases.Types.CustomDateFormat
       TestCases.Types.DateTimeFormats
       TestCases.Types.DateTimeFormats.CustomLocalTimeField
@@ -104,6 +110,8 @@ library
       TestCases.Types.FieldTestCases.OptionalNullableField
       TestCases.Types.FieldTestCases.RequiredField
       TestCases.Types.FieldTestCases.RequiredNullableField
+      TestCases.Types.Foo
+      TestCases.Types.Foo.Type
       TestCases.Types.JustAdditionalPropertiesNullableBoolean
       TestCases.Types.JustAdditionalPropertiesNullableBooleanItem
       TestCases.Types.JustAdditionalPropertiesNullableBooleanRef
@@ -163,6 +171,7 @@ library
       TestCases.Types.NameConflicts.Where
       TestCases.Types.NullableBoolean
       TestCases.Types.Num2SchemaStartingWithNumber
+      TestCases.Types.OneOfWithDiscriminator
       TestCases.Types.OneOfWithNullable
       TestCases.Types.ReferenceOneOf
       TestCases.Types.ReferenceOneOfInsideOneOf

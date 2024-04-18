@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE DataKinds #-}
 
 module TestCases.Types.MinItemsOneInlineObjectOneOf.SomeArrayItem
   ( SomeArrayItem(..)

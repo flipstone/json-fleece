@@ -33,7 +33,7 @@ module Fleece.CodeGenUtil.HaskellCode
   , newline
   , quote
   , union
-  , unionTypeList
+  , taggedUnion
   , intercalate
   , lines
   , indent
@@ -57,6 +57,7 @@ module Fleece.CodeGenUtil.HaskellCode
   , enum
   , sumType
   , typeAnnotate
+  , typeApplication
   , stringLiteral
   , intLiteral
   , caseMatch
@@ -263,6 +264,10 @@ typeAnnotate :: VarName -> TypeExpression -> HaskellCode
 typeAnnotate item annotation =
   varNameToCode Nothing item <> " :: " <> toCode annotation
 
+typeApplication :: HaskellCode -> HaskellCode
+typeApplication code =
+  String.fromString "@" <> code
+
 indent :: Int -> HaskellCode -> HaskellCode
 indent n code =
   fromText (T.replicate n " ") <> code
@@ -280,8 +285,9 @@ toConstructorName typeName constructorName =
   case T.unpack constructorName of
     c : _
       | Char.isNumber c ->
-          ConstructorName . fromText $
-            Manip.toPascal (typeNameText typeName)
+          ConstructorName
+            . fromText
+            $ Manip.toPascal (typeNameText typeName)
               <> Manip.toPascal constructorName
     _ -> ConstructorName . fromText $ Manip.toPascal constructorName
 
@@ -445,17 +451,36 @@ mapOf keyName itemName =
     <> guardParens itemName
     <> ")"
 
-union :: TypeExpression
-union =
-  typeNameToCodeDefaultQualification (shrubberyType "Union")
-
-unionTypeList :: [TypeExpression] -> TypeExpression
-unionTypeList members =
+union :: [TypeExpression] -> TypeExpression
+union members =
   fromCode $
     lines
-      ( toCode union
+      ( typeNameToCodeDefaultQualification (shrubberyType "Union")
           : map (indent 2 . toCode) (delimitLines "'[ " " , " members <> [" ]"])
       )
+
+taggedUnion :: [(T.Text, TypeExpression)] -> TypeExpression
+taggedUnion members =
+  let
+    mkMemberExpression (tag, typeExpr) =
+      stringLiteral tag
+        <> " "
+        <> shrubberyTagAssignment
+        <> " "
+        <> toCode typeExpr
+
+    memberExpressions =
+      fmap mkMemberExpression members
+  in
+    fromCode $
+      lines
+        ( typeNameToCodeDefaultQualification (shrubberyType "TaggedUnion")
+            : map (indent 2 . toCode) (delimitLines "'[ " " , " memberExpressions <> [" ]"])
+        )
+
+shrubberyTagAssignment :: HaskellCode
+shrubberyTagAssignment =
+  addReferences [VarReference "Shrubbery" Nothing "type (@=)"] "@="
 
 quote :: HaskellCode -> HaskellCode
 quote code =

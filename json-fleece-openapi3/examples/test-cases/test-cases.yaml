@@ -594,6 +594,41 @@ components:
       oneOf:
         - type: string
 
+    OneOfWithDiscriminator:
+      oneOf:
+        - $ref: "#/components/schemas/Foo"
+        - $ref: "#/components/schemas/Bar"
+        - $ref: "#/components/schemas/Baz"
+
+      discriminator:
+        propertyName: "type"
+        mapping:
+          foo: "#/components/schemas/Foo"
+          bar: "#/components/schemas/Bar"
+          baz: "#/components/schemas/Baz"
+
+    Foo:
+      type: object
+      properties:
+        type:
+          type: string
+
+    Bar:
+      type: object
+      properties:
+        type:
+          type: string
+        barName:
+          type: string
+
+    Baz:
+      type: object
+      properties:
+        type:
+          type: string
+        bazName:
+          type: string
+
     TopLevelArray:
       type: array
       description: A schema that defines a top level array

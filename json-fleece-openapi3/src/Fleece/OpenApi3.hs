@@ -5,7 +5,7 @@ module Fleece.OpenApi3
   ( generateOpenApiFleeceCode
   ) where
 
-import Control.Monad (join, (<=<))
+import Control.Monad (join, when, (<=<))
 import Control.Monad.Reader (asks)
 import qualified Data.Aeson as Aeson
 import Data.Bifunctor (bimap, first)
@@ -415,8 +415,9 @@ mkInlineIntegerSchema ::
   OA.Schema ->
   CGU.CodeGen SchemaTypeInfoWithDeps
 mkInlineIntegerSchema schema =
-  pure . schemaInfoWithoutDependencies $
-    case OA._schemaFormat schema of
+  pure
+    . schemaInfoWithoutDependencies
+    $ case OA._schemaFormat schema of
       Just "int32" -> CGU.int32SchemaTypeInfo
       Just "int64" -> CGU.int64SchemaTypeInfo
       Just _ -> CGU.integerSchemaTypeInfo
@@ -923,7 +924,11 @@ mkOpenApiDataFormat schemaKey typeName schema =
       Nothing ->
         case OA._schemaOneOf schema of
           Just schemas ->
-            Just <$> mkOneOf schemaKey schemas
+            case OA._schemaDiscriminator schema of
+              Nothing ->
+                Just <$> mkOneOfUnion schemaKey schemas
+              Just discriminator ->
+                Just <$> mkOneOfTaggedUnion discriminator schemaKey
           Nothing ->
             mkOpenApiObjectFormatOrAdditionalPropertiesNewtype
               CGU.Type
@@ -931,11 +936,11 @@ mkOpenApiDataFormat schemaKey typeName schema =
               typeName
               schema
 
-mkOneOf ::
+mkOneOfUnion ::
   T.Text ->
   [OA.Referenced OA.Schema] ->
   CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
-mkOneOf schemaKey refSchemas =
+mkOneOfUnion schemaKey refSchemas = do
   let
     processRefSchema refSchema =
       case refSchema of
@@ -959,11 +964,46 @@ mkOneOf schemaKey refSchemas =
                 { CGU.codeGenUnionMemberType = Right $ CGU.TypeReference $ OA.getReference ref
                 }
           pure (mempty, unionMember)
-  in
-    do
-      (maps, codeGenUnionMembers) <- fmap unzip . traverse processRefSchema $ refSchemas
-      schemaMap <- unionsErrorOnConflict maps
-      pure (schemaMap, CGU.CodeGenUnion codeGenUnionMembers)
+
+  (maps, codeGenUnionMembers) <- fmap unzip . traverse processRefSchema $ refSchemas
+  schemaMap <- unionsErrorOnConflict maps
+  pure (schemaMap, CGU.CodeGenUnion codeGenUnionMembers)
+
+mkOneOfTaggedUnion ::
+  OA.Discriminator ->
+  T.Text ->
+  CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
+mkOneOfTaggedUnion discriminator _schemaKey = do
+  let
+    processMappingEntry (tag, ref) =
+      case T.stripPrefix "#/components/schemas/" ref of
+        Nothing ->
+          CGU.codeGenError $
+            "Discriminators mappings with references to locations other than the schema components are not supported: "
+              <> T.unpack ref
+        Just typeName ->
+          pure $
+            CGU.CodeGenTaggedUnionMember
+              { CGU.codeGenTaggedUnionMemberTag = tag
+              , CGU.codeGenTaggedUnionMemberType = Right . CGU.TypeReference $ typeName
+              }
+
+    mapping =
+      OA._discriminatorMapping discriminator
+
+    tagProperty =
+      OA._discriminatorPropertyName discriminator
+
+  when
+    (IOHM.null mapping)
+    (CGU.codeGenError "Discriminators without mappings is not currently supported")
+
+  codeGenTaggedUnionMembers <-
+    traverse processMappingEntry
+      . IOHM.toList
+      $ mapping
+
+  pure (mempty, CGU.CodeGenTaggedUnion tagProperty codeGenTaggedUnionMembers)
 
 mkOpenApiStringFormat :: HC.TypeName -> OA.Schema -> CGU.CodeGen CGU.CodeGenDataFormat
 mkOpenApiStringFormat typeName schema = do
@@ -1324,8 +1364,9 @@ mkAdditionalPropertiesSchema raiseError schemaKey mkInlineItemSchema mbAdditiona
               <> " field in the Fleece code gen config as false."
         else pure Nothing
     Just (OA.AdditionalPropertiesSchema (OA.Ref ref)) ->
-      pure . Just $
-        SchemaTypeInfoWithDeps
+      pure
+        . Just
+        $ SchemaTypeInfoWithDeps
           { schemaTypeInfoDependent = Right $ CGU.TypeReference $ OA.getReference ref
           , schemaTypeInfoDependencies = Map.empty
           }
