@@ -6,6 +6,7 @@ module TestCases.Types.OneOfWithNullable
   , oneOfWithNullableSchema
   ) where
 
+import qualified Data.List.NonEmpty as NEL
 import qualified Data.Text as T
 import Fleece.Core ((#|))
 import qualified Fleece.Core as FC
@@ -20,6 +21,8 @@ newtype OneOfWithNullable = OneOfWithNullable (Shrubbery.Union
    , [AStringType.AStringType]
    , Either FC.Null [AStringType.AStringType]
    , [Either FC.Null [AStringType.AStringType]]
+   , (NEL.NonEmpty (Either FC.Null [AStringType.AStringType]))
+   , [Either FC.Null (NEL.NonEmpty AStringType.AStringType)]
    ])
   deriving (Show, Eq)
 
@@ -33,3 +36,5 @@ oneOfWithNullableSchema =
         #| FC.unionMember (FC.list AStringType.aStringTypeSchema)
         #| FC.unionMember (FC.nullable (FC.list AStringType.aStringTypeSchema))
         #| FC.unionMember (FC.list (FC.nullable (FC.list AStringType.aStringTypeSchema)))
+        #| FC.unionMember (FC.nonEmpty (FC.nullable (FC.list AStringType.aStringTypeSchema)))
+        #| FC.unionMember (FC.list (FC.nullable (FC.nonEmpty AStringType.aStringTypeSchema)))

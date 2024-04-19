@@ -509,14 +509,14 @@ mkInlineArraySchema raiseError schemaKey schemaMap schema =
     case OA._schemaItems schema of
       Just (OA.OpenApiItemsObject (OA.Ref (OA.Reference itemRefKey))) -> do
         itemSchemaInfo <- lookupCodeGenType itemRefKey
-        pure . schemaInfoWithoutDependencies . CGU.arrayTypeInfo $ itemSchemaInfo
+        pure . schemaInfoWithoutDependencies . CGU.arrayLikeTypeInfo (OA._schemaMinItems schema) $ itemSchemaInfo
       Just (OA.OpenApiItemsObject (OA.Inline innerSchema)) ->
         let
           itemKey =
             schemaKey <> "Item"
         in
           fmap
-            (fmapSchemaInfoAndDeps $ first CGU.arrayTypeInfo)
+            (fmapSchemaInfoAndDeps $ first $ CGU.arrayLikeTypeInfo $ OA._schemaMinItems schema)
             (mkInlineBodySchema raiseError itemKey schemaMap innerSchema)
       otherItemType ->
         raiseError $
@@ -530,25 +530,28 @@ mkInlineArrayOneOfSchema ::
   OA.Schema ->
   CGU.CodeGen SchemaTypeInfoWithDeps
 mkInlineArrayOneOfSchema raiseError schemaKey schemaMap schema =
-  case OA._schemaItems schema of
-    Just (OA.OpenApiItemsObject (OA.Ref ref)) -> do
-      pure $
-        SchemaTypeInfoWithDeps
-          { schemaTypeInfoDependent = Right $ CGU.CodeGenRefArray $ CGU.TypeReference $ OA.getReference ref
-          , schemaTypeInfoDependencies = mempty
-          }
-    Just (OA.OpenApiItemsObject (OA.Inline innerSchema)) ->
-      let
-        itemKey =
-          schemaKey <> "Item"
-      in
-        fmap
-          (fmapSchemaInfoAndDeps (bimap CGU.arrayTypeInfo CGU.CodeGenRefArray))
-          (mkInlineOneOfSchema raiseError itemKey schemaMap innerSchema)
-    otherItemType ->
-      raiseError $
-        "Unsupported schema array item type found: "
-          <> show otherItemType
+  let
+    minItems = OA._schemaMinItems schema
+  in
+    case OA._schemaItems schema of
+      Just (OA.OpenApiItemsObject (OA.Ref ref)) -> do
+        pure $
+          SchemaTypeInfoWithDeps
+            { schemaTypeInfoDependent = Right $ CGU.CodeGenRefArray minItems $ CGU.TypeReference $ OA.getReference ref
+            , schemaTypeInfoDependencies = mempty
+            }
+      Just (OA.OpenApiItemsObject (OA.Inline innerSchema)) ->
+        let
+          itemKey =
+            schemaKey <> "Item"
+        in
+          fmap
+            (fmapSchemaInfoAndDeps (bimap (CGU.arrayLikeTypeInfo minItems) $ CGU.CodeGenRefArray minItems))
+            (mkInlineOneOfSchema raiseError itemKey schemaMap innerSchema)
+      otherItemType ->
+        raiseError $
+          "Unsupported schema array item type found: "
+            <> show otherItemType
 
 applyNullable :: OA.Schema -> SchemaTypeInfoWithDeps -> SchemaTypeInfoWithDeps
 applyNullable schema =
@@ -1146,7 +1149,7 @@ mkOpenApiArrayFormat ::
   CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
 mkOpenApiArrayFormat schemaKey typeName schema = do
   typeOptions <- CGU.lookupTypeOptions typeName
-  fmap (fmap (CGU.CodeGenArray typeOptions (OA._schemaMinLength schema))) $
+  fmap (fmap (CGU.CodeGenArray typeOptions (OA._schemaMinItems schema))) $
     schemaArrayItemsToFieldType
       CGU.Type
       schemaKey
@@ -1195,8 +1198,10 @@ schemaRefToFieldType section parentKey fieldName schemaRef =
               if nullable
                 then CGU.CodeGenRefNullable
                 else id
+            minItems =
+              OA._schemaMinItems inlineSchema
           in
-            fmap (fmap (applyNull . CGU.CodeGenRefArray)) $
+            fmap (fmap (applyNull . CGU.CodeGenRefArray minItems)) $
               schemaArrayItemsToFieldType
                 section
                 parentKey

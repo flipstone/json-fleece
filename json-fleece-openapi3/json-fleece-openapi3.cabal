@@ -1959,8 +1959,16 @@ extra-source-files:
     examples/test-cases/TestCases/Types/JustAdditionalPropertiesSchemaRef.hs
     examples/test-cases/TestCases/Types/JustAdditionalPropertiesTrue.hs
     examples/test-cases/TestCases/Types/LocalTimeType.hs
-    examples/test-cases/TestCases/Types/MinLengthOne.hs
-    examples/test-cases/TestCases/Types/MinLengthOne/MinLengthOneItem.hs
+    examples/test-cases/TestCases/Types/MinItemsOne.hs
+    examples/test-cases/TestCases/Types/MinItemsOne/MinItemsOneItem.hs
+    examples/test-cases/TestCases/Types/MinItemsOneInline.hs
+    examples/test-cases/TestCases/Types/MinItemsOneInline/SomeArrayItem.hs
+    examples/test-cases/TestCases/Types/MinItemsOneInlineArrayNullableOneOf.hs
+    examples/test-cases/TestCases/Types/MinItemsOneInlineArrayNullableOneOf/MinItemsOneInlineArrayNullableOneOfItem.hs
+    examples/test-cases/TestCases/Types/MinItemsOneInlineArrayOneOf.hs
+    examples/test-cases/TestCases/Types/MinItemsOneInlineArrayOneOf/MinItemsOneInlineArrayOneOfItem.hs
+    examples/test-cases/TestCases/Types/MinItemsOneInlineObjectOneOf.hs
+    examples/test-cases/TestCases/Types/MinItemsOneInlineObjectOneOf/SomeArrayItem.hs
     examples/test-cases/TestCases/Types/MixedInAdditionalPropertiesFalse.hs
     examples/test-cases/TestCases/Types/MixedInAdditionalPropertiesFalse/Bar.hs
     examples/test-cases/TestCases/Types/MixedInAdditionalPropertiesFalse/Foo.hs

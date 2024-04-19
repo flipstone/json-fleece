@@ -575,6 +575,20 @@ components:
               $ref: "#/components/schemas/AStringType"
             type: array
           type: array
+        - items:
+            nullable: true
+            items:
+              $ref: "#/components/schemas/AStringType"
+            type: array
+          type: array
+          minItems: 1
+        - items:
+            nullable: true
+            items:
+              $ref: "#/components/schemas/AStringType"
+            type: array
+            minItems: 1
+          type: array
 
     TopLevelOneOfOneOption:
       oneOf:
@@ -792,8 +806,51 @@ components:
       description: An explicit type that is just a string for use in other test cases
       type: string
 
-    MinLengthOne:
+    MinItemsOne:
       type: array
       items:
         type: boolean
-      minLength: 1
+      minItems: 1
+
+    MinItemsOneInline:
+      type: object
+      properties:
+        someArray:
+          type: array
+          items:
+            type: boolean
+          minItems: 1
+
+    MinItemsOneInlineObjectOneOf:
+      type: object
+      properties:
+        someArray:
+          type: array
+          items:
+            oneOf:
+              - type: array
+                items:
+                  type: boolean
+                minItems: 1
+          minItems: 1
+
+    MinItemsOneInlineArrayOneOf:
+      type: array
+      items:
+        oneOf:
+          - type: array
+            items:
+              type: boolean
+            minItems: 1
+      minItems: 1
+
+    MinItemsOneInlineArrayNullableOneOf:
+      type: array
+      items:
+        oneOf:
+          - type: array
+            items:
+              type: boolean
+            minItems: 1
+            nullable: true
+      minItems: 1

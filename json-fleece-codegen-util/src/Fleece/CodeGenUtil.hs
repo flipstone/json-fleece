@@ -34,7 +34,7 @@ module Fleece.CodeGenUtil
   , CodeGenUnionMember (..)
   , inferSchemaInfoForTypeName
   , inferTypeForInputName
-  , arrayTypeInfo
+  , arrayLikeTypeInfo
   , mapTypeInfo
   , nullableTypeInfo
   , anyJSONSchemaTypeInfo
@@ -261,7 +261,7 @@ newtype CodeGenAdditionalProperties = CodeGenAdditionalProperties
 data CodeGenRefType
   = TypeReference T.Text
   | CodeGenRefMap CodeGenRefType
-  | CodeGenRefArray CodeGenRefType
+  | CodeGenRefArray (Maybe Integer) CodeGenRefType
   | CodeGenRefNullable CodeGenRefType
 
 resolveRefTypeInfo ::
@@ -278,8 +278,8 @@ resolveRefTypeInfo typeMap =
               pure (codeGenTypeSchemaInfo codeGenType)
             _ ->
               codeGenError $ "Type " <> show ref <> " not found."
-        CodeGenRefArray itemType ->
-          fmap arrayTypeInfo (go itemType)
+        CodeGenRefArray mbMinItems itemType ->
+          fmap (arrayLikeTypeInfo mbMinItems) (go itemType)
         CodeGenRefMap itemType ->
           fmap mapTypeInfo (go itemType)
         CodeGenRefNullable itemType ->
@@ -305,7 +305,7 @@ resolveFieldDescription typeMap =
               Nothing
             Nothing ->
               Nothing
-        CodeGenRefArray itemType ->
+        CodeGenRefArray _mbMinItems itemType ->
           go itemType
         CodeGenRefMap itemType ->
           go itemType
@@ -463,6 +463,15 @@ nonEmptyTypeInfo itemInfo =
           <> schemaTypeSchema itemInfo
           <> ")"
     }
+
+arrayLikeTypeInfo :: Maybe Integer -> SchemaTypeInfo -> SchemaTypeInfo
+arrayLikeTypeInfo mbMinItems =
+  case mbMinItems of
+    Just minLength
+      | minLength >= 1 ->
+          nonEmptyTypeInfo
+    _ ->
+      arrayTypeInfo
 
 mapTypeInfo :: SchemaTypeInfo -> SchemaTypeInfo
 mapTypeInfo itemInfo =
@@ -1109,8 +1118,8 @@ generateCodeGenDataFormat typeMap typeName format = do
       pure $ generateFleeceEnum typeName values typeOptions
     CodeGenObject typeOptions fields mbAdditionalProperties ->
       generateFleeceObject typeMap typeName fields mbAdditionalProperties typeOptions
-    CodeGenArray typeOptions mbMinLength itemType ->
-      generateFleeceArray typeMap typeName mbMinLength itemType typeOptions
+    CodeGenArray typeOptions mbMinItems itemType ->
+      generateFleeceArray typeMap typeName mbMinItems itemType typeOptions
     CodeGenUnion members ->
       generateFleeceUnion typeMap typeName members
 
@@ -1467,15 +1476,9 @@ generateFleeceArray ::
   CodeGenRefType ->
   TypeOptions ->
   CodeGen ([HC.VarName], HC.HaskellCode)
-generateFleeceArray typeMap typeName mbMinLength itemType typeOptions = do
+generateFleeceArray typeMap typeName mbMinItems itemType typeOptions = do
   let
-    elemTypeInfo =
-      case mbMinLength of
-        Just minLength
-          | minLength >= 1 ->
-              nonEmptyTypeInfo
-        _ ->
-          arrayTypeInfo
+    elemTypeInfo = arrayLikeTypeInfo mbMinItems
   typeInfo <- fmap elemTypeInfo (resolveRefTypeInfo typeMap itemType)
   generateFleeceNewtype
     typeMap
