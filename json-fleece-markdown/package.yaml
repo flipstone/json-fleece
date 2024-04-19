@@ -52,7 +52,7 @@ library:
   exposed-modules:
     - Fleece.Markdown
   dependencies:
-    - json-fleece-core >= 0.6 &&  < 0.7
+    - json-fleece-core >= 0.7 &&  < 0.8
     - containers >= 0.6 && < 0.7
     - dlist >= 1.0 && < 1.1
 
