@@ -440,9 +440,9 @@ mapOf keyName itemName =
   "("
     <> typeNameToCodeDefaultQualification mapType
     <> " "
-    <> keyName
+    <> guardParens keyName
     <> " "
-    <> itemName
+    <> guardParens itemName
     <> ")"
 
 union :: TypeExpression
