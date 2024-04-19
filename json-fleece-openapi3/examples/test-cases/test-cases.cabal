@@ -104,6 +104,9 @@ library
       TestCases.Types.FieldTestCases.OptionalNullableField
       TestCases.Types.FieldTestCases.RequiredField
       TestCases.Types.FieldTestCases.RequiredNullableField
+      TestCases.Types.JustAdditionalPropertiesNullableBoolean
+      TestCases.Types.JustAdditionalPropertiesNullableBooleanItem
+      TestCases.Types.JustAdditionalPropertiesNullableBooleanRef
       TestCases.Types.JustAdditionalPropertiesSchemaInline
       TestCases.Types.JustAdditionalPropertiesSchemaInlineItem
       TestCases.Types.JustAdditionalPropertiesSchemaRef
@@ -150,6 +153,7 @@ library
       TestCases.Types.NameConflicts.Then
       TestCases.Types.NameConflicts.Type
       TestCases.Types.NameConflicts.Where
+      TestCases.Types.NullableBoolean
       TestCases.Types.Num2SchemaStartingWithNumber
       TestCases.Types.OneOfWithNullable
       TestCases.Types.ReferenceOneOf

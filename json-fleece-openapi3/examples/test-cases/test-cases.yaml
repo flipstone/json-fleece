@@ -716,6 +716,24 @@ components:
       description: An object with just additionalProperties = true
       additionalProperties: true
 
+    # This test is broken, since the nullability is not considered
+    JustAdditionalPropertiesNullableBoolean:
+      type: object
+      description: An object with a nullable boolean
+      additionalProperties:
+        type: boolean
+        nullable: true
+
+    JustAdditionalPropertiesNullableBooleanRef:
+      type: object
+      description: An object with a ref to a nullable boolean
+      additionalProperties:
+        $ref: '#/components/schemas/NullableBoolean'
+
+    NullableBoolean:
+      nullable: true
+      type: boolean
+
     JustAdditionalPropertiesSchemaRef:
       type: object
       description: An object with just additionalProperties as a schema ref
