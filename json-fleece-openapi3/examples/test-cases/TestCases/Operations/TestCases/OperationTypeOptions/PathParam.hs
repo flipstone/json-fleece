@@ -15,13 +15,14 @@ import Beeline.HTTP.Client ((?+))
 import qualified Beeline.HTTP.Client as H
 import Beeline.Routing ((/+), (/-))
 import qualified Beeline.Routing as R
+import qualified Fleece.Aeson.Beeline as FA
 import Prelude (($), fmap)
 import qualified TestCases.Operations.TestCases.OperationTypeOptions.PathParam.PathParam as PathParam
 import qualified TestCases.Operations.TestCases.OperationTypeOptions.PathParam.QueryParam as QueryParam
 
 operation ::
   H.Operation
-    H.ContentTypeDecodingError
+    FA.JSONDecodingError
     PathParams
     QueryParams
     H.NoHeaderParams
@@ -62,7 +63,7 @@ data Responses
   | Response422 H.NoResponseBody
   deriving ()
 
-responseSchemas :: [(H.StatusRange, H.ResponseBodySchema H.ContentTypeDecodingError Responses)]
+responseSchemas :: [(H.StatusRange, H.ResponseBodySchema FA.JSONDecodingError Responses)]
 responseSchemas =
   [ (H.Status 201, fmap Response201 (H.noResponseBody))
   , (H.Status 422, fmap Response422 (H.noResponseBody))

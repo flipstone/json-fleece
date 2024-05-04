@@ -24,7 +24,7 @@ import qualified StarTrek.Types.ElementBaseResponse as ElementBaseResponse
 
 operation ::
   H.Operation
-    H.ContentTypeDecodingError
+    FA.JSONDecodingError
     H.NoPathParams
     QueryParams
     H.NoHeaderParams
@@ -64,7 +64,7 @@ data Responses
   = Response200 ElementBaseResponse.ElementBaseResponse
   deriving (Eq, Show)
 
-responseSchemas :: [(H.StatusRange, H.ResponseBodySchema H.ContentTypeDecodingError Responses)]
+responseSchemas :: [(H.StatusRange, H.ResponseBodySchema FA.JSONDecodingError Responses)]
 responseSchemas =
   [ (H.Status 200, fmap Response200 (H.responseBody FA.JSON ElementBaseResponse.elementBaseResponseSchema))
   ]

@@ -18,7 +18,7 @@ import qualified TestCases.Operations.TestCases.InlineEnumResponses.Response201B
 
 operation ::
   H.Operation
-    H.ContentTypeDecodingError
+    FA.JSONDecodingError
     H.NoPathParams
     H.NoQueryParams
     H.NoHeaderParams
@@ -42,7 +42,7 @@ data Responses
   | Response201 Response201Body.Response201Body
   deriving (Eq, Show)
 
-responseSchemas :: [(H.StatusRange, H.ResponseBodySchema H.ContentTypeDecodingError Responses)]
+responseSchemas :: [(H.StatusRange, H.ResponseBodySchema FA.JSONDecodingError Responses)]
 responseSchemas =
   [ (H.Status 200, fmap Response200 (H.responseBody FA.JSON Response200Body.response200BodySchema))
   , (H.Status 201, fmap Response201 (H.responseBody FA.JSON Response201Body.response201BodySchema))

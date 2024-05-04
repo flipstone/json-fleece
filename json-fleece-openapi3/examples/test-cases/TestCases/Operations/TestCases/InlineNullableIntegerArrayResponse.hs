@@ -17,7 +17,7 @@ import Prelude (($), Either, Eq, Integer, Show, fmap)
 
 operation ::
   H.Operation
-    H.ContentTypeDecodingError
+    FA.JSONDecodingError
     H.NoPathParams
     H.NoQueryParams
     H.NoHeaderParams
@@ -40,7 +40,7 @@ data Responses
   = Response200 (Either FC.Null [Either FC.Null Integer])
   deriving (Eq, Show)
 
-responseSchemas :: [(H.StatusRange, H.ResponseBodySchema H.ContentTypeDecodingError Responses)]
+responseSchemas :: [(H.StatusRange, H.ResponseBodySchema FA.JSONDecodingError Responses)]
 responseSchemas =
   [ (H.Status 200, fmap Response200 (H.responseBody FA.JSON (FC.nullable (FC.list (FC.nullable FC.integer)))))
   ]

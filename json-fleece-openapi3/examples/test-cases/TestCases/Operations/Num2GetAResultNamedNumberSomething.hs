@@ -17,7 +17,7 @@ import qualified TestCases.Types.Num2SchemaStartingWithNumber as Num2SchemaStart
 
 operation ::
   H.Operation
-    H.ContentTypeDecodingError
+    FA.JSONDecodingError
     H.NoPathParams
     H.NoQueryParams
     H.NoHeaderParams
@@ -40,7 +40,7 @@ data Responses
   = Response200 Num2SchemaStartingWithNumber.Num2SchemaStartingWithNumber
   deriving (Eq, Show)
 
-responseSchemas :: [(H.StatusRange, H.ResponseBodySchema H.ContentTypeDecodingError Responses)]
+responseSchemas :: [(H.StatusRange, H.ResponseBodySchema FA.JSONDecodingError Responses)]
 responseSchemas =
   [ (H.Status 200, fmap Response200 (H.responseBody FA.JSON Num2SchemaStartingWithNumber.num2SchemaStartingWithNumberSchema))
   ]

@@ -11,11 +11,12 @@ module TestCases.Operations.TestCases.NoContentResponse
 import qualified Beeline.HTTP.Client as H
 import Beeline.Routing ((/-))
 import qualified Beeline.Routing as R
+import qualified Fleece.Aeson.Beeline as FA
 import Prelude (($), Eq, Show, fmap)
 
 operation ::
   H.Operation
-    H.ContentTypeDecodingError
+    FA.JSONDecodingError
     H.NoPathParams
     H.NoQueryParams
     H.NoHeaderParams
@@ -38,7 +39,7 @@ data Responses
   = Response201 H.NoResponseBody
   deriving (Eq, Show)
 
-responseSchemas :: [(H.StatusRange, H.ResponseBodySchema H.ContentTypeDecodingError Responses)]
+responseSchemas :: [(H.StatusRange, H.ResponseBodySchema FA.JSONDecodingError Responses)]
 responseSchemas =
   [ (H.Status 201, fmap Response201 (H.noResponseBody))
   ]

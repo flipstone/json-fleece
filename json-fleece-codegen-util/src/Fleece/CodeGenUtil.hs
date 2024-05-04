@@ -748,7 +748,7 @@ generateOperationCode typeMap codeGenOperation = do
       HC.lines
         . (HC.indent 2 beelineOperation :)
         $ fmap (HC.indent 4)
-        $ [ beelineContentTypeDecodingError
+        $ [ fleeceJSONDecodingError
           , pathParamsTypeNameAsCode
           , maybe
               beelineNoQueryParams
@@ -883,7 +883,7 @@ generateOperationCode typeMap codeGenOperation = do
             <> ", "
             <> beelineResponseBodySchema
             <> " "
-            <> beelineContentTypeDecodingError
+            <> fleeceJSONDecodingError
             <> " "
             <> HC.typeNameToCode Nothing responsesTypeName
             <> ")]"
@@ -2055,6 +2055,10 @@ fleeceAesonBeelineConstructor =
     . HC.varNameToCodeDefaultQualification
     . HC.toConstructorVarName "Fleece.Aeson.Beeline" (Just "FA")
 
+fleeceJSONDecodingError :: HC.FromCode c => c
+fleeceJSONDecodingError =
+  fleeceAesonBeelineConstructor "JSONDecodingError"
+
 methodToBeelineFunction :: HC.FromCode c => T.Text -> CodeGen c
 methodToBeelineFunction method =
   fmap beelineRoutingVar $
@@ -2242,10 +2246,6 @@ beelineStatus =
 beelineAnyStatus :: HC.FromCode c => c
 beelineAnyStatus =
   beelineHTTPConstructor "AnyStatus"
-
-beelineContentTypeDecodingError :: HC.FromCode c => c
-beelineContentTypeDecodingError =
-  beelineHTTPConstructor "ContentTypeDecodingError"
 
 beelineStatusRange :: HC.FromCode c => c
 beelineStatusRange =

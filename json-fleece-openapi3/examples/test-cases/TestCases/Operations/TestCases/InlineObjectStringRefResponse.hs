@@ -20,7 +20,7 @@ import qualified TestCases.Types.AStringType as AStringType
 
 operation ::
   H.Operation
-    H.ContentTypeDecodingError
+    FA.JSONDecodingError
     H.NoPathParams
     H.NoQueryParams
     H.NoHeaderParams
@@ -43,7 +43,7 @@ data Responses
   = Response200 (Map.Map T.Text AStringType.AStringType)
   deriving (Eq, Show)
 
-responseSchemas :: [(H.StatusRange, H.ResponseBodySchema H.ContentTypeDecodingError Responses)]
+responseSchemas :: [(H.StatusRange, H.ResponseBodySchema FA.JSONDecodingError Responses)]
 responseSchemas =
   [ (H.Status 200, fmap Response200 (H.responseBody FA.JSON (FC.map AStringType.aStringTypeSchema)))
   ]

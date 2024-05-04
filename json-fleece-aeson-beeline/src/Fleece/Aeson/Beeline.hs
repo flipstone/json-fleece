@@ -2,9 +2,11 @@
 
 module Fleece.Aeson.Beeline
   ( JSON (JSON)
+  , JSONDecodingError (..)
   ) where
 
 import qualified Beeline.HTTP.Client as BHC
+import qualified Control.Exception as Exc
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as BS8
 import qualified Data.ByteString.Lazy as LBS
@@ -18,6 +20,14 @@ import qualified Fleece.Aeson as FA
 data JSON
   = JSON
 
+data JSONDecodingError = JSONDecodingError
+  { jsonDecodingErrorBytes :: BS.ByteString
+  , jsonDecodingErrorMessage :: String
+  }
+  deriving (Show)
+
+instance Exc.Exception JSONDecodingError
+
 instance BHC.ContentTypeEncoder JSON where
   type EncodeSchema JSON = FA.Encoder
 
@@ -29,16 +39,18 @@ instance BHC.ContentTypeEncoder JSON where
 
 instance BHC.ContentTypeDecoder JSON where
   type DecodeSchema JSON = FA.Decoder
-  type DecodingError JSON = BHC.ContentTypeDecodingError
+  type DecodingError JSON = JSONDecodingError
 
   toResponseContentType JSON _ =
     jsonContentType
 
   parseResponse JSON schema reader = do
-    bytes <- HTTP.brConsume reader
+    chunks <- HTTP.brConsume reader
+    let
+      bytes = LBS.fromChunks chunks
     pure $
-      case FA.decode schema (LBS.fromChunks bytes) of
-        Left err -> Left (BHC.ContentTypeDecodingError err)
+      case FA.decode schema bytes of
+        Left err -> Left JSONDecodingError {jsonDecodingErrorBytes = BS.toStrict bytes, jsonDecodingErrorMessage = err}
         Right response -> Right response
 
 jsonContentType :: BS.ByteString
