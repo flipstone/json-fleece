@@ -1,5 +1,5 @@
 name:                json-fleece-openapi3
-version:             0.4.3.0
+version:             0.4.3.1
 github:              "flipstone/json-fleece/json-fleece-openapi3"
 license:             BSD3
 author:              "Author name here"
@@ -63,7 +63,7 @@ library:
     - aeson >= 2.0 && < 2.2
     - insert-ordered-containers >= 0.2 && < 0.3
     - containers >= 0.6 && < 0.7
-    - mtl >= 2.2 && < 2.3
+    - mtl >= 2.2 && < 2.4
     - non-empty-text >= 0.2 && < 0.3
     - openapi3 >= 3.2 && < 3.3
     - text >= 1.2 && < 2.1
@@ -90,5 +90,5 @@ tests:
       - json-fleece-openapi3
       - hedgehog
       - bytestring >= 0.11 && < 0.12
-      - file-embed >= 0.0.15 && < 0.0.16
+      - file-embed >= 0.0.15 && < 0.0.17
       - yaml >= 0.11 && < 0.12
