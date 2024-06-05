@@ -31,15 +31,15 @@ packages:
     git: https://github.com/flipstone/beeline
     subdir: beeline-http-client
 - completed:
-    commit: e64d5494205e32a3bef421392ba8c7f8f758bfe9
+    commit: 73bea50a23ec60106eae9aa75a06ee854beb2e71
     git: https://github.com/flipstone/shrubbery
     name: shrubbery
     pantry-tree:
-      sha256: b3c533a32106f822be41996bcd00c6b1993ad6c95f0ad830c48ac39059a291be
+      sha256: e18a9032ca90d613943b023bdc2b362e42cfb1761c31886f83270e40a54d5095
       size: 1737
-    version: 0.2.0.0
+    version: 0.2.1.0
   original:
-    commit: e64d5494205e32a3bef421392ba8c7f8f758bfe9
+    commit: 73bea50a23ec60106eae9aa75a06ee854beb2e71
     git: https://github.com/flipstone/shrubbery
 - completed:
     hackage: non-empty-text-0.2.1@sha256:df9629af4ad53af59dc0bfb5995c0500aaa656c884485560e9115152f7495c20,2438

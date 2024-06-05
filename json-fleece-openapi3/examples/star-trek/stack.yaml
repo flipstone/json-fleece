@@ -33,7 +33,7 @@ extra-deps:
       - beeline-routing
       - beeline-http-client
   - git: https://github.com/flipstone/shrubbery
-    commit: e64d5494205e32a3bef421392ba8c7f8f758bfe9
+    commit: 73bea50a23ec60106eae9aa75a06ee854beb2e71
   - non-empty-text-0.2.0@sha256:7d1c1f9a11c78c00c656269f940d2fcccd3c2eaf6b619f66bb83a9ea72decc1f,2438
 
 # Override default flag values for local packages and extra-deps
