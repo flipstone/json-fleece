@@ -3,6 +3,7 @@
 module TestCases.Types.Baz
   ( Baz(..)
   , bazSchema
+  , bazObjSchema
   ) where
 
 import Fleece.Core ((#+), Object)
@@ -15,7 +16,11 @@ data Baz = Baz
   }
   deriving (Eq, Show)
 
-bazSchema :: FC.Fleece schema => Object schema Baz Baz
+bazSchema :: FC.Fleece schema => schema Baz
 bazSchema =
+  FC.object bazObjSchema
+
+bazObjSchema :: FC.Fleece schema => Object schema Baz Baz
+bazObjSchema =
   FC.constructor Baz
     #+ FC.optional "bazName" bazName BazName.bazNameSchema

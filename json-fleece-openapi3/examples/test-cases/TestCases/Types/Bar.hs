@@ -3,6 +3,7 @@
 module TestCases.Types.Bar
   ( Bar(..)
   , barSchema
+  , barObjSchema
   ) where
 
 import Fleece.Core ((#+), Object)
@@ -15,7 +16,11 @@ data Bar = Bar
   }
   deriving (Eq, Show)
 
-barSchema :: FC.Fleece schema => Object schema Bar Bar
+barSchema :: FC.Fleece schema => schema Bar
 barSchema =
+  FC.object barObjSchema
+
+barObjSchema :: FC.Fleece schema => Object schema Bar Bar
+barObjSchema =
   FC.constructor Bar
     #+ FC.optional "barName" barName BarName.barNameSchema

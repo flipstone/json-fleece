@@ -621,6 +621,12 @@ components:
           bar: "#/components/schemas/Bar"
           baz: "#/components/schemas/Baz"
 
+    ObjectWithDiscriminatedUnionRef:
+      type: object
+      properties:
+        bazRef:
+          $ref: "#/components/schemas/Baz"
+
     Foo:
       type: object
       properties:

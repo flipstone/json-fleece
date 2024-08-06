@@ -171,6 +171,7 @@ library
       TestCases.Types.NameConflicts.Where
       TestCases.Types.NullableBoolean
       TestCases.Types.Num2SchemaStartingWithNumber
+      TestCases.Types.ObjectWithDiscriminatedUnionRef
       TestCases.Types.OneOfWithDiscriminator
       TestCases.Types.OneOfWithDiscriminatorTypeObject
       TestCases.Types.OneOfWithNullable

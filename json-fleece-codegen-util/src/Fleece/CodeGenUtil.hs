@@ -612,6 +612,7 @@ anyJSONSchemaTypeInfo =
   SchemaTypeInfo
     { schemaTypeExpr = HC.typeNameToCodeDefaultQualification (fleeceCoreType "AnyJSON")
     , schemaTypeSchema = fleeceCoreVar "anyJSON"
+    , schemaTypeObjSchema = fleeceCoreVar "anyJSON"
     }
 
 generateFleeceCode :: CodeGenMap -> CodeGen Modules
@@ -1558,7 +1559,7 @@ generateFleeceTaggedUnion typeMap typeName tagProperty members = do
         <> " "
         <> HC.typeApplication (HC.stringLiteral tag)
         <> " "
-        <> schemaTypeSchema typeInfo
+        <> schemaTypeObjSchema typeInfo
 
     taggedUnionMemberLines =
       map taggedUnionMemberLine taggedTypeInfos
@@ -1616,12 +1617,13 @@ determineDiscriminatorPropertyForObject refSet =
         UnionMemberSource -> Nothing
         TaggedUnionMemberSource property -> Just property
   in
-    case Set.toList (Set.map toDiscriminator refSet) of
+    case catMaybes $ Set.toList (Set.map toDiscriminator refSet) of
       [] -> pure Nothing
-      [oneDiscriminator] -> pure oneDiscriminator
+      [oneDiscriminator] -> pure $ Just oneDiscriminator
       multiple ->
+        -- This limitation could probably be lifted with some additional care
         codeGenError $
-          "Objects referenced from tagged unions must have consistent discriminator properties and cannot be referenced outside the union."
+          "Objects referenced from tagged unions must have consistent discriminator properties."
             <> " Found the following discriminator properties: "
             <> show multiple
 
@@ -1707,30 +1709,38 @@ generateFleeceObject typeMap references typeName rawCodeGenFields mbAdditionalPr
     fleeceFields =
       map fleeceField fields ++ fleeceAdditionalProps
 
-    fleeceSchema =
+    fleeceSchemas =
       case mbDiscriminator of
         Nothing ->
-          fleeceSchemaForType
-            typeName
-            ( fleeceCoreVar "object" <> " " <> HC.dollar
-                : "  " <> fleeceCoreVar "constructor" <> " " <> HC.typeNameToCode Nothing typeName
-                : map (HC.indent 4) fleeceFields
-            )
+          [ fleeceSchemaForType
+              typeName
+              ( fleeceCoreVar "object" <> " " <> HC.dollar
+                  : "  " <> fleeceCoreVar "constructor" <> " " <> HC.typeNameToCode Nothing typeName
+                  : map (HC.indent 4) fleeceFields
+              )
+          ]
         Just _ ->
-          fleeceObjectForType
-            typeName
-            ( fleeceCoreVar "constructor" <> " " <> HC.typeNameToCode Nothing typeName
-                : map (HC.indent 2) fleeceFields
-            )
+          [ fleeceSchemaForType
+              typeName
+              [fleeceCoreVar "object" <> " " <> HC.varNameToCode Nothing (fleeceObjSchemaNameForType typeName)]
+          , fleeceObjectForType
+              typeName
+              ( fleeceCoreVar "constructor" <> " " <> HC.typeNameToCode Nothing typeName
+                  : map (HC.indent 2) fleeceFields
+              )
+          ]
 
     extraExports =
-      []
+      case mbDiscriminator of
+        Nothing -> []
+        Just _ ->
+          [fleeceObjSchemaNameForType typeName]
 
     body =
-      HC.declarations
+      HC.declarations $
         [ recordDecl
-        , fleeceSchema
         ]
+          <> fleeceSchemas
 
   pure (extraExports, body)
 
@@ -1814,6 +1824,7 @@ mkFleeceSchemaField typeMap moduleName codeGenField = do
 data SchemaTypeInfo = SchemaTypeInfo
   { schemaTypeExpr :: HC.TypeExpression
   , schemaTypeSchema :: HC.HaskellCode
+  , schemaTypeObjSchema :: HC.HaskellCode
   }
 
 primitiveSchemaTypeInfo :: HC.TypeName -> HC.HaskellCode -> SchemaTypeInfo
@@ -1821,18 +1832,16 @@ primitiveSchemaTypeInfo typeName schema =
   SchemaTypeInfo
     { schemaTypeExpr = HC.typeNameToCodeDefaultQualification typeName
     , schemaTypeSchema = schema
+    , schemaTypeObjSchema = schema
     }
 
 inferSchemaInfoForTypeName :: HC.TypeName -> CodeGen SchemaTypeInfo
-inferSchemaInfoForTypeName typeName = do
-  let
-    schema =
-      fleeceSchemaNameForType typeName
-
+inferSchemaInfoForTypeName typeName =
   pure $
     SchemaTypeInfo
       { schemaTypeExpr = HC.typeNameToCodeDefaultQualification typeName
-      , schemaTypeSchema = HC.varNameToCodeDefaultQualification schema
+      , schemaTypeSchema = HC.varNameToCodeDefaultQualification $ fleeceSchemaNameForType typeName
+      , schemaTypeObjSchema = HC.varNameToCodeDefaultQualification $ fleeceObjSchemaNameForType typeName
       }
 
 inferTypeForInputName :: CodeSection -> T.Text -> CodeGen (HC.ModuleName, HC.TypeName)
@@ -1852,6 +1861,13 @@ fleeceSchemaNameForType typeName =
     (HC.typeNameModule typeName)
     (HC.typeNameSuggestedQualifier typeName)
     (HC.typeNameText typeName <> "Schema")
+
+fleeceObjSchemaNameForType :: HC.TypeName -> HC.VarName
+fleeceObjSchemaNameForType typeName =
+  HC.toVarName
+    (HC.typeNameModule typeName)
+    (HC.typeNameSuggestedQualifier typeName)
+    (HC.typeNameText typeName <> "ObjSchema")
 
 fleeceSchemaForType :: HC.TypeName -> [HC.HaskellCode] -> HC.HaskellCode
 fleeceSchemaForType typeName bodyLines =
@@ -1878,7 +1894,7 @@ fleeceObjectForType :: HC.TypeName -> [HC.HaskellCode] -> HC.HaskellCode
 fleeceObjectForType typeName bodyLines =
   let
     schemaName =
-      fleeceSchemaNameForType typeName
+      fleeceObjSchemaNameForType typeName
 
     declType =
       HC.typeAnnotate schemaName $

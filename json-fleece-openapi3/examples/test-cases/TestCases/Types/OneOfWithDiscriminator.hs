@@ -29,6 +29,6 @@ oneOfWithDiscriminatorSchema :: FC.Fleece schema => schema OneOfWithDiscriminato
 oneOfWithDiscriminatorSchema =
   FC.coerceSchema $
     FC.taggedUnionNamed (FC.qualifiedName "TestCases.Types.OneOfWithDiscriminator" "OneOfWithDiscriminator") "type" $
-      FC.taggedUnionMember @"bar" Bar.barSchema
-        #@ FC.taggedUnionMember @"baz" Baz.bazSchema
-        #@ FC.taggedUnionMember @"foo" Foo.fooSchema
+      FC.taggedUnionMember @"bar" Bar.barObjSchema
+        #@ FC.taggedUnionMember @"baz" Baz.bazObjSchema
+        #@ FC.taggedUnionMember @"foo" Foo.fooObjSchema
