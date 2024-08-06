@@ -903,32 +903,32 @@ mkOpenApiDataFormat schemaKey typeName schema =
       dataFormat <- mkFormat
       pure $ Just (Map.empty, dataFormat)
   in
-    case OA._schemaType schema of
-      Just OA.OpenApiString -> noRefs $ mkOpenApiStringFormat typeName schema
-      Just OA.OpenApiNumber -> noRefs $ mkOpenApiNumberFormat typeName schema
-      Just OA.OpenApiInteger -> noRefs $ mkOpenApiIntegerFormat typeName schema
-      Just OA.OpenApiBoolean -> do
-        typeOptions <- CGU.lookupTypeOptions typeName
-        noRefs $ pure (CGU.boolFormat typeOptions)
-      Just OA.OpenApiArray ->
-        Just <$> mkOpenApiArrayFormat schemaKey typeName schema
-      Just OA.OpenApiObject ->
-        mkOpenApiObjectFormatOrAdditionalPropertiesNewtype
-          CGU.Type
-          schemaKey
-          typeName
-          schema
-      Just OA.OpenApiNull -> do
-        typeOptions <- CGU.lookupTypeOptions typeName
-        noRefs $ pure (CGU.nullFormat typeOptions)
+    case OA._schemaOneOf schema of
+      Just schemas ->
+        case OA._schemaDiscriminator schema of
+          Nothing ->
+            Just <$> mkOneOfUnion schemaKey schemas
+          Just discriminator ->
+            Just <$> mkOneOfTaggedUnion discriminator schemaKey
       Nothing ->
-        case OA._schemaOneOf schema of
-          Just schemas ->
-            case OA._schemaDiscriminator schema of
-              Nothing ->
-                Just <$> mkOneOfUnion schemaKey schemas
-              Just discriminator ->
-                Just <$> mkOneOfTaggedUnion discriminator schemaKey
+        case OA._schemaType schema of
+          Just OA.OpenApiString -> noRefs $ mkOpenApiStringFormat typeName schema
+          Just OA.OpenApiNumber -> noRefs $ mkOpenApiNumberFormat typeName schema
+          Just OA.OpenApiInteger -> noRefs $ mkOpenApiIntegerFormat typeName schema
+          Just OA.OpenApiBoolean -> do
+            typeOptions <- CGU.lookupTypeOptions typeName
+            noRefs $ pure (CGU.boolFormat typeOptions)
+          Just OA.OpenApiArray ->
+            Just <$> mkOpenApiArrayFormat schemaKey typeName schema
+          Just OA.OpenApiObject ->
+            mkOpenApiObjectFormatOrAdditionalPropertiesNewtype
+              CGU.Type
+              schemaKey
+              typeName
+              schema
+          Just OA.OpenApiNull -> do
+            typeOptions <- CGU.lookupTypeOptions typeName
+            noRefs $ pure (CGU.nullFormat typeOptions)
           Nothing ->
             mkOpenApiObjectFormatOrAdditionalPropertiesNewtype
               CGU.Type

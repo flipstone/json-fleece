@@ -2019,6 +2019,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/NullableBoolean.hs
     examples/test-cases/TestCases/Types/Num2SchemaStartingWithNumber.hs
     examples/test-cases/TestCases/Types/OneOfWithDiscriminator.hs
+    examples/test-cases/TestCases/Types/OneOfWithDiscriminatorTypeObject.hs
     examples/test-cases/TestCases/Types/OneOfWithNullable.hs
     examples/test-cases/TestCases/Types/ReferenceOneOf.hs
     examples/test-cases/TestCases/Types/ReferenceOneOfInsideOneOf.hs

@@ -607,6 +607,20 @@ components:
           bar: "#/components/schemas/Bar"
           baz: "#/components/schemas/Baz"
 
+    OneOfWithDiscriminatorTypeObject:
+      type: object
+      oneOf:
+        - $ref: "#/components/schemas/Foo"
+        - $ref: "#/components/schemas/Bar"
+        - $ref: "#/components/schemas/Baz"
+
+      discriminator:
+        propertyName: "type"
+        mapping:
+          foo: "#/components/schemas/Foo"
+          bar: "#/components/schemas/Bar"
+          baz: "#/components/schemas/Baz"
+
     Foo:
       type: object
       properties:
