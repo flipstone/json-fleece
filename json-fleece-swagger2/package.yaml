@@ -1,5 +1,5 @@
 name:                json-fleece-swagger2
-version:             0.4.0.4
+version:             0.5.0.0
 github:              "flipstone/json-fleece/json-fleece-swagger2"
 license:             BSD3
 author:              "Author name here"
@@ -57,7 +57,7 @@ library:
   exposed-modules:
     - Fleece.Swagger2
   dependencies:
-    - json-fleece-openapi3 >= 0.4 && < 0.5
+    - json-fleece-openapi3 >= 0.5 && < 0.6
     - insert-ordered-containers >= 0.2 && < 0.3
     - swagger2 >= 2.8 && < 2.9
     - openapi3 >= 3.2 &&  < 3.3

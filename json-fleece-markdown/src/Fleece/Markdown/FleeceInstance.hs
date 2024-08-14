@@ -1,3 +1,4 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module Fleece.Markdown.FleeceInstance
@@ -36,6 +37,7 @@ import Fleece.Markdown.SchemaDocumentation
   , TaggedUnionMemberDocumentation (TaggedUnionMemberDocumentation, tagFields, tagValue)
   , schemaSelfReference
   )
+import qualified Fleece.OpenApi3 as FleeceOpenApi3
 
 newtype Markdown a = Markdown SchemaDocumentation
 
@@ -58,6 +60,9 @@ instance FC.Fleece Markdown where
 
   newtype TaggedUnionMembers Markdown _allTags _handledTags
     = TaggedUnionMembers (DList.DList TaggedUnionMemberDocumentation)
+
+  newtype Validator Markdown a b = MarkdownValidator (FC.NoOpValidator a b)
+    deriving (FC.FleeceValidator, FleeceOpenApi3.OpenApi3Validator)
 
   schemaName (Markdown schemaDoc) =
     schemaName schemaDoc
@@ -122,7 +127,7 @@ instance FC.Fleece Markdown where
         , schemaReferences = foldMap (schemaSelfReference . fieldSchemaDocs) fields
         }
 
-  validateNamed _name _check _unvalidate (Markdown schemaDocs) =
+  validateNamed _validator _unvalidate (Markdown schemaDocs) =
     Markdown schemaDocs
 
   boundedEnumNamed name toText =

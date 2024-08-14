@@ -1,4 +1,6 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -8,6 +10,7 @@
 
 module Fleece.Aeson.Encoder
   ( Encoder (..)
+  , FC.Validator (EncoderValidator)
   , encode
   , encodeStrict
   ) where
@@ -28,6 +31,7 @@ import Shrubbery (type (@=))
 import qualified Shrubbery
 
 import qualified Fleece.Core as FC
+import qualified Fleece.OpenApi3 as FleeceOpenApi3
 
 data Encoder a
   = Encoder FC.Name (a -> Aeson.Encoding)
@@ -55,6 +59,9 @@ instance FC.Fleece Encoder where
 
   newtype TaggedUnionMembers Encoder _allTags handledTags
     = TaggedUnionMembers (Shrubbery.TaggedBranchBuilder handledTags (T.Text, Aeson.Series))
+
+  newtype Validator Encoder a b = EncoderValidator (FC.StandardValidator a b)
+    deriving (FC.FleeceValidator, FleeceOpenApi3.OpenApi3Validator)
 
   schemaName (Encoder name _toEncoding) =
     name
@@ -128,8 +135,8 @@ instance FC.Fleece Encoder where
   boundedEnumNamed name toText =
     Encoder name (Aeson.toEncoding . toText)
 
-  validateNamed name uncheck _check (Encoder _unvalidatedName toEncoding) =
-    Encoder name (toEncoding . uncheck)
+  validateNamed name validator (Encoder _unvalidatedName toEncoding) =
+    Encoder name (toEncoding . FC.uncheck validator)
 
   unionNamed name (UnionMembers builder) =
     let

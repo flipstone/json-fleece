@@ -1,3 +1,4 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 
@@ -21,6 +22,7 @@ import GHC.TypeLits (symbolVal)
 import qualified Shrubbery
 
 import qualified Fleece.Core as FC
+import qualified Fleece.OpenApi3 as FleeceOpenApi3
 
 data PrettyPrinter a
   = PrettyPrinter FC.Name (a -> Pretty)
@@ -87,6 +89,9 @@ instance FC.Fleece PrettyPrinter where
 
   newtype TaggedUnionMembers PrettyPrinter _allTags handledTags
     = TaggedUnionMembers (Shrubbery.TaggedBranchBuilder handledTags (T.Text, DList.DList Pretty))
+
+  newtype Validator PrettyPrinter a b = PrettyPrinterValidator (FC.StandardValidator a b)
+    deriving (FC.FleeceValidator, FleeceOpenApi3.OpenApi3Validator)
 
   schemaName (PrettyPrinter name _toBuilder) =
     name
@@ -166,11 +171,11 @@ instance FC.Fleece PrettyPrinter where
         , Indent (Block (map (\f -> f object) (DList.toList fields)))
         ]
 
-  validateNamed name unvalidate _check (PrettyPrinter _name toPretty) =
+  validateNamed name validator (PrettyPrinter _name toPretty) =
     PrettyPrinter name $ \value ->
       prefixConstructor
         (renderName name)
-        (toPretty (unvalidate value))
+        (toPretty (FC.uncheck validator value))
 
   boundedEnumNamed name toText =
     PrettyPrinter name (showInline . toText)

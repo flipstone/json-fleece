@@ -1,4 +1,5 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -8,6 +9,7 @@
 
 module Fleece.Aeson.Decoder
   ( Decoder (..)
+  , FC.Validator (DecoderValidator)
   , decode
   , decodeStrict
   , fromValue
@@ -30,6 +32,7 @@ import Shrubbery (type (@=))
 import qualified Shrubbery
 
 import qualified Fleece.Core as FC
+import qualified Fleece.OpenApi3 as FleeceOpenApi3
 
 data Decoder a
   = Decoder FC.Name (Aeson.Value -> AesonTypes.Parser a)
@@ -70,6 +73,9 @@ instance FC.Fleece Decoder where
 
   newtype TaggedUnionMembers Decoder allTags _handledTags
     = TaggedUnionMembers (Map.Map T.Text (Aeson.Object -> AesonTypes.Parser (Shrubbery.TaggedUnion allTags)))
+
+  newtype Validator Decoder a b = DecoderValidator (FC.StandardValidator a b)
+    deriving (FC.FleeceValidator, FleeceOpenApi3.OpenApi3Validator)
 
   schemaName (Decoder name _parseValue) =
     name
@@ -172,10 +178,10 @@ instance FC.Fleece Decoder where
                   <> " enum: "
                   <> show textValue
 
-  validateNamed name _uncheck check (Decoder _unvalidatedName parseValue) =
+  validateNamed name validator (Decoder _unvalidatedName parseValue) =
     Decoder name $ \jsonValue -> do
       uncheckedValue <- parseValue jsonValue
-      case check uncheckedValue of
+      case FC.check validator uncheckedValue of
         Right checkedValue -> pure checkedValue
         Left err -> fail $ "Error validating " <> FC.nameToString name <> ": " <> err
 

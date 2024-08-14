@@ -1,12 +1,14 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module Fleece.Aeson.EncoderDecoder
   ( EncoderDecoder (..)
   ) where
 
-import Fleece.Aeson.Decoder (Decoder)
-import Fleece.Aeson.Encoder (Encoder)
+import Fleece.Aeson.Decoder (Decoder, Validator (DecoderValidator))
+import Fleece.Aeson.Encoder (Encoder, Validator (EncoderValidator))
 import qualified Fleece.Core as FC
+import qualified Fleece.OpenApi3 as FleeceOpenApi3
 
 data EncoderDecoder a = EncoderDecoder
   { encoder :: Encoder a
@@ -38,6 +40,9 @@ instance FC.Fleece EncoderDecoder where
     { taggedUnionMembersEncoder :: FC.TaggedUnionMembers Encoder allTags handledTags
     , taggedUnionMembersDecoder :: FC.TaggedUnionMembers Decoder allTags handledTags
     }
+
+  newtype Validator EncoderDecoder a b = EncoderDecoderValidator (FC.StandardValidator a b)
+    deriving (FC.FleeceValidator, FleeceOpenApi3.OpenApi3Validator)
 
   schemaName = FC.schemaName . encoder
 
@@ -127,10 +132,10 @@ instance FC.Fleece EncoderDecoder where
           FC.additional (objectDecoder object) (additionalFieldsDecoder addFields)
       }
 
-  validateNamed name uncheck check itemEncoderDecoder =
+  validateNamed name (EncoderDecoderValidator validator) itemEncoderDecoder =
     EncoderDecoder
-      { encoder = FC.validateNamed name uncheck check $ encoder itemEncoderDecoder
-      , decoder = FC.validateNamed name uncheck check $ decoder itemEncoderDecoder
+      { encoder = FC.validateNamed name (EncoderValidator validator) $ encoder itemEncoderDecoder
+      , decoder = FC.validateNamed name (DecoderValidator validator) $ decoder itemEncoderDecoder
       }
 
   boundedEnumNamed name toText =

@@ -38,7 +38,8 @@ import Fleece.Core.Class
   , (#|)
   )
 import Fleece.Core.Name (unqualifiedName)
-import Fleece.Core.Schemas (list, transform, unionMember)
+import Fleece.Core.Schemas (list, unionMember, validate)
+import Fleece.Core.Validator (transform)
 
 newtype AnyJSON
   = AnyJSON
@@ -150,7 +151,7 @@ handleAnyJSON handleText handleBool handleNumber handleArray handleObject handle
 
 anyJSON :: Fleece schema => schema AnyJSON
 anyJSON =
-  transform (\(AnyJSON u) -> u) AnyJSON $
+  validate (transform (\(AnyJSON u) -> u) AnyJSON) $
     unionNamed (unqualifiedName "AnyJSON") $
       unionMember text
         #| unionMember boolean

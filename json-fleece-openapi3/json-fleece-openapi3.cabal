@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.4.3.1
+version:        0.5.0.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -2049,6 +2049,10 @@ library
   exposed-modules:
       Fleece.OpenApi3
   other-modules:
+      Fleece.OpenApi3.CodeGen
+      Fleece.OpenApi3.Schemas
+      Fleece.OpenApi3.Schemas.OpenApi3Validator
+      Fleece.OpenApi3.Schemas.Schemas
       Paths_json_fleece_openapi3
   hs-source-dirs:
       src
@@ -2058,10 +2062,14 @@ library
     , containers ==0.6.*
     , insert-ordered-containers ==0.2.*
     , json-fleece-codegen-util >=0.9 && <0.11
+    , json-fleece-core ==0.8.*
     , mtl >=2.2 && <2.4
     , non-empty-text ==0.2.*
     , openapi3 ==3.2.*
+    , scientific >=0.3.7 && <0.4
     , text >=1.2 && <2.1
+    , time >=1.11 && <1.13
+    , vector >=0.12 && <0.14
   default-language: Haskell2010
   if flag(strict)
     ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations -Wno-unticked-promoted-constructors

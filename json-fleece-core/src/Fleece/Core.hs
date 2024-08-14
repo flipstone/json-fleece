@@ -37,8 +37,6 @@ module Fleece.Core
   , nullable
   , validate
   , validateNamed
-  , transform
-  , transformNamed
   , coerceSchema
   , coerceSchemaNamed
 
@@ -129,9 +127,26 @@ module Fleece.Core
   , autoQualifiedName
   , nameToString
   , annotateName
+  , defaultSchemaName
+
+    -- * Validators
+  , Validator
+  , FleeceValidator
+  , mkValidator
+  , check
+  , uncheck
+  , mapUncheck
+  , mapCheck
+  , compose
+  , coercion
+  , transform
+  , identity
+  , StandardValidator
+  , NoOpValidator (..)
   ) where
 
 import Fleece.Core.AnyJSON
 import Fleece.Core.Class
 import Fleece.Core.Name
 import Fleece.Core.Schemas
+import Fleece.Core.Validator

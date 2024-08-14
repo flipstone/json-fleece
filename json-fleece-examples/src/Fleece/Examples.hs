@@ -53,6 +53,7 @@ import Fleece.Core
   , int
   , jsonString
   , list
+  , mkValidator
   , nullable
   , number
   , object
@@ -102,8 +103,10 @@ newtype Validation = Validation T.Text
 validationSchema :: Fleece schema => schema Validation
 validationSchema =
   validate
-    (\(Validation t) -> t)
-    (\t -> if T.length t > 12 then Left "At most 12 characters allowed" else Right (Validation t))
+    ( mkValidator
+        (\(Validation t) -> t)
+        (\t -> if T.length t > 12 then Left "At most 12 characters allowed" else Right (Validation t))
+    )
     text
 
 data OptionalField = OptionalField

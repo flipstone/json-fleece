@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-markdown
-version:        0.5.0.0
+version:        0.6.0.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-markdown#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -39,7 +39,8 @@ library
       base >=4.7 && <5
     , containers ==0.6.*
     , dlist ==1.0.*
-    , json-fleece-core ==0.7.*
+    , json-fleece-core ==0.8.*
+    , json-fleece-openapi3 ==0.5.*
     , text >=1.2 && <2.1
   default-language: Haskell2010
   if flag(strict)

@@ -27,6 +27,8 @@ extra-deps:
   - ../../../json-fleece-core
   - ../../../json-fleece-aeson
   - ../../../json-fleece-aeson-beeline
+  - ../../../json-fleece-openapi3
+  - ../../../json-fleece-codegen-util
   - git: https://github.com/flipstone/beeline
     commit: 343c3e5fabc812e5c32efa33ddf8a6cee965e8b0
     subdirs:
