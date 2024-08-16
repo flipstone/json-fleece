@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-hermes
-version:        0.1.1.0
+version:        0.2.0.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-hermes#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -37,7 +37,7 @@ library
     , bytestring ==0.11.*
     , containers ==0.6.*
     , hermes-json ==0.6.*
-    , json-fleece-core ==0.7.*
+    , json-fleece-core ==0.8.*
     , shrubbery ==0.2.*
     , text >=2.0
   default-language: Haskell2010
@@ -60,7 +60,7 @@ test-suite json-fleece-hermes-test
     , bytestring ==0.11.*
     , containers ==0.6.*
     , hedgehog
-    , json-fleece-core ==0.7.*
+    , json-fleece-core ==0.8.*
     , json-fleece-examples
     , json-fleece-hermes
     , scientific >=0.3.7 && <0.4
@@ -91,7 +91,7 @@ benchmark json-fleece-hermes-bench
     , deepseq
     , hermes-json
     , json-fleece-aeson
-    , json-fleece-core ==0.7.*
+    , json-fleece-core ==0.8.*
     , json-fleece-hermes
     , tasty-bench
     , text

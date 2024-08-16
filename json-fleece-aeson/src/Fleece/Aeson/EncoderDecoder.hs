@@ -39,6 +39,8 @@ instance FC.Fleece EncoderDecoder where
     , taggedUnionMembersDecoder :: FC.TaggedUnionMembers Decoder allTags handledTags
     }
 
+  type Validator EncoderDecoder = FC.StandardValidator
+
   schemaName = FC.schemaName . encoder
 
   number =
@@ -127,10 +129,10 @@ instance FC.Fleece EncoderDecoder where
           FC.additional (objectDecoder object) (additionalFieldsDecoder addFields)
       }
 
-  validateNamed name uncheck check itemEncoderDecoder =
+  validateNamed name validator itemEncoderDecoder =
     EncoderDecoder
-      { encoder = FC.validateNamed name uncheck check $ encoder itemEncoderDecoder
-      , decoder = FC.validateNamed name uncheck check $ decoder itemEncoderDecoder
+      { encoder = FC.validateNamed name validator $ encoder itemEncoderDecoder
+      , decoder = FC.validateNamed name validator $ decoder itemEncoderDecoder
       }
 
   boundedEnumNamed name toText =

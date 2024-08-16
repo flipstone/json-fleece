@@ -1,5 +1,5 @@
 name:                json-fleece-core
-version:             0.7.0.0
+version:             0.8.0.0
 github:              "flipstone/json-fleece/json-fleece-core"
 license:             BSD3
 author:              "Author name here"
@@ -63,4 +63,4 @@ library:
     - Fleece.Core.Class
     - Fleece.Core.Name
     - Fleece.Core.Schemas
-
+    - Fleece.Core.Validator

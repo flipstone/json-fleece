@@ -72,6 +72,7 @@ tests =
   , ("prop_decode_taggedUnion", prop_decode_taggedUnion)
   , ("prop_encode_taggedUnion", prop_encode_taggedUnion)
   , ("prop_utcTimeAndZonedTime", prop_utcTimeAndZonedTime)
+  , ("prop_decode_CustomValidatorObject", prop_decode_CustomValidatorObject)
   ]
 
 prop_decode_number :: HH.Property
@@ -778,6 +779,32 @@ prop_utcTimeAndZonedTime =
       (Right originalZonedTime, Left decodedUTCTime) -> do
         Right (Time.zonedTimeToUTC originalZonedTime)
           === decodedUTCTime
+
+prop_decode_CustomValidatorObject :: HH.Property
+prop_decode_CustomValidatorObject = HH.property $ do
+  positiveInt <- HH.forAll . Gen.int $ Range.linear 0 10
+  negativeInt <- HH.forAll . Gen.int $ Range.linear (-10) (-1)
+  let
+    validTestObject =
+      encodeTestObject $
+        [ "positive_int" .= positiveInt
+        , "negative_int" .= negativeInt
+        ]
+
+    invalidTestObject =
+      encodeTestObject $
+        [ "positive_int" .= positiveInt
+        , "negative_int" .= positiveInt
+        ]
+
+    expected =
+      Examples.CustomValidatorObject
+        { Examples.customValidatorObjectPositiveInt = Examples.PositiveInt positiveInt
+        , Examples.customValidatorObjectNegativeInt = Examples.NegativeInt negativeInt
+        }
+
+  FA.decode (FA.decoder Examples.customValidatorObjectExampleSchema) validTestObject === Right expected
+  FA.decode (FA.decoder Examples.customValidatorObjectExampleSchema) invalidTestObject === Left "Error in $['negative_int']: Error validating Fleece.Examples.NegativeInt: Too big"
 
 genAnyJSON :: HH.Gen FC.AnyJSON
 genAnyJSON =
