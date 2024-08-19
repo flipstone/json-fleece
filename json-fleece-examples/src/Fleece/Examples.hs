@@ -46,6 +46,7 @@ module Fleece.Examples
   , NegativeInt (..)
   , CustomValidator (..)
   , CustomValidatorInfo (..)
+  , checkBoundedIntegral
   ) where
 
 import qualified Data.Map as Map
@@ -75,6 +76,7 @@ import Fleece.Core
   , boolean
   , boundedEnum
   , boundedEnumNamed
+  , check
   , compose
   , constructor
   , field
@@ -288,7 +290,7 @@ companyObject =
     #+ required "tooBigToFail" companyIsToBigToFail boolean
 
 -- A custom class that extends Fleece validation.
-class CustomValidator validator where
+class FleeceValidator validator => CustomValidator validator where
   integralMaximum :: Integral n => n -> validator n n
   integralMinimum :: Integral n => n -> validator n n
 
@@ -318,14 +320,20 @@ type CustomFleece schema =
 
 boundedIntegral :: (Integral n, CustomFleece schema, Typeable n) => Maybe n -> Maybe n -> schema n
 boundedIntegral mbMin mbMax =
-  let
-    validator =
-      maybe identity integralMinimum mbMin
-        `compose` maybe identity integralMaximum mbMax
-  in
-    validate
-      validator
-      unboundedIntegralNumber
+  validate
+    (boundedIntegralValidator mbMin mbMax)
+    unboundedIntegralNumber
+
+-- If you define the validator separately, you can use it to implement conversion functions
+-- via the instances for 'StandardValidator'
+boundedIntegralValidator :: (CustomValidator validator, Integral n) => Maybe n -> Maybe n -> validator n n
+boundedIntegralValidator mbMin mbMax =
+  maybe identity integralMinimum mbMin
+    `compose` maybe identity integralMaximum mbMax
+
+-- Instantiate @validator@ to 'StandardValidator' to create a conversion function
+checkBoundedIntegral :: Integral n => Maybe n -> Maybe n -> n -> Either String n
+checkBoundedIntegral mbMin = check . boundedIntegralValidator mbMin
 
 newtype PositiveInt = PositiveInt Int
   deriving (Eq, Ord, Show, Num, Enum, Real, Integral)
@@ -357,24 +365,22 @@ customValidatorObjectExampleSchema =
 -- The extended validator allows us to extract static information about the validations being performed
 -- by implementing a new 'Fleece' instance. This example instance collects information about the custom
 -- validations used by the schema.
-data SchemaValidatorInfo a = SchemaValidatorInfo
-  { schemaValidatorInfoName :: Name
-  , schemaValidatorInfo :: ValidatorInfo
-  }
+newtype SchemaValidatorInfo a = SchemaValidatorInfo {schemaValidatorInfo :: ValidatorInfo}
   deriving (Eq, Show)
 
 primInfo :: String -> SchemaValidatorInfo a
-primInfo name = SchemaValidatorInfo (unqualifiedName name) (ValidatorInfo [] [])
+primInfo name = SchemaValidatorInfo (ValidatorInfo (unqualifiedName name) [] [])
 
 data ValidatorInfo = ValidatorInfo
-  { validatorInfoCustomValidatorInfo :: [CustomValidatorInfo]
+  { validatorInfoName :: Name
+  , validatorInfoCustomValidatorInfo :: [CustomValidatorInfo]
   , validatorInfoChildren :: [ValidatorInfo]
   }
   deriving (Eq, Show)
 
 appendValidatorInfo :: ValidatorInfo -> CollectValidatorInfo a b -> ValidatorInfo
-appendValidatorInfo (ValidatorInfo infos1 cs) (CollectValidatorInfo infos2) =
-  ValidatorInfo (infos1 <> infos2) cs
+appendValidatorInfo (ValidatorInfo n infos1 cs) (CollectValidatorInfo infos2) =
+  ValidatorInfo n (infos1 <> infos2) cs
 
 -- This type will serve as our 'Validator' associated type
 newtype CollectValidatorInfo a b = CollectValidatorInfo [CustomValidatorInfo]
@@ -410,7 +416,7 @@ instance Fleece SchemaValidatorInfo where
   -- Derive the instance of 'CustomValidator' using @GeneralizedNewtypeDeriving@
   type Validator SchemaValidatorInfo = CollectValidatorInfo
 
-  schemaName (SchemaValidatorInfo n _) = n
+  schemaName (SchemaValidatorInfo (ValidatorInfo n _ _)) = n
 
   number = primInfo "scientific"
 
@@ -418,24 +424,24 @@ instance Fleece SchemaValidatorInfo where
 
   boolean = primInfo "boolean"
 
-  array (SchemaValidatorInfo a b) = SchemaValidatorInfo (a `annotateName` "array") b
+  array (SchemaValidatorInfo (ValidatorInfo n a b)) = SchemaValidatorInfo (ValidatorInfo (n `annotateName` "array") a b)
 
   null = primInfo "null"
 
-  nullable (SchemaValidatorInfo a b) = SchemaValidatorInfo (a `annotateName` "nullable") b
+  nullable (SchemaValidatorInfo (ValidatorInfo n a b)) = SchemaValidatorInfo (ValidatorInfo (n `annotateName` "nullable") a b)
 
-  required _ _ (SchemaValidatorInfo _ info) = Field info
+  required _ _ (SchemaValidatorInfo info) = Field info
 
-  optional _ _ (SchemaValidatorInfo _ info) = Field info
+  optional _ _ (SchemaValidatorInfo info) = Field info
 
   mapField _ (Field f) =
     Field f
 
-  additionalFields _ (SchemaValidatorInfo _ info) =
+  additionalFields _ (SchemaValidatorInfo info) =
     AdditionalFields info
 
   objectNamed n (Object infos) =
-    SchemaValidatorInfo n (ValidatorInfo [] infos)
+    SchemaValidatorInfo (ValidatorInfo n [] infos)
 
   constructor _ =
     Object mempty
@@ -446,23 +452,23 @@ instance Fleece SchemaValidatorInfo where
   additional (Object objInfos) (AdditionalFields fieldsInfo) =
     Object (fieldsInfo : objInfos)
 
-  validateNamed n collectValidatorInfo (SchemaValidatorInfo _ info) =
-    SchemaValidatorInfo n (appendValidatorInfo info collectValidatorInfo)
+  validateNamed n collectValidatorInfo (SchemaValidatorInfo info) =
+    SchemaValidatorInfo ((appendValidatorInfo info collectValidatorInfo) {validatorInfoName = n})
 
   boundedEnumNamed n _ =
-    SchemaValidatorInfo n (ValidatorInfo [] [])
+    SchemaValidatorInfo (ValidatorInfo n [] [])
 
   unionNamed n (UnionMembers infos) =
-    SchemaValidatorInfo n (ValidatorInfo [] infos)
+    SchemaValidatorInfo (ValidatorInfo n [] infos)
 
-  unionMemberWithIndex _ (SchemaValidatorInfo _ info) =
+  unionMemberWithIndex _ (SchemaValidatorInfo info) =
     UnionMembers [info]
 
   unionCombine (UnionMembers infos1) (UnionMembers infos2) =
     UnionMembers (infos1 <> infos2)
 
   taggedUnionNamed n _ (TaggedUnionMembers infos) =
-    SchemaValidatorInfo n (ValidatorInfo [] infos)
+    SchemaValidatorInfo (ValidatorInfo n [] infos)
 
   taggedUnionMemberWithTag _ (Object info) =
     TaggedUnionMembers info

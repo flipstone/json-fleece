@@ -26,16 +26,19 @@ prop_SchemaValidatorInfo_CustomValidatorObject =
       info = Examples.schemaValidatorInfo Examples.customValidatorObjectExampleSchema
       expected =
         Examples.ValidatorInfo
-          { Examples.validatorInfoCustomValidatorInfo = []
+          { Examples.validatorInfoName = "Fleece.Examples.CustomValidatorObject"
+          , Examples.validatorInfoCustomValidatorInfo = []
           , Examples.validatorInfoChildren =
               [ Examples.ValidatorInfo
-                  { Examples.validatorInfoCustomValidatorInfo =
+                  { Examples.validatorInfoName = "Fleece.Examples.NegativeInt"
+                  , Examples.validatorInfoCustomValidatorInfo =
                       [ Examples.IntegralMaximum (-1)
                       ]
                   , Examples.validatorInfoChildren = []
                   }
               , Examples.ValidatorInfo
-                  { Examples.validatorInfoCustomValidatorInfo =
+                  { Examples.validatorInfoName = "Fleece.Examples.PositiveInt"
+                  , Examples.validatorInfoCustomValidatorInfo =
                       [ Examples.IntegralMinimum 0
                       ]
                   , Examples.validatorInfoChildren = []
