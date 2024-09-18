@@ -1940,6 +1940,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/DateTimeFormats/LocalTimeField.hs
     examples/test-cases/TestCases/Types/DateTimeFormats/UtcTimeField.hs
     examples/test-cases/TestCases/Types/DateTimeFormats/ZonedTimeField.hs
+    examples/test-cases/TestCases/Types/DateTimeFormats/ZonedTimeInUnionField.hs
     examples/test-cases/TestCases/Types/DefaultTimeType.hs
     examples/test-cases/TestCases/Types/DerivingNothing.hs
     examples/test-cases/TestCases/Types/EnumIntParam.hs

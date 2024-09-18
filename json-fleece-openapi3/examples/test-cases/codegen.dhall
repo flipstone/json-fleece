@@ -63,6 +63,12 @@ in
                   , formatSpecifier = Some "local"
                   }
             }
+          , { type = "TestCases.Types.DateTimeFormats.ZonedTimeInUnionField.ZonedTimeInUnionField"
+            , options =
+                CodeGen.TypeOptions::
+                  { deriveClasses = CodeGen.derive [ CodeGen.show ]
+                  }
+            }
           , { type = "TestCases.Types.UtcTimeType.UtcTimeType"
             , options =
                 CodeGen.TypeOptions::

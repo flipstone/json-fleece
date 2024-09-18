@@ -241,7 +241,7 @@ mkReferencesMap =
             <> maybe mempty mkAdditionalPropertiesReferences mbAdditionalProperties
         CodeGenArray _options _mbMaxLength ref ->
           mkSingletonReference ArrayItemSource ref
-        CodeGenUnion members ->
+        CodeGenUnion _options members ->
           foldMap mkUnionMemberReferences members
         CodeGenTaggedUnion discriminatorProperty members ->
           foldMap
@@ -335,7 +335,7 @@ data CodeGenDataFormat
   | CodeGenEnum TypeOptions [T.Text]
   | CodeGenObject TypeOptions [CodeGenObjectField] (Maybe CodeGenAdditionalProperties)
   | CodeGenArray TypeOptions (Maybe Integer) CodeGenRefType
-  | CodeGenUnion [CodeGenUnionMember]
+  | CodeGenUnion TypeOptions [CodeGenUnionMember]
   | CodeGenTaggedUnion T.Text [CodeGenTaggedUnionMember]
 
 codeGenNewTypeSchemaTypeInfo :: TypeOptions -> SchemaTypeInfo -> CodeGenDataFormat
@@ -1235,8 +1235,8 @@ generateCodeGenDataFormat typeMap references typeName format = do
       generateFleeceObject typeMap references typeName fields mbAdditionalProperties typeOptions
     CodeGenArray typeOptions mbMinItems itemType ->
       generateFleeceArray typeMap typeName mbMinItems itemType typeOptions
-    CodeGenUnion members ->
-      generateFleeceUnion typeMap typeName members
+    CodeGenUnion typeOptions members ->
+      generateFleeceUnion typeMap typeName members typeOptions
     CodeGenTaggedUnion tagProperty members ->
       generateFleeceTaggedUnion typeMap typeName tagProperty members
 
@@ -1249,7 +1249,7 @@ requiredPragmasForFormat format =
     CodeGenEnum _ _ -> []
     CodeGenObject _ _ _ -> []
     CodeGenArray _ _ _ -> []
-    CodeGenUnion _ ->
+    CodeGenUnion _ _ ->
       [ "{-# LANGUAGE DataKinds #-}"
       ]
     CodeGenTaggedUnion _ _ ->
@@ -1467,8 +1467,9 @@ generateFleeceUnion ::
   CodeGenMap ->
   HC.TypeName ->
   [CodeGenUnionMember] ->
+  TypeOptions ->
   CodeGen ([HC.VarName], HC.HaskellCode)
-generateFleeceUnion typeMap typeName members = do
+generateFleeceUnion typeMap typeName members typeOptions = do
   typeInfos <-
     traverse
       (schemaInfoOrRefToSchemaTypeInfo typeMap . codeGenUnionMemberType)
@@ -1512,7 +1513,7 @@ generateFleeceUnion typeMap typeName members = do
       HC.newtype_
         typeName
         ("(" <> HC.union (schemaTypeExpr <$> typeInfos) <> ")")
-        Nothing
+        (deriveClassNames typeOptions)
 
     extraExports =
       []

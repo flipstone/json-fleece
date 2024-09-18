@@ -15,6 +15,7 @@ import qualified TestCases.Types.DateTimeFormats.DefaultTimeField as DefaultTime
 import qualified TestCases.Types.DateTimeFormats.LocalTimeField as LocalTimeField
 import qualified TestCases.Types.DateTimeFormats.UtcTimeField as UtcTimeField
 import qualified TestCases.Types.DateTimeFormats.ZonedTimeField as ZonedTimeField
+import qualified TestCases.Types.DateTimeFormats.ZonedTimeInUnionField as ZonedTimeInUnionField
 
 data DateTimeFormats = DateTimeFormats
   { zonedTimeField :: Maybe ZonedTimeField.ZonedTimeField
@@ -24,6 +25,7 @@ data DateTimeFormats = DateTimeFormats
   , utcTimeField :: Maybe UtcTimeField.UtcTimeField
   , customZonedTimeField :: Maybe CustomZonedTimeField.CustomZonedTimeField
   , customUtcTimeField :: Maybe CustomUtcTimeField.CustomUtcTimeField
+  , zonedTimeInUnionField :: Maybe ZonedTimeInUnionField.ZonedTimeInUnionField
   }
   deriving (Show)
 
@@ -38,3 +40,4 @@ dateTimeFormatsSchema =
       #+ FC.optional "utcTimeField" utcTimeField UtcTimeField.utcTimeFieldSchema
       #+ FC.optional "customZonedTimeField" customZonedTimeField CustomZonedTimeField.customZonedTimeFieldSchema
       #+ FC.optional "customUtcTimeField" customUtcTimeField CustomUtcTimeField.customUtcTimeFieldSchema
+      #+ FC.optional "zonedTimeInUnionField" zonedTimeInUnionField ZonedTimeInUnionField.zonedTimeInUnionFieldSchema

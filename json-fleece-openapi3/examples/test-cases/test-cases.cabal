@@ -93,6 +93,7 @@ library
       TestCases.Types.DateTimeFormats.LocalTimeField
       TestCases.Types.DateTimeFormats.UtcTimeField
       TestCases.Types.DateTimeFormats.ZonedTimeField
+      TestCases.Types.DateTimeFormats.ZonedTimeInUnionField
       TestCases.Types.DefaultTimeType
       TestCases.Types.DerivingNothing
       TestCases.Types.EnumIntParam

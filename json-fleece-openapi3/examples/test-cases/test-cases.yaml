@@ -746,6 +746,11 @@ components:
         customLocalTimeField:
           type: string
           format: date-time
+        zonedTimeInUnionField:
+          oneOf:
+            - $ref: '#/components/schemas/ZonedTimeType'
+            - type: string
+              format: date-time # Bug: This doesn't actually change it from being a Text in the generated code
 
     DefaultTimeType:
       type: string

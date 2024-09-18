@@ -906,8 +906,9 @@ mkOpenApiDataFormat schemaKey typeName schema =
     case OA._schemaOneOf schema of
       Just schemas ->
         case OA._schemaDiscriminator schema of
-          Nothing ->
-            Just <$> mkOneOfUnion schemaKey schemas
+          Nothing -> do
+            typeOptions <- CGU.lookupTypeOptions typeName
+            Just <$> mkOneOfUnion schemaKey typeOptions schemas
           Just discriminator ->
             Just <$> mkOneOfTaggedUnion discriminator schemaKey
       Nothing ->
@@ -938,9 +939,10 @@ mkOpenApiDataFormat schemaKey typeName schema =
 
 mkOneOfUnion ::
   T.Text ->
+  CGU.TypeOptions ->
   [OA.Referenced OA.Schema] ->
   CGU.CodeGen (SchemaMap, CGU.CodeGenDataFormat)
-mkOneOfUnion schemaKey refSchemas = do
+mkOneOfUnion schemaKey typeOptions refSchemas = do
   let
     processRefSchema refSchema =
       case refSchema of
@@ -967,7 +969,7 @@ mkOneOfUnion schemaKey refSchemas = do
 
   (maps, codeGenUnionMembers) <- fmap unzip . traverse processRefSchema $ refSchemas
   schemaMap <- unionsErrorOnConflict maps
-  pure (schemaMap, CGU.CodeGenUnion codeGenUnionMembers)
+  pure (schemaMap, CGU.CodeGenUnion typeOptions codeGenUnionMembers)
 
 mkOneOfTaggedUnion ::
   OA.Discriminator ->
