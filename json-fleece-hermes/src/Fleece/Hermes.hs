@@ -58,6 +58,8 @@ instance FC.Fleece Decoder where
   newtype TaggedUnionMembers Decoder allTags _handledTags
     = TaggedUnionMembers (Map.Map T.Text (H.FieldsDecoder (Shrubbery.TaggedUnion allTags)))
 
+  type Validator Decoder = FC.StandardValidator
+
   schemaName (Decoder name _parseValue) =
     name
 
@@ -160,10 +162,10 @@ instance FC.Fleece Decoder where
                   <> " enum: "
                   <> show textValue
 
-  validateNamed name _uncheck check (Decoder _unvalidatedName parseValue) =
+  validateNamed name validator (Decoder _unvalidatedName parseValue) =
     Decoder name $ do
       uncheckedValue <- parseValue
-      case check uncheckedValue of
+      case FC.check validator uncheckedValue of
         Right checkedValue -> pure checkedValue
         Left err -> fail $ "Error validating " <> FC.nameToString name <> ": " <> err
 

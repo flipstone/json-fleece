@@ -88,6 +88,8 @@ instance FC.Fleece PrettyPrinter where
   newtype TaggedUnionMembers PrettyPrinter _allTags handledTags
     = TaggedUnionMembers (Shrubbery.TaggedBranchBuilder handledTags (T.Text, DList.DList Pretty))
 
+  type Validator PrettyPrinter = FC.StandardValidator
+
   schemaName (PrettyPrinter name _toBuilder) =
     name
 
@@ -166,11 +168,11 @@ instance FC.Fleece PrettyPrinter where
         , Indent (Block (map (\f -> f object) (DList.toList fields)))
         ]
 
-  validateNamed name unvalidate _check (PrettyPrinter _name toPretty) =
+  validateNamed name validator (PrettyPrinter _name toPretty) =
     PrettyPrinter name $ \value ->
       prefixConstructor
         (renderName name)
-        (toPretty (unvalidate value))
+        (toPretty (FC.uncheck validator value))
 
   boundedEnumNamed name toText =
     PrettyPrinter name (showInline . toText)

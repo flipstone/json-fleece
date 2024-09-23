@@ -11,6 +11,7 @@ module Fleece.Core.Class
       , Object
       , UnionMembers
       , TaggedUnionMembers
+      , Validator
       , schemaName
       , text
       , number
@@ -53,13 +54,15 @@ import Shrubbery (BranchIndex, Tag, TagIndex, TagType, TaggedTypes, TaggedUnion,
 import Shrubbery.TypeList (Append, Length)
 
 import Fleece.Core.Name (Name)
+import Fleece.Core.Validator (FleeceValidator)
 
-class Fleece schema where
+class FleeceValidator (Validator schema) => Fleece schema where
   data Object schema :: Type -> Type -> Type
   data Field schema :: Type -> Type -> Type
   data AdditionalFields schema :: Type -> Type -> Type
   data UnionMembers schema :: [Type] -> [Type] -> Type
   data TaggedUnionMembers schema :: [Tag] -> [Tag] -> Type
+  type Validator schema :: Type -> Type -> Type
 
   schemaName :: schema a -> Name
 
@@ -118,10 +121,9 @@ class Fleece schema where
 
   validateNamed ::
     Name ->
-    (a -> b) ->
-    (b -> Either String a) ->
-    (schema b) ->
-    (schema a)
+    Validator schema a b ->
+    schema a ->
+    schema b
 
   boundedEnumNamed ::
     (Bounded a, Enum a) =>

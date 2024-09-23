@@ -14,7 +14,7 @@ import qualified Fleece.Core as FC
 
 aesonValue :: FC.Fleece schema => schema Aeson.Value
 aesonValue =
-  FC.transform valueToAnyJSON anyJSONToValue FC.anyJSON
+  FC.validate (FC.transform valueToAnyJSON anyJSONToValue) FC.anyJSON
 
 anyJSONToValue :: FC.AnyJSON -> Aeson.Value
 anyJSONToValue =

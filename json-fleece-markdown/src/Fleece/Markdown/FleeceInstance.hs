@@ -59,6 +59,8 @@ instance FC.Fleece Markdown where
   newtype TaggedUnionMembers Markdown _allTags _handledTags
     = TaggedUnionMembers (DList.DList TaggedUnionMemberDocumentation)
 
+  type Validator Markdown = FC.NoOpValidator
+
   schemaName (Markdown schemaDoc) =
     schemaName schemaDoc
 
@@ -122,7 +124,7 @@ instance FC.Fleece Markdown where
         , schemaReferences = foldMap (schemaSelfReference . fieldSchemaDocs) fields
         }
 
-  validateNamed _name _check _unvalidate (Markdown schemaDocs) =
+  validateNamed _validator _unvalidate (Markdown schemaDocs) =
     Markdown schemaDocs
 
   boundedEnumNamed name toText =

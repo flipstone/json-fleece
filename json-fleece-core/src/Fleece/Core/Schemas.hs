@@ -42,8 +42,6 @@ module Fleece.Core.Schemas
   , boundedIntegralNumberNamed
   , unboundedIntegralNumber
   , unboundedIntegralNumberNamed
-  , transform
-  , transformNamed
   , coerceSchema
   , coerceSchemaNamed
   , eitherOf
@@ -60,7 +58,7 @@ module Fleece.Core.Schemas
 
 import qualified Data.Attoparsec.Text as AttoText
 import qualified Data.Attoparsec.Time as AttoTime
-import Data.Coerce (Coercible, coerce)
+import Data.Coerce (Coercible)
 import qualified Data.Int as I
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map as Map
@@ -85,6 +83,7 @@ import Fleece.Core.Class
   , Object
   , TaggedUnionMembers
   , UnionMembers
+  , Validator
   , additionalFields
   , array
   , boundedEnumNamed
@@ -113,6 +112,7 @@ import Fleece.Core.Name
   , nameUnqualified
   , unqualifiedName
   )
+import Fleece.Core.Validator (FleeceValidator (mkValidator), coercion, transform)
 
 eitherOf ::
   forall schema a b.
@@ -165,10 +165,9 @@ eitherOfNamed name leftSchema rightSchema =
         unionMember leftSchema
           #| unionMember rightSchema
   in
-    transformNamed
+    validateNamed
       name
-      toUnion
-      fromUnion
+      (transform toUnion fromUnion)
       unionSchema
 
 union ::
@@ -258,46 +257,19 @@ boundedEnum toText =
     schema
 
 validate ::
-  (Fleece schema, Typeable a) =>
-  (a -> b) ->
-  (b -> Either String a) ->
-  schema b ->
-  schema a
-validate uncheck check schemaB =
+  (Fleece schema, Typeable b) =>
+  Validator schema a b ->
+  schema a ->
+  schema b
+validate validator schemaB =
   let
     name =
       defaultSchemaName schemaA
 
     schemaA =
-      validateNamed name uncheck check schemaB
+      validateNamed name validator schemaB
   in
     schemaA
-
-transform ::
-  (Fleece schema, Typeable a) =>
-  (a -> b) ->
-  (b -> a) ->
-  schema b ->
-  schema a
-transform aToB bToA schemaB =
-  let
-    name =
-      defaultSchemaName schemaA
-
-    schemaA =
-      transformNamed name aToB bToA schemaB
-  in
-    schemaA
-
-transformNamed ::
-  Fleece schema =>
-  Name ->
-  (a -> b) ->
-  (b -> a) ->
-  schema b ->
-  schema a
-transformNamed name aToB bToA =
-  validateNamed name aToB (Right . bToA)
 
 coerceSchema ::
   (Fleece schema, Typeable a, Coercible a b) =>
@@ -318,8 +290,8 @@ coerceSchemaNamed ::
   Name ->
   schema b ->
   schema a
-coerceSchemaNamed name schemaB =
-  transformNamed name coerce coerce schemaB
+coerceSchemaNamed name =
+  validateNamed name coercion
 
 data NothingEncoding
   = EmitNull
@@ -350,10 +322,9 @@ optionalNullable encoding name accessor schema =
 
 list :: Fleece schema => schema a -> schema [a]
 list itemSchema =
-  transformNamed
+  validateNamed
     (unqualifiedName $ "[" <> nameUnqualified (schemaName itemSchema) <> "]")
-    V.fromList
-    V.toList
+    (transform V.fromList V.toList)
     (array itemSchema)
 
 map :: (Fleece schema, Typeable a) => schema a -> schema (Map.Map T.Text a)
@@ -372,8 +343,7 @@ nonEmpty itemSchema =
   in
     validateNamed
       (unqualifiedName $ "NonEmpty " <> nameUnqualified (schemaName itemSchema))
-      NEL.toList
-      validateNonEmpty
+      (mkValidator NEL.toList validateNonEmpty)
       (list itemSchema)
 
 data SetDuplicateHandling
@@ -384,10 +354,9 @@ set :: (Ord a, Fleece schema) => SetDuplicateHandling -> schema a -> schema (Set
 set handling itemSchema =
   case handling of
     AllowInputDuplicates ->
-      transformNamed
+      validateNamed
         (unqualifiedName $ "Set [" <> nameUnqualified (schemaName itemSchema) <> "]")
-        (V.fromList . Set.toList)
-        (Set.fromList . V.toList)
+        (transform (V.fromList . Set.toList) (Set.fromList . V.toList))
         (array itemSchema)
     RejectInputDuplicates ->
       let
@@ -401,8 +370,7 @@ set handling itemSchema =
       in
         validateNamed
           (unqualifiedName $ "Set [" <> nameUnqualified (schemaName itemSchema) <> "]")
-          (V.fromList . Set.toList)
-          validateNoDuplicates
+          (mkValidator (V.fromList . Set.toList) validateNoDuplicates)
           (array itemSchema)
 
 nonEmptyText :: Fleece schema => schema NET.NonEmptyText
@@ -415,8 +383,7 @@ nonEmptyText =
   in
     validateNamed
       (unqualifiedName "NonEmptyText")
-      NET.toText
-      validateNonEmptyText
+      (mkValidator NET.toText validateNonEmptyText)
       text
 
 integer :: Fleece schema => schema Integer
@@ -445,8 +412,7 @@ unboundedIntegralNumberNamed name =
   in
     validateNamed
       name
-      fromIntegral
-      validateInteger
+      (mkValidator fromIntegral validateInteger)
       number
 
 unboundedIntegralNumber ::
@@ -480,8 +446,7 @@ boundedIntegralNumberNamed name =
   in
     validateNamed
       name
-      fromIntegral
-      validateInteger
+      (mkValidator fromIntegral validateInteger)
       number
 
 boundedIntegralNumber ::
@@ -553,14 +518,13 @@ realFloatNamed ::
   Name ->
   schema f
 realFloatNamed name =
-  transformNamed
+  validateNamed
     name
-    fromFloatDigits
-    toRealFloat
+    (transform fromFloatDigits toRealFloat)
     number
 
 string :: Fleece schema => schema String
-string = transform T.pack T.unpack text
+string = validate (transform T.pack T.unpack) text
 
 utcTime :: Fleece schema => schema Time.UTCTime
 utcTime =
@@ -602,8 +566,7 @@ timeWithFormat typeName formatString =
   in
     validateNamed
       (unqualifiedName $ typeName <> " in " <> formatString <> " format")
-      (Time.formatTime Time.defaultTimeLocale formatString)
-      decode
+      (mkValidator (Time.formatTime Time.defaultTimeLocale formatString) decode)
       string
 
 bareOrJSONString :: Fleece schema => schema a -> schema a
@@ -632,10 +595,9 @@ bareOrJSONString baseSchema =
           (unionMemberWithIndex index0 baseSchema)
           (unionMemberWithIndex index1 (jsonString baseSchema))
   in
-    transformNamed
+    validateNamed
       name
-      toUnion
-      fromUnion
+      (transform toUnion fromUnion)
       unionSchema
 
 -- An internal helper for building building time schemes
@@ -662,6 +624,5 @@ iso8601Formatted name format parser =
   in
     validateNamed
       (unqualifiedName name)
-      (T.pack . ISO8601.formatShow format)
-      parseTime
+      (mkValidator (T.pack . ISO8601.formatShow format) parseTime)
       text

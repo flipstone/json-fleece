@@ -56,6 +56,8 @@ instance FC.Fleece Encoder where
   newtype TaggedUnionMembers Encoder _allTags handledTags
     = TaggedUnionMembers (Shrubbery.TaggedBranchBuilder handledTags (T.Text, Aeson.Series))
 
+  type Validator Encoder = FC.StandardValidator
+
   schemaName (Encoder name _toEncoding) =
     name
 
@@ -128,8 +130,8 @@ instance FC.Fleece Encoder where
   boundedEnumNamed name toText =
     Encoder name (Aeson.toEncoding . toText)
 
-  validateNamed name uncheck _check (Encoder _unvalidatedName toEncoding) =
-    Encoder name (toEncoding . uncheck)
+  validateNamed name validator (Encoder _unvalidatedName toEncoding) =
+    Encoder name (toEncoding . FC.uncheck validator)
 
   unionNamed name (UnionMembers builder) =
     let
