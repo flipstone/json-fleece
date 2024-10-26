@@ -17,7 +17,7 @@ description: Please see the README on GitHub at <https://github.com/flipstone/js
 
 dependencies:
 - base >= 4.7 && < 5
-- bytestring >= 0.11 && < 0.12
+- bytestring >= 0.11 && < 0.13
 - json-fleece-core >= 0.7 && < 0.8
 - text >= 2.0 # This could be problematic for anyone using LTS 20 or below
 
@@ -66,7 +66,7 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - aeson >= 2.0 && < 2.2
+    - aeson >= 2.0 && < 2.3
     - containers >= 0.6 && < 0.7
     - json-fleece-hermes
     - json-fleece-examples

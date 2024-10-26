@@ -51,7 +51,7 @@ library:
   dependencies:
     - json-fleece-aeson >= 0.1 && < 0.4
     - beeline-http-client >= 0.2 && < 0.9
-    - bytestring >= 0.11 && < 0.12
+    - bytestring >= 0.11 && < 0.13
     - http-client >= 0.7 && < 0.8
   exposed-modules:
     - Fleece.Aeson.Beeline

@@ -2054,7 +2054,7 @@ library
   hs-source-dirs:
       src
   build-depends:
-      aeson >=2.0 && <2.2
+      aeson >=2.0 && <2.3
     , base >=4.7 && <5
     , containers ==0.6.*
     , insert-ordered-containers ==0.2.*
@@ -2062,7 +2062,7 @@ library
     , mtl >=2.2 && <2.4
     , non-empty-text ==0.2.*
     , openapi3 ==3.2.*
-    , text >=1.2 && <2.1
+    , text >=1.2 && <2.2
   default-language: Haskell2010
   if flag(strict)
     ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations -Wno-unticked-promoted-constructors
@@ -2096,7 +2096,7 @@ test-suite json-fleece-openapi3-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
-    , bytestring ==0.11.*
+    , bytestring >=0.11 && <0.13
     , file-embed >=0.0.15 && <0.0.17
     , hedgehog
     , json-fleece-codegen-util ==0.11.*

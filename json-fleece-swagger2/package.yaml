@@ -61,7 +61,7 @@ library:
     - insert-ordered-containers >= 0.2 && < 0.3
     - swagger2 >= 2.8 && < 2.9
     - openapi3 >= 3.2 &&  < 3.3
-    - text >= 1.2 && < 2.1
+    - text >= 1.2 && < 2.2
 
 executables:
   fleece-swagger2:
@@ -84,6 +84,6 @@ tests:
     dependencies:
       - json-fleece-swagger2
       - hedgehog
-      - aeson >= 2.0 && < 2.2
-      - bytestring >= 0.11 && < 0.12
+      - aeson >= 2.0 && < 2.3
+      - bytestring >= 0.11 && < 0.13
       - file-embed >= 0.0.15 && < 0.0.17
