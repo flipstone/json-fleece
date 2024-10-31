@@ -5,49 +5,42 @@
 
 packages:
 - completed:
-    commit: 343c3e5fabc812e5c32efa33ddf8a6cee965e8b0
-    git: https://github.com/flipstone/beeline
     name: beeline-routing
     pantry-tree:
       sha256: f79fc2e97dfa9147e44cbc6dedb2f9c024e1c2856a0b5a07facfdaa7cd0fd6c6
       size: 1174
+    sha256: 6f8428e62267150a960c41f59e1000b70c28c40d22b01a241c0d120775af5e43
+    size: 24689
     subdir: beeline-routing
+    url: https://github.com/flipstone/beeline/archive/47d1fe37ef10368cb1ed9ddcd7781f58c80a96b8.tar.gz
     version: 0.2.4.0
   original:
-    commit: 343c3e5fabc812e5c32efa33ddf8a6cee965e8b0
-    git: https://github.com/flipstone/beeline
     subdir: beeline-routing
+    url: https://github.com/flipstone/beeline/archive/47d1fe37ef10368cb1ed9ddcd7781f58c80a96b8.tar.gz
 - completed:
-    commit: 343c3e5fabc812e5c32efa33ddf8a6cee965e8b0
-    git: https://github.com/flipstone/beeline
     name: beeline-http-client
     pantry-tree:
-      sha256: 003653d3a0cfe9ead5e3e98ef277d32e9ac2000b4079069820b1d6cb597b9790
+      sha256: afb20a23917633dfdc5486359cc65217df3eab2089ecd428a11d1f021a4715eb
       size: 718
+    sha256: 6f8428e62267150a960c41f59e1000b70c28c40d22b01a241c0d120775af5e43
+    size: 24689
     subdir: beeline-http-client
+    url: https://github.com/flipstone/beeline/archive/47d1fe37ef10368cb1ed9ddcd7781f58c80a96b8.tar.gz
     version: 0.8.0.0
   original:
-    commit: 343c3e5fabc812e5c32efa33ddf8a6cee965e8b0
-    git: https://github.com/flipstone/beeline
     subdir: beeline-http-client
+    url: https://github.com/flipstone/beeline/archive/47d1fe37ef10368cb1ed9ddcd7781f58c80a96b8.tar.gz
 - completed:
-    commit: 73bea50a23ec60106eae9aa75a06ee854beb2e71
-    git: https://github.com/flipstone/shrubbery
     name: shrubbery
     pantry-tree:
-      sha256: e18a9032ca90d613943b023bdc2b362e42cfb1761c31886f83270e40a54d5095
-      size: 1737
-    version: 0.2.1.0
+      sha256: 39ce7cb2d835d5b80e8085a1ba776d09c29df63c2d20b1fc74ac4bf034174241
+      size: 1739
+    sha256: d7efa64a63aba7f7e77fedb81c461a0a50344ba7a45a44ad447a2dd721cc70ac
+    size: 25629
+    url: https://github.com/flipstone/shrubbery/archive/95c5bf28d03ed8b4df163a98b878fa515bf40604.tar.gz
+    version: 0.2.2.0
   original:
-    commit: 73bea50a23ec60106eae9aa75a06ee854beb2e71
-    git: https://github.com/flipstone/shrubbery
-- completed:
-    hackage: non-empty-text-0.2.1@sha256:df9629af4ad53af59dc0bfb5995c0500aaa656c884485560e9115152f7495c20,2438
-    pantry-tree:
-      sha256: d8304ffcf168785e1a9d91c9f49bec92eacb43890ad31a48893861ff8de223ed
-      size: 400
-  original:
-    hackage: non-empty-text-0.2.1
+    url: https://github.com/flipstone/shrubbery/archive/95c5bf28d03ed8b4df163a98b878fa515bf40604.tar.gz
 - completed:
     hackage: hermes-json-0.6.1.0@sha256:ab54609e63a83a8e07900360de60ba1e197ea499fa5d3eb782eed980ee07545b,3856
     pantry-tree:
@@ -55,24 +48,9 @@ packages:
       size: 1387
   original:
     hackage: hermes-json-0.6.1.0@sha256:ab54609e63a83a8e07900360de60ba1e197ea499fa5d3eb782eed980ee07545b,3856
-- completed:
-    hackage: integer-conversion-0.1.0.1@sha256:0e57a82635323f015b5d6c242bcfbbeeaa9854fe9c8058e57052254dbb24bb14,2250
-    pantry-tree:
-      sha256: 5684bd08f7edbadbff77d84075b37cdf41309bd8a0dc23bcea6ffbf4497adb7f
-      size: 509
-  original:
-    hackage: integer-conversion-0.1.0.1
-- completed:
-    hackage: text-iso8601-0.1@sha256:fc10d8de72fc094d0d299644f17421b9430d1c1092a1355c7f0c02d8b6edf6a7,2371
-    pantry-tree:
-      sha256: f72aa62f5f4d1155b3d3f35e8227548a27cee83fb5d0742564b5ef26597f1431
-      size: 427
-  original:
-    hackage: text-iso8601-0.1@sha256:fc10d8de72fc094d0d299644f17421b9430d1c1092a1355c7f0c02d8b6edf6a7,2371
 snapshots:
 - completed:
-    sha256: 4be1ca5d31689b524a7f0f17a439bbe9136465213edc498e9a395899a670f2aa
-    size: 718486
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/22/22.yaml
-  original:
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/22/22.yaml
+    sha256: 6c5aeace2ca5ecde793a9e0acfaa730ec8f384aa2f6183a2a252f5f9ec55d623
+    size: 720039
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/22/39.yaml
+  original: lts-22.39
