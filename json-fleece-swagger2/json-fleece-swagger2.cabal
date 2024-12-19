@@ -85,7 +85,7 @@ library
   build-depends:
       base >=4.7 && <5
     , insert-ordered-containers ==0.2.*
-    , json-fleece-codegen-util ==0.11.*
+    , json-fleece-codegen-util ==0.12.*
     , json-fleece-openapi3 ==0.4.*
     , openapi3 ==3.2.*
     , swagger2 ==2.8.*
@@ -105,7 +105,7 @@ executable fleece-swagger2
   ghc-options: -rtsopts -threaded
   build-depends:
       base >=4.7 && <5
-    , json-fleece-codegen-util ==0.11.*
+    , json-fleece-codegen-util ==0.12.*
     , json-fleece-swagger2
   default-language: Haskell2010
   if flag(strict)
@@ -127,7 +127,7 @@ test-suite json-fleece-swagger2-test
     , bytestring >=0.11 && <0.13
     , file-embed >=0.0.15 && <0.0.17
     , hedgehog
-    , json-fleece-codegen-util ==0.11.*
+    , json-fleece-codegen-util ==0.12.*
     , json-fleece-swagger2
   default-language: Haskell2010
   if flag(strict)

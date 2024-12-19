@@ -17,7 +17,7 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
-- json-fleece-codegen-util >= 0.11 && < 0.12
+- json-fleece-codegen-util >= 0.12 && < 0.13
 
 flags:
   strict:

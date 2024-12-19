@@ -3,5 +3,5 @@ if [ "$IN_DEV_CONTAINER" ]; then
   :
 else
   docker compose build
-  exec docker compose run dev $0 "$@"
+  exec docker compose run --rm dev $0 "$@"
 fi

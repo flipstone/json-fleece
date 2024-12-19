@@ -93,6 +93,7 @@ data CodeGenOptions = CodeGenOptions
   , defaultTypeOptions :: TypeOptions
   , typeOptionsMap :: Map.Map T.Text TypeOptions
   , strictAdditionalProperties :: Bool
+  , useOptionalNullable :: Bool
   }
 
 data TypeOptions = TypeOptions
@@ -1659,6 +1660,7 @@ generateFleeceObject typeMap references typeName rawCodeGenFields mbAdditionalPr
     traverse (mkFleeceSchemaField typeMap moduleName) codeGenFields
 
   mbAdditionalPropertiesSchemaTypeInfo <- mapM (schemaInfoOrRefToSchemaTypeInfo typeMap . codeGenAdditionalPropertiesSchemaInfoOrRef) mbAdditionalProperties
+  useOptionalNullableBool <- asks useOptionalNullable
 
   let
     additionalPropsFieldNameAndType =
@@ -1685,7 +1687,7 @@ generateFleeceObject typeMap references typeName rawCodeGenFields mbAdditionalPr
     fleeceField field =
       HC.addReferences [HC.VarReference "Fleece.Core" Nothing "(#+)"] $
         "#+ "
-          <> fleeceFieldFunction field
+          <> fleeceFieldFunction field useOptionalNullableBool
           <> " "
           <> HC.stringLiteral (fieldJSONName field)
           <> " "
@@ -1792,11 +1794,11 @@ fieldFleeceSchemaCode :: FleeceSchemaField -> HC.HaskellCode
 fieldFleeceSchemaCode =
   schemaTypeSchema . fieldBaseSchemaTypeInfo
 
-fleeceFieldFunction :: FleeceSchemaField -> HC.HaskellCode
-fleeceFieldFunction field =
-  if fieldRequired field
-    then fleeceCoreVar "required"
-    else fleeceCoreVar "optional"
+fleeceFieldFunction :: FleeceSchemaField -> Bool -> HC.HaskellCode
+fleeceFieldFunction field useOptionalNullableBool
+  | fieldRequired field = fleeceCoreVar "required"
+  | useOptionalNullableBool = fleeceCoreVar "optionalNullable"
+  | otherwise = fleeceCoreVar "optional"
 
 mkFleeceSchemaField ::
   CodeGenMap ->

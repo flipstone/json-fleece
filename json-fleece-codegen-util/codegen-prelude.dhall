@@ -32,6 +32,7 @@ let
     { defaultTypeOptions = TypeOptions.default
     , typeOptions = [] : List SpecificTypeOptions
     , strictAdditionalProperties = True
+    , useOptionalNullable = False
     }
 
 in

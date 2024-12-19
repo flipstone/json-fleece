@@ -27,6 +27,7 @@ decoder =
                 <*> Dhall.field "defaultTypeOptions" typeOptionsDecoder
                 <*> Dhall.field "typeOptions" typeOptionsMapDecoder
                 <*> Dhall.field "strictAdditionalProperties" Dhall.bool
+                <*> Dhall.field "useOptionalNullable" Dhall.bool
             )
         <*> Dhall.field "inputFileName" Dhall.string
         <*> Dhall.field "destination" Dhall.string
