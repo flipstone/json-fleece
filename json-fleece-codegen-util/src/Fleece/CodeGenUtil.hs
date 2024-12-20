@@ -1797,7 +1797,7 @@ fieldFleeceSchemaCode =
 fleeceFieldFunction :: FleeceSchemaField -> Bool -> HC.HaskellCode
 fleeceFieldFunction field useOptionalNullableBool
   | fieldRequired field = fleeceCoreVar "required"
-  | useOptionalNullableBool = fleeceCoreVar "optionalNullable" <> " " <> fleeceCoreVar "OmitKey"
+  | useOptionalNullableBool = fleeceCoreVar "optionalNullable" <> " " <> fleeceCoreConstructorVar "OmitKey"
   | otherwise = fleeceCoreVar "optional"
 
 mkFleeceSchemaField ::
@@ -2054,6 +2054,12 @@ fleeceCoreVar =
   HC.fromCode
     . HC.varNameToCodeDefaultQualification
     . HC.toVarName "Fleece.Core" (Just "FC")
+
+fleeceCoreConstructorVar :: HC.FromCode c => T.Text -> c
+fleeceCoreConstructorVar =
+  HC.fromCode
+    . HC.varNameToCodeDefaultQualification
+    . HC.toConstructorVarName "Fleece.Core" (Just "FC")
 
 fleeceCoreFunApp :: HC.FromCode c => T.Text -> T.Text -> c
 fleeceCoreFunApp functionName argument =
