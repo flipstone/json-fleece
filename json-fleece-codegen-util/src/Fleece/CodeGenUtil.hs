@@ -1797,7 +1797,7 @@ fieldFleeceSchemaCode =
 fleeceFieldFunction :: FleeceSchemaField -> Bool -> HC.HaskellCode
 fleeceFieldFunction field useOptionalNullableBool
   | fieldRequired field = fleeceCoreVar "required"
-  | useOptionalNullableBool = fleeceCoreVar "optionalNullable"
+  | useOptionalNullableBool = fleeceCoreVar "optionalNullable" <> " " <> fleeceCoreVar "OmitKey"
   | otherwise = fleeceCoreVar "optional"
 
 mkFleeceSchemaField ::
