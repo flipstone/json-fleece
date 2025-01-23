@@ -2162,7 +2162,7 @@ beelineInt32Param =
 
 beelineInt64Param :: HC.FromCode c => c
 beelineInt64Param =
-  beelineRoutingVar "int32Param"
+  beelineRoutingVar "int64Param"
 
 beelineScientificParam :: HC.FromCode c => c
 beelineScientificParam =
