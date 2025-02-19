@@ -7,7 +7,7 @@
 {-# LANGUAGE TypeOperators #-}
 
 module Fleece.Aeson.ToValue
-  ( ToValue (..)
+  ( ToValue
   , toValue
   ) where
 
