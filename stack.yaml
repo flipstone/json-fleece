@@ -61,12 +61,12 @@ flags:
 
 extra-deps:
   - github: flipstone/beeline
-    commit: 120c480601f8c348a4b3250fe8e31fa7fc2c9885
+    commit: 319bc02bcdaddcc7f185c74e32c76c5157d51c92
     subdirs:
       - beeline-routing
       - beeline-http-client
   - github: flipstone/shrubbery
-    commit: 40a2bbe88ac99ec6fbad7a40e331a1f624e70850
+    commit: ae5c282af3029179d5ab43a927aecbc8e44971e4
   - hermes-json-0.6.1.0@sha256:ab54609e63a83a8e07900360de60ba1e197ea499fa5d3eb782eed980ee07545b,3856
 
 
