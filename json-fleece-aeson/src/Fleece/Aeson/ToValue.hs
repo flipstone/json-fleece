@@ -9,21 +9,31 @@
 module Fleece.Aeson.ToValue
   ( ToValue
   , toValue
+  , toLazyText
+  , toStrictText
   ) where
 
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Key as AesonKey
+import Data.Aeson.Text (encodeToLazyText)
 import qualified Data.Aeson.Types as AesonTypes
 import qualified Data.ByteString.Lazy as LBS
 import Data.Coerce (coerce)
 import qualified Data.Map.Strict as Map
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as Enc
+import qualified Data.Text.Lazy as TL
 import GHC.TypeLits (KnownSymbol, symbolVal)
 import Shrubbery (type (@=))
 import qualified Shrubbery
 
 import qualified Fleece.Core as FC
+
+toLazyText :: ToValue a -> a -> TL.Text
+toLazyText encoder = encodeToLazyText . toValue encoder
+
+toStrictText :: ToValue a -> a -> T.Text
+toStrictText encoder = TL.toStrict . toLazyText encoder
 
 toValue :: ToValue a -> a -> Aeson.Value
 toValue (ToValue _name f) =

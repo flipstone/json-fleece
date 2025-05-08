@@ -10,6 +10,8 @@ module Fleece.Aeson.Decoder
   ( Decoder (..)
   , decode
   , decodeStrict
+  , fromLazyText
+  , fromStrictText
   , fromValue
   , toParser
   ) where
@@ -25,6 +27,7 @@ import qualified Data.ByteString.Lazy as LBS
 import qualified Data.Map.Strict as Map
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as Enc
+import qualified Data.Text.Lazy as TL
 import GHC.TypeLits (KnownNat, KnownSymbol, symbolVal)
 import Shrubbery (type (@=))
 import qualified Shrubbery
@@ -33,6 +36,16 @@ import qualified Fleece.Core as FC
 
 data Decoder a
   = Decoder FC.Name (Aeson.Value -> AesonTypes.Parser a)
+
+fromLazyText :: Decoder a -> TL.Text -> Either String a
+fromLazyText decoder =
+  fromStrictText decoder . TL.toStrict
+
+fromStrictText :: Decoder a -> T.Text -> Either String a
+fromStrictText decoder =
+  -- With aeson-2.2.1.0, there is no need to encode to UTF-8,
+  -- this could be 'fromValue decoder <=< eitherDecodeStrictText'
+  decodeStrict decoder . Enc.encodeUtf8
 
 fromValue :: Decoder a -> Aeson.Value -> Either String a
 fromValue =
