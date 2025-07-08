@@ -6,6 +6,7 @@ module TestCases.Operations.TestCases.QueryParams.StringParam
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified Data.Text as T
 import Prelude (Eq, Show)
@@ -15,4 +16,4 @@ newtype StringParam = StringParam T.Text
 
 paramDef :: R.ParameterDefinition StringParam
 paramDef =
-  R.coerceParam (R.textParam "string-param")
+  P.coerceParam (P.textParam "string-param")

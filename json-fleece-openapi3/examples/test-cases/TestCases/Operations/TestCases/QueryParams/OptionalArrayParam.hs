@@ -6,6 +6,7 @@ module TestCases.Operations.TestCases.QueryParams.OptionalArrayParam
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified Data.Text as T
 import Prelude (Eq, Show)
@@ -15,4 +16,4 @@ newtype OptionalArrayParam = OptionalArrayParam T.Text
 
 paramDef :: R.ParameterDefinition OptionalArrayParam
 paramDef =
-  R.coerceParam (R.textParam "optional-array-param")
+  P.coerceParam (P.textParam "optional-array-param")

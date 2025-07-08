@@ -6,6 +6,7 @@ module TestCases.Operations.TestCases.QueryParams.RequiredArrayParam
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified Data.Text as T
 import Prelude (Eq, Show)
@@ -15,4 +16,4 @@ newtype RequiredArrayParam = RequiredArrayParam T.Text
 
 paramDef :: R.ParameterDefinition RequiredArrayParam
 paramDef =
-  R.coerceParam (R.textParam "required-array-param")
+  P.coerceParam (P.textParam "required-array-param")

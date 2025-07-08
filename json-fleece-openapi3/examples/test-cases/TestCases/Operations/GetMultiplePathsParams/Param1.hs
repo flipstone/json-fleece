@@ -6,6 +6,7 @@ module TestCases.Operations.GetMultiplePathsParams.Param1
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified Data.Text as T
 import Prelude (Eq, Show)
@@ -15,4 +16,4 @@ newtype Param1 = Param1 T.Text
 
 paramDef :: R.ParameterDefinition Param1
 paramDef =
-  R.coerceParam (R.textParam "param1")
+  P.coerceParam (P.textParam "param1")

@@ -6,6 +6,7 @@ module TestCases.Operations.TestCases.HeaderParams.BooleanParam
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import Prelude (Bool, Eq, Show)
 
@@ -14,4 +15,4 @@ newtype BooleanParam = BooleanParam Bool
 
 paramDef :: R.ParameterDefinition BooleanParam
 paramDef =
-  R.coerceParam (R.booleanParam "boolean-param")
+  P.coerceParam (P.booleanParam "boolean-param")

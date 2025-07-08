@@ -991,7 +991,7 @@ mkParameterCollectionCode moduleName typeName schemaName params = do
       HC.typeNameToCode Nothing typeName
 
     paramsSchemaType =
-      beelineParameterCollectionSchema
+      beelineParameterSchema
         <> " p => p "
         <> paramsTypeNameAsCode
         <> " "
@@ -2124,53 +2124,53 @@ beelineParamDef =
 
 beelineCoerceParam :: HC.FromCode c => c
 beelineCoerceParam =
-  beelineRoutingVar "coerceParam"
+  beelineParamsVar "coerceParam"
 
 beelineTextParam :: HC.FromCode c => c
 beelineTextParam =
-  beelineRoutingVar "textParam"
+  beelineParamsVar "textParam"
 
 beelineBooleanParam :: HC.FromCode c => c
 beelineBooleanParam =
-  beelineRoutingVar "booleanParam"
+  beelineParamsVar "booleanParam"
 
 beelineEnumParam :: (HC.FromCode c, Semigroup c) => HC.VarName -> c
 beelineEnumParam toTextName =
-  beelineRoutingVar "boundedEnumParam"
+  beelineParamsVar "boundedEnumParam"
     <> HC.fromText " "
     <> HC.varNameToCodeDefaultQualification toTextName
 
 beelineIntegerParam :: HC.FromCode c => c
 beelineIntegerParam =
-  beelineRoutingVar "integerParam"
+  beelineParamsVar "integerParam"
 
 beelineIntParam :: HC.FromCode c => c
 beelineIntParam =
-  beelineRoutingVar "intParam"
+  beelineParamsVar "intParam"
 
 beelineInt8Param :: HC.FromCode c => c
 beelineInt8Param =
-  beelineRoutingVar "int8Param"
+  beelineParamsVar "int8Param"
 
 beelineInt16Param :: HC.FromCode c => c
 beelineInt16Param =
-  beelineRoutingVar "int16Param"
+  beelineParamsVar "int16Param"
 
 beelineInt32Param :: HC.FromCode c => c
 beelineInt32Param =
-  beelineRoutingVar "int32Param"
+  beelineParamsVar "int32Param"
 
 beelineInt64Param :: HC.FromCode c => c
 beelineInt64Param =
-  beelineRoutingVar "int64Param"
+  beelineParamsVar "int64Param"
 
 beelineScientificParam :: HC.FromCode c => c
 beelineScientificParam =
-  beelineRoutingVar "scientificParam"
+  beelineParamsVar "scientificParam"
 
 beelineDoubleParam :: HC.FromCode c => c
 beelineDoubleParam =
-  beelineRoutingVar "doubleParam"
+  beelineParamsVar "doubleParam"
 
 beelineFloatParam :: HC.FromCode c => c
 beelineFloatParam =
@@ -2200,33 +2200,33 @@ beelineRoutingOperator op =
     [HC.VarReference "Beeline.Routing" Nothing ("(" <> op <> ")")]
     (HC.fromText op)
 
-beelineParameterCollectionSchema :: HC.FromCode c => c
-beelineParameterCollectionSchema =
-  beelineHTTPType "ParameterCollectionSchema"
+beelineParameterSchema :: HC.FromCode c => c
+beelineParameterSchema =
+  beelineParamsType "ParameterSchema"
 
 beelineMakeParams :: HC.FromCode c => c
 beelineMakeParams =
-  beelineHTTPVar "makeParams"
+  beelineParamsVar "makeParams"
 
 beelineQueryParam :: (HC.FromCode c, HC.ToCode c) => c
 beelineQueryParam =
-  beelineHTTPOperator "?+"
+  beelineParamsOperator "?+"
 
 beelineRequired :: HC.FromCode c => c
 beelineRequired =
-  beelineHTTPVar "required"
+  beelineParamsVar "required"
 
 beelineOptional :: HC.FromCode c => c
 beelineOptional =
-  beelineHTTPVar "optional"
+  beelineParamsVar "optional"
 
 beelineExplodedArray :: HC.FromCode c => c
 beelineExplodedArray =
-  beelineHTTPVar "explodedArray"
+  beelineParamsVar "explodedArray"
 
 beelineExplodedNonEmpty :: HC.FromCode c => c
 beelineExplodedNonEmpty =
-  beelineHTTPVar "explodedNonEmpty"
+  beelineParamsVar "explodedNonEmpty"
 
 beelineOperation :: HC.FromCode c => c
 beelineOperation =
@@ -2322,8 +2322,20 @@ beelineHTTPType =
     . HC.typeNameToCodeDefaultQualification
     . HC.toTypeName "Beeline.HTTP.Client" (Just "H")
 
-beelineHTTPOperator :: (HC.FromCode c, HC.ToCode c) => T.Text -> c
-beelineHTTPOperator op =
+beelineParamsVar :: HC.FromCode c => T.Text -> c
+beelineParamsVar =
+  HC.fromCode
+    . HC.varNameToCodeDefaultQualification
+    . HC.toVarName "Beeline.Params" (Just "P")
+
+beelineParamsType :: HC.FromCode c => T.Text -> c
+beelineParamsType =
+  HC.fromCode
+    . HC.typeNameToCodeDefaultQualification
+    . HC.toTypeName "Beeline.Params" (Just "P")
+
+beelineParamsOperator :: (HC.FromCode c, HC.ToCode c) => T.Text -> c
+beelineParamsOperator op =
   HC.addReferences
-    [HC.VarReference "Beeline.HTTP.Client" Nothing ("(" <> op <> ")")]
+    [HC.VarReference "Beeline.Params" Nothing ("(" <> op <> ")")]
     (HC.fromText op)

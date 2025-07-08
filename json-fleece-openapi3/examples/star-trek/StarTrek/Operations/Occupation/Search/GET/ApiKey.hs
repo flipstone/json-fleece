@@ -6,6 +6,7 @@ module StarTrek.Operations.Occupation.Search.GET.ApiKey
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified Data.Text as T
 import Prelude (Eq, Show)
@@ -15,4 +16,4 @@ newtype ApiKey = ApiKey T.Text
 
 paramDef :: R.ParameterDefinition ApiKey
 paramDef =
-  R.coerceParam (R.textParam "apiKey")
+  P.coerceParam (P.textParam "apiKey")

@@ -6,6 +6,7 @@ module StarTrek.Operations.MagazineSeries.Search.POST.Sort
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified Data.Text as T
 import Prelude (Eq, Show)
@@ -15,4 +16,4 @@ newtype Sort = Sort T.Text
 
 paramDef :: R.ParameterDefinition Sort
 paramDef =
-  R.coerceParam (R.textParam "sort")
+  P.coerceParam (P.textParam "sort")
