@@ -1,11 +1,11 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.36.0.
+-- This file has been generated from package.yaml by hpack version 0.37.0.
 --
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.4.3.2
+version:        0.4.4.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -1924,6 +1924,7 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/RequiredArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/StringParam.hs
     examples/test-cases/TestCases/Operations/TestCases/RequestBody.hs
+    examples/test-cases/TestCases/Types/ArrayWithNullableStrings.hs
     examples/test-cases/TestCases/Types/AStringType.hs
     examples/test-cases/TestCases/Types/Bar.hs
     examples/test-cases/TestCases/Types/Bar/BarName.hs
@@ -1960,6 +1961,10 @@ extra-source-files:
     examples/test-cases/TestCases/Types/FieldTestCases/RequiredNullableField.hs
     examples/test-cases/TestCases/Types/Foo.hs
     examples/test-cases/TestCases/Types/Foo/Type.hs
+    examples/test-cases/TestCases/Types/InlineNoAdditionalPropertiesWithOneOfNullabilityOutside.hs
+    examples/test-cases/TestCases/Types/InlineYesAdditionalPropertiesWithOneOfNullablityInside.hs
+    examples/test-cases/TestCases/Types/InlineYesAdditionalPropertiesWithOneOfNullablityInside/Foobar.hs
+    examples/test-cases/TestCases/Types/InlineYesAdditionalPropertiesWithOneOfNullablityInsideItem.hs
     examples/test-cases/TestCases/Types/JustAdditionalPropertiesNullableBoolean.hs
     examples/test-cases/TestCases/Types/JustAdditionalPropertiesNullableBooleanItem.hs
     examples/test-cases/TestCases/Types/JustAdditionalPropertiesNullableBooleanRef.hs
@@ -1974,10 +1979,13 @@ extra-source-files:
     examples/test-cases/TestCases/Types/MinItemsOneInline/SomeArrayItem.hs
     examples/test-cases/TestCases/Types/MinItemsOneInlineArrayNullableOneOf.hs
     examples/test-cases/TestCases/Types/MinItemsOneInlineArrayNullableOneOf/MinItemsOneInlineArrayNullableOneOfItem.hs
+    examples/test-cases/TestCases/Types/MinItemsOneInlineArrayNullableOneOf/MinItemsOneInlineArrayNullableOneOfItem/MinItemsOneInlineArrayNullableOneOf/MinItemsOneInlineArrayNullableOneOfItemItem.hs
     examples/test-cases/TestCases/Types/MinItemsOneInlineArrayOneOf.hs
     examples/test-cases/TestCases/Types/MinItemsOneInlineArrayOneOf/MinItemsOneInlineArrayOneOfItem.hs
+    examples/test-cases/TestCases/Types/MinItemsOneInlineArrayOneOf/MinItemsOneInlineArrayOneOfItem/MinItemsOneInlineArrayOneOf/MinItemsOneInlineArrayOneOfItemItem.hs
     examples/test-cases/TestCases/Types/MinItemsOneInlineObjectOneOf.hs
     examples/test-cases/TestCases/Types/MinItemsOneInlineObjectOneOf/SomeArrayItem.hs
+    examples/test-cases/TestCases/Types/MinItemsOneInlineObjectOneOf/SomeArrayItem/MinItemsOneInlineObjectOneOf/SomeArrayItemItem.hs
     examples/test-cases/TestCases/Types/MixedInAdditionalPropertiesFalse.hs
     examples/test-cases/TestCases/Types/MixedInAdditionalPropertiesFalse/Bar.hs
     examples/test-cases/TestCases/Types/MixedInAdditionalPropertiesFalse/Foo.hs
@@ -2018,6 +2026,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/NameConflicts/Type.hs
     examples/test-cases/TestCases/Types/NameConflicts/Where.hs
     examples/test-cases/TestCases/Types/NullableBoolean.hs
+    examples/test-cases/TestCases/Types/NullableString.hs
     examples/test-cases/TestCases/Types/Num2SchemaStartingWithNumber.hs
     examples/test-cases/TestCases/Types/ObjectWithDiscriminatedUnionRef.hs
     examples/test-cases/TestCases/Types/OneOfWithDiscriminator.hs
@@ -2025,6 +2034,9 @@ extra-source-files:
     examples/test-cases/TestCases/Types/OneOfWithNullable.hs
     examples/test-cases/TestCases/Types/ReferenceOneOf.hs
     examples/test-cases/TestCases/Types/ReferenceOneOfInsideOneOf.hs
+    examples/test-cases/TestCases/Types/SingletonNonNullableOneOfRef.hs
+    examples/test-cases/TestCases/Types/SingletonNullableOneOfPrimitive.hs
+    examples/test-cases/TestCases/Types/SingletonNullableOneOfRef.hs
     examples/test-cases/TestCases/Types/StringParam.hs
     examples/test-cases/TestCases/Types/TestCases/InlineObjectWithPropertiesJsonResponse/Response200Body/Baz/Bax.hs
     examples/test-cases/TestCases/Types/TopLevelArray.hs

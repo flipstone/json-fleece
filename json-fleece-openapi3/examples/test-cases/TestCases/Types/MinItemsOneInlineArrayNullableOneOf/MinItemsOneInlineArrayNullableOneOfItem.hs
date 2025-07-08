@@ -1,5 +1,4 @@
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE DataKinds #-}
 
 module TestCases.Types.MinItemsOneInlineArrayNullableOneOf.MinItemsOneInlineArrayNullableOneOfItem
   ( MinItemsOneInlineArrayNullableOneOfItem(..)
@@ -8,16 +7,12 @@ module TestCases.Types.MinItemsOneInlineArrayNullableOneOf.MinItemsOneInlineArra
 
 import qualified Data.List.NonEmpty as NEL
 import qualified Fleece.Core as FC
-import Prelude (($), Bool, Either, Eq, Show)
-import qualified Shrubbery as Shrubbery
+import Prelude (Eq, Show)
+import qualified TestCases.Types.MinItemsOneInlineArrayNullableOneOf.MinItemsOneInlineArrayNullableOneOfItem.MinItemsOneInlineArrayNullableOneOf.MinItemsOneInlineArrayNullableOneOfItemItem as MinItemsOneInlineArrayNullableOneOfItemItem
 
-newtype MinItemsOneInlineArrayNullableOneOfItem = MinItemsOneInlineArrayNullableOneOfItem (Shrubbery.Union
-  '[ Either FC.Null (NEL.NonEmpty Bool)
-   ])
+newtype MinItemsOneInlineArrayNullableOneOfItem = MinItemsOneInlineArrayNullableOneOfItem (NEL.NonEmpty MinItemsOneInlineArrayNullableOneOfItemItem.MinItemsOneInlineArrayNullableOneOfItemItem)
   deriving (Show, Eq)
 
 minItemsOneInlineArrayNullableOneOfItemSchema :: FC.Fleece schema => schema MinItemsOneInlineArrayNullableOneOfItem
 minItemsOneInlineArrayNullableOneOfItemSchema =
-  FC.coerceSchema $
-    FC.unionNamed (FC.qualifiedName "TestCases.Types.MinItemsOneInlineArrayNullableOneOf.MinItemsOneInlineArrayNullableOneOfItem" "MinItemsOneInlineArrayNullableOneOfItem") $
-      FC.unionMember (FC.nullable (FC.nonEmpty FC.boolean))
+  FC.coerceSchema (FC.nonEmpty MinItemsOneInlineArrayNullableOneOfItemItem.minItemsOneInlineArrayNullableOneOfItemItemSchema)

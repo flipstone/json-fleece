@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.36.0.
+-- This file has been generated from package.yaml by hpack version 0.37.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -77,6 +77,7 @@ library
       TestCases.Operations.TestCases.QueryParams.RequiredArrayParam
       TestCases.Operations.TestCases.QueryParams.StringParam
       TestCases.Operations.TestCases.RequestBody
+      TestCases.Types.ArrayWithNullableStrings
       TestCases.Types.AStringType
       TestCases.Types.Bar
       TestCases.Types.Bar.BarName
@@ -113,6 +114,10 @@ library
       TestCases.Types.FieldTestCases.RequiredNullableField
       TestCases.Types.Foo
       TestCases.Types.Foo.Type
+      TestCases.Types.InlineNoAdditionalPropertiesWithOneOfNullabilityOutside
+      TestCases.Types.InlineYesAdditionalPropertiesWithOneOfNullablityInside
+      TestCases.Types.InlineYesAdditionalPropertiesWithOneOfNullablityInside.Foobar
+      TestCases.Types.InlineYesAdditionalPropertiesWithOneOfNullablityInsideItem
       TestCases.Types.JustAdditionalPropertiesNullableBoolean
       TestCases.Types.JustAdditionalPropertiesNullableBooleanItem
       TestCases.Types.JustAdditionalPropertiesNullableBooleanRef
@@ -127,10 +132,13 @@ library
       TestCases.Types.MinItemsOneInline.SomeArrayItem
       TestCases.Types.MinItemsOneInlineArrayNullableOneOf
       TestCases.Types.MinItemsOneInlineArrayNullableOneOf.MinItemsOneInlineArrayNullableOneOfItem
+      TestCases.Types.MinItemsOneInlineArrayNullableOneOf.MinItemsOneInlineArrayNullableOneOfItem.MinItemsOneInlineArrayNullableOneOf.MinItemsOneInlineArrayNullableOneOfItemItem
       TestCases.Types.MinItemsOneInlineArrayOneOf
       TestCases.Types.MinItemsOneInlineArrayOneOf.MinItemsOneInlineArrayOneOfItem
+      TestCases.Types.MinItemsOneInlineArrayOneOf.MinItemsOneInlineArrayOneOfItem.MinItemsOneInlineArrayOneOf.MinItemsOneInlineArrayOneOfItemItem
       TestCases.Types.MinItemsOneInlineObjectOneOf
       TestCases.Types.MinItemsOneInlineObjectOneOf.SomeArrayItem
+      TestCases.Types.MinItemsOneInlineObjectOneOf.SomeArrayItem.MinItemsOneInlineObjectOneOf.SomeArrayItemItem
       TestCases.Types.MixedInAdditionalPropertiesFalse
       TestCases.Types.MixedInAdditionalPropertiesFalse.Bar
       TestCases.Types.MixedInAdditionalPropertiesFalse.Foo
@@ -171,6 +179,7 @@ library
       TestCases.Types.NameConflicts.Type
       TestCases.Types.NameConflicts.Where
       TestCases.Types.NullableBoolean
+      TestCases.Types.NullableString
       TestCases.Types.Num2SchemaStartingWithNumber
       TestCases.Types.ObjectWithDiscriminatedUnionRef
       TestCases.Types.OneOfWithDiscriminator
@@ -178,6 +187,9 @@ library
       TestCases.Types.OneOfWithNullable
       TestCases.Types.ReferenceOneOf
       TestCases.Types.ReferenceOneOfInsideOneOf
+      TestCases.Types.SingletonNonNullableOneOfRef
+      TestCases.Types.SingletonNullableOneOfPrimitive
+      TestCases.Types.SingletonNullableOneOfRef
       TestCases.Types.StringParam
       TestCases.Types.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body.Baz.Bax
       TestCases.Types.TopLevelArray

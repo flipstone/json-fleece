@@ -914,3 +914,41 @@ components:
             minItems: 1
             nullable: true
       minItems: 1
+
+    ArrayWithNullableStrings:
+      type: array
+      items:
+        $ref: '#/components/schemas/NullableString'
+
+    NullableString:
+      nullable: true
+      type: string
+
+    SingletonNullableOneOfPrimitive:
+      nullable: true
+      oneOf:
+        - type: boolean
+
+    SingletonNullableOneOfRef:
+      nullable: true
+      oneOf:
+        - $ref: '#/components/schemas/AStringType'
+
+    SingletonNonNullableOneOfRef:
+      oneOf:
+        - $ref: '#/components/schemas/AStringType'
+
+    InlineNo_AdditionalPropertiesWithOneOf_NullabilityOutside:
+      type: object
+      properties: {}
+      additionalProperties:
+        $ref: '#/components/schemas/SingletonNullableOneOfRef'
+
+    InlineYes_AdditionalPropertiesWithOneOf_NullablityInside:
+      type: object
+      properties:
+        foobar:
+          type: boolean
+      additionalProperties:
+        oneOf:
+          - $ref: '#/components/schemas/NullableString'

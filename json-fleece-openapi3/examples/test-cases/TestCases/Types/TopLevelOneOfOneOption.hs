@@ -1,5 +1,4 @@
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE DataKinds #-}
 
 module TestCases.Types.TopLevelOneOfOneOption
   ( TopLevelOneOfOneOption(..)
@@ -8,16 +7,11 @@ module TestCases.Types.TopLevelOneOfOneOption
 
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), Eq, Show)
-import qualified Shrubbery as Shrubbery
+import Prelude (Eq, Show)
 
-newtype TopLevelOneOfOneOption = TopLevelOneOfOneOption (Shrubbery.Union
-  '[ T.Text
-   ])
+newtype TopLevelOneOfOneOption = TopLevelOneOfOneOption T.Text
   deriving (Show, Eq)
 
 topLevelOneOfOneOptionSchema :: FC.Fleece schema => schema TopLevelOneOfOneOption
 topLevelOneOfOneOptionSchema =
-  FC.coerceSchema $
-    FC.unionNamed (FC.qualifiedName "TestCases.Types.TopLevelOneOfOneOption" "TopLevelOneOfOneOption") $
-      FC.unionMember FC.text
+  FC.coerceSchema FC.text

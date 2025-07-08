@@ -1,5 +1,4 @@
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE DataKinds #-}
 
 module TestCases.Types.MinItemsOneInlineObjectOneOf.SomeArrayItem
   ( SomeArrayItem(..)
@@ -8,16 +7,12 @@ module TestCases.Types.MinItemsOneInlineObjectOneOf.SomeArrayItem
 
 import qualified Data.List.NonEmpty as NEL
 import qualified Fleece.Core as FC
-import Prelude (($), Bool, Eq, Show)
-import qualified Shrubbery as Shrubbery
+import Prelude (Eq, Show)
+import qualified TestCases.Types.MinItemsOneInlineObjectOneOf.SomeArrayItem.MinItemsOneInlineObjectOneOf.SomeArrayItemItem as SomeArrayItemItem
 
-newtype SomeArrayItem = SomeArrayItem (Shrubbery.Union
-  '[ (NEL.NonEmpty Bool)
-   ])
+newtype SomeArrayItem = SomeArrayItem (NEL.NonEmpty SomeArrayItemItem.SomeArrayItemItem)
   deriving (Show, Eq)
 
 someArrayItemSchema :: FC.Fleece schema => schema SomeArrayItem
 someArrayItemSchema =
-  FC.coerceSchema $
-    FC.unionNamed (FC.qualifiedName "TestCases.Types.MinItemsOneInlineObjectOneOf.SomeArrayItem" "SomeArrayItem") $
-      FC.unionMember (FC.nonEmpty FC.boolean)
+  FC.coerceSchema (FC.nonEmpty SomeArrayItemItem.someArrayItemItemSchema)
