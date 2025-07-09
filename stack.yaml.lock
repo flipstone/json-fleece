@@ -7,40 +7,40 @@ packages:
 - completed:
     name: beeline-routing
     pantry-tree:
-      sha256: 4e3af43612d5feacce7c28fa7093c76358d257cf2ce9c5e0321eb6d9888ef195
-      size: 1174
-    sha256: 2e269a7bf5912cfb9bd94fbdcce00322d9e1d872a2e8c7000d6e1adc72833d25
-    size: 24830
+      sha256: b9e412eb1dc3ee1542b796ce7e8072e182d0559dd63579c7577c0ff2595ee6ae
+      size: 1275
+    sha256: f6c8975f259a96f318db54dbfdee94c243729e33a7a091c0d8beed8ca8b8236e
+    size: 29765
     subdir: beeline-routing
-    url: https://github.com/flipstone/beeline/archive/319bc02bcdaddcc7f185c74e32c76c5157d51c92.tar.gz
+    url: https://github.com/flipstone/beeline/archive/3df35484471bbe7a4bcd4b44da0ab99a99dd9404.tar.gz
     version: 0.2.4.1
   original:
     subdir: beeline-routing
-    url: https://github.com/flipstone/beeline/archive/319bc02bcdaddcc7f185c74e32c76c5157d51c92.tar.gz
+    url: https://github.com/flipstone/beeline/archive/3df35484471bbe7a4bcd4b44da0ab99a99dd9404.tar.gz
 - completed:
     name: beeline-http-client
     pantry-tree:
-      sha256: 0361a00dc6a163d6b0f1cb1d9be536e6cffd59bef09c40df81354442d097ef51
-      size: 718
-    sha256: 2e269a7bf5912cfb9bd94fbdcce00322d9e1d872a2e8c7000d6e1adc72833d25
-    size: 24830
+      sha256: 5a041011c6cbe437e47fb7459671562fa53b80614fc465d4ace4fce29730812b
+      size: 819
+    sha256: f6c8975f259a96f318db54dbfdee94c243729e33a7a091c0d8beed8ca8b8236e
+    size: 29765
     subdir: beeline-http-client
-    url: https://github.com/flipstone/beeline/archive/319bc02bcdaddcc7f185c74e32c76c5157d51c92.tar.gz
+    url: https://github.com/flipstone/beeline/archive/3df35484471bbe7a4bcd4b44da0ab99a99dd9404.tar.gz
     version: 0.8.0.1
   original:
     subdir: beeline-http-client
-    url: https://github.com/flipstone/beeline/archive/319bc02bcdaddcc7f185c74e32c76c5157d51c92.tar.gz
+    url: https://github.com/flipstone/beeline/archive/3df35484471bbe7a4bcd4b44da0ab99a99dd9404.tar.gz
 - completed:
     name: shrubbery
     pantry-tree:
-      sha256: 1c4db8a171cbf61e10afa09be518ce3e3c834988e605dc4ddccb8fc635d4eb8b
-      size: 1799
-    sha256: c935a9fbfc3a31c383862b575ff7e085dd1833b609fbf257952d32033f39672e
-    size: 26905
-    url: https://github.com/flipstone/shrubbery/archive/ae5c282af3029179d5ab43a927aecbc8e44971e4.tar.gz
+      sha256: ce1da50398eab8151e608e3643bc96b62f951c48e9d84af8f8c795367a81e03e
+      size: 2834
+    sha256: cb40f3032052496b42afcb672d235e321b1f3e5bd707bad0108ba4fb03f394df
+    size: 30354
+    url: https://github.com/flipstone/shrubbery/archive/4c88cff99a1445097403aad70db27fd7712767f6.tar.gz
     version: 0.2.3.0
   original:
-    url: https://github.com/flipstone/shrubbery/archive/ae5c282af3029179d5ab43a927aecbc8e44971e4.tar.gz
+    url: https://github.com/flipstone/shrubbery/archive/4c88cff99a1445097403aad70db27fd7712767f6.tar.gz
 - completed:
     hackage: hermes-json-0.6.1.0@sha256:ab54609e63a83a8e07900360de60ba1e197ea499fa5d3eb782eed980ee07545b,3856
     pantry-tree:
