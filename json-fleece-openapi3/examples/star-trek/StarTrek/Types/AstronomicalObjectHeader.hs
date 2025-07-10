@@ -12,8 +12,8 @@ import qualified StarTrek.Types.AstronomicalObjectHeader.Name as Name
 import qualified StarTrek.Types.AstronomicalObjectHeader.Uid as Uid
 
 data AstronomicalObjectHeader = AstronomicalObjectHeader
-  { uid :: Uid.Uid -- ^ Astronomical object's unique ID
-  , name :: Name.Name -- ^ Astronomical object name
+  { name :: Name.Name -- ^ Astronomical object name
+  , uid :: Uid.Uid -- ^ Astronomical object's unique ID
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ astronomicalObjectHeaderSchema :: FC.Fleece schema => schema AstronomicalObjectH
 astronomicalObjectHeaderSchema =
   FC.object $
     FC.constructor AstronomicalObjectHeader
-      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.required "name" name Name.nameSchema
+      #+ FC.required "uid" uid Uid.uidSchema

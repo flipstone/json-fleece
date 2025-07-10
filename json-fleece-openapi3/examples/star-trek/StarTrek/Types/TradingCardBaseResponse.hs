@@ -13,9 +13,9 @@ import qualified StarTrek.Types.ResponseSort as ResponseSort
 import qualified StarTrek.Types.TradingCardBase as TradingCardBase
 
 data TradingCardBaseResponse = TradingCardBaseResponse
-  { tradingCards :: Maybe [TradingCardBase.TradingCardBase] -- ^ Base trading card, returned in search results
-  , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
+  { page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
   , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
+  , tradingCards :: Maybe [TradingCardBase.TradingCardBase] -- ^ Base trading card, returned in search results
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ tradingCardBaseResponseSchema :: FC.Fleece schema => schema TradingCardBaseRespo
 tradingCardBaseResponseSchema =
   FC.object $
     FC.constructor TradingCardBaseResponse
-      #+ FC.optional "tradingCards" tradingCards (FC.list TradingCardBase.tradingCardBaseSchema)
       #+ FC.optional "page" page ResponsePage.responsePageSchema
       #+ FC.optional "sort" sort ResponseSort.responseSortSchema
+      #+ FC.optional "tradingCards" tradingCards (FC.list TradingCardBase.tradingCardBaseSchema)

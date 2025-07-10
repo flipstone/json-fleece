@@ -24,21 +24,21 @@ import qualified StarTrek.Types.BookSeriesFull.YearTo as YearTo
 import qualified StarTrek.Types.CompanyBase as CompanyBase
 
 data BookSeriesFull = BookSeriesFull
-  { title :: Title.Title -- ^ Book series title
-  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of book series stories
-  , publishedMonthFrom :: Maybe PublishedMonthFrom.PublishedMonthFrom -- ^ Month from which the book series was published
-  , publishedYearFrom :: Maybe PublishedYearFrom.PublishedYearFrom -- ^ Year from which the book series was published
-  , books :: Maybe [BookBase.BookBase] -- ^ Base book, returned in search results
+  { books :: Maybe [BookBase.BookBase] -- ^ Base book, returned in search results
   , childSeries :: Maybe [BookSeriesBase.BookSeriesBase] -- ^ Base book series, returned in search results
-  , uid :: Uid.Uid -- ^ Book series unique ID
-  , numberOfBooks :: Maybe NumberOfBooks.NumberOfBooks -- ^ Number of books in book series
-  , publishers :: Maybe [CompanyBase.CompanyBase] -- ^ Base company, returned in search results
-  , miniseries :: Maybe Miniseries.Miniseries -- ^ Whether it's a miniseries
-  , publishedMonthTo :: Maybe PublishedMonthTo.PublishedMonthTo -- ^ Month to which the book series was published
-  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of book series stories
-  , publishedYearTo :: Maybe PublishedYearTo.PublishedYearTo -- ^ Year to which the book series was published
-  , parentSeries :: Maybe [BookSeriesBase.BookSeriesBase] -- ^ Base book series, returned in search results
   , eBookSeries :: Maybe EBookSeries.EBookSeries -- ^ Whether it's a e-book series
+  , miniseries :: Maybe Miniseries.Miniseries -- ^ Whether it's a miniseries
+  , numberOfBooks :: Maybe NumberOfBooks.NumberOfBooks -- ^ Number of books in book series
+  , parentSeries :: Maybe [BookSeriesBase.BookSeriesBase] -- ^ Base book series, returned in search results
+  , publishedMonthFrom :: Maybe PublishedMonthFrom.PublishedMonthFrom -- ^ Month from which the book series was published
+  , publishedMonthTo :: Maybe PublishedMonthTo.PublishedMonthTo -- ^ Month to which the book series was published
+  , publishedYearFrom :: Maybe PublishedYearFrom.PublishedYearFrom -- ^ Year from which the book series was published
+  , publishedYearTo :: Maybe PublishedYearTo.PublishedYearTo -- ^ Year to which the book series was published
+  , publishers :: Maybe [CompanyBase.CompanyBase] -- ^ Base company, returned in search results
+  , title :: Title.Title -- ^ Book series title
+  , uid :: Uid.Uid -- ^ Book series unique ID
+  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of book series stories
+  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of book series stories
   }
   deriving (Eq, Show)
 
@@ -46,18 +46,18 @@ bookSeriesFullSchema :: FC.Fleece schema => schema BookSeriesFull
 bookSeriesFullSchema =
   FC.object $
     FC.constructor BookSeriesFull
-      #+ FC.required "title" title Title.titleSchema
-      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
-      #+ FC.optional "publishedMonthFrom" publishedMonthFrom PublishedMonthFrom.publishedMonthFromSchema
-      #+ FC.optional "publishedYearFrom" publishedYearFrom PublishedYearFrom.publishedYearFromSchema
       #+ FC.optional "books" books (FC.list BookBase.bookBaseSchema)
       #+ FC.optional "childSeries" childSeries (FC.list BookSeriesBase.bookSeriesBaseSchema)
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "numberOfBooks" numberOfBooks NumberOfBooks.numberOfBooksSchema
-      #+ FC.optional "publishers" publishers (FC.list CompanyBase.companyBaseSchema)
-      #+ FC.optional "miniseries" miniseries Miniseries.miniseriesSchema
-      #+ FC.optional "publishedMonthTo" publishedMonthTo PublishedMonthTo.publishedMonthToSchema
-      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
-      #+ FC.optional "publishedYearTo" publishedYearTo PublishedYearTo.publishedYearToSchema
-      #+ FC.optional "parentSeries" parentSeries (FC.list BookSeriesBase.bookSeriesBaseSchema)
       #+ FC.optional "eBookSeries" eBookSeries EBookSeries.eBookSeriesSchema
+      #+ FC.optional "miniseries" miniseries Miniseries.miniseriesSchema
+      #+ FC.optional "numberOfBooks" numberOfBooks NumberOfBooks.numberOfBooksSchema
+      #+ FC.optional "parentSeries" parentSeries (FC.list BookSeriesBase.bookSeriesBaseSchema)
+      #+ FC.optional "publishedMonthFrom" publishedMonthFrom PublishedMonthFrom.publishedMonthFromSchema
+      #+ FC.optional "publishedMonthTo" publishedMonthTo PublishedMonthTo.publishedMonthToSchema
+      #+ FC.optional "publishedYearFrom" publishedYearFrom PublishedYearFrom.publishedYearFromSchema
+      #+ FC.optional "publishedYearTo" publishedYearTo PublishedYearTo.publishedYearToSchema
+      #+ FC.optional "publishers" publishers (FC.list CompanyBase.companyBaseSchema)
+      #+ FC.required "title" title Title.titleSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
+      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema

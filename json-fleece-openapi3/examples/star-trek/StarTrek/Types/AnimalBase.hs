@@ -17,13 +17,13 @@ import qualified StarTrek.Types.AnimalBase.Name as Name
 import qualified StarTrek.Types.AnimalBase.Uid as Uid
 
 data AnimalBase = AnimalBase
-  { feline :: Maybe Feline.Feline -- ^ Whether it's a feline
-  , avian :: Maybe Avian.Avian -- ^ Whether it's an avian
-  , earthInsect :: Maybe EarthInsect.EarthInsect -- ^ Whether it's an earth insect
-  , uid :: Uid.Uid -- ^ Animal unique ID
-  , name :: Name.Name -- ^ Animal name
-  , earthAnimal :: Maybe EarthAnimal.EarthAnimal -- ^ Whether it's an earth animal
+  { avian :: Maybe Avian.Avian -- ^ Whether it's an avian
   , canine :: Maybe Canine.Canine -- ^ Whether it's a canine
+  , earthAnimal :: Maybe EarthAnimal.EarthAnimal -- ^ Whether it's an earth animal
+  , earthInsect :: Maybe EarthInsect.EarthInsect -- ^ Whether it's an earth insect
+  , feline :: Maybe Feline.Feline -- ^ Whether it's a feline
+  , name :: Name.Name -- ^ Animal name
+  , uid :: Uid.Uid -- ^ Animal unique ID
   }
   deriving (Eq, Show)
 
@@ -31,10 +31,10 @@ animalBaseSchema :: FC.Fleece schema => schema AnimalBase
 animalBaseSchema =
   FC.object $
     FC.constructor AnimalBase
-      #+ FC.optional "feline" feline Feline.felineSchema
       #+ FC.optional "avian" avian Avian.avianSchema
-      #+ FC.optional "earthInsect" earthInsect EarthInsect.earthInsectSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.required "name" name Name.nameSchema
-      #+ FC.optional "earthAnimal" earthAnimal EarthAnimal.earthAnimalSchema
       #+ FC.optional "canine" canine Canine.canineSchema
+      #+ FC.optional "earthAnimal" earthAnimal EarthAnimal.earthAnimalSchema
+      #+ FC.optional "earthInsect" earthInsect EarthInsect.earthInsectSchema
+      #+ FC.optional "feline" feline Feline.felineSchema
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.required "uid" uid Uid.uidSchema

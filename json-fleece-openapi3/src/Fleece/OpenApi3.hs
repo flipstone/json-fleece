@@ -10,7 +10,9 @@ import Control.Monad.Reader (ReaderT, ask, asks, runReaderT)
 import Control.Monad.Trans (lift)
 import qualified Data.Aeson as Aeson
 import Data.Bifunctor (bimap, first)
+import Data.Function (on)
 import qualified Data.HashMap.Strict.InsOrd as IOHM
+import qualified Data.List as List
 import Data.List.NonEmpty (NonEmpty ((:|)))
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map.Strict as Map
@@ -1186,7 +1188,10 @@ mkOpenApiObjectFormat section schemaKey typeName schema = do
         (CGU.CodeGenAdditionalProperties . schemaTypeInfoDependent)
         mbAdditionalProperties
 
-  pure (dependencies, CGU.CodeGenObject typeOptions fields mbCodeGenAdditionalProps)
+    sortedFields =
+      List.sortBy (compare `on` CGU.codeGenFieldName) fields
+
+  pure (dependencies, CGU.CodeGenObject typeOptions sortedFields mbCodeGenAdditionalProps)
 
 mkAdditionalPropertiesInlineItemSchema ::
   CGU.CodeSection ->

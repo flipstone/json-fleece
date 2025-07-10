@@ -25,21 +25,21 @@ import qualified StarTrek.Types.OrganizationFull.SportOrganization as SportOrgan
 import qualified StarTrek.Types.OrganizationFull.Uid as Uid
 
 data OrganizationFull = OrganizationFull
-  { mirror :: Maybe Mirror.Mirror -- ^ Whether this organization is from mirror universe
-  , alternateReality :: Maybe AlternateReality.AlternateReality -- ^ Whether this organization is from alternate reality
-  , intergovernmentalOrganization :: Maybe IntergovernmentalOrganization.IntergovernmentalOrganization -- ^ Whether it's an intergovernmental organization
-  , militaryUnit :: Maybe MilitaryUnit.MilitaryUnit -- ^ Whether it's a military unit
-  , government :: Maybe Government.Government -- ^ Whether it's a government
+  { alternateReality :: Maybe AlternateReality.AlternateReality -- ^ Whether this organization is from alternate reality
   , characters :: Maybe [CharacterBase.CharacterBase] -- ^ Base character, returned in search results
-  , sportOrganization :: Maybe SportOrganization.SportOrganization -- ^ Whether it's a sport organization
-  , lawEnforcementAgency :: Maybe LawEnforcementAgency.LawEnforcementAgency -- ^ Whether it's a law enforcement agency
-  , prisonOrPenalColony :: Maybe PrisonOrPenalColony.PrisonOrPenalColony -- ^ Whether it's a prison or penal colony
-  , uid :: Uid.Uid -- ^ Organization unique ID
-  , medicalOrganization :: Maybe MedicalOrganization.MedicalOrganization -- ^ Whether it's a medical organization
+  , government :: Maybe Government.Government -- ^ Whether it's a government
   , governmentAgency :: Maybe GovernmentAgency.GovernmentAgency -- ^ Whether it's a government agency
-  , name :: Name.Name -- ^ Organization name
+  , intergovernmentalOrganization :: Maybe IntergovernmentalOrganization.IntergovernmentalOrganization -- ^ Whether it's an intergovernmental organization
+  , lawEnforcementAgency :: Maybe LawEnforcementAgency.LawEnforcementAgency -- ^ Whether it's a law enforcement agency
+  , medicalOrganization :: Maybe MedicalOrganization.MedicalOrganization -- ^ Whether it's a medical organization
   , militaryOrganization :: Maybe MilitaryOrganization.MilitaryOrganization -- ^ Whether it's a military organization
+  , militaryUnit :: Maybe MilitaryUnit.MilitaryUnit -- ^ Whether it's a military unit
+  , mirror :: Maybe Mirror.Mirror -- ^ Whether this organization is from mirror universe
+  , name :: Name.Name -- ^ Organization name
+  , prisonOrPenalColony :: Maybe PrisonOrPenalColony.PrisonOrPenalColony -- ^ Whether it's a prison or penal colony
   , researchOrganization :: Maybe ResearchOrganization.ResearchOrganization -- ^ Whether it's a research organization
+  , sportOrganization :: Maybe SportOrganization.SportOrganization -- ^ Whether it's a sport organization
+  , uid :: Uid.Uid -- ^ Organization unique ID
   }
   deriving (Eq, Show)
 
@@ -47,18 +47,18 @@ organizationFullSchema :: FC.Fleece schema => schema OrganizationFull
 organizationFullSchema =
   FC.object $
     FC.constructor OrganizationFull
-      #+ FC.optional "mirror" mirror Mirror.mirrorSchema
       #+ FC.optional "alternateReality" alternateReality AlternateReality.alternateRealitySchema
-      #+ FC.optional "intergovernmentalOrganization" intergovernmentalOrganization IntergovernmentalOrganization.intergovernmentalOrganizationSchema
-      #+ FC.optional "militaryUnit" militaryUnit MilitaryUnit.militaryUnitSchema
-      #+ FC.optional "government" government Government.governmentSchema
       #+ FC.optional "characters" characters (FC.list CharacterBase.characterBaseSchema)
-      #+ FC.optional "sportOrganization" sportOrganization SportOrganization.sportOrganizationSchema
-      #+ FC.optional "lawEnforcementAgency" lawEnforcementAgency LawEnforcementAgency.lawEnforcementAgencySchema
-      #+ FC.optional "prisonOrPenalColony" prisonOrPenalColony PrisonOrPenalColony.prisonOrPenalColonySchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "medicalOrganization" medicalOrganization MedicalOrganization.medicalOrganizationSchema
+      #+ FC.optional "government" government Government.governmentSchema
       #+ FC.optional "governmentAgency" governmentAgency GovernmentAgency.governmentAgencySchema
-      #+ FC.required "name" name Name.nameSchema
+      #+ FC.optional "intergovernmentalOrganization" intergovernmentalOrganization IntergovernmentalOrganization.intergovernmentalOrganizationSchema
+      #+ FC.optional "lawEnforcementAgency" lawEnforcementAgency LawEnforcementAgency.lawEnforcementAgencySchema
+      #+ FC.optional "medicalOrganization" medicalOrganization MedicalOrganization.medicalOrganizationSchema
       #+ FC.optional "militaryOrganization" militaryOrganization MilitaryOrganization.militaryOrganizationSchema
+      #+ FC.optional "militaryUnit" militaryUnit MilitaryUnit.militaryUnitSchema
+      #+ FC.optional "mirror" mirror Mirror.mirrorSchema
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.optional "prisonOrPenalColony" prisonOrPenalColony PrisonOrPenalColony.prisonOrPenalColonySchema
       #+ FC.optional "researchOrganization" researchOrganization ResearchOrganization.researchOrganizationSchema
+      #+ FC.optional "sportOrganization" sportOrganization SportOrganization.sportOrganizationSchema
+      #+ FC.required "uid" uid Uid.uidSchema

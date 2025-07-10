@@ -14,8 +14,8 @@ import qualified StarTrek.Types.TitleBase as TitleBase
 
 data TitleBaseResponse = TitleBaseResponse
   { page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
-  , titles :: Maybe [TitleBase.TitleBase] -- ^ Base title, returned in search results
   , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
+  , titles :: Maybe [TitleBase.TitleBase] -- ^ Base title, returned in search results
   }
   deriving (Eq, Show)
 
@@ -24,5 +24,5 @@ titleBaseResponseSchema =
   FC.object $
     FC.constructor TitleBaseResponse
       #+ FC.optional "page" page ResponsePage.responsePageSchema
-      #+ FC.optional "titles" titles (FC.list TitleBase.titleBaseSchema)
       #+ FC.optional "sort" sort ResponseSort.responseSortSchema
+      #+ FC.optional "titles" titles (FC.list TitleBase.titleBaseSchema)

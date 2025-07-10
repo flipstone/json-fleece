@@ -14,8 +14,8 @@ import qualified StarTrek.Types.SeriesBase as SeriesBase
 
 data SeriesBaseResponse = SeriesBaseResponse
   { page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
-  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
   , series :: Maybe [SeriesBase.SeriesBase] -- ^ Base series, returned in search results
+  , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
   }
   deriving (Eq, Show)
 
@@ -24,5 +24,5 @@ seriesBaseResponseSchema =
   FC.object $
     FC.constructor SeriesBaseResponse
       #+ FC.optional "page" page ResponsePage.responsePageSchema
-      #+ FC.optional "sort" sort ResponseSort.responseSortSchema
       #+ FC.optional "series" series (FC.list SeriesBase.seriesBaseSchema)
+      #+ FC.optional "sort" sort ResponseSort.responseSortSchema

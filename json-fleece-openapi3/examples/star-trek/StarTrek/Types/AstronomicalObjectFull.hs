@@ -14,11 +14,11 @@ import qualified StarTrek.Types.AstronomicalObjectFull.Uid as Uid
 import qualified StarTrek.Types.AstronomicalObjectType as AstronomicalObjectType
 
 data AstronomicalObjectFull = AstronomicalObjectFull
-  { astronomicalObjects :: Maybe [AstronomicalObjectBase.AstronomicalObjectBase] -- ^ Base astronomical object, returned in search results
+  { astronomicalObjectType :: AstronomicalObjectType.AstronomicalObjectType -- ^ Astronomical object type
+  , astronomicalObjects :: Maybe [AstronomicalObjectBase.AstronomicalObjectBase] -- ^ Base astronomical object, returned in search results
   , location :: Maybe AstronomicalObjectBase.AstronomicalObjectBase -- ^ Base astronomical object, returned in search results
-  , uid :: Uid.Uid -- ^ Astronomical object's unique ID
   , name :: Name.Name -- ^ Astronomical object name
-  , astronomicalObjectType :: AstronomicalObjectType.AstronomicalObjectType -- ^ Astronomical object type
+  , uid :: Uid.Uid -- ^ Astronomical object's unique ID
   }
   deriving (Eq, Show)
 
@@ -26,8 +26,8 @@ astronomicalObjectFullSchema :: FC.Fleece schema => schema AstronomicalObjectFul
 astronomicalObjectFullSchema =
   FC.object $
     FC.constructor AstronomicalObjectFull
+      #+ FC.required "astronomicalObjectType" astronomicalObjectType AstronomicalObjectType.astronomicalObjectTypeSchema
       #+ FC.optional "astronomicalObjects" astronomicalObjects (FC.list AstronomicalObjectBase.astronomicalObjectBaseSchema)
       #+ FC.optional "location" location AstronomicalObjectBase.astronomicalObjectBaseSchema
-      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.required "name" name Name.nameSchema
-      #+ FC.required "astronomicalObjectType" astronomicalObjectType AstronomicalObjectType.astronomicalObjectTypeSchema
+      #+ FC.required "uid" uid Uid.uidSchema

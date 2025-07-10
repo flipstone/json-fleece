@@ -17,13 +17,13 @@ import qualified StarTrek.Types.TradingCardDeckHeader as TradingCardDeckHeader
 import qualified StarTrek.Types.TradingCardSetHeader as TradingCardSetHeader
 
 data TradingCardBase = TradingCardBase
-  { tradingCardDeck :: Maybe TradingCardDeckHeader.TradingCardDeckHeader -- ^ Header trading card deck, embedded in other objects
-  , tradingCardSet :: Maybe TradingCardSetHeader.TradingCardSetHeader -- ^ Header trading card set, embedded in other objects
-  , uid :: Uid.Uid -- ^ Trading card unique ID
-  , name :: Name.Name -- ^ Trading card name
-  , releaseYear :: Maybe ReleaseYear.ReleaseYear -- ^ Release year, if set was releases over multiple years
+  { name :: Name.Name -- ^ Trading card name
   , number :: Maybe Number.Number -- ^ Trading card number
   , productionRun :: Maybe ProductionRun.ProductionRun -- ^ Production run, if different from trading card set production run
+  , releaseYear :: Maybe ReleaseYear.ReleaseYear -- ^ Release year, if set was releases over multiple years
+  , tradingCardDeck :: Maybe TradingCardDeckHeader.TradingCardDeckHeader -- ^ Header trading card deck, embedded in other objects
+  , tradingCardSet :: Maybe TradingCardSetHeader.TradingCardSetHeader -- ^ Header trading card set, embedded in other objects
+  , uid :: Uid.Uid -- ^ Trading card unique ID
   }
   deriving (Eq, Show)
 
@@ -31,10 +31,10 @@ tradingCardBaseSchema :: FC.Fleece schema => schema TradingCardBase
 tradingCardBaseSchema =
   FC.object $
     FC.constructor TradingCardBase
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.optional "number" number Number.numberSchema
+      #+ FC.optional "productionRun" productionRun ProductionRun.productionRunSchema
+      #+ FC.optional "releaseYear" releaseYear ReleaseYear.releaseYearSchema
       #+ FC.optional "tradingCardDeck" tradingCardDeck TradingCardDeckHeader.tradingCardDeckHeaderSchema
       #+ FC.optional "tradingCardSet" tradingCardSet TradingCardSetHeader.tradingCardSetHeaderSchema
       #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.required "name" name Name.nameSchema
-      #+ FC.optional "releaseYear" releaseYear ReleaseYear.releaseYearSchema
-      #+ FC.optional "number" number Number.numberSchema
-      #+ FC.optional "productionRun" productionRun ProductionRun.productionRunSchema

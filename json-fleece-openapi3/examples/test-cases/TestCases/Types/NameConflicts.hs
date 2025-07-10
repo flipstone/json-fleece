@@ -35,31 +35,31 @@ import qualified TestCases.Types.NameConflicts.Type as Type
 import qualified TestCases.Types.NameConflicts.Where as Where
 
 data NameConflicts = NameConflicts
-  { int64 :: Maybe Int64.Int64
-  , nameConflicts :: Maybe NameConflicts.NameConflicts
-  , int32 :: Maybe Int32.Int32
-  , case_ :: Maybe Case.Case
-  , of_ :: Maybe Of.Of
-  , then_ :: Maybe Then.Then
-  , deriving_ :: Maybe Deriving.Deriving
-  , let_ :: Maybe Let.Let
-  , where_ :: Maybe Where.Where
+  { case_ :: Maybe Case.Case
+  , class_ :: Maybe Class.Class
   , data_ :: Maybe Data.Data
-  , module_ :: Maybe Module.Module
-  , text :: Maybe Text.Text
+  , deriving_ :: Maybe Deriving.Deriving
   , do_ :: Maybe Do.Do
   , else_ :: Maybe Else.Else
-  , infixr_ :: Maybe Infixr.Infixr
-  , import_ :: Maybe Import.Import
-  , scientific :: Maybe Scientific.Scientific
-  , infixl_ :: Maybe Infixl.Infixl
   , if_ :: Maybe If.If
-  , newtype_ :: Maybe Newtype.Newtype
-  , class_ :: Maybe Class.Class
-  , type_ :: Maybe Type.Type
+  , import_ :: Maybe Import.Import
   , in_ :: Maybe In.In
-  , instance_ :: Maybe Instance.Instance
   , infix_ :: Maybe Infix.Infix
+  , infixl_ :: Maybe Infixl.Infixl
+  , infixr_ :: Maybe Infixr.Infixr
+  , instance_ :: Maybe Instance.Instance
+  , int32 :: Maybe Int32.Int32
+  , int64 :: Maybe Int64.Int64
+  , let_ :: Maybe Let.Let
+  , module_ :: Maybe Module.Module
+  , nameConflicts :: Maybe NameConflicts.NameConflicts
+  , newtype_ :: Maybe Newtype.Newtype
+  , of_ :: Maybe Of.Of
+  , scientific :: Maybe Scientific.Scientific
+  , text :: Maybe Text.Text
+  , then_ :: Maybe Then.Then
+  , type_ :: Maybe Type.Type
+  , where_ :: Maybe Where.Where
   }
   deriving (Eq, Show)
 
@@ -67,28 +67,28 @@ nameConflictsSchema :: FC.Fleece schema => schema NameConflicts
 nameConflictsSchema =
   FC.object $
     FC.constructor NameConflicts
-      #+ FC.optional "int64" int64 Int64.int64Schema
-      #+ FC.optional "nameConflicts" nameConflicts NameConflicts.nameConflictsSchema
-      #+ FC.optional "int32" int32 Int32.int32Schema
       #+ FC.optional "case" case_ Case.caseSchema
-      #+ FC.optional "of" of_ Of.ofSchema
-      #+ FC.optional "then" then_ Then.thenSchema
-      #+ FC.optional "deriving" deriving_ Deriving.derivingSchema
-      #+ FC.optional "let" let_ Let.letSchema
-      #+ FC.optional "where" where_ Where.whereSchema
+      #+ FC.optional "class" class_ Class.classSchema
       #+ FC.optional "data" data_ Data.dataSchema
-      #+ FC.optional "module" module_ Module.moduleSchema
-      #+ FC.optional "text" text Text.textSchema
+      #+ FC.optional "deriving" deriving_ Deriving.derivingSchema
       #+ FC.optional "do" do_ Do.doSchema
       #+ FC.optional "else" else_ Else.elseSchema
-      #+ FC.optional "infixr" infixr_ Infixr.infixrSchema
-      #+ FC.optional "import" import_ Import.importSchema
-      #+ FC.optional "scientific" scientific Scientific.scientificSchema
-      #+ FC.optional "infixl" infixl_ Infixl.infixlSchema
       #+ FC.optional "if" if_ If.ifSchema
-      #+ FC.optional "newtype" newtype_ Newtype.newtypeSchema
-      #+ FC.optional "class" class_ Class.classSchema
-      #+ FC.optional "type" type_ Type.typeSchema
+      #+ FC.optional "import" import_ Import.importSchema
       #+ FC.optional "in" in_ In.inSchema
-      #+ FC.optional "instance" instance_ Instance.instanceSchema
       #+ FC.optional "infix" infix_ Infix.infixSchema
+      #+ FC.optional "infixl" infixl_ Infixl.infixlSchema
+      #+ FC.optional "infixr" infixr_ Infixr.infixrSchema
+      #+ FC.optional "instance" instance_ Instance.instanceSchema
+      #+ FC.optional "int32" int32 Int32.int32Schema
+      #+ FC.optional "int64" int64 Int64.int64Schema
+      #+ FC.optional "let" let_ Let.letSchema
+      #+ FC.optional "module" module_ Module.moduleSchema
+      #+ FC.optional "nameConflicts" nameConflicts NameConflicts.nameConflictsSchema
+      #+ FC.optional "newtype" newtype_ Newtype.newtypeSchema
+      #+ FC.optional "of" of_ Of.ofSchema
+      #+ FC.optional "scientific" scientific Scientific.scientificSchema
+      #+ FC.optional "text" text Text.textSchema
+      #+ FC.optional "then" then_ Then.thenSchema
+      #+ FC.optional "type" type_ Type.typeSchema
+      #+ FC.optional "where" where_ Where.whereSchema

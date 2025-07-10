@@ -18,13 +18,13 @@ import qualified TestCases.Types.DateTimeFormats.ZonedTimeField as ZonedTimeFiel
 import qualified TestCases.Types.DateTimeFormats.ZonedTimeInUnionField as ZonedTimeInUnionField
 
 data DateTimeFormats = DateTimeFormats
-  { zonedTimeField :: Maybe ZonedTimeField.ZonedTimeField
+  { customLocalTimeField :: Maybe CustomLocalTimeField.CustomLocalTimeField
+  , customUtcTimeField :: Maybe CustomUtcTimeField.CustomUtcTimeField
+  , customZonedTimeField :: Maybe CustomZonedTimeField.CustomZonedTimeField
   , defaultTimeField :: Maybe DefaultTimeField.DefaultTimeField
   , localTimeField :: Maybe LocalTimeField.LocalTimeField
-  , customLocalTimeField :: Maybe CustomLocalTimeField.CustomLocalTimeField
   , utcTimeField :: Maybe UtcTimeField.UtcTimeField
-  , customZonedTimeField :: Maybe CustomZonedTimeField.CustomZonedTimeField
-  , customUtcTimeField :: Maybe CustomUtcTimeField.CustomUtcTimeField
+  , zonedTimeField :: Maybe ZonedTimeField.ZonedTimeField
   , zonedTimeInUnionField :: Maybe ZonedTimeInUnionField.ZonedTimeInUnionField
   }
   deriving (Show)
@@ -33,11 +33,11 @@ dateTimeFormatsSchema :: FC.Fleece schema => schema DateTimeFormats
 dateTimeFormatsSchema =
   FC.object $
     FC.constructor DateTimeFormats
-      #+ FC.optional "zonedTimeField" zonedTimeField ZonedTimeField.zonedTimeFieldSchema
+      #+ FC.optional "customLocalTimeField" customLocalTimeField CustomLocalTimeField.customLocalTimeFieldSchema
+      #+ FC.optional "customUtcTimeField" customUtcTimeField CustomUtcTimeField.customUtcTimeFieldSchema
+      #+ FC.optional "customZonedTimeField" customZonedTimeField CustomZonedTimeField.customZonedTimeFieldSchema
       #+ FC.optional "defaultTimeField" defaultTimeField DefaultTimeField.defaultTimeFieldSchema
       #+ FC.optional "localTimeField" localTimeField LocalTimeField.localTimeFieldSchema
-      #+ FC.optional "customLocalTimeField" customLocalTimeField CustomLocalTimeField.customLocalTimeFieldSchema
       #+ FC.optional "utcTimeField" utcTimeField UtcTimeField.utcTimeFieldSchema
-      #+ FC.optional "customZonedTimeField" customZonedTimeField CustomZonedTimeField.customZonedTimeFieldSchema
-      #+ FC.optional "customUtcTimeField" customUtcTimeField CustomUtcTimeField.customUtcTimeFieldSchema
+      #+ FC.optional "zonedTimeField" zonedTimeField ZonedTimeField.zonedTimeFieldSchema
       #+ FC.optional "zonedTimeInUnionField" zonedTimeInUnionField ZonedTimeInUnionField.zonedTimeInUnionFieldSchema

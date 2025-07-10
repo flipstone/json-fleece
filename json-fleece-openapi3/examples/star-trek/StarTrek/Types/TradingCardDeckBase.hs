@@ -15,9 +15,9 @@ import qualified StarTrek.Types.TradingCardSetHeader as TradingCardSetHeader
 
 data TradingCardDeckBase = TradingCardDeckBase
   { frequency :: Maybe Frequency.Frequency -- ^ Frequency with which this deck occur in it's set
+  , name :: Name.Name -- ^ Trading card deck name
   , tradingCardSet :: Maybe TradingCardSetHeader.TradingCardSetHeader -- ^ Header trading card set, embedded in other objects
   , uid :: Uid.Uid -- ^ Trading card deck unique ID
-  , name :: Name.Name -- ^ Trading card deck name
   }
   deriving (Eq, Show)
 
@@ -26,6 +26,6 @@ tradingCardDeckBaseSchema =
   FC.object $
     FC.constructor TradingCardDeckBase
       #+ FC.optional "frequency" frequency Frequency.frequencySchema
+      #+ FC.required "name" name Name.nameSchema
       #+ FC.optional "tradingCardSet" tradingCardSet TradingCardSetHeader.tradingCardSetHeaderSchema
       #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.required "name" name Name.nameSchema

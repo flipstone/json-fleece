@@ -13,9 +13,9 @@ import qualified StarTrek.Types.ResponsePage as ResponsePage
 import qualified StarTrek.Types.ResponseSort as ResponseSort
 
 data EpisodeBaseResponse = EpisodeBaseResponse
-  { page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
+  { episodes :: Maybe [EpisodeBase.EpisodeBase] -- ^ Base episode, returned in search results
+  , page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
   , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
-  , episodes :: Maybe [EpisodeBase.EpisodeBase] -- ^ Base episode, returned in search results
   }
   deriving (Eq, Show)
 
@@ -23,6 +23,6 @@ episodeBaseResponseSchema :: FC.Fleece schema => schema EpisodeBaseResponse
 episodeBaseResponseSchema =
   FC.object $
     FC.constructor EpisodeBaseResponse
+      #+ FC.optional "episodes" episodes (FC.list EpisodeBase.episodeBaseSchema)
       #+ FC.optional "page" page ResponsePage.responsePageSchema
       #+ FC.optional "sort" sort ResponseSort.responseSortSchema
-      #+ FC.optional "episodes" episodes (FC.list EpisodeBase.episodeBaseSchema)
