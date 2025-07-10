@@ -14,8 +14,8 @@ import qualified StarTrek.Types.TradingCardDeckBase as TradingCardDeckBase
 
 data TradingCardDeckBaseResponse = TradingCardDeckBaseResponse
   { page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
-  , tradingCardDecks :: Maybe [TradingCardDeckBase.TradingCardDeckBase] -- ^ Base trading card deck, returned in search results
   , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
+  , tradingCardDecks :: Maybe [TradingCardDeckBase.TradingCardDeckBase] -- ^ Base trading card deck, returned in search results
   }
   deriving (Eq, Show)
 
@@ -24,5 +24,5 @@ tradingCardDeckBaseResponseSchema =
   FC.object $
     FC.constructor TradingCardDeckBaseResponse
       #+ FC.optional "page" page ResponsePage.responsePageSchema
-      #+ FC.optional "tradingCardDecks" tradingCardDecks (FC.list TradingCardDeckBase.tradingCardDeckBaseSchema)
       #+ FC.optional "sort" sort ResponseSort.responseSortSchema
+      #+ FC.optional "tradingCardDecks" tradingCardDecks (FC.list TradingCardDeckBase.tradingCardDeckBaseSchema)

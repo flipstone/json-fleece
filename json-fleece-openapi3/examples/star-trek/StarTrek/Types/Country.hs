@@ -14,8 +14,8 @@ import qualified StarTrek.Types.Country.Uid as Uid
 
 data Country = Country
   { iso31661Alpha2Code :: Maybe Iso31661Alpha2Code.Iso31661Alpha2Code -- ^ ISO 3166-1 alpha-2 code
-  , uid :: Maybe Uid.Uid -- ^ Country unique ID
   , name :: Maybe Name.Name -- ^ Country name
+  , uid :: Maybe Uid.Uid -- ^ Country unique ID
   }
   deriving (Eq, Show)
 
@@ -24,5 +24,5 @@ countrySchema =
   FC.object $
     FC.constructor Country
       #+ FC.optional "iso31661Alpha2Code" iso31661Alpha2Code Iso31661Alpha2Code.iso31661Alpha2CodeSchema
-      #+ FC.optional "uid" uid Uid.uidSchema
       #+ FC.optional "name" name Name.nameSchema
+      #+ FC.optional "uid" uid Uid.uidSchema

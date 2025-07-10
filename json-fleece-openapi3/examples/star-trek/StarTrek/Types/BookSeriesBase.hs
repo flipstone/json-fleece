@@ -21,17 +21,17 @@ import qualified StarTrek.Types.BookSeriesBase.YearFrom as YearFrom
 import qualified StarTrek.Types.BookSeriesBase.YearTo as YearTo
 
 data BookSeriesBase = BookSeriesBase
-  { title :: Title.Title -- ^ Book series title
-  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of book series stories
-  , publishedMonthFrom :: Maybe PublishedMonthFrom.PublishedMonthFrom -- ^ Month from which the book series was published
-  , publishedYearFrom :: Maybe PublishedYearFrom.PublishedYearFrom -- ^ Year from which the book series was published
-  , uid :: Uid.Uid -- ^ Book series unique ID
-  , numberOfBooks :: Maybe NumberOfBooks.NumberOfBooks -- ^ Number of pages
+  { eBookSeries :: Maybe EBookSeries.EBookSeries -- ^ Whether it's a e-book series
   , miniseries :: Maybe Miniseries.Miniseries -- ^ Whether it's a miniseries
+  , numberOfBooks :: Maybe NumberOfBooks.NumberOfBooks -- ^ Number of pages
+  , publishedMonthFrom :: Maybe PublishedMonthFrom.PublishedMonthFrom -- ^ Month from which the book series was published
   , publishedMonthTo :: Maybe PublishedMonthTo.PublishedMonthTo -- ^ Month to which the book series was published
-  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of book series stories
+  , publishedYearFrom :: Maybe PublishedYearFrom.PublishedYearFrom -- ^ Year from which the book series was published
   , publishedYearTo :: Maybe PublishedYearTo.PublishedYearTo -- ^ Year to which the book series was published
-  , eBookSeries :: Maybe EBookSeries.EBookSeries -- ^ Whether it's a e-book series
+  , title :: Title.Title -- ^ Book series title
+  , uid :: Uid.Uid -- ^ Book series unique ID
+  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of book series stories
+  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of book series stories
   }
   deriving (Eq, Show)
 
@@ -39,14 +39,14 @@ bookSeriesBaseSchema :: FC.Fleece schema => schema BookSeriesBase
 bookSeriesBaseSchema =
   FC.object $
     FC.constructor BookSeriesBase
-      #+ FC.required "title" title Title.titleSchema
-      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
-      #+ FC.optional "publishedMonthFrom" publishedMonthFrom PublishedMonthFrom.publishedMonthFromSchema
-      #+ FC.optional "publishedYearFrom" publishedYearFrom PublishedYearFrom.publishedYearFromSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "numberOfBooks" numberOfBooks NumberOfBooks.numberOfBooksSchema
-      #+ FC.optional "miniseries" miniseries Miniseries.miniseriesSchema
-      #+ FC.optional "publishedMonthTo" publishedMonthTo PublishedMonthTo.publishedMonthToSchema
-      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
-      #+ FC.optional "publishedYearTo" publishedYearTo PublishedYearTo.publishedYearToSchema
       #+ FC.optional "eBookSeries" eBookSeries EBookSeries.eBookSeriesSchema
+      #+ FC.optional "miniseries" miniseries Miniseries.miniseriesSchema
+      #+ FC.optional "numberOfBooks" numberOfBooks NumberOfBooks.numberOfBooksSchema
+      #+ FC.optional "publishedMonthFrom" publishedMonthFrom PublishedMonthFrom.publishedMonthFromSchema
+      #+ FC.optional "publishedMonthTo" publishedMonthTo PublishedMonthTo.publishedMonthToSchema
+      #+ FC.optional "publishedYearFrom" publishedYearFrom PublishedYearFrom.publishedYearFromSchema
+      #+ FC.optional "publishedYearTo" publishedYearTo PublishedYearTo.publishedYearToSchema
+      #+ FC.required "title" title Title.titleSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
+      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema

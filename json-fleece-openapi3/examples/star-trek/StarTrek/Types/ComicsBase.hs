@@ -25,21 +25,21 @@ import qualified StarTrek.Types.ComicsBase.YearFrom as YearFrom
 import qualified StarTrek.Types.ComicsBase.YearTo as YearTo
 
 data ComicsBase = ComicsBase
-  { coverMonth :: Maybe CoverMonth.CoverMonth -- ^ Cover publication month
-  , title :: Title.Title -- ^ Comics title
-  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of comic story
-  , publishedDay :: Maybe PublishedDay.PublishedDay -- ^ Day the comics was published
-  , coverYear :: Maybe CoverYear.CoverYear -- ^ Cover publication year
-  , uid :: Uid.Uid -- ^ Comics unique ID
-  , numberOfPages :: Maybe NumberOfPages.NumberOfPages -- ^ Number of pages
+  { adaptation :: Maybe Adaptation.Adaptation -- ^ Whether it's an adaptation of an episode or a movie
   , coverDay :: Maybe CoverDay.CoverDay -- ^ Cover publication day
-  , adaptation :: Maybe Adaptation.Adaptation -- ^ Whether it's an adaptation of an episode or a movie
+  , coverMonth :: Maybe CoverMonth.CoverMonth -- ^ Cover publication month
+  , coverYear :: Maybe CoverYear.CoverYear -- ^ Cover publication year
+  , numberOfPages :: Maybe NumberOfPages.NumberOfPages -- ^ Number of pages
+  , photonovel :: Maybe Photonovel.Photonovel -- ^ Whether it's a photonovel
+  , publishedDay :: Maybe PublishedDay.PublishedDay -- ^ Day the comics was published
+  , publishedMonth :: Maybe PublishedMonth.PublishedMonth -- ^ Month the comics was published
   , publishedYear :: Maybe PublishedYear.PublishedYear -- ^ Year the comics was published
   , stardateFrom :: Maybe StardateFrom.StardateFrom -- ^ Starting stardate of comic story
-  , photonovel :: Maybe Photonovel.Photonovel -- ^ Whether it's a photonovel
-  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of comic story
   , stardateTo :: Maybe StardateTo.StardateTo -- ^ Ending stardate of comic story
-  , publishedMonth :: Maybe PublishedMonth.PublishedMonth -- ^ Month the comics was published
+  , title :: Title.Title -- ^ Comics title
+  , uid :: Uid.Uid -- ^ Comics unique ID
+  , yearFrom :: Maybe YearFrom.YearFrom -- ^ Starting year of comic story
+  , yearTo :: Maybe YearTo.YearTo -- ^ Ending year of comic story
   }
   deriving (Eq, Show)
 
@@ -47,18 +47,18 @@ comicsBaseSchema :: FC.Fleece schema => schema ComicsBase
 comicsBaseSchema =
   FC.object $
     FC.constructor ComicsBase
-      #+ FC.optional "coverMonth" coverMonth CoverMonth.coverMonthSchema
-      #+ FC.required "title" title Title.titleSchema
-      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
-      #+ FC.optional "publishedDay" publishedDay PublishedDay.publishedDaySchema
-      #+ FC.optional "coverYear" coverYear CoverYear.coverYearSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "numberOfPages" numberOfPages NumberOfPages.numberOfPagesSchema
-      #+ FC.optional "coverDay" coverDay CoverDay.coverDaySchema
       #+ FC.optional "adaptation" adaptation Adaptation.adaptationSchema
+      #+ FC.optional "coverDay" coverDay CoverDay.coverDaySchema
+      #+ FC.optional "coverMonth" coverMonth CoverMonth.coverMonthSchema
+      #+ FC.optional "coverYear" coverYear CoverYear.coverYearSchema
+      #+ FC.optional "numberOfPages" numberOfPages NumberOfPages.numberOfPagesSchema
+      #+ FC.optional "photonovel" photonovel Photonovel.photonovelSchema
+      #+ FC.optional "publishedDay" publishedDay PublishedDay.publishedDaySchema
+      #+ FC.optional "publishedMonth" publishedMonth PublishedMonth.publishedMonthSchema
       #+ FC.optional "publishedYear" publishedYear PublishedYear.publishedYearSchema
       #+ FC.optional "stardateFrom" stardateFrom StardateFrom.stardateFromSchema
-      #+ FC.optional "photonovel" photonovel Photonovel.photonovelSchema
-      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema
       #+ FC.optional "stardateTo" stardateTo StardateTo.stardateToSchema
-      #+ FC.optional "publishedMonth" publishedMonth PublishedMonth.publishedMonthSchema
+      #+ FC.required "title" title Title.titleSchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "yearFrom" yearFrom YearFrom.yearFromSchema
+      #+ FC.optional "yearTo" yearTo YearTo.yearToSchema

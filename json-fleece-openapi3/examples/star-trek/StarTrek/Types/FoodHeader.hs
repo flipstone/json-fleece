@@ -12,8 +12,8 @@ import qualified StarTrek.Types.FoodHeader.Name as Name
 import qualified StarTrek.Types.FoodHeader.Uid as Uid
 
 data FoodHeader = FoodHeader
-  { uid :: Uid.Uid -- ^ Food unique ID
-  , name :: Name.Name -- ^ Food name
+  { name :: Name.Name -- ^ Food name
+  , uid :: Uid.Uid -- ^ Food unique ID
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ foodHeaderSchema :: FC.Fleece schema => schema FoodHeader
 foodHeaderSchema =
   FC.object $
     FC.constructor FoodHeader
-      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.required "name" name Name.nameSchema
+      #+ FC.required "uid" uid Uid.uidSchema

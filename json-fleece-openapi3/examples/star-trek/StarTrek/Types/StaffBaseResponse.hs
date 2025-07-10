@@ -14,8 +14,8 @@ import qualified StarTrek.Types.StaffBase as StaffBase
 
 data StaffBaseResponse = StaffBaseResponse
   { page :: Maybe ResponsePage.ResponsePage -- ^ Object describing response page
-  , staff :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
   , sort :: Maybe ResponseSort.ResponseSort -- ^ Response sort
+  , staff :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
   }
   deriving (Eq, Show)
 
@@ -24,5 +24,5 @@ staffBaseResponseSchema =
   FC.object $
     FC.constructor StaffBaseResponse
       #+ FC.optional "page" page ResponsePage.responsePageSchema
-      #+ FC.optional "staff" staff (FC.list StaffBase.staffBaseSchema)
       #+ FC.optional "sort" sort ResponseSort.responseSortSchema
+      #+ FC.optional "staff" staff (FC.list StaffBase.staffBaseSchema)

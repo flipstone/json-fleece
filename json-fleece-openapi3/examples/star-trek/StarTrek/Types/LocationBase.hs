@@ -35,31 +35,31 @@ import qualified StarTrek.Types.LocationBase.Uid as Uid
 import qualified StarTrek.Types.LocationBase.UsSettlement as UsSettlement
 
 data LocationBase = LocationBase
-  { usSettlement :: Maybe UsSettlement.UsSettlement -- ^ Whether it's a US settlement
-  , buildingInterior :: Maybe BuildingInterior.BuildingInterior -- ^ Whether it's a building interior
-  , subnationalEntity :: Maybe SubnationalEntity.SubnationalEntity -- ^ Whether it's a subnational entity
-  , landmark :: Maybe Landmark.Landmark -- ^ Whether it's a landmark
-  , geographicalLocation :: Maybe GeographicalLocation.GeographicalLocation -- ^ Whether it's a geographical location
-  , mirror :: Maybe Mirror.Mirror -- ^ Whether this location is from mirror universe
-  , alternateReality :: Maybe AlternateReality.AlternateReality -- ^ Whether this location is from alternate reality
-  , structure :: Maybe Structure.Structure -- ^ Whether it's a structure
-  , landform :: Maybe Landform.Landform -- ^ Whether it's a landform
-  , religiousLocation :: Maybe ReligiousLocation.ReligiousLocation -- ^ Whether it's a religious location
-  , school :: Maybe School.School -- ^ Whether it's a school
-  , ds9Establishment :: Maybe Ds9Establishment.Ds9Establishment -- ^ Whether it's a DS9 establishment
-  , establishment :: Maybe Establishment.Establishment -- ^ Whether it's a establishment
-  , shipyard :: Maybe Shipyard.Shipyard -- ^ Whether it's a shipyard
-  , country :: Maybe Country.Country -- ^ Whether it's a country
-  , fictionalLocation :: Maybe FictionalLocation.FictionalLocation -- ^ Whether it's a fictional location
-  , uid :: Uid.Uid -- ^ Location unique ID
-  , colony :: Maybe Colony.Colony -- ^ Whether it's a colony
+  { alternateReality :: Maybe AlternateReality.AlternateReality -- ^ Whether this location is from alternate reality
   , bajoranSettlement :: Maybe BajoranSettlement.BajoranSettlement -- ^ Whether it's a Bajoran settlement
-  , settlement :: Maybe Settlement.Settlement -- ^ Whether it's a settlement
-  , name :: Name.Name -- ^ Location name
   , bodyOfWater :: Maybe BodyOfWater.BodyOfWater -- ^ Whether it's a body of water
-  , road :: Maybe Road.Road -- ^ Whether it's a road
-  , medicalEstablishment :: Maybe MedicalEstablishment.MedicalEstablishment -- ^ Whether it's a medical establishment
+  , buildingInterior :: Maybe BuildingInterior.BuildingInterior -- ^ Whether it's a building interior
+  , colony :: Maybe Colony.Colony -- ^ Whether it's a colony
+  , country :: Maybe Country.Country -- ^ Whether it's a country
+  , ds9Establishment :: Maybe Ds9Establishment.Ds9Establishment -- ^ Whether it's a DS9 establishment
   , earthlyLocation :: Maybe EarthlyLocation.EarthlyLocation -- ^ Whether it's an earthly location
+  , establishment :: Maybe Establishment.Establishment -- ^ Whether it's a establishment
+  , fictionalLocation :: Maybe FictionalLocation.FictionalLocation -- ^ Whether it's a fictional location
+  , geographicalLocation :: Maybe GeographicalLocation.GeographicalLocation -- ^ Whether it's a geographical location
+  , landform :: Maybe Landform.Landform -- ^ Whether it's a landform
+  , landmark :: Maybe Landmark.Landmark -- ^ Whether it's a landmark
+  , medicalEstablishment :: Maybe MedicalEstablishment.MedicalEstablishment -- ^ Whether it's a medical establishment
+  , mirror :: Maybe Mirror.Mirror -- ^ Whether this location is from mirror universe
+  , name :: Name.Name -- ^ Location name
+  , religiousLocation :: Maybe ReligiousLocation.ReligiousLocation -- ^ Whether it's a religious location
+  , road :: Maybe Road.Road -- ^ Whether it's a road
+  , school :: Maybe School.School -- ^ Whether it's a school
+  , settlement :: Maybe Settlement.Settlement -- ^ Whether it's a settlement
+  , shipyard :: Maybe Shipyard.Shipyard -- ^ Whether it's a shipyard
+  , structure :: Maybe Structure.Structure -- ^ Whether it's a structure
+  , subnationalEntity :: Maybe SubnationalEntity.SubnationalEntity -- ^ Whether it's a subnational entity
+  , uid :: Uid.Uid -- ^ Location unique ID
+  , usSettlement :: Maybe UsSettlement.UsSettlement -- ^ Whether it's a US settlement
   }
   deriving (Eq, Show)
 
@@ -67,28 +67,28 @@ locationBaseSchema :: FC.Fleece schema => schema LocationBase
 locationBaseSchema =
   FC.object $
     FC.constructor LocationBase
-      #+ FC.optional "usSettlement" usSettlement UsSettlement.usSettlementSchema
-      #+ FC.optional "buildingInterior" buildingInterior BuildingInterior.buildingInteriorSchema
-      #+ FC.optional "subnationalEntity" subnationalEntity SubnationalEntity.subnationalEntitySchema
-      #+ FC.optional "landmark" landmark Landmark.landmarkSchema
-      #+ FC.optional "geographicalLocation" geographicalLocation GeographicalLocation.geographicalLocationSchema
-      #+ FC.optional "mirror" mirror Mirror.mirrorSchema
       #+ FC.optional "alternateReality" alternateReality AlternateReality.alternateRealitySchema
-      #+ FC.optional "structure" structure Structure.structureSchema
-      #+ FC.optional "landform" landform Landform.landformSchema
-      #+ FC.optional "religiousLocation" religiousLocation ReligiousLocation.religiousLocationSchema
-      #+ FC.optional "school" school School.schoolSchema
-      #+ FC.optional "ds9Establishment" ds9Establishment Ds9Establishment.ds9EstablishmentSchema
-      #+ FC.optional "establishment" establishment Establishment.establishmentSchema
-      #+ FC.optional "shipyard" shipyard Shipyard.shipyardSchema
-      #+ FC.optional "country" country Country.countrySchema
-      #+ FC.optional "fictionalLocation" fictionalLocation FictionalLocation.fictionalLocationSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "colony" colony Colony.colonySchema
       #+ FC.optional "bajoranSettlement" bajoranSettlement BajoranSettlement.bajoranSettlementSchema
-      #+ FC.optional "settlement" settlement Settlement.settlementSchema
-      #+ FC.required "name" name Name.nameSchema
       #+ FC.optional "bodyOfWater" bodyOfWater BodyOfWater.bodyOfWaterSchema
-      #+ FC.optional "road" road Road.roadSchema
-      #+ FC.optional "medicalEstablishment" medicalEstablishment MedicalEstablishment.medicalEstablishmentSchema
+      #+ FC.optional "buildingInterior" buildingInterior BuildingInterior.buildingInteriorSchema
+      #+ FC.optional "colony" colony Colony.colonySchema
+      #+ FC.optional "country" country Country.countrySchema
+      #+ FC.optional "ds9Establishment" ds9Establishment Ds9Establishment.ds9EstablishmentSchema
       #+ FC.optional "earthlyLocation" earthlyLocation EarthlyLocation.earthlyLocationSchema
+      #+ FC.optional "establishment" establishment Establishment.establishmentSchema
+      #+ FC.optional "fictionalLocation" fictionalLocation FictionalLocation.fictionalLocationSchema
+      #+ FC.optional "geographicalLocation" geographicalLocation GeographicalLocation.geographicalLocationSchema
+      #+ FC.optional "landform" landform Landform.landformSchema
+      #+ FC.optional "landmark" landmark Landmark.landmarkSchema
+      #+ FC.optional "medicalEstablishment" medicalEstablishment MedicalEstablishment.medicalEstablishmentSchema
+      #+ FC.optional "mirror" mirror Mirror.mirrorSchema
+      #+ FC.required "name" name Name.nameSchema
+      #+ FC.optional "religiousLocation" religiousLocation ReligiousLocation.religiousLocationSchema
+      #+ FC.optional "road" road Road.roadSchema
+      #+ FC.optional "school" school School.schoolSchema
+      #+ FC.optional "settlement" settlement Settlement.settlementSchema
+      #+ FC.optional "shipyard" shipyard Shipyard.shipyardSchema
+      #+ FC.optional "structure" structure Structure.structureSchema
+      #+ FC.optional "subnationalEntity" subnationalEntity SubnationalEntity.subnationalEntitySchema
+      #+ FC.required "uid" uid Uid.uidSchema
+      #+ FC.optional "usSettlement" usSettlement UsSettlement.usSettlementSchema

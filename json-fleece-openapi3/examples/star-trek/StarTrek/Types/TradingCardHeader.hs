@@ -12,8 +12,8 @@ import qualified StarTrek.Types.TradingCardHeader.Name as Name
 import qualified StarTrek.Types.TradingCardHeader.Uid as Uid
 
 data TradingCardHeader = TradingCardHeader
-  { uid :: Uid.Uid -- ^ Trading card unique ID
-  , name :: Name.Name -- ^ Trading card name
+  { name :: Name.Name -- ^ Trading card name
+  , uid :: Uid.Uid -- ^ Trading card unique ID
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ tradingCardHeaderSchema :: FC.Fleece schema => schema TradingCardHeader
 tradingCardHeaderSchema =
   FC.object $
     FC.constructor TradingCardHeader
-      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.required "name" name Name.nameSchema
+      #+ FC.required "uid" uid Uid.uidSchema

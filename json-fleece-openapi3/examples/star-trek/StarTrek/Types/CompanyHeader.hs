@@ -12,8 +12,8 @@ import qualified StarTrek.Types.CompanyHeader.Name as Name
 import qualified StarTrek.Types.CompanyHeader.Uid as Uid
 
 data CompanyHeader = CompanyHeader
-  { uid :: Uid.Uid -- ^ Company unique ID
-  , name :: Name.Name -- ^ Company title
+  { name :: Name.Name -- ^ Company title
+  , uid :: Uid.Uid -- ^ Company unique ID
   }
   deriving (Eq, Show)
 
@@ -21,5 +21,5 @@ companyHeaderSchema :: FC.Fleece schema => schema CompanyHeader
 companyHeaderSchema =
   FC.object $
     FC.constructor CompanyHeader
-      #+ FC.required "uid" uid Uid.uidSchema
       #+ FC.required "name" name Name.nameSchema
+      #+ FC.required "uid" uid Uid.uidSchema

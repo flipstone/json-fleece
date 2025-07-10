@@ -15,9 +15,9 @@ import qualified StarTrek.Types.CharacterSpecies.Uid as Uid
 
 data CharacterSpecies = CharacterSpecies
   { denominator :: Maybe Denominator.Denominator -- ^ Denominator
-  , uid :: Maybe Uid.Uid -- ^ Entity unique ID
   , name :: Maybe Name.Name -- ^ Species name
   , numerator :: Maybe Numerator.Numerator -- ^ Numerator
+  , uid :: Maybe Uid.Uid -- ^ Entity unique ID
   }
   deriving (Eq, Show)
 
@@ -26,6 +26,6 @@ characterSpeciesSchema =
   FC.object $
     FC.constructor CharacterSpecies
       #+ FC.optional "denominator" denominator Denominator.denominatorSchema
-      #+ FC.optional "uid" uid Uid.uidSchema
       #+ FC.optional "name" name Name.nameSchema
       #+ FC.optional "numerator" numerator Numerator.numeratorSchema
+      #+ FC.optional "uid" uid Uid.uidSchema

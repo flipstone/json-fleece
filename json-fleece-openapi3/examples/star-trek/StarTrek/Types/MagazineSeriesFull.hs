@@ -20,16 +20,16 @@ import qualified StarTrek.Types.MagazineSeriesFull.Uid as Uid
 import qualified StarTrek.Types.StaffBase as StaffBase
 
 data MagazineSeriesFull = MagazineSeriesFull
-  { magazines :: Maybe [MagazineBase.MagazineBase] -- ^ Base magazine, returned in search results
-  , title :: Title.Title -- ^ Magazine series title
-  , publishedMonthFrom :: Maybe PublishedMonthFrom.PublishedMonthFrom -- ^ Month from which the magazine series was published
-  , editors :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
-  , publishedYearFrom :: Maybe PublishedYearFrom.PublishedYearFrom -- ^ Year from which the magazine series was published
-  , uid :: Uid.Uid -- ^ Magazine series unique ID
-  , publishers :: Maybe [CompanyBase.CompanyBase] -- ^ Base company, returned in search results
-  , publishedMonthTo :: Maybe PublishedMonthTo.PublishedMonthTo -- ^ Month to which the magazine series was published
+  { editors :: Maybe [StaffBase.StaffBase] -- ^ Base staff, returned in search results
+  , magazines :: Maybe [MagazineBase.MagazineBase] -- ^ Base magazine, returned in search results
   , numberOfIssues :: Maybe NumberOfIssues.NumberOfIssues -- ^ Number of issues
+  , publishedMonthFrom :: Maybe PublishedMonthFrom.PublishedMonthFrom -- ^ Month from which the magazine series was published
+  , publishedMonthTo :: Maybe PublishedMonthTo.PublishedMonthTo -- ^ Month to which the magazine series was published
+  , publishedYearFrom :: Maybe PublishedYearFrom.PublishedYearFrom -- ^ Year from which the magazine series was published
   , publishedYearTo :: Maybe PublishedYearTo.PublishedYearTo -- ^ Year to which the magazine series was published
+  , publishers :: Maybe [CompanyBase.CompanyBase] -- ^ Base company, returned in search results
+  , title :: Title.Title -- ^ Magazine series title
+  , uid :: Uid.Uid -- ^ Magazine series unique ID
   }
   deriving (Eq, Show)
 
@@ -37,13 +37,13 @@ magazineSeriesFullSchema :: FC.Fleece schema => schema MagazineSeriesFull
 magazineSeriesFullSchema =
   FC.object $
     FC.constructor MagazineSeriesFull
-      #+ FC.optional "magazines" magazines (FC.list MagazineBase.magazineBaseSchema)
-      #+ FC.required "title" title Title.titleSchema
-      #+ FC.optional "publishedMonthFrom" publishedMonthFrom PublishedMonthFrom.publishedMonthFromSchema
       #+ FC.optional "editors" editors (FC.list StaffBase.staffBaseSchema)
-      #+ FC.optional "publishedYearFrom" publishedYearFrom PublishedYearFrom.publishedYearFromSchema
-      #+ FC.required "uid" uid Uid.uidSchema
-      #+ FC.optional "publishers" publishers (FC.list CompanyBase.companyBaseSchema)
-      #+ FC.optional "publishedMonthTo" publishedMonthTo PublishedMonthTo.publishedMonthToSchema
+      #+ FC.optional "magazines" magazines (FC.list MagazineBase.magazineBaseSchema)
       #+ FC.optional "numberOfIssues" numberOfIssues NumberOfIssues.numberOfIssuesSchema
+      #+ FC.optional "publishedMonthFrom" publishedMonthFrom PublishedMonthFrom.publishedMonthFromSchema
+      #+ FC.optional "publishedMonthTo" publishedMonthTo PublishedMonthTo.publishedMonthToSchema
+      #+ FC.optional "publishedYearFrom" publishedYearFrom PublishedYearFrom.publishedYearFromSchema
       #+ FC.optional "publishedYearTo" publishedYearTo PublishedYearTo.publishedYearToSchema
+      #+ FC.optional "publishers" publishers (FC.list CompanyBase.companyBaseSchema)
+      #+ FC.required "title" title Title.titleSchema
+      #+ FC.required "uid" uid Uid.uidSchema

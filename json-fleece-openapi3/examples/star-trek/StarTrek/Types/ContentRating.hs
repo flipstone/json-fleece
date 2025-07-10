@@ -14,8 +14,8 @@ import qualified StarTrek.Types.ContentRatingSystem as ContentRatingSystem
 
 data ContentRating = ContentRating
   { contentRatingSystem :: Maybe ContentRatingSystem.ContentRatingSystem -- ^ Content rating system
-  , uid :: Maybe Uid.Uid -- ^ Rating unique ID
   , rating :: Maybe Rating.Rating -- ^ Rating within specified content rating system
+  , uid :: Maybe Uid.Uid -- ^ Rating unique ID
   }
   deriving (Eq, Show)
 
@@ -24,5 +24,5 @@ contentRatingSchema =
   FC.object $
     FC.constructor ContentRating
       #+ FC.optional "contentRatingSystem" contentRatingSystem ContentRatingSystem.contentRatingSystemSchema
-      #+ FC.optional "uid" uid Uid.uidSchema
       #+ FC.optional "rating" rating Rating.ratingSchema
+      #+ FC.optional "uid" uid Uid.uidSchema
