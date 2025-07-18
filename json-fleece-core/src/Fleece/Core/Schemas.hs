@@ -28,6 +28,8 @@ module Fleece.Core.Schemas
   , float
   , realFloat
   , realFloatNamed
+  , fixed
+  , fixedNamed
   , string
   , utcTime
   , utcTimeWithFormat
@@ -61,12 +63,13 @@ module Fleece.Core.Schemas
 import qualified Data.Attoparsec.Text as AttoText
 import qualified Data.Attoparsec.Time as AttoTime
 import Data.Coerce (Coercible, coerce)
+import Data.Fixed (Fixed, HasResolution (resolution))
 import qualified Data.Int as I
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map as Map
 import qualified Data.NonEmptyText as NET
 import Data.Proxy (Proxy (Proxy))
-import Data.Scientific (floatingOrInteger, fromFloatDigits, toBoundedInteger, toRealFloat)
+import Data.Scientific (Scientific, base10Exponent, floatingOrInteger, fromFloatDigits, normalize, toBoundedInteger, toRealFloat)
 import qualified Data.Set as Set
 import qualified Data.Text as T
 import qualified Data.Time as Time
@@ -558,6 +561,49 @@ realFloatNamed name =
     fromFloatDigits
     toRealFloat
     number
+
+-- | Validates a 'number', failing if the precision is too high for the given resolution.
+fixed ::
+  (Fleece schema, HasResolution r, Typeable r) =>
+  schema (Fixed r)
+fixed =
+  let
+    name =
+      defaultSchemaName schema
+
+    schema =
+      fixedNamed name
+  in
+    schema
+
+-- | Validates a 'number', failing if the precision is too high for the given resolution.
+fixedNamed ::
+  (Fleece schema, HasResolution r) =>
+  Name ->
+  schema (Fixed r)
+fixedNamed name =
+  validateNamed
+    name
+    realToFrac
+    (fixedFromScientific name)
+    number
+
+fixedFromScientific :: forall r. HasResolution r => Name -> Scientific -> Either String (Fixed r)
+fixedFromScientific name sci =
+  let
+    normalized = normalize sci
+    fixedResolution = resolution (Proxy :: Proxy r)
+    sciExponent = base10Exponent normalized
+  in
+    if sciExponent >= 0 || 10 ^ abs sciExponent <= fixedResolution
+      then Right (realToFrac normalized)
+      else
+        Left $
+          "Invalid fixed precision number "
+            <> nameToString name
+            <> ", max precision is "
+            <> show (floor (logBase 10 (fromInteger fixedResolution) :: Double) :: Integer)
+            <> " decimal places."
 
 string :: Fleece schema => schema String
 string = transform T.pack T.unpack text
