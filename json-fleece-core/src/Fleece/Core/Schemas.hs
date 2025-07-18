@@ -28,6 +28,8 @@ module Fleece.Core.Schemas
   , float
   , realFloat
   , realFloatNamed
+  , fixed
+  , fixedNamed
   , string
   , utcTime
   , utcTimeWithFormat
@@ -61,6 +63,7 @@ module Fleece.Core.Schemas
 import qualified Data.Attoparsec.Text as AttoText
 import qualified Data.Attoparsec.Time as AttoTime
 import Data.Coerce (Coercible, coerce)
+import Data.Fixed (Fixed, HasResolution)
 import qualified Data.Int as I
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map as Map
@@ -557,6 +560,30 @@ realFloatNamed name =
     name
     fromFloatDigits
     toRealFloat
+    number
+
+fixed ::
+  (Fleece schema, HasResolution r, Typeable r) =>
+  schema (Fixed r)
+fixed =
+  let
+    name =
+      defaultSchemaName schema
+
+    schema =
+      fixedNamed name
+  in
+    schema
+
+fixedNamed ::
+  (Fleece schema, HasResolution r) =>
+  Name ->
+  schema (Fixed r)
+fixedNamed name =
+  transformNamed
+    name
+    realToFrac
+    realToFrac
     number
 
 string :: Fleece schema => schema String
