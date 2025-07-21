@@ -64,6 +64,8 @@ module Fleece.Core
   , float
   , realFloat
   , realFloatNamed
+  , fixed
+  , fixedNamed
   , SetDuplicateHandling (AllowInputDuplicates, RejectInputDuplicates)
   , set
   , string
