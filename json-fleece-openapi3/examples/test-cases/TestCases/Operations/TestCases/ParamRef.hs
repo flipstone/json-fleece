@@ -10,8 +10,9 @@ module TestCases.Operations.TestCases.ParamRef
   , responseSchemas
   ) where
 
-import Beeline.HTTP.Client ((?+))
 import qualified Beeline.HTTP.Client as H
+import Beeline.Params ((?+))
+import qualified Beeline.Params as P
 import Beeline.Routing ((/-))
 import qualified Beeline.Routing as R
 import qualified Fleece.Aeson.Beeline as FA
@@ -45,10 +46,10 @@ data HeaderParams = HeaderParams
   }
   deriving (Eq, Show)
 
-headerParamsSchema :: H.ParameterCollectionSchema p => p HeaderParams HeaderParams
+headerParamsSchema :: P.HeaderSchema p => p HeaderParams HeaderParams
 headerParamsSchema =
-  H.makeParams HeaderParams
-    ?+ H.required xSampleHeaderParam XSampleHeaderParam.paramDef
+  P.makeParams HeaderParams
+    ?+ P.required xSampleHeaderParam XSampleHeaderParam.paramDef
 
 data Responses
   = Response204 H.NoResponseBody

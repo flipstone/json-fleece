@@ -6,6 +6,7 @@ module Uber.Operations.Estimates.Time.CustomerUuid
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified Data.Text as T
 import Prelude (Eq, Show)
@@ -15,4 +16,4 @@ newtype CustomerUuid = CustomerUuid T.Text
 
 paramDef :: R.ParameterDefinition CustomerUuid
 paramDef =
-  R.coerceParam (R.textParam "customer_uuid")
+  P.coerceParam (P.textParam "customer_uuid")

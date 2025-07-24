@@ -10,8 +10,9 @@ module StarTrek.Operations.TradingCardDeck.Search.POST
   , responseSchemas
   ) where
 
-import Beeline.HTTP.Client ((?+))
 import qualified Beeline.HTTP.Client as H
+import Beeline.Params ((?+))
+import qualified Beeline.Params as P
 import Beeline.Routing ((/-))
 import qualified Beeline.Routing as R
 import qualified Fleece.Aeson.Beeline as FA
@@ -52,13 +53,13 @@ data QueryParams = QueryParams
   }
   deriving (Eq, Show)
 
-queryParamsSchema :: H.ParameterCollectionSchema p => p QueryParams QueryParams
+queryParamsSchema :: P.QuerySchema p => p QueryParams QueryParams
 queryParamsSchema =
-  H.makeParams QueryParams
-    ?+ H.optional apiKey ApiKey.paramDef
-    ?+ H.optional pageNumber PageNumber.paramDef
-    ?+ H.optional pageSize PageSize.paramDef
-    ?+ H.optional sort Sort.paramDef
+  P.makeParams QueryParams
+    ?+ P.optional apiKey ApiKey.paramDef
+    ?+ P.optional pageNumber PageNumber.paramDef
+    ?+ P.optional pageSize PageSize.paramDef
+    ?+ P.optional sort Sort.paramDef
 
 data Responses
   = Response200 TradingCardDeckBaseResponse.TradingCardDeckBaseResponse

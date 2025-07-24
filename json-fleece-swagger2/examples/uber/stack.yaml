@@ -27,8 +27,9 @@ extra-deps:
   - ../../../json-fleece-aeson
   - ../../../json-fleece-aeson-beeline
   - github: flipstone/beeline
-    commit: 319bc02bcdaddcc7f185c74e32c76c5157d51c92
+    commit: ed9cddfaad23d5759b4fe3909b886950a7891496
     subdirs:
+      - beeline-params
       - beeline-routing
       - beeline-http-client
   - github: flipstone/shrubbery

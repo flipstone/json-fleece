@@ -5,9 +5,10 @@ module TestCases.Operations.ParamSchemaReferenceArray.ArrayParam
   ( paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified TestCases.Types.StringParam as StringParam
 
 paramDef :: R.ParameterDefinition StringParam.StringParam
 paramDef =
-  R.coerceParam (R.textParam "array-param")
+  P.coerceParam (P.textParam "array-param")

@@ -6,6 +6,7 @@ module StarTrek.Operations.Conflict.Search.GET.PageSize
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified Data.Int as I
 import Prelude (Eq, Show)
@@ -15,4 +16,4 @@ newtype PageSize = PageSize I.Int32
 
 paramDef :: R.ParameterDefinition PageSize
 paramDef =
-  R.coerceParam (R.int32Param "pageSize")
+  P.coerceParam (P.int32Param "pageSize")

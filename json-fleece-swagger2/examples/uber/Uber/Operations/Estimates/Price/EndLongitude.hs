@@ -6,6 +6,7 @@ module Uber.Operations.Estimates.Price.EndLongitude
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import Prelude (Double, Eq, Show)
 
@@ -14,4 +15,4 @@ newtype EndLongitude = EndLongitude Double
 
 paramDef :: R.ParameterDefinition EndLongitude
 paramDef =
-  R.coerceParam (R.doubleParam "end_longitude")
+  P.coerceParam (P.doubleParam "end_longitude")

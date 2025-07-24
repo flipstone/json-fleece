@@ -6,6 +6,7 @@ module StarTrek.Operations.ComicStrip.Uid
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified Data.Text as T
 import Prelude (Eq, Show)
@@ -15,4 +16,4 @@ newtype Uid = Uid T.Text
 
 paramDef :: R.ParameterDefinition Uid
 paramDef =
-  R.coerceParam (R.textParam "uid")
+  P.coerceParam (P.textParam "uid")

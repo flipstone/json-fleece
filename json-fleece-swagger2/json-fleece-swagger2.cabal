@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.36.0.
+-- This file has been generated from package.yaml by hpack version 0.37.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -17,53 +17,6 @@ build-type:     Simple
 extra-source-files:
     examples/uber/codegen.dhall
     examples/uber/uber.json
-    examples/uber/Uber/Operations/Estimates/Price.hs
-    examples/uber/Uber/Operations/Estimates/Price/EndLatitude.hs
-    examples/uber/Uber/Operations/Estimates/Price/EndLongitude.hs
-    examples/uber/Uber/Operations/Estimates/Price/StartLatitude.hs
-    examples/uber/Uber/Operations/Estimates/Price/StartLongitude.hs
-    examples/uber/Uber/Operations/Estimates/Time.hs
-    examples/uber/Uber/Operations/Estimates/Time/CustomerUuid.hs
-    examples/uber/Uber/Operations/Estimates/Time/ProductId.hs
-    examples/uber/Uber/Operations/Estimates/Time/StartLatitude.hs
-    examples/uber/Uber/Operations/Estimates/Time/StartLongitude.hs
-    examples/uber/Uber/Operations/History.hs
-    examples/uber/Uber/Operations/History/Limit.hs
-    examples/uber/Uber/Operations/History/Offset.hs
-    examples/uber/Uber/Operations/Me.hs
-    examples/uber/Uber/Operations/Products.hs
-    examples/uber/Uber/Operations/Products/Latitude.hs
-    examples/uber/Uber/Operations/Products/Longitude.hs
-    examples/uber/Uber/Types/Activities.hs
-    examples/uber/Uber/Types/Activities/Count.hs
-    examples/uber/Uber/Types/Activities/Limit.hs
-    examples/uber/Uber/Types/Activities/Offset.hs
-    examples/uber/Uber/Types/Activity.hs
-    examples/uber/Uber/Types/Activity/Uuid.hs
-    examples/uber/Uber/Types/Error.hs
-    examples/uber/Uber/Types/Error/Code.hs
-    examples/uber/Uber/Types/Error/Fields.hs
-    examples/uber/Uber/Types/Error/Message.hs
-    examples/uber/Uber/Types/PriceEstimate.hs
-    examples/uber/Uber/Types/PriceEstimate/CurrencyCode.hs
-    examples/uber/Uber/Types/PriceEstimate/DisplayName.hs
-    examples/uber/Uber/Types/PriceEstimate/Estimate.hs
-    examples/uber/Uber/Types/PriceEstimate/HighEstimate.hs
-    examples/uber/Uber/Types/PriceEstimate/LowEstimate.hs
-    examples/uber/Uber/Types/PriceEstimate/ProductId.hs
-    examples/uber/Uber/Types/PriceEstimate/SurgeMultiplier.hs
-    examples/uber/Uber/Types/Product.hs
-    examples/uber/Uber/Types/Product/Capacity.hs
-    examples/uber/Uber/Types/Product/Description.hs
-    examples/uber/Uber/Types/Product/DisplayName.hs
-    examples/uber/Uber/Types/Product/Image.hs
-    examples/uber/Uber/Types/Product/ProductId.hs
-    examples/uber/Uber/Types/Profile.hs
-    examples/uber/Uber/Types/Profile/Email.hs
-    examples/uber/Uber/Types/Profile/FirstName.hs
-    examples/uber/Uber/Types/Profile/LastName.hs
-    examples/uber/Uber/Types/Profile/Picture.hs
-    examples/uber/Uber/Types/Profile/PromoCode.hs
 
 source-repository head
   type: git
@@ -85,7 +38,7 @@ library
   build-depends:
       base >=4.7 && <5
     , insert-ordered-containers ==0.2.*
-    , json-fleece-codegen-util ==0.12.*
+    , json-fleece-codegen-util ==0.13.*
     , json-fleece-openapi3 ==0.4.*
     , openapi3 ==3.2.*
     , swagger2 ==2.8.*
@@ -105,7 +58,7 @@ executable fleece-swagger2
   ghc-options: -rtsopts -threaded
   build-depends:
       base >=4.7 && <5
-    , json-fleece-codegen-util ==0.12.*
+    , json-fleece-codegen-util ==0.13.*
     , json-fleece-swagger2
   default-language: Haskell2010
   if flag(strict)
@@ -127,7 +80,7 @@ test-suite json-fleece-swagger2-test
     , bytestring >=0.11 && <0.13
     , file-embed >=0.0.15 && <0.0.17
     , hedgehog
-    , json-fleece-codegen-util ==0.12.*
+    , json-fleece-codegen-util ==0.13.*
     , json-fleece-swagger2
   default-language: Haskell2010
   if flag(strict)

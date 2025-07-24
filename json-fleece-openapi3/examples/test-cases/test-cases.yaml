@@ -92,22 +92,6 @@ paths:
           required: true
           schema:
             type: boolean
-        - name: required-array-param
-          in: header
-          required: true
-          explode: true
-          schema:
-            type: array
-            items:
-              type: string
-        - name: optional-array-param
-          in: header
-          required: false
-          explode: true
-          schema:
-            type: array
-            items:
-              type: string
         - name: inline-enum-param
           required: false
           in: header
@@ -126,6 +110,51 @@ paths:
               - "10"
               - "20"
               - "30"
+      responses:
+        '200':
+          description: "Successful Get"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldTestCases'
+  /test-cases/headers-with-cookies:
+    get:
+      parameters:
+        - name: header-param
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: cookie-param-a
+          in: cookie
+          required: true
+          schema:
+            type: string
+        - name: cookie-param-b
+          in: cookie
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Successful Get"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FieldTestCases'
+  /test-cases/cookies-without-headers:
+    get:
+      parameters:
+        - name: cookie-param-a
+          in: cookie
+          required: true
+          schema:
+            type: string
+        - name: cookie-param-b
+          in: cookie
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: "Successful Get"

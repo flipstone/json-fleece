@@ -6,6 +6,7 @@ module Uber.Operations.Products.Latitude
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import Prelude (Double, Eq, Show)
 
@@ -14,4 +15,4 @@ newtype Latitude = Latitude Double
 
 paramDef :: R.ParameterDefinition Latitude
 paramDef =
-  R.coerceParam (R.doubleParam "latitude")
+  P.coerceParam (P.doubleParam "latitude")

@@ -10,18 +10,16 @@ module TestCases.Operations.TestCases.HeaderParams
   , responseSchemas
   ) where
 
-import Beeline.HTTP.Client ((?+))
 import qualified Beeline.HTTP.Client as H
+import Beeline.Params ((?+))
+import qualified Beeline.Params as P
 import Beeline.Routing ((/-))
 import qualified Beeline.Routing as R
-import qualified Data.List.NonEmpty as NEL
 import qualified Fleece.Aeson.Beeline as FA
 import Prelude (($), Eq, Maybe, Show, fmap)
 import qualified TestCases.Operations.TestCases.HeaderParams.BooleanParam as BooleanParam
 import qualified TestCases.Operations.TestCases.HeaderParams.InlineEnumIntParam as InlineEnumIntParam
 import qualified TestCases.Operations.TestCases.HeaderParams.InlineEnumParam as InlineEnumParam
-import qualified TestCases.Operations.TestCases.HeaderParams.OptionalArrayParam as OptionalArrayParam
-import qualified TestCases.Operations.TestCases.HeaderParams.RequiredArrayParam as RequiredArrayParam
 import qualified TestCases.Operations.TestCases.HeaderParams.StringParam as StringParam
 import qualified TestCases.Types.FieldTestCases as FieldTestCases
 
@@ -51,21 +49,17 @@ data HeaderParams = HeaderParams
   { booleanParam :: BooleanParam.BooleanParam
   , inlineEnumIntParam :: Maybe InlineEnumIntParam.InlineEnumIntParam
   , inlineEnumParam :: Maybe InlineEnumParam.InlineEnumParam
-  , optionalArrayParam :: [OptionalArrayParam.OptionalArrayParam]
-  , requiredArrayParam :: NEL.NonEmpty RequiredArrayParam.RequiredArrayParam
   , stringParam :: StringParam.StringParam
   }
   deriving (Eq, Show)
 
-headerParamsSchema :: H.ParameterCollectionSchema p => p HeaderParams HeaderParams
+headerParamsSchema :: P.HeaderSchema p => p HeaderParams HeaderParams
 headerParamsSchema =
-  H.makeParams HeaderParams
-    ?+ H.required booleanParam BooleanParam.paramDef
-    ?+ H.optional inlineEnumIntParam InlineEnumIntParam.paramDef
-    ?+ H.optional inlineEnumParam InlineEnumParam.paramDef
-    ?+ H.explodedArray optionalArrayParam OptionalArrayParam.paramDef
-    ?+ H.explodedNonEmpty requiredArrayParam RequiredArrayParam.paramDef
-    ?+ H.required stringParam StringParam.paramDef
+  P.makeParams HeaderParams
+    ?+ P.required booleanParam BooleanParam.paramDef
+    ?+ P.optional inlineEnumIntParam InlineEnumIntParam.paramDef
+    ?+ P.optional inlineEnumParam InlineEnumParam.paramDef
+    ?+ P.required stringParam StringParam.paramDef
 
 data Responses
   = Response200 FieldTestCases.FieldTestCases
