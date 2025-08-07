@@ -6,6 +6,7 @@ module Uber.Operations.Estimates.Time.StartLongitude
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import Prelude (Double, Eq, Show)
 
@@ -14,4 +15,4 @@ newtype StartLongitude = StartLongitude Double
 
 paramDef :: R.ParameterDefinition StartLongitude
 paramDef =
-  R.coerceParam (R.doubleParam "start_longitude")
+  P.coerceParam (P.doubleParam "start_longitude")

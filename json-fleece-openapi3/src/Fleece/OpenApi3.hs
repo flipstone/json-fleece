@@ -682,7 +682,7 @@ mkOperationParam paramDefs schemaMap operationKey paramRef = do
           OA.ParamQuery -> pure CGU.ParamLocationQuery
           OA.ParamPath -> pure CGU.ParamLocationPath
           OA.ParamHeader -> pure CGU.ParamLocationHeader
-          OA.ParamCookie -> paramCodeGenError paramName operationKey "Cookie params not supported."
+          OA.ParamCookie -> pure CGU.ParamLocationCookie
 
       typeOptions <- lift $ CGU.lookupTypeOptions paramTypeName
 
@@ -692,7 +692,7 @@ mkOperationParam paramDefs schemaMap operationKey paramRef = do
           , CGU.codeGenOperationParamArity = arity
           , CGU.codeGenOperationParamModuleName = moduleName
           , CGU.codeGenOperationParamTypeName = paramTypeName
-          , CGU.codeGenOperationParamFormat = paramInfoFormat paramInfo
+          , CGU.codeGenOperationParamType = paramInfoParamType paramInfo
           , CGU.codeGenOperationParamLocation = paramLocation
           , CGU.codeGenOperationParamDefName =
               HC.toVarName
@@ -717,15 +717,15 @@ paramCodeGenError paramName operationKey msg =
 data ParamInfo = ParamInfo
   { paramInfoTypeName :: Maybe HC.TypeName
   , paramInfoArray :: Bool
-  , paramInfoFormat :: CGU.OperationParamFormat
+  , paramInfoParamType :: CGU.OperationParamType
   }
 
-primitiveParamInfo :: CGU.OperationParamFormat -> ParamInfo
-primitiveParamInfo format =
+primitiveParamInfo :: CGU.OperationParamType -> ParamInfo
+primitiveParamInfo paramType =
   ParamInfo
     { paramInfoTypeName = Nothing
     , paramInfoArray = False
-    , paramInfoFormat = format
+    , paramInfoParamType = paramType
     }
 
 schemaRefToParamInfo ::

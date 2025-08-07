@@ -6,6 +6,7 @@ module TestCases.Operations.TestCases.ParamRef.XSampleHeaderParam
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import Prelude (Bool, Eq, Show)
 
@@ -14,4 +15,4 @@ newtype XSampleHeaderParam = XSampleHeaderParam Bool
 
 paramDef :: R.ParameterDefinition XSampleHeaderParam
 paramDef =
-  R.coerceParam (R.booleanParam "X-Sample-Header-Param")
+  P.coerceParam (P.booleanParam "X-Sample-Header-Param")

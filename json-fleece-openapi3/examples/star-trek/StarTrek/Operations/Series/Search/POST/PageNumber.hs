@@ -6,6 +6,7 @@ module StarTrek.Operations.Series.Search.POST.PageNumber
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified Data.Int as I
 import Prelude (Eq, Show)
@@ -15,4 +16,4 @@ newtype PageNumber = PageNumber I.Int32
 
 paramDef :: R.ParameterDefinition PageNumber
 paramDef =
-  R.coerceParam (R.int32Param "pageNumber")
+  P.coerceParam (P.int32Param "pageNumber")

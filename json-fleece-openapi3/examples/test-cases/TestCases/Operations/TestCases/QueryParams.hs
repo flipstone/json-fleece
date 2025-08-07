@@ -10,8 +10,9 @@ module TestCases.Operations.TestCases.QueryParams
   , responseSchemas
   ) where
 
-import Beeline.HTTP.Client ((?+))
 import qualified Beeline.HTTP.Client as H
+import Beeline.Params ((?+))
+import qualified Beeline.Params as P
 import Beeline.Routing ((/-))
 import qualified Beeline.Routing as R
 import qualified Data.List.NonEmpty as NEL
@@ -57,15 +58,15 @@ data QueryParams = QueryParams
   }
   deriving (Eq, Show)
 
-queryParamsSchema :: H.ParameterCollectionSchema p => p QueryParams QueryParams
+queryParamsSchema :: P.QuerySchema p => p QueryParams QueryParams
 queryParamsSchema =
-  H.makeParams QueryParams
-    ?+ H.required booleanParam BooleanParam.paramDef
-    ?+ H.optional inlineEnumIntParam InlineEnumIntParam.paramDef
-    ?+ H.optional inlineEnumParam InlineEnumParam.paramDef
-    ?+ H.explodedArray optionalArrayParam OptionalArrayParam.paramDef
-    ?+ H.explodedNonEmpty requiredArrayParam RequiredArrayParam.paramDef
-    ?+ H.required stringParam StringParam.paramDef
+  P.makeParams QueryParams
+    ?+ P.required booleanParam BooleanParam.paramDef
+    ?+ P.optional inlineEnumIntParam InlineEnumIntParam.paramDef
+    ?+ P.optional inlineEnumParam InlineEnumParam.paramDef
+    ?+ P.explodedArray optionalArrayParam OptionalArrayParam.paramDef
+    ?+ P.explodedNonEmpty requiredArrayParam RequiredArrayParam.paramDef
+    ?+ P.required stringParam StringParam.paramDef
 
 data Responses
   = Response200 FieldTestCases.FieldTestCases

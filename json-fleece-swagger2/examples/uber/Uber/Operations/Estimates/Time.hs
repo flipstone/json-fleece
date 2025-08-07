@@ -10,8 +10,9 @@ module Uber.Operations.Estimates.Time
   , responseSchemas
   ) where
 
-import Beeline.HTTP.Client ((?+))
 import qualified Beeline.HTTP.Client as H
+import Beeline.Params ((?+))
+import qualified Beeline.Params as P
 import Beeline.Routing ((/-))
 import qualified Beeline.Routing as R
 import qualified Fleece.Aeson.Beeline as FA
@@ -54,13 +55,13 @@ data QueryParams = QueryParams
   }
   deriving (Eq, Show)
 
-queryParamsSchema :: H.ParameterCollectionSchema p => p QueryParams QueryParams
+queryParamsSchema :: P.QuerySchema p => p QueryParams QueryParams
 queryParamsSchema =
-  H.makeParams QueryParams
-    ?+ H.optional customerUuid CustomerUuid.paramDef
-    ?+ H.optional productId ProductId.paramDef
-    ?+ H.required startLatitude StartLatitude.paramDef
-    ?+ H.required startLongitude StartLongitude.paramDef
+  P.makeParams QueryParams
+    ?+ P.optional customerUuid CustomerUuid.paramDef
+    ?+ P.optional productId ProductId.paramDef
+    ?+ P.required startLatitude StartLatitude.paramDef
+    ?+ P.required startLongitude StartLongitude.paramDef
 
 data Responses
   = Response200 [Product.Product]

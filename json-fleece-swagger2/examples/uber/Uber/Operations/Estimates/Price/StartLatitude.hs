@@ -6,6 +6,7 @@ module Uber.Operations.Estimates.Price.StartLatitude
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import Prelude (Double, Eq, Show)
 
@@ -14,4 +15,4 @@ newtype StartLatitude = StartLatitude Double
 
 paramDef :: R.ParameterDefinition StartLatitude
 paramDef =
-  R.coerceParam (R.doubleParam "start_latitude")
+  P.coerceParam (P.doubleParam "start_latitude")

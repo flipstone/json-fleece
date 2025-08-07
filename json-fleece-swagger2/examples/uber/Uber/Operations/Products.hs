@@ -10,8 +10,9 @@ module Uber.Operations.Products
   , responseSchemas
   ) where
 
-import Beeline.HTTP.Client ((?+))
 import qualified Beeline.HTTP.Client as H
+import Beeline.Params ((?+))
+import qualified Beeline.Params as P
 import Beeline.Routing ((/-))
 import qualified Beeline.Routing as R
 import qualified Fleece.Aeson.Beeline as FA
@@ -49,11 +50,11 @@ data QueryParams = QueryParams
   }
   deriving (Eq, Show)
 
-queryParamsSchema :: H.ParameterCollectionSchema p => p QueryParams QueryParams
+queryParamsSchema :: P.QuerySchema p => p QueryParams QueryParams
 queryParamsSchema =
-  H.makeParams QueryParams
-    ?+ H.required latitude Latitude.paramDef
-    ?+ H.required longitude Longitude.paramDef
+  P.makeParams QueryParams
+    ?+ P.required latitude Latitude.paramDef
+    ?+ P.required longitude Longitude.paramDef
 
 data Responses
   = Response200 [Product.Product]

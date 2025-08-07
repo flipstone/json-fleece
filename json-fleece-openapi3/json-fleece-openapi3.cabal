@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.4.5.0
+version:        0.4.6.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -1874,13 +1874,18 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/ParamSchemaReferenceArray.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReferenceArray/ArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/AnyJsonResponse.hs
+    examples/test-cases/TestCases/Operations/TestCases/CookiesWithoutHeaders.hs
+    examples/test-cases/TestCases/Operations/TestCases/CookiesWithoutHeaders/CookieParamA.hs
+    examples/test-cases/TestCases/Operations/TestCases/CookiesWithoutHeaders/CookieParamB.hs
     examples/test-cases/TestCases/Operations/TestCases/HeaderParams.hs
     examples/test-cases/TestCases/Operations/TestCases/HeaderParams/BooleanParam.hs
     examples/test-cases/TestCases/Operations/TestCases/HeaderParams/InlineEnumIntParam.hs
     examples/test-cases/TestCases/Operations/TestCases/HeaderParams/InlineEnumParam.hs
-    examples/test-cases/TestCases/Operations/TestCases/HeaderParams/OptionalArrayParam.hs
-    examples/test-cases/TestCases/Operations/TestCases/HeaderParams/RequiredArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/HeaderParams/StringParam.hs
+    examples/test-cases/TestCases/Operations/TestCases/HeadersWithCookies.hs
+    examples/test-cases/TestCases/Operations/TestCases/HeadersWithCookies/CookieParamA.hs
+    examples/test-cases/TestCases/Operations/TestCases/HeadersWithCookies/CookieParamB.hs
+    examples/test-cases/TestCases/Operations/TestCases/HeadersWithCookies/HeaderParam.hs
     examples/test-cases/TestCases/Operations/TestCases/InlineArrayResponse.hs
     examples/test-cases/TestCases/Operations/TestCases/InlineBooleanResponse.hs
     examples/test-cases/TestCases/Operations/TestCases/InlineEnumArrayRequestBody.hs
@@ -2070,7 +2075,7 @@ library
     , base >=4.7 && <5
     , containers ==0.6.*
     , insert-ordered-containers ==0.2.*
-    , json-fleece-codegen-util ==0.12.*
+    , json-fleece-codegen-util ==0.13.*
     , mtl >=2.2 && <2.4
     , non-empty-text ==0.2.*
     , openapi3 ==3.2.*
@@ -2090,7 +2095,7 @@ executable fleece-openapi3
   ghc-options: -rtsopts -threaded
   build-depends:
       base >=4.7 && <5
-    , json-fleece-codegen-util ==0.12.*
+    , json-fleece-codegen-util ==0.13.*
     , json-fleece-openapi3
   default-language: Haskell2010
   if flag(strict)
@@ -2111,7 +2116,7 @@ test-suite json-fleece-openapi3-test
     , bytestring >=0.11 && <0.13
     , file-embed >=0.0.15 && <0.0.17
     , hedgehog
-    , json-fleece-codegen-util ==0.12.*
+    , json-fleece-codegen-util ==0.13.*
     , json-fleece-openapi3
     , yaml ==0.11.*
   default-language: Haskell2010

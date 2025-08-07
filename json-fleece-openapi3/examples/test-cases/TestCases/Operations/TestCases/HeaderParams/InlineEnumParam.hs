@@ -6,6 +6,7 @@ module TestCases.Operations.TestCases.HeaderParams.InlineEnumParam
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified Data.Text as T
 import Prelude (($), Bounded, Enum, Eq, Ord, Show)
@@ -26,4 +27,4 @@ inlineEnumParamToText v =
 
 paramDef :: R.ParameterDefinition InlineEnumParam
 paramDef =
-  R.coerceParam (R.boundedEnumParam inlineEnumParamToText "inline-enum-param")
+  P.coerceParam (P.boundedEnumParam inlineEnumParamToText "inline-enum-param")

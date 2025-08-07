@@ -6,6 +6,7 @@ module Uber.Operations.History.Offset
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified Data.Int as I
 import Prelude (Eq, Show)
@@ -15,4 +16,4 @@ newtype Offset = Offset I.Int32
 
 paramDef :: R.ParameterDefinition Offset
 paramDef =
-  R.coerceParam (R.int32Param "offset")
+  P.coerceParam (P.int32Param "offset")

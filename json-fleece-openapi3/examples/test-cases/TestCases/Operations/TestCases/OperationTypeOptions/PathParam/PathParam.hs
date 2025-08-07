@@ -6,6 +6,7 @@ module TestCases.Operations.TestCases.OperationTypeOptions.PathParam.PathParam
   , paramDef
   ) where
 
+import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified Data.Text as T
 import Prelude (Eq, Show)
@@ -15,4 +16,4 @@ newtype PathParam = PathParam T.Text
 
 paramDef :: R.ParameterDefinition PathParam
 paramDef =
-  R.coerceParam (R.textParam "path-param")
+  P.coerceParam (P.textParam "path-param")
