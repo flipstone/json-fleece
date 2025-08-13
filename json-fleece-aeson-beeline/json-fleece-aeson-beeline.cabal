@@ -1,11 +1,11 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.37.0.
+-- This file has been generated from package.yaml by hpack version 0.38.1.
 --
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-aeson-beeline
-version:        0.2.0.0
+version:        0.2.0.1
 description:    Please see the README on GitHub at <https://github.com/githubuser/json-fleece-aeson-beeline#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
