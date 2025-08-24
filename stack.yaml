@@ -68,7 +68,7 @@ extra-deps:
       - beeline-http-client
   - github: flipstone/shrubbery
     commit: a064ede07e01b753a6eb310fc24d9fd8da1ad826
-  - hermes-json-0.6.1.0@sha256:ab54609e63a83a8e07900360de60ba1e197ea499fa5d3eb782eed980ee07545b,3856
+  - hermes-json-0.7.0.0@sha256:04e0a208f1aecbd4bf738ad4e00984d9960729104f72df6d37b7153f46416cbf,3788
 
 
 # Extra package databases containing global packages
