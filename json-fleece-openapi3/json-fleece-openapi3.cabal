@@ -14,6 +14,8 @@ maintainer:     example@example.com
 copyright:      2023 Author name here
 license:        BSD3
 build-type:     Simple
+tested-with:
+    GHC == 9.4.8, GHC == 9.6.7, GHC == 9.8.4, GHC == 9.10.2
 extra-source-files:
     examples/star-trek/codegen.dhall
     examples/star-trek/star-trek.yaml
@@ -2073,7 +2075,7 @@ library
   build-depends:
       aeson >=2.0 && <2.3
     , base >=4.7 && <5
-    , containers ==0.6.*
+    , containers >=0.6 && <0.8
     , insert-ordered-containers ==0.2.*
     , json-fleece-codegen-util ==0.13.*
     , mtl >=2.2 && <2.4
@@ -2083,6 +2085,10 @@ library
   default-language: Haskell2010
   if flag(strict)
     ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations -Wno-unticked-promoted-constructors
+    if impl (ghc >= 9.8)
+      ghc-options: -Wno-missing-role-annotations -Wno-missing-poly-kind-signatures
+    if impl (ghc >= 9.10)
+      ghc-options: -Wno-defaulted-exception-context
   else
     ghc-options: -Wall
 
@@ -2100,6 +2106,10 @@ executable fleece-openapi3
   default-language: Haskell2010
   if flag(strict)
     ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations -Wno-unticked-promoted-constructors
+    if impl (ghc >= 9.8)
+      ghc-options: -Wno-missing-role-annotations -Wno-missing-poly-kind-signatures
+    if impl (ghc >= 9.10)
+      ghc-options: -Wno-defaulted-exception-context
   else
     ghc-options: -Wall
 
@@ -2122,5 +2132,9 @@ test-suite json-fleece-openapi3-test
   default-language: Haskell2010
   if flag(strict)
     ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations -Wno-unticked-promoted-constructors
+    if impl (ghc >= 9.8)
+      ghc-options: -Wno-missing-role-annotations -Wno-missing-poly-kind-signatures
+    if impl (ghc >= 9.10)
+      ghc-options: -Wno-defaulted-exception-context
   else
     ghc-options: -Wall

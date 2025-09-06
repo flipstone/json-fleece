@@ -332,9 +332,9 @@ optionalNullable ::
   Fleece schema =>
   NothingEncoding ->
   String ->
-  (object -> Maybe a) ->
+  (objectType -> Maybe a) ->
   schema a ->
-  Field schema object (Maybe a)
+  Field schema objectType (Maybe a)
 optionalNullable encoding name accessor schema =
   let
     nullableAccessor o =

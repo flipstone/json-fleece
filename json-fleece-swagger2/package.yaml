@@ -14,6 +14,8 @@ copyright:           "2023 Author name here"
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
 description:         Please see the README on GitHub at <https://github.com/githubuser/json-fleece-swagger2#readme>
+tested-with:
+    GHC == 9.4.8, GHC == 9.6.7, GHC == 9.8.4, GHC == 9.10.2
 
 dependencies:
 - base >= 4.7 && < 5
@@ -43,6 +45,14 @@ when:
         - -Wno-all-missed-specialisations
         - -Wno-missed-specialisations
         - -Wno-unticked-promoted-constructors
+      when:
+        - condition: impl (ghc >= 9.8)
+          ghc-options:
+            - -Wno-missing-role-annotations
+            - -Wno-missing-poly-kind-signatures
+        - condition: impl (ghc >= 9.10)
+          ghc-options:
+            - -Wno-defaulted-exception-context
     else:
       ghc-options:
         - -Wall

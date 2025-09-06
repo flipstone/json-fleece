@@ -4,6 +4,14 @@ set -e
 
 source scripts/lib/run-in-container.sh
 
-(cd json-fleece-openapi3/examples/test-cases && stack build --fast "$@")
-(cd json-fleece-openapi3/examples/star-trek && stack build --fast "$@")
-(cd json-fleece-swagger2/examples/uber && stack build --fast "$@")
+STACK_OPTIONS=""
+
+if [ "$CI" ]; then
+  STACK_OPTIONS="--lock-file error-on-write"
+else
+  STACK_OPTIONS="--fast"
+fi
+
+(cd json-fleece-openapi3/examples/test-cases && stack build $STACK_OPTIONS "$@")
+(cd json-fleece-openapi3/examples/star-trek && stack build $STACK_OPTIONS "$@")
+(cd json-fleece-swagger2/examples/uber && stack build $STACK_OPTIONS "$@")

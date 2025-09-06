@@ -1,0 +1,42 @@
+packages:
+  - json-fleece-core
+  - json-fleece-examples
+  - json-fleece-aeson
+  - json-fleece-aeson-beeline
+  - json-fleece-markdown
+  - json-fleece-codegen-util
+  - json-fleece-openapi3
+  - json-fleece-swagger2
+  - json-fleece-pretty-print
+  - json-fleece-hermes
+
+flags:
+  json-fleece-core:
+    strict: true
+
+  json-fleece-examples:
+    strict: true
+
+  json-fleece-aeson:
+    strict: true
+
+  json-fleece-aeson-beeline:
+    strict: true
+
+  json-fleece-markdown:
+    strict: true
+
+  json-fleece-codegen-util:
+    strict: true
+
+  json-fleece-openapi3:
+    strict: true
+
+  json-fleece-swagger2:
+    strict: true
+
+  json-fleece-pretty-print:
+    strict: true
+
+  json-fleece-hermes:
+    strict: true

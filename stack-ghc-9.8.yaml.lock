@@ -55,15 +55,15 @@ packages:
   original:
     url: https://github.com/flipstone/shrubbery/archive/a064ede07e01b753a6eb310fc24d9fd8da1ad826.tar.gz
 - completed:
-    hackage: non-empty-text-0.2.1@sha256:df9629af4ad53af59dc0bfb5995c0500aaa656c884485560e9115152f7495c20,2438
+    hackage: hermes-json-0.7.0.0@sha256:04e0a208f1aecbd4bf738ad4e00984d9960729104f72df6d37b7153f46416cbf,3788
     pantry-tree:
-      sha256: d8304ffcf168785e1a9d91c9f49bec92eacb43890ad31a48893861ff8de223ed
-      size: 400
+      sha256: 9d4f37da93285a945b5216c97ec2da53f6cc9d356722b7192af2ba21202d5c0d
+      size: 1332
   original:
-    hackage: non-empty-text-0.2.1@sha256:df9629af4ad53af59dc0bfb5995c0500aaa656c884485560e9115152f7495c20,2438
+    hackage: hermes-json-0.7.0.0@sha256:04e0a208f1aecbd4bf738ad4e00984d9960729104f72df6d37b7153f46416cbf,3788
 snapshots:
 - completed:
-    sha256: afd5ba64ab602cabc2d3942d3d7e7dd6311bc626dcb415b901eaf576cb62f0ea
-    size: 640060
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/22.yaml
-  original: lts-21.22
+    sha256: 7e724f347d5969cb5e8dde9f9aae30996e3231c29d1dafd45f21f1700d4c4fcb
+    size: 684460
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/23/28.yaml
+  original: lts-23.28

@@ -14,6 +14,8 @@ copyright:           "2023 Author name here"
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
 description: Please see the README on GitHub at <https://github.com/flipstone/json-fleece-hermes#readme>
+tested-with:
+    GHC == 9.4.8, GHC == 9.6.7, GHC == 9.8.4, GHC == 9.10.2
 
 dependencies:
 - base >= 4.7 && < 5
@@ -45,6 +47,14 @@ when:
         - -Wno-all-missed-specialisations
         - -Wno-missed-specialisations
         - -Wno-unticked-promoted-constructors
+      when:
+        - condition: impl (ghc >= 9.8)
+          ghc-options:
+            - -Wno-missing-role-annotations
+            - -Wno-missing-poly-kind-signatures
+        - condition: impl (ghc >= 9.10)
+          ghc-options:
+            - -Wno-defaulted-exception-context
     else:
       ghc-options:
         - -Wall
@@ -53,7 +63,7 @@ library:
   exposed-modules:
     - Fleece.Hermes
   dependencies:
-    - containers >= 0.6 && < 0.7
+    - containers >= 0.6 && < 0.8
     - hermes-json >= 0.6 && < 0.8
     - shrubbery >= 0.2 && < 0.3
 
@@ -67,13 +77,13 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - aeson >= 2.0 && < 2.3
-    - containers >= 0.6 && < 0.7
+    - containers >= 0.6 && < 0.8
     - json-fleece-hermes
     - json-fleece-examples
     - hedgehog
     - scientific >= 0.3.7 && < 0.4
     - shrubbery >= 0.2 && < 0.3
-    - time >= 1.11 && < 1.13
+    - time >= 1.11 && < 1.15
     - vector >= 0.12 && < 0.14
 
 benchmarks:

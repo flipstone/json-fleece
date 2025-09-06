@@ -103,8 +103,8 @@ class Fleece schema where
     schema a
 
   constructor ::
-    constructor ->
-    Object schema object constructor
+    constructorType ->
+    Object schema object constructorType
 
   field ::
     Object schema object (a -> b) ->

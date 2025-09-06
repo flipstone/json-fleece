@@ -2,5 +2,6 @@ services:
   dev:
     environment:
       STACK_ROOT: /stack-root
+      STACK_CONFIG:
     volumes:
       - ./stack-root:/stack-root

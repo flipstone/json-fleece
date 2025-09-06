@@ -11,7 +11,7 @@ source scripts/lib/run-in-container.sh
 #
 # Use ./scripts/generate-examples if you intend to generate new example code
 # because you've altered the code gen.
-./scripts/test
+./scripts/test-all
 
 ./scripts/format-repo
 

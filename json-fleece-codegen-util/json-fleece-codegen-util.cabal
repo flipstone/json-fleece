@@ -14,6 +14,8 @@ maintainer:     example@example.com
 copyright:      2023 Author name here
 license:        BSD3
 build-type:     Simple
+tested-with:
+    GHC == 9.4.8, GHC == 9.6.7, GHC == 9.8.4, GHC == 9.10.2
 extra-source-files:
     codegen-prelude.dhall
 
@@ -42,20 +44,24 @@ library
       aeson >=2.0 && <2.3
     , base >=4.7 && <5
     , bytestring >=0.11 && <0.13
-    , containers ==0.6.*
+    , containers >=0.6 && <0.8
     , dhall >=1.41 && <1.43
     , directory ==1.3.*
     , file-embed ==0.0.*
-    , filepath ==1.4.*
+    , filepath >=1.4 && <1.6
     , isocline ==1.0.*
     , mtl >=2.2 && <2.4
     , non-empty-text ==0.2.*
-    , optparse-applicative >=0.17 && <0.19
+    , optparse-applicative >=0.17 && <0.20
     , text >=1.2 && <2.2
     , text-manipulate ==0.3.*
     , yaml ==0.11.*
   default-language: Haskell2010
   if flag(strict)
     ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations -Wno-unticked-promoted-constructors
+    if impl (ghc >= 9.8)
+      ghc-options: -Wno-missing-role-annotations -Wno-missing-poly-kind-signatures
+    if impl (ghc >= 9.10)
+      ghc-options: -Wno-defaulted-exception-context
   else
     ghc-options: -Wall

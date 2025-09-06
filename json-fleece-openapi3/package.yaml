@@ -14,6 +14,8 @@ copyright:           "2023 Author name here"
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
 description:         Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
+tested-with:
+    GHC == 9.4.8, GHC == 9.6.7, GHC == 9.8.4, GHC == 9.10.2
 
 flags:
   strict:
@@ -39,6 +41,14 @@ when:
         - -Wno-all-missed-specialisations
         - -Wno-missed-specialisations
         - -Wno-unticked-promoted-constructors
+      when:
+        - condition: impl (ghc >= 9.8)
+          ghc-options:
+            - -Wno-missing-role-annotations
+            - -Wno-missing-poly-kind-signatures
+        - condition: impl (ghc >= 9.10)
+          ghc-options:
+            - -Wno-defaulted-exception-context
     else:
       ghc-options:
         - -Wall
@@ -62,7 +72,7 @@ library:
   dependencies:
     - aeson >= 2.0 && < 2.3
     - insert-ordered-containers >= 0.2 && < 0.3
-    - containers >= 0.6 && < 0.7
+    - containers >= 0.6 && < 0.8
     - mtl >= 2.2 && < 2.4
     - non-empty-text >= 0.2 && < 0.3
     - openapi3 >= 3.2 && < 3.3

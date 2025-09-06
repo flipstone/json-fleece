@@ -7,10 +7,36 @@ defaults:
   run:
     shell: bash
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: ${{ github.ref_name != 'main' }}
+
 jobs:
+  find-stack-yamls:
+    name: Find stack.yamls for GHC Matrix
+    runs-on: ubuntu-22.04
+    outputs:
+      stack-yamls: ${{ steps.set-output.outputs.stack-yamls }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set Output
+        id: set-output
+        run: |
+          shopt -s failglob
+          files=(stack-ghc*.yaml)
+          json=$(jq --null-input --compact-output '$ARGS.positional' --args "${files[@]}")
+          echo "stack-yamls=$json" >> "$GITHUB_OUTPUT"
+
   build:
     name: Build and Test
-    runs-on: [self-hosted, linux, x64]
+    needs: find-stack-yamls
+    runs-on: ubuntu-22.04
+    strategy:
+      max-parallel: 5
+      matrix:
+        stack-yaml: ${{ fromJson(needs.find-stack-yamls.outputs.stack-yamls) }}
 
     steps:
       - name: Checkout
@@ -19,18 +45,80 @@ jobs:
       - name: Cache
         uses: actions/cache@v4
         env:
-          cache-version: v1
+          cache-version: v3
         with:
-          key: ${{ env.cache-version }}-${{ hashFiles('stack*.yaml') }}-${{ hashFiles('package.yaml') }}
+          key: ${{ env.cache-version }}-${{ matrix.stack-yaml }}-${{ hashFiles(matrix.stack-yaml, 'stack-base.yaml', '*/package.yaml') }}
           restore-keys: |
-            ${{ env.cache-version }}-
+            ${{ env.cache-version }}-${{ matrix.stack-yaml }}-
           path: |
             ./stack-root
 
       - name: Build and test
+        env:
+          STACK_CONFIG: ${{ github.workspace }}/stack-config.yaml
         run: |
           set -e
+
+          # allow stack to use the provided stack root we're making
+          # even though it's owned by a different user
+          echo 'allow-different-user: true' >> $STACK_CONFIG
+
           mkdir -p ./stack-root
           echo "PROJECT_DIR=$PWD" >> .env
           mv compose.override.github.yml compose.override.yml
-          ./scripts/build
+          ./scripts/test --stack-yaml ${{ matrix.stack-yaml }}
+
+  test-examples:
+    name: Test Examples
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache
+        uses: actions/cache@v4
+        env:
+          cache-version: v3
+        with:
+          key: ${{ env.cache-version }}-examples-${{ hashFiles('**/examples/*/stack.yaml', '*/package.yaml', '**/examples/*/package.yaml') }}
+          restore-keys: |
+            ${{ env.cache-version }}-examples-
+          path: |
+            ./stack-root
+
+      - name: Test Examples
+        env:
+          STACK_CONFIG: ${{ github.workspace }}/stack-config.yaml
+        run: |
+          set -e
+
+          # allow stack to use the provided stack root we're making
+          # even though it's owned by a different user
+          echo 'allow-different-user: true' >> $STACK_CONFIG
+
+          mkdir -p ./stack-root
+          echo "PROJECT_DIR=$PWD" >> .env
+          mv compose.override.github.yml compose.override.yml
+          ./scripts/test-examples
+
+  formatting-check:
+    name: Formatting Check
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Format and Check for Diff
+        env:
+          GIT_GLOBAL_CONFIG: ${{ github.workspace }}/git-config.yaml
+        run: |
+          set -o errexit
+
+          echo "PROJECT_DIR=$PWD" >> .env
+          cp compose.override.github.yml compose.override.yml
+
+          ./scripts/format-repo

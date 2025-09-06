@@ -1,0 +1,13 @@
+<<: !include stack-base.yaml
+
+resolver: lts-22.44
+extra-deps:
+  - github: flipstone/beeline
+    commit: ad51a5197ba71b44f27fd760c6c241ac67f0a52f
+    subdirs:
+      - beeline-params
+      - beeline-routing
+      - beeline-http-client
+  - github: flipstone/shrubbery
+    commit: a064ede07e01b753a6eb310fc24d9fd8da1ad826
+  - hermes-json-0.7.0.0@sha256:04e0a208f1aecbd4bf738ad4e00984d9960729104f72df6d37b7153f46416cbf,3788
