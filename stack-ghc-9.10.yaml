@@ -14,3 +14,5 @@ extra-deps:
 
 # To let hermes-json use the newer containers version
 allow-newer: true
+allow-newer-deps:
+  - hermes-json
