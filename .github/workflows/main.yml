@@ -18,16 +18,9 @@ jobs:
     outputs:
       stack-yamls: ${{ steps.set-output.outputs.stack-yamls }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set Output
+      - name: Find Stack Yamls
         id: set-output
-        run: |
-          shopt -s failglob
-          files=(stack-ghc*.yaml)
-          json=$(jq --null-input --compact-output '$ARGS.positional' --args "${files[@]}")
-          echo "stack-yamls=$json" >> "$GITHUB_OUTPUT"
+        uses: flipstone/github-actions/find-stack-ghc-yamls@bef3396e6c3777767d1d4837203cfdb2635b4933
 
   build:
     name: Build and Test
@@ -53,20 +46,13 @@ jobs:
           path: |
             ./stack-root
 
+      - name: Setup Stack
+        uses: flipstone/github-actions/setup-dockerized-stack@bef3396e6c3777767d1d4837203cfdb2635b4933
+        with:
+          stack-root: ./stack-root
+
       - name: Build and test
-        env:
-          STACK_CONFIG: ${{ github.workspace }}/stack-config.yaml
-        run: |
-          set -e
-
-          # allow stack to use the provided stack root we're making
-          # even though it's owned by a different user
-          echo 'allow-different-user: true' >> $STACK_CONFIG
-
-          mkdir -p ./stack-root
-          echo "PROJECT_DIR=$PWD" >> .env
-          mv compose.override.github.yml compose.override.yml
-          ./scripts/test --stack-yaml ${{ matrix.stack-yaml }}
+        run: ./scripts/test --stack-yaml ${{ matrix.stack-yaml }}
 
   test-examples:
     name: Test Examples
@@ -87,38 +73,28 @@ jobs:
           path: |
             ./stack-root
 
+      - name: Setup Stack
+        uses: flipstone/github-actions/setup-dockerized-stack@b9af5aa234ab24a706251e5978f4934ea909d916
+        with:
+          stack-root: ./stack-root
+
       - name: Test Examples
-        env:
-          STACK_CONFIG: ${{ github.workspace }}/stack-config.yaml
-        run: |
-          set -e
-
-          # allow stack to use the provided stack root we're making
-          # even though it's owned by a different user
-          echo 'allow-different-user: true' >> $STACK_CONFIG
-
-          mkdir -p ./stack-root
-          echo "PROJECT_DIR=$PWD" >> .env
-          mv compose.override.github.yml compose.override.yml
-          ./scripts/test-examples
+        run: ./scripts/test-examples
 
   formatting-check:
     name: Formatting Check
     runs-on: ubuntu-22.04
-    permissions:
-      contents: read
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # This doesn't actually run stack, so we don't need a cached stack-root, but
+      # we still need to set up the dockerized environment for scripts to be able
+      # to run
+      - name: Setup Stack
+        uses: flipstone/github-actions/setup-dockerized-stack@b9af5aa234ab24a706251e5978f4934ea909d916
+        with:
+          stack-root: ./stack-root
+
       - name: Format and Check for Diff
-        env:
-          GIT_GLOBAL_CONFIG: ${{ github.workspace }}/git-config.yaml
-        run: |
-          set -o errexit
-
-          echo "PROJECT_DIR=$PWD" >> .env
-          cp compose.override.github.yml compose.override.yml
-
-          ./scripts/format-repo
+        run: ./scripts/format-repo
