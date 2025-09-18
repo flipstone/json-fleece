@@ -3,6 +3,7 @@
 
 module TestCases.Operations.TestCases.QueryParams.InlineEnumIntParam
   ( InlineEnumIntParam(..)
+  , inlineEnumIntParamToText
   , paramDef
   ) where
 

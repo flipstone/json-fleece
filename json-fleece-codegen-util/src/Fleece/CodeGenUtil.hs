@@ -1178,7 +1178,7 @@ generateOperationParamCode codeGenOperationParam = do
             ]
 
         header =
-          operationParamHeader moduleName typeName defName
+          operationParamHeader codeGenOperationParam
 
         moduleBody =
           HC.declarations
@@ -1255,22 +1255,61 @@ paramTypeToBeelineType moduleName typeName paramType =
     ParamTypeFloat -> Just beelineFloatParam
     ParamTypeHaskell _typeName -> Nothing
 
-operationParamHeader :: HC.ModuleName -> HC.TypeName -> HC.VarName -> HC.HaskellCode
-operationParamHeader moduleName typeName paramDef =
+operationParamHeader :: CodeGenOperationParam -> HC.HaskellCode
+operationParamHeader param =
   let
+    moduleName = codeGenOperationParamModuleName param
+    typeName = codeGenOperationParamTypeName param
+    moduleMatchesTypeName = moduleName == HC.typeNameModule typeName
+
     typeExport =
-      if moduleName == HC.typeNameModule typeName
+      if moduleMatchesTypeName
         then Just (HC.typeNameToCode Nothing typeName <> "(..)")
         else Nothing
 
-    paramExport =
-      HC.varNameToCode Nothing paramDef
+    typeToTextExport =
+      case codeGenOperationParamType param of
+        ParamTypeString ->
+          Nothing
+        ParamTypeBoolean ->
+          Nothing
+        ParamTypeEnum _vals ->
+          if moduleMatchesTypeName
+            then
+              Just
+                . HC.varNameToCode Nothing
+                . HC.toVarName moduleName Nothing
+                $ HC.typeNameText typeName <> "ToText"
+            else Nothing
+        ParamTypeInteger ->
+          Nothing
+        ParamTypeInt ->
+          Nothing
+        ParamTypeInt8 ->
+          Nothing
+        ParamTypeInt16 ->
+          Nothing
+        ParamTypeInt32 ->
+          Nothing
+        ParamTypeInt64 ->
+          Nothing
+        ParamTypeScientific ->
+          Nothing
+        ParamTypeDouble ->
+          Nothing
+        ParamTypeFloat ->
+          Nothing
+        ParamTypeHaskell _typeName ->
+          Nothing
 
     exportLines =
       HC.delimitLines "( " ", " $
         catMaybes
           [ typeExport
-          , Just paramExport
+          , typeToTextExport
+          , Just
+              . HC.varNameToCode Nothing
+              $ codeGenOperationParamDefName param
           ]
   in
     HC.lines
