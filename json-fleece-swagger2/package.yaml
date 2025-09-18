@@ -19,7 +19,7 @@ tested-with:
 
 dependencies:
 - base >= 4.7 && < 5
-- json-fleece-codegen-util >= 0.13 && < 0.14
+- json-fleece-codegen-util >= 0.14 && < 0.15
 
 flags:
   strict:

@@ -1238,10 +1238,7 @@ paramTypeToBeelineType moduleName typeName paramType =
             else Just typeNameText
 
         toTextName =
-          HC.toVarName
-            typeModuleName
-            qualifier
-            (typeNameText <> "ToText")
+          toTextFunctionVarName typeModuleName qualifier typeName
       in
         Just (beelineEnumParam toTextName)
     ParamTypeInteger -> Just beelineIntegerParam
@@ -1278,8 +1275,7 @@ operationParamHeader param =
             then
               Just
                 . HC.varNameToCode Nothing
-                . HC.toVarName moduleName Nothing
-                $ HC.typeNameText typeName <> "ToText"
+                $ toTextFunctionVarName moduleName Nothing typeName
             else Nothing
         ParamTypeInteger ->
           Nothing
@@ -2042,10 +2038,7 @@ generateEnum typeName enumValues typeOptions =
         (deriveClassNames typeOptions)
 
     toTextName =
-      HC.toVarName
-        moduleName
-        Nothing
-        (HC.typeNameText typeName <> "ToText")
+      toTextFunctionVarName moduleName Nothing typeName
 
     toTextType =
       HC.typeNameToCode Nothing typeName
@@ -2452,3 +2445,10 @@ beelineParamsOperator op =
   HC.addReferences
     [HC.VarReference "Beeline.Params" Nothing ("(" <> op <> ")")]
     (HC.fromText op)
+
+toTextFunctionVarName :: HC.ModuleName -> Maybe T.Text -> HC.TypeName -> HC.VarName
+toTextFunctionVarName moduleName mbQualifier typeName =
+  HC.toVarName
+    moduleName
+    mbQualifier
+    (HC.typeNameText typeName <> "ToText")

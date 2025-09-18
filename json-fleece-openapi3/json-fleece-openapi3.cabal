@@ -2077,7 +2077,7 @@ library
     , base >=4.7 && <5
     , containers >=0.6 && <0.8
     , insert-ordered-containers ==0.2.*
-    , json-fleece-codegen-util ==0.13.*
+    , json-fleece-codegen-util ==0.14.*
     , mtl >=2.2 && <2.4
     , non-empty-text ==0.2.*
     , openapi3 ==3.2.*
@@ -2101,7 +2101,7 @@ executable fleece-openapi3
   ghc-options: -rtsopts -threaded
   build-depends:
       base >=4.7 && <5
-    , json-fleece-codegen-util ==0.13.*
+    , json-fleece-codegen-util ==0.14.*
     , json-fleece-openapi3
   default-language: Haskell2010
   if flag(strict)
@@ -2126,7 +2126,7 @@ test-suite json-fleece-openapi3-test
     , bytestring >=0.11 && <0.13
     , file-embed >=0.0.15 && <0.0.17
     , hedgehog
-    , json-fleece-codegen-util ==0.13.*
+    , json-fleece-codegen-util ==0.14.*
     , json-fleece-openapi3
     , yaml ==0.11.*
   default-language: Haskell2010
