@@ -55,12 +55,12 @@ packages:
   original:
     url: https://github.com/flipstone/shrubbery/archive/a064ede07e01b753a6eb310fc24d9fd8da1ad826.tar.gz
 - completed:
-    hackage: hermes-json-0.7.0.0@sha256:04e0a208f1aecbd4bf738ad4e00984d9960729104f72df6d37b7153f46416cbf,3788
+    hackage: hermes-json-0.7.0.0@sha256:d1fe74cc26fc7c4de12e4eab2bb74cda4eb9b4dc311c297caa23e40bdb1bd3b6,3943
     pantry-tree:
-      sha256: 9d4f37da93285a945b5216c97ec2da53f6cc9d356722b7192af2ba21202d5c0d
+      sha256: 77f7eb467a7a8fdd0b73b2bc1a51c309fd32fbcd063d99a14540cda34f3926c1
       size: 1332
   original:
-    hackage: hermes-json-0.7.0.0@sha256:04e0a208f1aecbd4bf738ad4e00984d9960729104f72df6d37b7153f46416cbf,3788
+    hackage: hermes-json-0.7.0.0@sha256:d1fe74cc26fc7c4de12e4eab2bb74cda4eb9b4dc311c297caa23e40bdb1bd3b6,3943
 - completed:
     hackage: integer-conversion-0.1.1@sha256:941d4ae16e2124cbff5defe2abedb49efc8e03a594f817035bf231a317e6c1c9,2256
     pantry-tree:

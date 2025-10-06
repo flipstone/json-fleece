@@ -1,0 +1,26 @@
+<<: !include stack-base.yaml
+
+resolver: nightly-2025-10-06
+extra-deps:
+  - github: flipstone/beeline
+    commit: ad51a5197ba71b44f27fd760c6c241ac67f0a52f
+    subdirs:
+      - beeline-params
+      - beeline-routing
+      - beeline-http-client
+  - github: flipstone/shrubbery
+    commit: a064ede07e01b753a6eb310fc24d9fd8da1ad826
+
+  - hermes-json-0.7.0.0@sha256:d1fe74cc26fc7c4de12e4eab2bb74cda4eb9b4dc311c297caa23e40bdb1bd3b6,3943
+
+  # Not in the LTS
+  - openapi3-3.2.4@sha256:7309864a9a59b4654b21ef477444fb26bf8d393eba795dd8de089b368ea74c2a,4982
+  - swagger2-2.8.10@sha256:e2cd0e2077b3f2571a3bfca2aca0ba03d10086800803d9c0b7bb895f7aad8441,4689
+
+  # For openapi3 and swagger2
+  - QuickCheck-2.15.0.1@sha256:0cfd337bb9e6fbf09255bd24bb498a156f1d9bcd465396ac8657b25034b9ee31,9046
+
+allow-newer: true
+allow-newer-deps:
+  - hermes-json
+

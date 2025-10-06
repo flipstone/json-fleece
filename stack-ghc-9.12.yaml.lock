@@ -61,9 +61,30 @@ packages:
       size: 1332
   original:
     hackage: hermes-json-0.7.0.0@sha256:d1fe74cc26fc7c4de12e4eab2bb74cda4eb9b4dc311c297caa23e40bdb1bd3b6,3943
+- completed:
+    hackage: openapi3-3.2.4@sha256:7309864a9a59b4654b21ef477444fb26bf8d393eba795dd8de089b368ea74c2a,4982
+    pantry-tree:
+      sha256: 1ac8db74ee9753398df1b87f2556c83cce42994c3a2c80faa13169ddba250ab0
+      size: 2263
+  original:
+    hackage: openapi3-3.2.4@sha256:7309864a9a59b4654b21ef477444fb26bf8d393eba795dd8de089b368ea74c2a,4982
+- completed:
+    hackage: swagger2-2.8.10@sha256:e2cd0e2077b3f2571a3bfca2aca0ba03d10086800803d9c0b7bb895f7aad8441,4689
+    pantry-tree:
+      sha256: 1d9fe7cb9fb7c42425a9bc4fe1bb22ebf51d7dd91c04516117c065afd2392626
+      size: 2192
+  original:
+    hackage: swagger2-2.8.10@sha256:e2cd0e2077b3f2571a3bfca2aca0ba03d10086800803d9c0b7bb895f7aad8441,4689
+- completed:
+    hackage: QuickCheck-2.15.0.1@sha256:0cfd337bb9e6fbf09255bd24bb498a156f1d9bcd465396ac8657b25034b9ee31,9046
+    pantry-tree:
+      sha256: 27dddf0b64cc7d7e154326059c89b70da61530c25623af7ef576dd9db0c53821
+      size: 2437
+  original:
+    hackage: QuickCheck-2.15.0.1@sha256:0cfd337bb9e6fbf09255bd24bb498a156f1d9bcd465396ac8657b25034b9ee31,9046
 snapshots:
 - completed:
-    sha256: 238fa745b64f91184f9aa518fe04bdde6552533d169b0da5256670df83a0f1a9
-    size: 721141
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/22/44.yaml
-  original: lts-22.44
+    sha256: 3fb5b5166a4665e3b23251fab8fefe0683fd69131773d104e136e45029130109
+    size: 696191
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/nightly/2025/10/6.yaml
+  original: nightly-2025-10-06
