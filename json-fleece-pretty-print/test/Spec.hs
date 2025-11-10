@@ -139,7 +139,7 @@ prop_jsonEmptyArray =
         FC.mkJSONArray []
 
       expected =
-        [ "AnyJSON ([AnyJSON] [])"
+        [ "AnyJSON []"
         ]
     in
       assertPrettyPrintEquals FC.anyJSON value expected
@@ -153,9 +153,8 @@ prop_jsonStringArray =
 
       expected =
         [ "AnyJSON"
-        , "  [AnyJSON]"
-        , "    - AnyJSON \"foo\""
-        , "    - AnyJSON \"bar\""
+        , "  - AnyJSON \"foo\""
+        , "  - AnyJSON \"bar\""
         ]
     in
       assertPrettyPrintEquals FC.anyJSON value expected
@@ -172,15 +171,14 @@ prop_jsonObjectArray =
 
       expected =
         [ "AnyJSON"
-        , "  [AnyJSON]"
-        , "    - AnyJSON"
-        , "        AnyJSON object"
-        , "          -- additional fields --"
-        , "          foo = AnyJSON \"bar\""
-        , "    - AnyJSON"
-        , "        AnyJSON object"
-        , "          -- additional fields --"
-        , "          baz = AnyJSON \"bat\""
+        , "  - AnyJSON"
+        , "      AnyJSON object"
+        , "        -- additional fields --"
+        , "        foo = AnyJSON \"bar\""
+        , "  - AnyJSON"
+        , "      AnyJSON object"
+        , "        -- additional fields --"
+        , "        baz = AnyJSON \"bat\""
         ]
     in
       assertPrettyPrintEquals FC.anyJSON value expected

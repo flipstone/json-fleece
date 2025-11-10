@@ -166,11 +166,14 @@ instance FC.Fleece PrettyPrinter where
         , Indent (Block (map (\f -> f object) (DList.toList fields)))
         ]
 
-  validateNamed name unvalidate _check (PrettyPrinter _name toPretty) =
+  validateNamed name unvalidate _check (PrettyPrinter _unvalidatedName toPretty) =
     PrettyPrinter name $ \value ->
       prefixConstructor
         (renderName name)
         (toPretty (unvalidate value))
+
+  validateAnonymous unvalidate _check (PrettyPrinter unvalidatedName toPretty) =
+    PrettyPrinter unvalidatedName (toPretty . unvalidate)
 
   boundedEnumNamed name toText =
     PrettyPrinter name (showInline . toText)

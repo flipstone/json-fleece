@@ -29,7 +29,6 @@ module Fleece.Core.Schemas
   , realFloat
   , realFloatNamed
   , fixed
-  , fixedNamed
   , string
   , utcTime
   , utcTimeWithFormat
@@ -46,8 +45,10 @@ module Fleece.Core.Schemas
   , unboundedIntegralNumberNamed
   , transform
   , transformNamed
+  , transformAnonymous
   , coerceSchema
   , coerceSchemaNamed
+  , coerceSchemaAnonymous
   , eitherOf
   , eitherOfNamed
   , union
@@ -104,6 +105,7 @@ import Fleece.Core.Class
   , unionCombine
   , unionMemberWithIndex
   , unionNamed
+  , validateAnonymous
   , validateNamed
   , (#*)
   , (#|)
@@ -113,7 +115,6 @@ import Fleece.Core.Name
   , annotateName
   , defaultSchemaName
   , nameToString
-  , nameUnqualified
   , unqualifiedName
   )
 
@@ -302,6 +303,15 @@ transformNamed ::
 transformNamed name aToB bToA =
   validateNamed name aToB (Right . bToA)
 
+transformAnonymous ::
+  Fleece schema =>
+  (a -> b) ->
+  (b -> a) ->
+  schema b ->
+  schema a
+transformAnonymous aToB bToA =
+  validateAnonymous aToB (Right . bToA)
+
 coerceSchema ::
   (Fleece schema, Typeable a, Coercible a b) =>
   schema b ->
@@ -323,6 +333,13 @@ coerceSchemaNamed ::
   schema a
 coerceSchemaNamed name schemaB =
   transformNamed name coerce coerce schemaB
+
+coerceSchemaAnonymous ::
+  (Fleece schema, Coercible a b) =>
+  schema b ->
+  schema a
+coerceSchemaAnonymous schemaB =
+  transformAnonymous coerce coerce schemaB
 
 data NothingEncoding
   = EmitNull
@@ -353,8 +370,7 @@ optionalNullable encoding name accessor schema =
 
 list :: Fleece schema => schema a -> schema [a]
 list itemSchema =
-  transformNamed
-    (unqualifiedName $ "[" <> nameUnqualified (schemaName itemSchema) <> "]")
+  transformAnonymous
     V.fromList
     V.toList
     (array itemSchema)
@@ -373,8 +389,7 @@ nonEmpty itemSchema =
         Just nonEmptyItems -> Right nonEmptyItems
         Nothing -> Left "Expected non-empty array for NonEmpty list, but array was empty"
   in
-    validateNamed
-      (unqualifiedName $ "NonEmpty " <> nameUnqualified (schemaName itemSchema))
+    validateAnonymous
       NEL.toList
       validateNonEmpty
       (list itemSchema)
@@ -387,8 +402,7 @@ set :: (Ord a, Fleece schema) => SetDuplicateHandling -> schema a -> schema (Set
 set handling itemSchema =
   case handling of
     AllowInputDuplicates ->
-      transformNamed
-        (unqualifiedName $ "Set [" <> nameUnqualified (schemaName itemSchema) <> "]")
+      transformAnonymous
         (V.fromList . Set.toList)
         (Set.fromList . V.toList)
         (array itemSchema)
@@ -402,8 +416,7 @@ set handling itemSchema =
             _ ->
               Left "Unexpected duplicates found in input"
       in
-        validateNamed
-          (unqualifiedName $ "Set [" <> nameUnqualified (schemaName itemSchema) <> "]")
+        validateAnonymous
           (V.fromList . Set.toList)
           validateNoDuplicates
           (array itemSchema)
@@ -416,8 +429,7 @@ nonEmptyText =
         Just net -> Right net
         Nothing -> Left "Expected non-empty text for NonEmptyText, but text was empty"
   in
-    validateNamed
-      (unqualifiedName "NonEmptyText")
+    validateAnonymous
       NET.toText
       validateNonEmptyText
       text
@@ -564,32 +576,16 @@ realFloatNamed name =
 
 -- | Validates a 'number', failing if the precision is too high for the given resolution.
 fixed ::
-  (Fleece schema, HasResolution r, Typeable r) =>
+  (Fleece schema, HasResolution r) =>
   schema (Fixed r)
 fixed =
-  let
-    name =
-      defaultSchemaName schema
-
-    schema =
-      fixedNamed name
-  in
-    schema
-
--- | Validates a 'number', failing if the precision is too high for the given resolution.
-fixedNamed ::
-  (Fleece schema, HasResolution r) =>
-  Name ->
-  schema (Fixed r)
-fixedNamed name =
-  validateNamed
-    name
+  validateAnonymous
     realToFrac
-    (fixedFromScientific name)
+    fixedFromScientific
     number
 
-fixedFromScientific :: forall r. HasResolution r => Name -> Scientific -> Either String (Fixed r)
-fixedFromScientific name sci =
+fixedFromScientific :: forall r. HasResolution r => Scientific -> Either String (Fixed r)
+fixedFromScientific sci =
   let
     normalized = normalize sci
     fixedResolution = resolution (Proxy :: Proxy r)
@@ -599,14 +595,12 @@ fixedFromScientific name sci =
       then Right (realToFrac normalized)
       else
         Left $
-          "Invalid fixed precision number "
-            <> nameToString name
-            <> ", max precision is "
+          "Invalid fixed precision number. Max precision is "
             <> show (floor (logBase 10 (fromInteger fixedResolution) :: Double) :: Integer)
             <> " decimal places."
 
 string :: Fleece schema => schema String
-string = transform T.pack T.unpack text
+string = transformAnonymous T.pack T.unpack text
 
 utcTime :: Fleece schema => schema Time.UTCTime
 utcTime =

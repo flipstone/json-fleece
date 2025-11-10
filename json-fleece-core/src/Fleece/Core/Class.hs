@@ -27,6 +27,7 @@ module Fleece.Core.Class
       , field
       , additional
       , validateNamed
+      , validateAnonymous
       , boundedEnumNamed
       , unionNamed
       , unionMemberWithIndex
@@ -118,6 +119,12 @@ class Fleece schema where
 
   validateNamed ::
     Name ->
+    (a -> b) ->
+    (b -> Either String a) ->
+    (schema b) ->
+    (schema a)
+
+  validateAnonymous ::
     (a -> b) ->
     (b -> Either String a) ->
     (schema b) ->

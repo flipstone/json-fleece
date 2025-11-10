@@ -133,6 +133,12 @@ instance FC.Fleece EncoderDecoder where
       , decoder = FC.validateNamed name uncheck check $ decoder itemEncoderDecoder
       }
 
+  validateAnonymous uncheck check itemEncoderDecoder =
+    EncoderDecoder
+      { encoder = FC.validateAnonymous uncheck check $ encoder itemEncoderDecoder
+      , decoder = FC.validateAnonymous uncheck check $ decoder itemEncoderDecoder
+      }
+
   boundedEnumNamed name toText =
     EncoderDecoder
       { encoder = FC.boundedEnumNamed name toText

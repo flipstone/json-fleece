@@ -37,10 +37,13 @@ module Fleece.Core
   , nullable
   , validate
   , validateNamed
+  , validateAnonymous
   , transform
   , transformNamed
+  , transformAnonymous
   , coerceSchema
   , coerceSchemaNamed
+  , coerceSchemaAnonymous
 
     -- * Schemas for common Haskell data types that are useful with JSON
   , boundedEnum
@@ -65,7 +68,6 @@ module Fleece.Core
   , realFloat
   , realFloatNamed
   , fixed
-  , fixedNamed
   , SetDuplicateHandling (AllowInputDuplicates, RejectInputDuplicates)
   , set
   , string
