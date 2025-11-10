@@ -131,6 +131,9 @@ instance FC.Fleece Encoder where
   validateNamed name uncheck _check (Encoder _unvalidatedName toEncoding) =
     Encoder name (toEncoding . uncheck)
 
+  validateAnonymous uncheck _check (Encoder unvalidatedName toEncoding) =
+    Encoder unvalidatedName (toEncoding . uncheck)
+
   unionNamed name (UnionMembers builder) =
     let
       branches =

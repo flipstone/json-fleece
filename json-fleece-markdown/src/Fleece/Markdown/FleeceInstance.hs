@@ -125,6 +125,9 @@ instance FC.Fleece Markdown where
   validateNamed _name _check _unvalidate (Markdown schemaDocs) =
     Markdown schemaDocs
 
+  validateAnonymous _check _unvalidate (Markdown schemaDocs) =
+    Markdown schemaDocs
+
   boundedEnumNamed name toText =
     let
       enumValues =
