@@ -20,7 +20,7 @@ import Fleece.Markdown.SchemaDocumentation
       , fieldName
       , fieldSchemaDocs
       )
-  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, TaggedUnionEntry, UnionEntry)
+  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, TaggedUnionEntry, UnionEntry, WithFormat)
   , SchemaDocumentation
     ( schemaExcludeFromRender
     , schemaMainEntry
@@ -142,6 +142,11 @@ mainEntryDocs nameContext entry =
         <> newline
         <> newline
         <> foldMap (taggedUnionMember nameContext tagProperty) memberDocs
+    WithFormat formatString itemEntry ->
+      mainEntryDocs nameContext itemEntry
+        <> newline
+        <> "format: "
+        <> markdownText (T.pack formatString)
 
 fieldsHeader :: LTB.Builder
 fieldsHeader =

@@ -46,7 +46,6 @@ import Fleece.Core
   , Null
   , Object
   , additionalFields
-  , bareOrJSONString
   , boolean
   , boundedEnum
   , constructor
@@ -177,7 +176,6 @@ additionalFieldsExampleSchema =
 
 data AbnormalNumbersExample = AbnormalNumbersExample
   { stringyNumber :: Scientific
-  , bareOrStringyNumber :: Scientific
   }
   deriving (Eq, Show)
 
@@ -186,7 +184,6 @@ abnormalNumbersExampleSchema =
   object $
     constructor AbnormalNumbersExample
       #+ required "stringyNumber" stringyNumber (jsonString number)
-      #+ required "bareOrStringyNumber" bareOrStringyNumber (bareOrJSONString number)
 
 newtype ListFieldExample = ListFieldExample
   { listField :: [BoundedEnum]

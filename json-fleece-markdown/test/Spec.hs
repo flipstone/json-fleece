@@ -37,6 +37,7 @@ tests =
   , ("prop_taggedUnion", prop_taggedUnion)
   , ("prop_nestedObject", prop_nestedObject)
   , ("prop_nameDisambiguation", prop_nameDisambiguation)
+  , ("prop_format", prop_format)
   ]
 
 prop_object :: HH.Property
@@ -171,14 +172,6 @@ prop_abnormalNumbers =
       , "|Field|Key Required|Null Allowed|Type|"
       , "|---|---|---|---|"
       , "|stringyNumber|yes|no|number (encoded as json string)|"
-      , "|bareOrStringyNumber|yes|no|number (bare or encoded as json string)|"
-      , ""
-      , "# number (bare or encoded as json string)"
-      , ""
-      , "Any one of the following"
-      , ""
-      , "- number"
-      , "- number (encoded as json string)"
       ]
 
 prop_listField :: HH.Property
@@ -346,6 +339,17 @@ ambiguousNameChild2Schema =
   FC.objectNamed "Child2.AmbiguousName" $
     FC.constructor AmbiguousNameChild2
       #+ FC.required "value" ambiguousNameChild2Value FC.text
+
+prop_format :: HH.Property
+prop_format =
+  HH.withTests 1 . HH.property $
+    assertMarkdownEquals
+      (FC.format "abc123" FC.text)
+      [ "# string"
+      , ""
+      , "string"
+      , "format: abc123"
+      ]
 
 assertMarkdownEquals :: FM.Markdown a -> [LT.Text] -> HH.PropertyT IO ()
 assertMarkdownEquals schema expected =

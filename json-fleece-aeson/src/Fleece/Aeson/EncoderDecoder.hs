@@ -41,6 +41,12 @@ instance FC.Fleece EncoderDecoder where
 
   schemaName = FC.schemaName . encoder
 
+  format formatString encoderDecoder =
+    EncoderDecoder
+      { encoder = FC.format formatString $ encoder encoderDecoder
+      , decoder = FC.format formatString $ decoder encoderDecoder
+      }
+
   number =
     EncoderDecoder
       { encoder = FC.number

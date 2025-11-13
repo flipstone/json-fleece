@@ -10,7 +10,7 @@ module Fleece.Markdown.SchemaDocumentation
   , schemaSelfReference
   , schemaReferencesWithDescendants
   , SchemaNullability (NotNull, Nullable)
-  , MainEntry (NameOnly, Fields, EnumValues, ArrayEntry, NullableEntry, UnionEntry, TaggedUnionEntry)
+  , MainEntry (NameOnly, Fields, EnumValues, ArrayEntry, NullableEntry, UnionEntry, TaggedUnionEntry, WithFormat)
   , FieldDocumentation
     ( FieldDocumentation
     , fieldName
@@ -76,6 +76,7 @@ data MainEntry
   | NullableEntry MainEntry
   | UnionEntry [FC.Name]
   | TaggedUnionEntry T.Text [TaggedUnionMemberDocumentation]
+  | WithFormat String MainEntry
 
 data FieldDocumentation = FieldDocumentation
   { fieldName :: T.Text

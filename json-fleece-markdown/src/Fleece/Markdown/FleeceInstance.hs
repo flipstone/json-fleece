@@ -23,7 +23,7 @@ import Fleece.Markdown.SchemaDocumentation
       , fieldSchemaDocs
       )
   , FieldList
-  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, TaggedUnionEntry, UnionEntry)
+  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, TaggedUnionEntry, UnionEntry, WithFormat)
   , SchemaDocumentation
     ( SchemaDocumentation
     , schemaExcludeFromRender
@@ -61,6 +61,12 @@ instance FC.Fleece Markdown where
 
   schemaName (Markdown schemaDoc) =
     schemaName schemaDoc
+
+  format formatString (Markdown schemaDoc) =
+    Markdown $
+      schemaDoc
+        { schemaMainEntry = WithFormat formatString (schemaMainEntry schemaDoc)
+        }
 
   number =
     primitiveMarkdown "number"
