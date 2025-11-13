@@ -59,6 +59,9 @@ instance FC.Fleece Encoder where
   schemaName (Encoder name _toEncoding) =
     name
 
+  format _ =
+    id
+
   number =
     Encoder (FC.unqualifiedName "number") Aeson.toEncoding
 

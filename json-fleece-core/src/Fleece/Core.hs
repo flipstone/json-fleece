@@ -4,6 +4,7 @@ module Fleece.Core
   ( -- * A class for defining Fleece schemas
     Fleece
   , schemaName
+  , format
 
     -- * Schemas for dealing with JSON primitives
   , text
@@ -124,7 +125,6 @@ module Fleece.Core
 
     -- * Schema helpers for dealing with JSON strings within json
   , jsonString
-  , bareOrJSONString
 
     -- * Schema Names
   , Name (nameQualification, nameUnqualified)

@@ -543,17 +543,11 @@ prop_decode_abnormalNumbers :: HH.Property
 prop_decode_abnormalNumbers =
   HH.property $ do
     stringyNumber <- HH.forAll genScientific
-    bareOrStringyNumber <- HH.forAll genScientific
-    encodeBare <- HH.forAll Gen.bool
 
     let
       encoded =
         encodeTestObject
           [ "stringyNumber" .= Aeson.String (encodeAesonText stringyNumber)
-          , "bareOrStringyNumber"
-              .= if encodeBare
-                then Aeson.Number bareOrStringyNumber
-                else Aeson.String (encodeAesonText bareOrStringyNumber)
           ]
 
       decoded =
@@ -562,7 +556,6 @@ prop_decode_abnormalNumbers =
       expected =
         Examples.AbnormalNumbersExample
           { Examples.stringyNumber = stringyNumber
-          , Examples.bareOrStringyNumber = bareOrStringyNumber
           }
 
     Right expected === decoded
@@ -571,19 +564,16 @@ prop_encode_abnormalNumbers :: HH.Property
 prop_encode_abnormalNumbers =
   HH.property $ do
     stringyNumber <- HH.forAll genScientific
-    bareOrStringyNumber <- HH.forAll genScientific
 
     let
       input =
         Examples.AbnormalNumbersExample
           { Examples.stringyNumber = stringyNumber
-          , Examples.bareOrStringyNumber = bareOrStringyNumber
           }
 
       expected =
         encodeTestObject
           [ "stringyNumber" .= Aeson.String (encodeAesonText stringyNumber)
-          , "bareOrStringyNumber" .= Aeson.Number bareOrStringyNumber
           ]
 
       encoded =

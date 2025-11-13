@@ -87,6 +87,9 @@ instance FC.Fleece Decoder where
   schemaName (Decoder name _parseValue) =
     name
 
+  format _ =
+    id
+
   number =
     Decoder (FC.unqualifiedName "number") $ Aeson.withScientific "number" pure
 

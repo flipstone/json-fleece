@@ -12,6 +12,7 @@ module Fleece.Core.Class
       , UnionMembers
       , TaggedUnionMembers
       , schemaName
+      , format
       , text
       , number
       , boolean
@@ -63,6 +64,8 @@ class Fleece schema where
   data TaggedUnionMembers schema :: [Tag] -> [Tag] -> Type
 
   schemaName :: schema a -> Name
+
+  format :: String -> schema a -> schema a
 
   number :: schema Scientific
 

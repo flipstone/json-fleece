@@ -67,6 +67,9 @@ instance FC.Fleece ToValue where
   schemaName (ToValue name _toJSON) =
     name
 
+  format _ =
+    id
+
   number =
     ToValue (FC.unqualifiedName "number") Aeson.toJSON
 

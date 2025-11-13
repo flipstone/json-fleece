@@ -55,7 +55,6 @@ module Fleece.Core.Schemas
   , unionMember
   , taggedUnion
   , taggedUnionMember
-  , bareOrJSONString
   , set
   , SetDuplicateHandling (AllowInputDuplicates, RejectInputDuplicates)
   , NothingEncoding (EmitNull, OmitKey)
@@ -79,7 +78,7 @@ import Data.Typeable (Typeable)
 import qualified Data.Vector as V
 import qualified Data.Word as W
 import GHC.TypeLits (KnownNat, KnownSymbol, Symbol)
-import Shrubbery (Tag, TagIndex, TagType, TaggedTypes, TaggedUnion, TypeAtIndex, Union, branch, branchBuild, branchEnd, dissectUnion, firstIndexOfType, index0, index1, unify, unifyWithIndex, type (@=))
+import Shrubbery (Tag, TagIndex, TagType, TaggedTypes, TaggedUnion, TypeAtIndex, Union, branch, branchBuild, branchEnd, dissectUnion, firstIndexOfType, unify, type (@=))
 import Shrubbery.TypeList (FirstIndexOf, Length)
 
 import Fleece.Core.Class
@@ -93,7 +92,7 @@ import Fleece.Core.Class
   , array
   , boundedEnumNamed
   , constructor
-  , jsonString
+  , format
   , nullable
   , number
   , objectNamed
@@ -102,17 +101,15 @@ import Fleece.Core.Class
   , taggedUnionMemberWithTag
   , taggedUnionNamed
   , text
-  , unionCombine
   , unionMemberWithIndex
   , unionNamed
-  , validateAnonymous
   , validateNamed
+  , validateAnonymous
   , (#*)
   , (#|)
   )
 import Fleece.Core.Name
   ( Name
-  , annotateName
   , defaultSchemaName
   , nameToString
   , unqualifiedName
@@ -516,39 +513,37 @@ int :: Fleece schema => schema Int
 int = boundedIntegralNumber
 
 int8 :: Fleece schema => schema I.Int8
-int8 = boundedIntegralNumber
+int8 = format "int8" boundedIntegralNumber
 
 int16 :: Fleece schema => schema I.Int16
-int16 = boundedIntegralNumber
+int16 = format "int16" boundedIntegralNumber
 
 int32 :: Fleece schema => schema I.Int32
-int32 = boundedIntegralNumber
+int32 = format "int32" boundedIntegralNumber
 
 int64 :: Fleece schema => schema I.Int64
-int64 = boundedIntegralNumber
+int64 = format "int64" boundedIntegralNumber
 
 word :: Fleece schema => schema Word
-word = boundedIntegralNumber
+word = format "word" boundedIntegralNumber
 
 word8 :: Fleece schema => schema W.Word8
-word8 = boundedIntegralNumber
+word8 = format "word8" boundedIntegralNumber
 
 word16 :: Fleece schema => schema W.Word16
-word16 = boundedIntegralNumber
+word16 = format "word16" boundedIntegralNumber
 
 word32 :: Fleece schema => schema W.Word32
-word32 = boundedIntegralNumber
+word32 = format "word32" boundedIntegralNumber
 
 word64 :: Fleece schema => schema W.Word64
-word64 = boundedIntegralNumber
+word64 = format "word64" boundedIntegralNumber
 
 double :: Fleece schema => schema Double
-double =
-  realFloat
+double = format "double" realFloat
 
 float :: Fleece schema => schema Float
-float =
-  realFloat
+float = format "float" realFloat
 
 realFloat ::
   (Fleece schema, RealFloat f, Typeable f) =>
@@ -604,28 +599,48 @@ string = transformAnonymous T.pack T.unpack text
 
 utcTime :: Fleece schema => schema Time.UTCTime
 utcTime =
-  iso8601Formatted "UTCTime" ISO8601.iso8601Format AttoTime.utcTime
+  iso8601Formatted "UTCTime" $
+    ISO8601Format
+      { iso8601FormatLogical = Just "date-time"
+      , iso8601FormatString = ISO8601.iso8601Format
+      , iso8601FormatParser = AttoTime.utcTime
+      }
 
 utcTimeWithFormat :: Fleece schema => String -> schema Time.UTCTime
 utcTimeWithFormat = timeWithFormat "UTCTime"
 
 localTime :: Fleece schema => schema Time.LocalTime
 localTime =
-  iso8601Formatted "LocalTime" ISO8601.iso8601Format AttoTime.localTime
+  iso8601Formatted "LocalTime" $
+    ISO8601Format
+      { iso8601FormatLogical = Just "date-time-local"
+      , iso8601FormatString = ISO8601.iso8601Format
+      , iso8601FormatParser = AttoTime.localTime
+      }
 
 localTimeWithFormat :: Fleece schema => String -> schema Time.LocalTime
 localTimeWithFormat = timeWithFormat "LocalTime"
 
 zonedTime :: Fleece schema => schema Time.ZonedTime
 zonedTime =
-  iso8601Formatted "ZonedTime" ISO8601.iso8601Format AttoTime.zonedTime
+  iso8601Formatted "ZonedTime" $
+    ISO8601Format
+      { iso8601FormatLogical = Just "date-time"
+      , iso8601FormatString = ISO8601.iso8601Format
+      , iso8601FormatParser = AttoTime.zonedTime
+      }
 
 zonedTimeWithFormat :: Fleece schema => String -> schema Time.ZonedTime
 zonedTimeWithFormat = timeWithFormat "ZonedTime"
 
 day :: Fleece schema => schema Time.Day
 day =
-  iso8601Formatted "Day" ISO8601.iso8601Format AttoTime.day
+  iso8601Formatted "Day"
+    ISO8601Format
+      { iso8601FormatLogical = Just "date"
+      , iso8601FormatString = ISO8601.iso8601Format
+      , iso8601FormatParser = AttoTime.day
+      }
 
 dayWithFormat :: Fleece schema => String -> schema Time.Day
 dayWithFormat = timeWithFormat "Day"
@@ -640,53 +655,35 @@ timeWithFormat typeName formatString =
           Left $
             "Invalid " <> typeName <> ", custom format is: " <> formatString
   in
-    validateNamed
-      (unqualifiedName $ typeName <> " in " <> formatString <> " format")
-      (Time.formatTime Time.defaultTimeLocale formatString)
-      decode
-      string
+    -- TODO put 'date' and 'date-time' in as appropriate
+    format formatString $
+      validateNamed
+        (unqualifiedName typeName)
+        (Time.formatTime Time.defaultTimeLocale formatString)
+        decode
+        string
 
-bareOrJSONString :: Fleece schema => schema a -> schema a
-bareOrJSONString baseSchema =
-  let
-    toUnion :: a -> Union '[a, a]
-    toUnion =
-      unifyWithIndex index0
-
-    fromUnion :: Union '[a, a] -> a
-    fromUnion =
-      dissectUnion
-        . branchBuild
-        . branch id
-        . branch id
-        $ branchEnd
-
-    name =
-      annotateName
-        (schemaName baseSchema)
-        "(bare or encoded as json string)"
-
-    unionSchema =
-      unionNamed name $
-        unionCombine
-          (unionMemberWithIndex index0 baseSchema)
-          (unionMemberWithIndex index1 (jsonString baseSchema))
-  in
-    transformNamed
-      name
-      toUnion
-      fromUnion
-      unionSchema
+data ISO8601Format t =
+  ISO8601Format
+    { iso8601FormatLogical :: Maybe String
+    , iso8601FormatString :: ISO8601.Format t
+    , iso8601FormatParser :: AttoText.Parser t
+    }
 
 -- An internal helper for building building time schemes
 iso8601Formatted ::
   Fleece schema =>
   String ->
-  ISO8601.Format t ->
-  AttoText.Parser t ->
+  ISO8601Format t ->
   schema t
-iso8601Formatted name format parser =
+iso8601Formatted name iso8601Format =
   let
+    formatString =
+      iso8601FormatString iso8601Format
+
+    parser =
+      iso8601FormatParser iso8601Format
+      
     parseTime jsonText =
       case AttoText.parseOnly (parser <* AttoText.endOfInput) jsonText of
         Right time ->
@@ -702,6 +699,6 @@ iso8601Formatted name format parser =
   in
     validateNamed
       (unqualifiedName name)
-      (T.pack . ISO8601.formatShow format)
+      (T.pack . ISO8601.formatShow formatString)
       parseTime
       text

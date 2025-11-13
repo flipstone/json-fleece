@@ -61,6 +61,9 @@ instance FC.Fleece Decoder where
   schemaName (Decoder name _parseValue) =
     name
 
+  format _ =
+    id
+
   {-# INLINE number #-}
   number =
     Decoder (FC.unqualifiedName "number") H.scientific
