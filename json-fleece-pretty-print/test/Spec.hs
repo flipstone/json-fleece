@@ -241,7 +241,7 @@ prop_taggedUnion =
         [ "TaggedUnionExample"
         , "  type = \"person\""
         , "  name = \"Alice\""
-        , "  age = Int 42"
+        , "  age = 42"
         ]
     in
       assertPrettyPrintEquals Examples.taggedUnionExampleSchema value expected

@@ -68,6 +68,7 @@ module Fleece.Core
   , float
   , realFloat
   , realFloatNamed
+  , realFloatAnonymous
   , fixed
   , SetDuplicateHandling (AllowInputDuplicates, RejectInputDuplicates)
   , set
@@ -82,8 +83,10 @@ module Fleece.Core
   , dayWithFormat
   , boundedIntegralNumber
   , boundedIntegralNumberNamed
+  , boundedIntegralNumberAnonymous
   , unboundedIntegralNumber
   , unboundedIntegralNumberNamed
+  , unboundedIntegralNumberAnonymous
   , eitherOf
   , eitherOfNamed
 
