@@ -33,12 +33,13 @@ import Fleece.Core.Class
   , number
   , objectNamed
   , text
+  , transform
   , unionNamed
   , (#*)
   , (#|)
   )
 import Fleece.Core.Name (unqualifiedName)
-import Fleece.Core.Schemas (list, transform, unionMember)
+import Fleece.Core.Schemas (list, unionMember)
 
 newtype AnyJSON
   = AnyJSON
