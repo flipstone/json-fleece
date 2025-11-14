@@ -507,9 +507,14 @@ iso8601Formatted name iso8601Format =
               <> show jsonText
               <> ": "
               <> err
+
+    baseSchema =
+      validateNamed
+        (unqualifiedName name)
+        (T.pack . ISO8601.formatShow formatString)
+        parseTime
+        text
   in
-    validateNamed
-      (unqualifiedName name)
-      (T.pack . ISO8601.formatShow formatString)
-      parseTime
-      text
+    case iso8601FormatLogical iso8601Format of
+      Nothing -> baseSchema
+      Just logicalFormat -> format logicalFormat baseSchema
