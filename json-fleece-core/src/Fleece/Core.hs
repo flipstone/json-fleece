@@ -81,6 +81,7 @@ module Fleece.Core
   , zonedTimeWithFormat
   , day
   , dayWithFormat
+  , timeWithFormat
   , boundedIntegralNumber
   , boundedIntegralNumberNamed
   , boundedIntegralNumberAnonymous
