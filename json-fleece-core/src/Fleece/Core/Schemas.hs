@@ -410,9 +410,9 @@ string = transformAnonymous T.pack T.unpack text
 
 utcTime :: Fleece schema => schema Time.UTCTime
 utcTime =
-  iso8601Formatted "UTCTime" $
+  iso8601Formatted $
     ISO8601Format
-      { iso8601FormatLogical = Just "date-time"
+      { iso8601FormatLogical = "date-time"
       , iso8601FormatString = ISO8601.iso8601Format
       , iso8601FormatParser = AttoTime.utcTime
       }
@@ -422,9 +422,9 @@ utcTimeWithFormat = timeWithFormat "UTCTime"
 
 localTime :: Fleece schema => schema Time.LocalTime
 localTime =
-  iso8601Formatted "LocalTime" $
+  iso8601Formatted $
     ISO8601Format
-      { iso8601FormatLogical = Just "date-time-local"
+      { iso8601FormatLogical = "date-time-local"
       , iso8601FormatString = ISO8601.iso8601Format
       , iso8601FormatParser = AttoTime.localTime
       }
@@ -434,9 +434,9 @@ localTimeWithFormat = timeWithFormat "LocalTime"
 
 zonedTime :: Fleece schema => schema Time.ZonedTime
 zonedTime =
-  iso8601Formatted "ZonedTime" $
+  iso8601Formatted $
     ISO8601Format
-      { iso8601FormatLogical = Just "date-time"
+      { iso8601FormatLogical = "date-time"
       , iso8601FormatString = ISO8601.iso8601Format
       , iso8601FormatParser = AttoTime.zonedTime
       }
@@ -446,9 +446,9 @@ zonedTimeWithFormat = timeWithFormat "ZonedTime"
 
 day :: Fleece schema => schema Time.Day
 day =
-  iso8601Formatted "Day"
+  iso8601Formatted $
     ISO8601Format
-      { iso8601FormatLogical = Just "date"
+      { iso8601FormatLogical = "date"
       , iso8601FormatString = ISO8601.iso8601Format
       , iso8601FormatParser = AttoTime.day
       }
@@ -476,7 +476,7 @@ timeWithFormat typeName formatString =
 
 data ISO8601Format t =
   ISO8601Format
-    { iso8601FormatLogical :: Maybe String
+    { iso8601FormatLogical :: String
     , iso8601FormatString :: ISO8601.Format t
     , iso8601FormatParser :: AttoText.Parser t
     }
@@ -484,11 +484,13 @@ data ISO8601Format t =
 -- An internal helper for building building time schemes
 iso8601Formatted ::
   Fleece schema =>
-  String ->
   ISO8601Format t ->
   schema t
-iso8601Formatted name iso8601Format =
+iso8601Formatted iso8601Format =
   let
+    formatLogical =
+      iso8601FormatLogical iso8601Format
+
     formatString =
       iso8601FormatString iso8601Format
 
@@ -502,19 +504,16 @@ iso8601Formatted name iso8601Format =
         Left err ->
           Left $
             "Invalid time format for "
-              <> name
-              <> " value "
+              <> formatLogical
+              <> ", value "
               <> show jsonText
               <> ": "
               <> err
 
     baseSchema =
-      validateNamed
-        (unqualifiedName name)
+      validateAnonymous
         (T.pack . ISO8601.formatShow formatString)
         parseTime
         text
   in
-    case iso8601FormatLogical iso8601Format of
-      Nothing -> baseSchema
-      Just logicalFormat -> format logicalFormat baseSchema
+   format formatLogical baseSchema
