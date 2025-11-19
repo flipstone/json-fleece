@@ -49,9 +49,12 @@ module Fleece.CodeGenUtil
   , int64SchemaTypeInfo
   , integerFormat
   , integerSchemaTypeInfo
-  , scientificFormat
   , floatFormat
+  , floatSchemaTypeInfo
   , doubleFormat
+  , doubleSchemaTypeInfo
+  , numberFormat
+  , numberSchemaTypeInfo
   , dayFormat
   , utcTimeFormat
   , zonedTimeFormat
@@ -489,21 +492,27 @@ textSchemaTypeInfo =
 
 floatFormat :: TypeOptions -> CodeGenDataFormat
 floatFormat typeOptions =
-  codeGenNewTypeSchemaTypeInfo
-    typeOptions
-    (primitiveSchemaTypeInfo floatType (fleeceCoreVar "float"))
+  codeGenNewTypeSchemaTypeInfo typeOptions floatSchemaTypeInfo
+
+floatSchemaTypeInfo :: SchemaTypeInfo
+floatSchemaTypeInfo =
+  primitiveSchemaTypeInfo floatType (fleeceCoreVar "float")
 
 doubleFormat :: TypeOptions -> CodeGenDataFormat
 doubleFormat typeOptions =
-  codeGenNewTypeSchemaTypeInfo
-    typeOptions
-    (primitiveSchemaTypeInfo doubleType (fleeceCoreVar "double"))
+  codeGenNewTypeSchemaTypeInfo typeOptions doubleSchemaTypeInfo
 
-scientificFormat :: TypeOptions -> CodeGenDataFormat
-scientificFormat typeOptions =
-  codeGenNewTypeSchemaTypeInfo
-    typeOptions
-    (primitiveSchemaTypeInfo scientificType (fleeceCoreVar "number"))
+doubleSchemaTypeInfo :: SchemaTypeInfo
+doubleSchemaTypeInfo =
+  primitiveSchemaTypeInfo doubleType (fleeceCoreVar "double")
+
+numberFormat :: TypeOptions -> CodeGenDataFormat
+numberFormat typeOptions =
+  codeGenNewTypeSchemaTypeInfo typeOptions numberSchemaTypeInfo
+
+numberSchemaTypeInfo :: SchemaTypeInfo
+numberSchemaTypeInfo =
+  primitiveSchemaTypeInfo scientificType (fleeceCoreVar "number")
 
 int32Format :: TypeOptions -> CodeGenDataFormat
 int32Format typeOptions =

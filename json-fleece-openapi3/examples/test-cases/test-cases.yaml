@@ -656,6 +656,13 @@ components:
         bazRef:
           $ref: "#/components/schemas/Baz"
 
+    OneOfWithInlineNumber:
+      oneOf:
+        - type: number
+        - type: array
+          items:
+            type: number
+
     Foo:
       type: object
       properties:

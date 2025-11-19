@@ -430,6 +430,18 @@ mkInlineIntegerSchema schema =
       Just _ -> CGU.integerSchemaTypeInfo
       Nothing -> CGU.integerSchemaTypeInfo
 
+mkInlineNumberSchema ::
+  OA.Schema ->
+  CGM SchemaTypeInfoWithDeps
+mkInlineNumberSchema schema =
+  pure
+    . schemaInfoWithoutDependencies
+    $ case OA._schemaFormat schema of
+      Just "float" -> CGU.floatSchemaTypeInfo
+      Just "double" -> CGU.doubleSchemaTypeInfo
+      Just _ -> CGU.numberSchemaTypeInfo
+      Nothing -> CGU.numberSchemaTypeInfo
+
 mkInlineBodyObjectSchema ::
   (forall a. String -> CGM a) ->
   T.Text ->
@@ -580,6 +592,7 @@ mkInlineBodySchema raiseError schemaKey schemaMap schema =
     Just OA.OpenApiBoolean -> mkInlineBoolSchema
     Just OA.OpenApiInteger -> mkInlineIntegerSchema schema
     Just OA.OpenApiObject -> mkInlineBodyObjectSchema raiseError schemaKey schemaMap schema
+    Just OA.OpenApiNumber -> mkInlineNumberSchema schema
     Just s -> raiseError $ "Inline " <> show s <> " schemas are not currently supported."
     Nothing -> raiseError "Inline schema doesn't have a type."
 
@@ -595,6 +608,7 @@ mkInlineOneOfSchema raiseError schemaKey schemaMap schema =
     Just OA.OpenApiString -> mkInlineStringSchema schemaKey schema
     Just OA.OpenApiBoolean -> mkInlineBoolSchema
     Just OA.OpenApiInteger -> mkInlineIntegerSchema schema
+    Just OA.OpenApiNumber -> mkInlineNumberSchema schema
     Just OA.OpenApiObject -> raiseError "Inline OpenApiObject schemas are not currently supported in oneOf."
     Just s -> raiseError $ "Inline " <> show s <> " schemas are not currently supported."
     Nothing -> raiseError "Inline schema doesn't have a type."
@@ -1075,7 +1089,7 @@ mkOpenApiNumberFormat typeName schema = do
     case OA._schemaFormat schema of
       Just "float" -> CGU.floatFormat typeOptions
       Just "double" -> CGU.doubleFormat typeOptions
-      _ -> CGU.scientificFormat typeOptions
+      _ -> CGU.numberFormat typeOptions
 
 mkOpenApiIntegerFormat :: HC.TypeName -> OA.Schema -> CGM CGU.CodeGenDataFormat
 mkOpenApiIntegerFormat typeName schema = do
