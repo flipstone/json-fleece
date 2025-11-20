@@ -620,7 +620,12 @@ mkInlineBodySchema raiseError schemaKey schemaMap schema =
     Just OA.OpenApiObject -> mkInlineObjectSchema raiseError schemaKey schemaMap schema
     Just OA.OpenApiNumber -> mkInlineNumberSchema schema
     Just OA.OpenApiNull -> mkInlineNullSchema
-    Nothing -> raiseError "Inline schema doesn't have a type."
+    Nothing -> raiseError $
+      "Inline schema doesn't have a type." <>
+      "\n" <>
+      T.unpack schemaKey <>
+      "\n" <>
+      show schema
 
 type SchemaKeyBuilder = T.Text -> T.Text
 
@@ -642,7 +647,12 @@ mkInlineOneOfSchema raiseError mkSchemaKey schemaMap schema idx =
     Just OA.OpenApiNumber -> mkInlineNumberSchema schema
     Just OA.OpenApiNull -> mkInlineNullSchema
     Just OA.OpenApiObject -> mkInlineOneOfObjectSchema raiseError mkSchemaKey schemaMap schema idx
-    Nothing -> raiseError "Inline schema doesn't have a type."
+    Nothing -> raiseError $
+      "Inline schema doesn't have a type." <>
+      "\n" <>
+      T.unpack (mkSchemaKey "ERROR: ") <>
+      "\n" <>
+      show schema
 
 mkOperationParams ::
   OA.Definitions OA.Param ->
