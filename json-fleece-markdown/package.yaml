@@ -78,4 +78,5 @@ tests:
     - json-fleece-examples
     - json-fleece-core
     - json-fleece-markdown
-    - hedgehog
+    - tasty
+    - tasty-golden
