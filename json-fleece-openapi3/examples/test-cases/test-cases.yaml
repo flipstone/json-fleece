@@ -663,6 +663,13 @@ components:
           items:
             type: number
 
+    OneOfWithInlineNull:
+      oneOf:
+        - type: "null"
+        - type: array
+          items:
+            type: "null"
+
     Foo:
       type: object
       properties:

@@ -442,6 +442,10 @@ mkInlineNumberSchema schema =
       Just _ -> CGU.numberSchemaTypeInfo
       Nothing -> CGU.numberSchemaTypeInfo
 
+mkInlineNullSchema :: CGM SchemaTypeInfoWithDeps
+mkInlineNullSchema =
+  pure . schemaInfoWithoutDependencies $ CGU.nullSchemaTypeInfo
+
 mkInlineBodyObjectSchema ::
   (forall a. String -> CGM a) ->
   T.Text ->
@@ -593,7 +597,7 @@ mkInlineBodySchema raiseError schemaKey schemaMap schema =
     Just OA.OpenApiInteger -> mkInlineIntegerSchema schema
     Just OA.OpenApiObject -> mkInlineBodyObjectSchema raiseError schemaKey schemaMap schema
     Just OA.OpenApiNumber -> mkInlineNumberSchema schema
-    Just s -> raiseError $ "Inline " <> show s <> " schemas are not currently supported."
+    Just OA.OpenApiNull -> mkInlineNullSchema
     Nothing -> raiseError "Inline schema doesn't have a type."
 
 mkInlineOneOfSchema ::
@@ -609,8 +613,8 @@ mkInlineOneOfSchema raiseError schemaKey schemaMap schema =
     Just OA.OpenApiBoolean -> mkInlineBoolSchema
     Just OA.OpenApiInteger -> mkInlineIntegerSchema schema
     Just OA.OpenApiNumber -> mkInlineNumberSchema schema
+    Just OA.OpenApiNull -> mkInlineNullSchema
     Just OA.OpenApiObject -> raiseError "Inline OpenApiObject schemas are not currently supported in oneOf."
-    Just s -> raiseError $ "Inline " <> show s <> " schemas are not currently supported."
     Nothing -> raiseError "Inline schema doesn't have a type."
 
 mkOperationParams ::

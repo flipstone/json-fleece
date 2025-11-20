@@ -61,6 +61,7 @@ module Fleece.CodeGenUtil
   , localTimeFormat
   , enumFormat
   , nullFormat
+  , nullSchemaTypeInfo
   , HC.HaskellCode
   , HC.renderLazyText
   , HC.renderText
@@ -552,9 +553,11 @@ enumFormat =
 
 nullFormat :: TypeOptions -> CodeGenDataFormat
 nullFormat typeOptions =
-  codeGenNewTypeSchemaTypeInfo
-    typeOptions
-    (primitiveSchemaTypeInfo (fleeceCoreType "Null") (fleeceCoreVar "null"))
+  codeGenNewTypeSchemaTypeInfo typeOptions nullSchemaTypeInfo
+
+nullSchemaTypeInfo :: SchemaTypeInfo
+nullSchemaTypeInfo =
+  primitiveSchemaTypeInfo (fleeceCoreType "Null") (fleeceCoreVar "null")
 
 arrayTypeInfo :: SchemaTypeInfo -> SchemaTypeInfo
 arrayTypeInfo itemInfo =
