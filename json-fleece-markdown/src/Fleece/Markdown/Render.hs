@@ -96,10 +96,21 @@ nameToText context name =
 
 schemaFieldTypeDocs :: NameContext -> SchemaDocumentation -> LTB.Builder
 schemaFieldTypeDocs nameContext schemaDocs =
-  renderName nameContext . schemaName $
-    case schemaNullability schemaDocs of
-      Nullable notNullSchemaDocs -> notNullSchemaDocs
-      NotNull -> schemaDocs
+  let
+    name =
+      renderName nameContext . schemaName $
+        case schemaNullability schemaDocs of
+          Nullable notNullSchemaDocs -> notNullSchemaDocs
+          NotNull -> schemaDocs
+  in
+    case schemaMainEntry schemaDocs of
+      WithFormat format _entry | schemaExcludeFromRender schemaDocs ->
+        -- If this schema has a format that has been declared and also is going
+        -- to be excluded from the render (so it's main entry will never be seen)
+        -- then include the format in the field type docs.
+        name <> " (format: " <> LTB.fromString format <> ")"
+      _ ->
+        name
 
 schemaMainEntryDocs :: NameContext -> SchemaDocumentation -> LTB.Builder
 schemaMainEntryDocs nameContext schemaDocs =
@@ -145,8 +156,10 @@ mainEntryDocs nameContext entry =
     WithFormat formatString itemEntry ->
       mainEntryDocs nameContext itemEntry
         <> newline
+        <> newline
         <> "format: "
         <> markdownText (T.pack formatString)
+        <> newline
 
 fieldsHeader :: LTB.Builder
 fieldsHeader =

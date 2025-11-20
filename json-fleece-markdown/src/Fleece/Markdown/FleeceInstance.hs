@@ -128,8 +128,12 @@ instance FC.Fleece Markdown where
         , schemaReferences = foldMap (schemaSelfReference . fieldSchemaDocs) fields
         }
 
-  validateNamed _name _check _unvalidate (Markdown schemaDocs) =
-    Markdown schemaDocs
+  validateNamed name _check _unvalidate (Markdown schemaDocs) =
+    Markdown
+      schemaDocs
+        { schemaName = name
+        , schemaExcludeFromRender = False
+        }
 
   validateAnonymous _check _unvalidate (Markdown schemaDocs) =
     Markdown schemaDocs

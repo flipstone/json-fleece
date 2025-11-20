@@ -466,7 +466,6 @@ timeWithFormat typeName formatString =
           Left $
             "Invalid " <> typeName <> ", custom format is: " <> formatString
   in
-    -- TODO put 'date' and 'date-time' in as appropriate
     format formatString $
       validateNamed
         (unqualifiedName typeName)
