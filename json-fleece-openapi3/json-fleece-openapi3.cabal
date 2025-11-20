@@ -1869,6 +1869,19 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param1.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param2.hs
     examples/test-cases/TestCases/Operations/Num2GetAResultNamedNumberSomething.hs
+    examples/test-cases/TestCases/Operations/OneOfWithInlineEnum/Option1.hs
+    examples/test-cases/TestCases/Operations/OneOfWithInlineEnum/Option2.hs
+    examples/test-cases/TestCases/Operations/OneOfWithInlineNestedArray/Option2ItemItem.hs
+    examples/test-cases/TestCases/Operations/OneOfWithInlineNestedArray/Option2ItemItem/Id.hs
+    examples/test-cases/TestCases/Operations/OneOfWithInlineNestedArray/Option2ItemItem/Name.hs
+    examples/test-cases/TestCases/Operations/OneOfWithInlineObject/Option1.hs
+    examples/test-cases/TestCases/Operations/OneOfWithInlineObject/Option1/Id.hs
+    examples/test-cases/TestCases/Operations/OneOfWithInlineObject/Option1/Type.hs
+    examples/test-cases/TestCases/Operations/OneOfWithInlineObject/Option3Item.hs
+    examples/test-cases/TestCases/Operations/OneOfWithInlineObject/Option3Item/Description.hs
+    examples/test-cases/TestCases/Operations/OneOfWithInlineObject/Option3Item/Type.hs
+    examples/test-cases/TestCases/Operations/OneOfWithInlineObject/Option4.hs
+    examples/test-cases/TestCases/Operations/OneOfWithInlineObject/Option4/Nested.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReference.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReference/EnumIntParam.hs
     examples/test-cases/TestCases/Operations/ParamSchemaReference/EnumParam.hs
@@ -2038,8 +2051,13 @@ extra-source-files:
     examples/test-cases/TestCases/Types/ObjectWithDiscriminatedUnionRef.hs
     examples/test-cases/TestCases/Types/OneOfWithDiscriminator.hs
     examples/test-cases/TestCases/Types/OneOfWithDiscriminatorTypeObject.hs
+    examples/test-cases/TestCases/Types/OneOfWithInlineEnum.hs
+    examples/test-cases/TestCases/Types/OneOfWithInlineNestedArray.hs
     examples/test-cases/TestCases/Types/OneOfWithInlineNull.hs
     examples/test-cases/TestCases/Types/OneOfWithInlineNumber.hs
+    examples/test-cases/TestCases/Types/OneOfWithInlineObject.hs
+    examples/test-cases/TestCases/Types/OneOfWithInlineObject/Option4/Nested/Name.hs
+    examples/test-cases/TestCases/Types/OneOfWithInlineObject/Option4/Nested/Number.hs
     examples/test-cases/TestCases/Types/OneOfWithNullable.hs
     examples/test-cases/TestCases/Types/ReferenceOneOf.hs
     examples/test-cases/TestCases/Types/ReferenceOneOfInsideOneOf.hs

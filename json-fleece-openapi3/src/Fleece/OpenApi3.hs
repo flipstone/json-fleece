@@ -446,13 +446,34 @@ mkInlineNullSchema :: CGM SchemaTypeInfoWithDeps
 mkInlineNullSchema =
   pure . schemaInfoWithoutDependencies $ CGU.nullSchemaTypeInfo
 
-mkInlineBodyObjectSchema ::
+mkInlineOneOfObjectSchema ::
+  (forall a. String -> CGM a) ->
+  SchemaKeyBuilder ->
+  SchemaMap ->
+  OA.Schema ->
+  OneOfSchemaIndex ->
+  CGM SchemaTypeInfoWithDeps
+mkInlineOneOfObjectSchema raiseError mkSchemaKey schemaMap schema idx =
+  mkInlineObjectSchema
+    raiseError
+    (mkInlineOneOfOptionSchemaKey mkSchemaKey idx)
+    schemaMap
+    schema
+
+mkInlineOneOfOptionSchemaKey ::
+  SchemaKeyBuilder ->
+  OneOfSchemaIndex ->
+  T.Text
+mkInlineOneOfOptionSchemaKey mkSchemaKey idx =
+  mkSchemaKey $ ".Option" <> T.pack (show idx)
+
+mkInlineObjectSchema ::
   (forall a. String -> CGM a) ->
   T.Text ->
   SchemaMap ->
   OA.Schema ->
   CGM SchemaTypeInfoWithDeps
-mkInlineBodyObjectSchema raiseError schemaKey schemaMap schema =
+mkInlineObjectSchema raiseError schemaKey schemaMap schema =
   if IOHM.null (OA._schemaProperties schema)
     then do
       mbAdditionalPropertiesMapSchema <-
@@ -549,11 +570,12 @@ mkInlineArraySchema raiseError schemaKey schemaMap schema =
 
 mkInlineArrayOneOfSchema ::
   (forall a. String -> CGM a) ->
-  T.Text ->
+  SchemaKeyBuilder ->
   SchemaMap ->
   OA.Schema ->
+  OneOfSchemaIndex ->
   CGM SchemaTypeInfoWithDeps
-mkInlineArrayOneOfSchema raiseError schemaKey schemaMap schema =
+mkInlineArrayOneOfSchema raiseError mkSchemaKey schemaMap schema idx =
   let
     minItems = OA._schemaMinItems schema
   in
@@ -566,12 +588,12 @@ mkInlineArrayOneOfSchema raiseError schemaKey schemaMap schema =
             }
       Just (OA.OpenApiItemsObject (OA.Inline innerSchema)) ->
         let
-          itemKey =
-            schemaKey <> "Item"
+          itemKey txt =
+            mkSchemaKey $ txt <> "Item"
         in
           fmap
             (fmapSchemaInfoAndDeps (bimap (CGU.arrayLikeTypeInfo minItems) $ CGU.CodeGenRefArray minItems))
-            (mkInlineOneOfSchema raiseError itemKey schemaMap innerSchema)
+            (mkInlineOneOfSchema raiseError itemKey schemaMap innerSchema idx)
       otherItemType ->
         raiseError $
           "Unsupported schema array item type found: "
@@ -595,26 +617,31 @@ mkInlineBodySchema raiseError schemaKey schemaMap schema =
     Just OA.OpenApiString -> mkInlineStringSchema schemaKey schema
     Just OA.OpenApiBoolean -> mkInlineBoolSchema
     Just OA.OpenApiInteger -> mkInlineIntegerSchema schema
-    Just OA.OpenApiObject -> mkInlineBodyObjectSchema raiseError schemaKey schemaMap schema
+    Just OA.OpenApiObject -> mkInlineObjectSchema raiseError schemaKey schemaMap schema
     Just OA.OpenApiNumber -> mkInlineNumberSchema schema
     Just OA.OpenApiNull -> mkInlineNullSchema
     Nothing -> raiseError "Inline schema doesn't have a type."
 
+type SchemaKeyBuilder = T.Text -> T.Text
+
+type OneOfSchemaIndex = Int
+
 mkInlineOneOfSchema ::
   (forall a. String -> CGM a) ->
-  T.Text ->
+  SchemaKeyBuilder ->
   SchemaMap ->
   OA.Schema ->
+  OneOfSchemaIndex ->
   CGM SchemaTypeInfoWithDeps
-mkInlineOneOfSchema raiseError schemaKey schemaMap schema =
+mkInlineOneOfSchema raiseError mkSchemaKey schemaMap schema idx =
   applyNullable schema <$> case OA._schemaType schema of
-    Just OA.OpenApiArray -> mkInlineArrayOneOfSchema raiseError schemaKey schemaMap schema
-    Just OA.OpenApiString -> mkInlineStringSchema schemaKey schema
+    Just OA.OpenApiArray -> mkInlineArrayOneOfSchema raiseError mkSchemaKey schemaMap schema idx
+    Just OA.OpenApiString -> mkInlineStringSchema (mkInlineOneOfOptionSchemaKey mkSchemaKey idx) schema
     Just OA.OpenApiBoolean -> mkInlineBoolSchema
     Just OA.OpenApiInteger -> mkInlineIntegerSchema schema
     Just OA.OpenApiNumber -> mkInlineNumberSchema schema
     Just OA.OpenApiNull -> mkInlineNullSchema
-    Just OA.OpenApiObject -> raiseError "Inline OpenApiObject schemas are not currently supported in oneOf."
+    Just OA.OpenApiObject -> mkInlineOneOfObjectSchema raiseError mkSchemaKey schemaMap schema idx
     Nothing -> raiseError "Inline schema doesn't have a type."
 
 mkOperationParams ::
@@ -988,15 +1015,16 @@ mkOneOfUnion ::
   CGM (SchemaMap, CGU.CodeGenDataFormat)
 mkOneOfUnion schemaKey typeOptions refSchemas = do
   let
-    processRefSchema refSchema =
+    processRefSchema idx refSchema =
       case refSchema of
         OA.Inline schema -> do
           typeInfoWithDeps <-
             mkInlineOneOfSchema
               (\err -> lift . CGU.codeGenError $ "Inside inline oneOf: " <> err)
-              schemaKey
+              (\txt -> schemaKey <> txt)
               mempty
               schema
+              idx
           let
             unionMember =
               CGU.CodeGenUnionMember
@@ -1011,7 +1039,13 @@ mkOneOfUnion schemaKey typeOptions refSchemas = do
                 }
           pure (mempty, unionMember)
 
-  (maps, codeGenUnionMembers) <- fmap unzip . traverse processRefSchema . NEL.toList $ refSchemas
+  (maps, codeGenUnionMembers) <-
+    fmap unzip
+      . traverse (uncurry processRefSchema)
+      . zip [1 ..]
+      . NEL.toList
+      $ refSchemas
+
   schemaMap <- unionsErrorOnConflict maps
   pure (schemaMap, CGU.CodeGenUnion typeOptions codeGenUnionMembers)
 

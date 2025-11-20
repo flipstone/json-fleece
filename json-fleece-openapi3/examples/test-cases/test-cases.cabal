@@ -20,6 +20,19 @@ library
       TestCases.Operations.GetMultiplePathsParams.Param1
       TestCases.Operations.GetMultiplePathsParams.Param2
       TestCases.Operations.Num2GetAResultNamedNumberSomething
+      TestCases.Operations.OneOfWithInlineEnum.Option1
+      TestCases.Operations.OneOfWithInlineEnum.Option2
+      TestCases.Operations.OneOfWithInlineNestedArray.Option2ItemItem
+      TestCases.Operations.OneOfWithInlineNestedArray.Option2ItemItem.Id
+      TestCases.Operations.OneOfWithInlineNestedArray.Option2ItemItem.Name
+      TestCases.Operations.OneOfWithInlineObject.Option1
+      TestCases.Operations.OneOfWithInlineObject.Option1.Id
+      TestCases.Operations.OneOfWithInlineObject.Option1.Type
+      TestCases.Operations.OneOfWithInlineObject.Option3Item
+      TestCases.Operations.OneOfWithInlineObject.Option3Item.Description
+      TestCases.Operations.OneOfWithInlineObject.Option3Item.Type
+      TestCases.Operations.OneOfWithInlineObject.Option4
+      TestCases.Operations.OneOfWithInlineObject.Option4.Nested
       TestCases.Operations.ParamSchemaReference
       TestCases.Operations.ParamSchemaReference.EnumIntParam
       TestCases.Operations.ParamSchemaReference.EnumParam
@@ -189,8 +202,13 @@ library
       TestCases.Types.ObjectWithDiscriminatedUnionRef
       TestCases.Types.OneOfWithDiscriminator
       TestCases.Types.OneOfWithDiscriminatorTypeObject
+      TestCases.Types.OneOfWithInlineEnum
+      TestCases.Types.OneOfWithInlineNestedArray
       TestCases.Types.OneOfWithInlineNull
       TestCases.Types.OneOfWithInlineNumber
+      TestCases.Types.OneOfWithInlineObject
+      TestCases.Types.OneOfWithInlineObject.Option4.Nested.Name
+      TestCases.Types.OneOfWithInlineObject.Option4.Nested.Number
       TestCases.Types.OneOfWithNullable
       TestCases.Types.ReferenceOneOf
       TestCases.Types.ReferenceOneOfInsideOneOf

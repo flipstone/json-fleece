@@ -656,6 +656,19 @@ components:
         bazRef:
           $ref: "#/components/schemas/Baz"
 
+    OneOfWithInlineEnum:
+      oneOf:
+        - type: string
+          enum:
+            - one
+            - two
+            - three
+        - type: string
+          enum:
+            - uno
+            - dos
+            - tres
+
     OneOfWithInlineNumber:
       oneOf:
         - type: number
@@ -669,6 +682,51 @@ components:
         - type: array
           items:
             type: "null"
+
+    OneOfWithInlineNestedArray:
+      oneOf:
+        - type: array
+          items:
+            type: array
+            items:
+              type: string
+        - type: array
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                id:
+                  type: number
+
+    OneOfWithInlineObject:
+      oneOf:
+        - type: object
+          properties:
+            type:
+              type: string
+            id:
+              type: number
+        - $ref: "#/components/schemas/Foo"
+        - type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              description:
+                type: string
+        - type: object
+          properties:
+            nested:
+              type: object
+              properties:
+                name:
+                  type: string
+                number:
+                  type: number
 
     Foo:
       type: object
