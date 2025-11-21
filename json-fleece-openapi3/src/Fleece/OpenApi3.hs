@@ -1073,12 +1073,23 @@ getAllOfObjectSchema typeName referenced = do
   case OA._schemaType schema of
     Just OA.OpenApiObject ->
       pure schema
-    _otherType ->
-      lift
-        . CGU.codeGenError
-        $ "While building merged allOf schema with typeName: "
-          <> T.unpack (HC.typeNameText typeName)
-          <> ": a schema in the allOf array was not an object."
+    _otherType -> case OA._schemaAllOf schema of
+      Just schemas ->
+        case NEL.nonEmpty schemas of
+          Just neSchemas ->
+            getAp $ foldMap (Ap . getAllOfObjectSchema typeName) neSchemas
+          Nothing ->
+            lift
+              . CGU.codeGenError
+              $ "While building merged allOf schema with typeName: "
+                <> T.unpack (HC.typeNameText typeName)
+                <> ": a recursively referenced allOf schema was empty."
+      Nothing ->
+        lift
+          . CGU.codeGenError
+          $ "While building merged allOf schema with typeName: "
+            <> T.unpack (HC.typeNameText typeName)
+            <> ": a schema in the allOf array was not an object or recursive allOf."
 
 mkOneOfUnion ::
   T.Text ->

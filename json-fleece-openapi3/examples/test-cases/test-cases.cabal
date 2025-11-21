@@ -226,6 +226,12 @@ library
       TestCases.Types.OneOfWithInlineObject.Option4.Nested.Name
       TestCases.Types.OneOfWithInlineObject.Option4.Nested.Number
       TestCases.Types.OneOfWithNullable
+      TestCases.Types.RecursiveAllOf
+      TestCases.Types.RecursiveAllOf.Age
+      TestCases.Types.RecursiveAllOf.Description
+      TestCases.Types.RecursiveAllOf.Id
+      TestCases.Types.RecursiveAllOf.Name
+      TestCases.Types.RecursiveAllOf.Type
       TestCases.Types.ReferenceOneOf
       TestCases.Types.ReferenceOneOfInsideOneOf
       TestCases.Types.SingletonNonNullableOneOfRef

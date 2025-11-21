@@ -1109,3 +1109,11 @@ components:
           type: string
       required:
         - id
+
+    RecursiveAllOf:
+      allOf:
+        - $ref: '#/components/schemas/AllOf'
+        - type: object
+          properties:
+            age:
+              type: integer

@@ -2075,6 +2075,12 @@ extra-source-files:
     examples/test-cases/TestCases/Types/OneOfWithInlineObject/Option4/Nested/Name.hs
     examples/test-cases/TestCases/Types/OneOfWithInlineObject/Option4/Nested/Number.hs
     examples/test-cases/TestCases/Types/OneOfWithNullable.hs
+    examples/test-cases/TestCases/Types/RecursiveAllOf.hs
+    examples/test-cases/TestCases/Types/RecursiveAllOf/Age.hs
+    examples/test-cases/TestCases/Types/RecursiveAllOf/Description.hs
+    examples/test-cases/TestCases/Types/RecursiveAllOf/Id.hs
+    examples/test-cases/TestCases/Types/RecursiveAllOf/Name.hs
+    examples/test-cases/TestCases/Types/RecursiveAllOf/Type.hs
     examples/test-cases/TestCases/Types/ReferenceOneOf.hs
     examples/test-cases/TestCases/Types/ReferenceOneOfInsideOneOf.hs
     examples/test-cases/TestCases/Types/SingletonNonNullableOneOfRef.hs
