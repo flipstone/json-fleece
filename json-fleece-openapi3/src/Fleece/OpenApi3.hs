@@ -511,7 +511,7 @@ mkInlineBodyOneOfOrAllOfSchema raiseError schemaKey schema = do
           , schemaTypeInfoDependencies = inlinedTypes
           }
     Nothing ->
-      raiseError "allOf or oneOf cannot be a single object with no properties and additionalProperties: false."
+      raiseError "allOf or oneOf/anyOf cannot be a single object with no properties and additionalProperties: false."
 
 mkInlineBodyObjectWithNoAdditionalPropertiesSchema ::
   T.Text ->
@@ -645,11 +645,11 @@ mkInlineBodySchema raiseError schemaKey schemaMap schema =
     Just OA.OpenApiNumber -> mkInlineNumberSchema schema
     Just OA.OpenApiNull -> mkInlineNullSchema
     Nothing ->
-      case OA._schemaOneOf schema <|> OA._schemaAllOf schema of
+      case OA._schemaOneOf schema <|> OA._schemaAnyOf schema <|> OA._schemaAllOf schema of
         Just _ ->
           mkInlineBodyOneOfOrAllOfSchema raiseError schemaKey schema
         Nothing ->
-          raiseError "Inline schema doesn't have a type and is not oneOf or allOf."
+          raiseError "Inline schema doesn't have a type and is not oneOf/anyOf or allOf."
 
 type SchemaKeyBuilder = T.Text -> T.Text
 
@@ -985,10 +985,10 @@ mkOpenApiDataFormat schemaKey typeName schema = do
       dataFormat <- mkFormat
       pure $ Just (Map.empty, dataFormat)
 
-  case (OA._schemaOneOf schema, OA._schemaAllOf schema) of
+  case (OA._schemaOneOf schema <|> OA._schemaAnyOf schema, OA._schemaAllOf schema) of
     (Just _, Just _) ->
       lift . CGU.codeGenError $
-        "Schema cannot define both oneOf and allOf. The typeName is: "
+        "Schema cannot define both oneOf/anyOf and allOf. The typeName is: "
           <> T.unpack (HC.typeNameText typeName)
     (Just schemas, Nothing) ->
       case OA._schemaDiscriminator schema of
@@ -997,7 +997,7 @@ mkOpenApiDataFormat schemaKey typeName schema = do
           case NEL.nonEmpty schemas of
             Nothing ->
               lift . CGU.codeGenError $
-                "While handling oneOf: The list of types cannot be empty. The typeName is: "
+                "While handling oneOf/anyOf: The list of types cannot be empty. The typeName is: "
                   <> T.unpack (HC.typeNameText typeName)
             Just (firstSchema :| []) ->
               case firstSchema of
@@ -1013,14 +1013,14 @@ mkOpenApiDataFormat schemaKey typeName schema = do
                     Just foundSchema ->
                       mkOpenApiDataFormat schemaKey typeName foundSchema
             Just neSchemas ->
-              Just <$> mkOneOfUnion schemaKey typeOptions neSchemas
+              Just <$> mkOneOfAnyOfUnion schemaKey typeOptions neSchemas
         Just discriminator ->
-          Just <$> mkOneOfTaggedUnion discriminator schemaKey
+          Just <$> mkOneOfAnyOfTaggedUnion discriminator schemaKey
     (Nothing, Just schemas) ->
       case NEL.nonEmpty schemas of
         Nothing ->
           lift . CGU.codeGenError $
-            "While handling oneOf: The list of types cannot be empty. The typeName is: "
+            "While handling oneOf/anyOf: The list of types cannot be empty. The typeName is: "
               <> T.unpack (HC.typeNameText typeName)
         Just neSchemas -> do
           mergedSchemas <- getAp $ foldMap (Ap . getAllOfObjectSchema typeName) neSchemas
@@ -1091,19 +1091,19 @@ getAllOfObjectSchema typeName referenced = do
             <> T.unpack (HC.typeNameText typeName)
             <> ": a schema in the allOf array was not an object or recursive allOf."
 
-mkOneOfUnion ::
+mkOneOfAnyOfUnion ::
   T.Text ->
   CGU.TypeOptions ->
   NEL.NonEmpty (OA.Referenced OA.Schema) ->
   CGM (SchemaMap, CGU.CodeGenDataFormat)
-mkOneOfUnion schemaKey typeOptions refSchemas = do
+mkOneOfAnyOfUnion schemaKey typeOptions refSchemas = do
   let
     processRefSchema idx refSchema =
       case refSchema of
         OA.Inline schema -> do
           typeInfoWithDeps <-
             mkInlineOneOfSchema
-              (\err -> lift . CGU.codeGenError $ "Inside inline oneOf: " <> err)
+              (\err -> lift . CGU.codeGenError $ "Inside inline oneOf/anyOf: " <> err)
               (\txt -> schemaKey <> txt)
               mempty
               schema
@@ -1132,11 +1132,11 @@ mkOneOfUnion schemaKey typeOptions refSchemas = do
   schemaMap <- unionsErrorOnConflict maps
   pure (schemaMap, CGU.CodeGenUnion typeOptions codeGenUnionMembers)
 
-mkOneOfTaggedUnion ::
+mkOneOfAnyOfTaggedUnion ::
   OA.Discriminator ->
   T.Text ->
   CGM (SchemaMap, CGU.CodeGenDataFormat)
-mkOneOfTaggedUnion discriminator _schemaKey = do
+mkOneOfAnyOfTaggedUnion discriminator _schemaKey = do
   let
     processMappingEntry (tag, ref) =
       case T.stripPrefix "#/components/schemas/" ref of

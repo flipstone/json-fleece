@@ -1865,6 +1865,10 @@ extra-source-files:
     examples/star-trek/StarTrek/Types/WeaponHeader/Uid.hs
     examples/test-cases/codegen.dhall
     examples/test-cases/test-cases.yaml
+    examples/test-cases/TestCases/Operations/AnyOf/Option3.hs
+    examples/test-cases/TestCases/Operations/AnyOf/Option3/Description.hs
+    examples/test-cases/TestCases/Operations/AnyOf/Option3/Id.hs
+    examples/test-cases/TestCases/Operations/AnyOf/Option3/Name.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param1.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param2.hs
@@ -1956,6 +1960,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/AllOfRefObject.hs
     examples/test-cases/TestCases/Types/AllOfRefObject/Description.hs
     examples/test-cases/TestCases/Types/AllOfRefObject/Id.hs
+    examples/test-cases/TestCases/Types/AnyOf.hs
     examples/test-cases/TestCases/Types/ArrayWithNullableStrings.hs
     examples/test-cases/TestCases/Types/AStringType.hs
     examples/test-cases/TestCases/Types/Bar.hs
