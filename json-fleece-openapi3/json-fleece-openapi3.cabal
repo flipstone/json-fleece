@@ -1943,9 +1943,14 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/OptionalArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/RequiredArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/StringParam.hs
+    examples/test-cases/TestCases/Operations/TestCases/ReferenceResponses.hs
+    examples/test-cases/TestCases/Operations/TestCases/ReferenceResponses/Response500Body.hs
+    examples/test-cases/TestCases/Operations/TestCases/ReferenceResponses/Response500Body/Error.hs
     examples/test-cases/TestCases/Operations/TestCases/RequestBody.hs
     examples/test-cases/TestCases/Types/ArrayWithNullableStrings.hs
     examples/test-cases/TestCases/Types/AStringType.hs
+    examples/test-cases/TestCases/Types/BadRequestError.hs
+    examples/test-cases/TestCases/Types/BadRequestError/Error.hs
     examples/test-cases/TestCases/Types/Bar.hs
     examples/test-cases/TestCases/Types/Bar/BarName.hs
     examples/test-cases/TestCases/Types/Bar/Type.hs

@@ -6,7 +6,7 @@ module Fleece.OpenApi3
   ) where
 
 import Control.Monad (join, when, (<=<))
-import Control.Monad.Reader (ReaderT, ask, asks, runReaderT)
+import Control.Monad.Reader (ReaderT, asks, runReaderT)
 import Control.Monad.Trans (lift)
 import qualified Data.Aeson as Aeson
 import Data.Bifunctor (bimap, first)
@@ -24,13 +24,13 @@ import qualified Data.Text as T
 import qualified Fleece.CodeGenUtil as CGU
 import qualified Fleece.CodeGenUtil.HaskellCode as HC
 
-type CGM = ReaderT (OA.Definitions OA.Schema) CGU.CodeGen
+type CGM = ReaderT OA.Components CGU.CodeGen
 
 generateOpenApiFleeceCode ::
   OA.OpenApi ->
   CGU.CodeGen CGU.Modules
 generateOpenApiFleeceCode openApi = do
-  typeMap <- runReaderT (mkCodeGenTypes openApi) (OA._componentsSchemas $ OA._openApiComponents openApi)
+  typeMap <- runReaderT (mkCodeGenTypes openApi) (OA._openApiComponents openApi)
   CGU.generateFleeceCode typeMap
 
 type SchemaMap =
@@ -341,7 +341,7 @@ lookupResponseBodySchema ::
   CGU.ResponseStatus ->
   OA.Referenced OA.Response ->
   CGM (Maybe SchemaTypeInfoWithDeps)
-lookupResponseBodySchema operationKey schemaMap responseStatus responseRef =
+lookupResponseBodySchema operationKey schemaMap responseStatus responseRef = do
   let
     responseError msg =
       lift . CGU.codeGenError $
@@ -359,37 +359,42 @@ lookupResponseBodySchema operationKey schemaMap responseStatus responseRef =
             "Unable to resolve schema reference "
               <> show refKey
               <> "."
-  in
-    case responseRef of
-      OA.Ref _reference ->
-        responseError "Response references are not yet supported."
-      OA.Inline response ->
-        case IOHM.lookup "application/json" (OA._responseContent response) of
-          Nothing -> pure Nothing
-          Just mediaTypeObject ->
-            fmap Just $
-              case OA._mediaTypeObjectSchema mediaTypeObject of
-                Just (OA.Ref (OA.Reference refKey)) ->
-                  fmap schemaInfoWithoutDependencies (lookupCodeGenType refKey)
-                Just (OA.Inline schema) ->
-                  let
-                    responseName =
-                      T.pack $
-                        case responseStatus of
-                          CGU.ResponseStatusCode n ->
-                            "Response" <> show n <> "Body"
-                          CGU.DefaultResponse ->
-                            "DefaultResponseBody"
-                  in
-                    mkInlineBodySchema
-                      responseError
-                      (operationKey <> "." <> responseName)
-                      schemaMap
-                      schema
-                Nothing ->
-                  -- This indicates that the empty schema was specified for
-                  -- the media type.
-                  pure (schemaInfoWithoutDependencies CGU.anyJSONSchemaTypeInfo)
+  responses <- asks OA._componentsResponses
+  response <- case responseRef of
+    OA.Ref ref -> case IOHM.lookup (OA.getReference ref) responses of
+      Nothing ->
+        responseError $ "Missing response component for " <> T.unpack (OA.getReference ref)
+      Just response ->
+        pure response
+    OA.Inline response ->
+      pure response
+
+  case IOHM.lookup "application/json" (OA._responseContent response) of
+    Nothing -> pure Nothing
+    Just mediaTypeObject ->
+      fmap Just $
+        case OA._mediaTypeObjectSchema mediaTypeObject of
+          Just (OA.Ref (OA.Reference refKey)) ->
+            fmap schemaInfoWithoutDependencies (lookupCodeGenType refKey)
+          Just (OA.Inline schema) ->
+            let
+              responseName =
+                T.pack $
+                  case responseStatus of
+                    CGU.ResponseStatusCode n ->
+                      "Response" <> show n <> "Body"
+                    CGU.DefaultResponse ->
+                      "DefaultResponseBody"
+            in
+              mkInlineBodySchema
+                responseError
+                (operationKey <> "." <> responseName)
+                schemaMap
+                schema
+          Nothing ->
+            -- This indicates that the empty schema was specified for
+            -- the media type.
+            pure (schemaInfoWithoutDependencies CGU.anyJSONSchemaTypeInfo)
 
 mkInlineStringSchema ::
   T.Text ->
@@ -950,7 +955,7 @@ mkOpenApiDataFormat ::
   OA.Schema ->
   CGM (Maybe (SchemaMap, CGU.CodeGenDataFormat))
 mkOpenApiDataFormat schemaKey typeName schema = do
-  components <- ask
+  components <- asks OA._componentsSchemas
   let
     noRefs mkFormat = do
       dataFormat <- mkFormat

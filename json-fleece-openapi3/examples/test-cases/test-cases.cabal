@@ -94,9 +94,14 @@ library
       TestCases.Operations.TestCases.QueryParams.OptionalArrayParam
       TestCases.Operations.TestCases.QueryParams.RequiredArrayParam
       TestCases.Operations.TestCases.QueryParams.StringParam
+      TestCases.Operations.TestCases.ReferenceResponses
+      TestCases.Operations.TestCases.ReferenceResponses.Response500Body
+      TestCases.Operations.TestCases.ReferenceResponses.Response500Body.Error
       TestCases.Operations.TestCases.RequestBody
       TestCases.Types.ArrayWithNullableStrings
       TestCases.Types.AStringType
+      TestCases.Types.BadRequestError
+      TestCases.Types.BadRequestError.Error
       TestCases.Types.Bar
       TestCases.Types.Bar.BarName
       TestCases.Types.Bar.Type
