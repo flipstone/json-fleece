@@ -1868,6 +1868,10 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param1.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param2.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body.hs
+    examples/test-cases/TestCases/Operations/InlineOneOf.hs
+    examples/test-cases/TestCases/Operations/InlineOneOf/Response200Body.hs
     examples/test-cases/TestCases/Operations/Num2GetAResultNamedNumberSomething.hs
     examples/test-cases/TestCases/Operations/OneOfWithInlineEnum/Option1.hs
     examples/test-cases/TestCases/Operations/OneOfWithInlineEnum/Option2.hs
@@ -1944,6 +1948,14 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/RequiredArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/StringParam.hs
     examples/test-cases/TestCases/Operations/TestCases/RequestBody.hs
+    examples/test-cases/TestCases/Types/AllOf.hs
+    examples/test-cases/TestCases/Types/AllOf/Description.hs
+    examples/test-cases/TestCases/Types/AllOf/Id.hs
+    examples/test-cases/TestCases/Types/AllOf/Name.hs
+    examples/test-cases/TestCases/Types/AllOf/Type.hs
+    examples/test-cases/TestCases/Types/AllOfRefObject.hs
+    examples/test-cases/TestCases/Types/AllOfRefObject/Description.hs
+    examples/test-cases/TestCases/Types/AllOfRefObject/Id.hs
     examples/test-cases/TestCases/Types/ArrayWithNullableStrings.hs
     examples/test-cases/TestCases/Types/AStringType.hs
     examples/test-cases/TestCases/Types/Bar.hs
@@ -1981,6 +1993,10 @@ extra-source-files:
     examples/test-cases/TestCases/Types/FieldTestCases/RequiredNullableField.hs
     examples/test-cases/TestCases/Types/Foo.hs
     examples/test-cases/TestCases/Types/Foo/Type.hs
+    examples/test-cases/TestCases/Types/InlineAllOf/Response200Body/Description.hs
+    examples/test-cases/TestCases/Types/InlineAllOf/Response200Body/Id.hs
+    examples/test-cases/TestCases/Types/InlineAllOf/Response200Body/Name.hs
+    examples/test-cases/TestCases/Types/InlineAllOf/Response200Body/Type.hs
     examples/test-cases/TestCases/Types/InlineNoAdditionalPropertiesWithOneOfNullabilityOutside.hs
     examples/test-cases/TestCases/Types/InlineYesAdditionalPropertiesWithOneOfNullablityInside.hs
     examples/test-cases/TestCases/Types/InlineYesAdditionalPropertiesWithOneOfNullablityInside/Foobar.hs

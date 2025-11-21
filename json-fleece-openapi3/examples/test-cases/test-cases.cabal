@@ -19,6 +19,10 @@ library
       TestCases.Operations.GetMultiplePathsParams
       TestCases.Operations.GetMultiplePathsParams.Param1
       TestCases.Operations.GetMultiplePathsParams.Param2
+      TestCases.Operations.InlineAllOf
+      TestCases.Operations.InlineAllOf.Response200Body
+      TestCases.Operations.InlineOneOf
+      TestCases.Operations.InlineOneOf.Response200Body
       TestCases.Operations.Num2GetAResultNamedNumberSomething
       TestCases.Operations.OneOfWithInlineEnum.Option1
       TestCases.Operations.OneOfWithInlineEnum.Option2
@@ -95,6 +99,14 @@ library
       TestCases.Operations.TestCases.QueryParams.RequiredArrayParam
       TestCases.Operations.TestCases.QueryParams.StringParam
       TestCases.Operations.TestCases.RequestBody
+      TestCases.Types.AllOf
+      TestCases.Types.AllOf.Description
+      TestCases.Types.AllOf.Id
+      TestCases.Types.AllOf.Name
+      TestCases.Types.AllOf.Type
+      TestCases.Types.AllOfRefObject
+      TestCases.Types.AllOfRefObject.Description
+      TestCases.Types.AllOfRefObject.Id
       TestCases.Types.ArrayWithNullableStrings
       TestCases.Types.AStringType
       TestCases.Types.Bar
@@ -132,6 +144,10 @@ library
       TestCases.Types.FieldTestCases.RequiredNullableField
       TestCases.Types.Foo
       TestCases.Types.Foo.Type
+      TestCases.Types.InlineAllOf.Response200Body.Description
+      TestCases.Types.InlineAllOf.Response200Body.Id
+      TestCases.Types.InlineAllOf.Response200Body.Name
+      TestCases.Types.InlineAllOf.Response200Body.Type
       TestCases.Types.InlineNoAdditionalPropertiesWithOneOfNullabilityOutside
       TestCases.Types.InlineYesAdditionalPropertiesWithOneOfNullablityInside
       TestCases.Types.InlineYesAdditionalPropertiesWithOneOfNullablityInside.Foobar
