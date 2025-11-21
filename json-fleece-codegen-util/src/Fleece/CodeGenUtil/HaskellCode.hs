@@ -275,9 +275,9 @@ indent n code =
 toTypeName :: ModuleName -> Maybe T.Text -> T.Text -> TypeName
 toTypeName moduleName mbQualifier t =
   TypeName
-    { typeNameText = transformDigitPrefixes . Manip.toPascal $ t
+    { typeNameText = transformDigitPrefixesConstructor . Manip.toPascal $ t
     , typeNameModule = moduleName
-    , typeNameSuggestedQualifier = fmap (transformDigitPrefixes . Manip.toPascal) mbQualifier
+    , typeNameSuggestedQualifier = fmap (transformDigitPrefixesConstructor . Manip.toPascal) mbQualifier
     }
 
 toConstructorName :: TypeName -> T.Text -> ConstructorName
@@ -295,14 +295,14 @@ toModuleName :: T.Text -> ModuleName
 toModuleName =
   ModuleName
     . T.intercalate "."
-    . map transformDigitPrefixes
+    . map transformDigitPrefixesConstructor
     . map Manip.toPascal
     . T.splitOn "."
 
 toVarName :: ModuleName -> Maybe T.Text -> T.Text -> VarName
 toVarName moduleName mbQualifier t =
   VarName
-    { varNameText = mkUnreservedVarName t
+    { varNameText = transformDigitPrefixesVar $ mkUnreservedVarName t
     , varNameModule = moduleName
     , varNameSuggestedQualifier = fmap Manip.toPascal mbQualifier
     }
@@ -350,14 +350,24 @@ reservedWords =
     , "where"
     ]
 
-transformDigitPrefixes :: T.Text -> T.Text
-transformDigitPrefixes original =
+transformDigitPrefixesConstructor :: T.Text -> T.Text
+transformDigitPrefixesConstructor original =
   let
     digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     hasNumberPrefix = any (flip T.isPrefixOf original) digits
   in
     if hasNumberPrefix
       then "Num" <> original
+      else original
+
+transformDigitPrefixesVar :: T.Text -> T.Text
+transformDigitPrefixesVar original =
+  let
+    digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    hasNumberPrefix = any (flip T.isPrefixOf original) digits
+  in
+    if hasNumberPrefix
+      then "num" <> original
       else original
 
 delimitLines :: Semigroup c => c -> c -> [c] -> [c]
