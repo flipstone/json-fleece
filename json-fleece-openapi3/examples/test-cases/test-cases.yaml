@@ -522,7 +522,38 @@ paths:
                     required:
                       - type
 
+  /test-cases/reference-responses:
+    get:
+      responses:
+        '201':
+          description: "Successful Get"
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
 components:
+  responses:
+    '404':
+      description: "Not Found"
+    '500':
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+            required:
+              - error
+    '400':
+      description: "Bad Request"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
   parameters:
     AParam:
       in: header
@@ -1117,3 +1148,10 @@ components:
           properties:
             age:
               type: integer
+    BadRequestError:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
