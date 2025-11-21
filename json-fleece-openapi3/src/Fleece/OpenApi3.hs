@@ -1002,9 +1002,9 @@ mkOpenApiDataFormat schemaKey typeName schema =
           "Schema cannot define both anyOf and allOf. The typeName is: "
             <> T.unpack (HC.typeNameText typeName)
       (Just schemas, Nothing, Nothing) ->
-        mkOneOfAndAnyOfDataFormat "oneOf" schemaKey typeName schema schemas
+        mkOneOfOrAnyOfDataFormat "oneOf" schemaKey typeName schema schemas
       (Nothing, Just schemas, Nothing) ->
-        mkOneOfAndAnyOfDataFormat "anyOf" schemaKey typeName schema schemas
+        mkOneOfOrAnyOfDataFormat "anyOf" schemaKey typeName schema schemas
       (Nothing, Nothing, Just schemas) ->
         case NEL.nonEmpty schemas of
           Nothing ->
@@ -1044,14 +1044,14 @@ mkOpenApiDataFormat schemaKey typeName schema =
               typeName
               schema
 
-mkOneOfAndAnyOfDataFormat ::
+mkOneOfOrAnyOfDataFormat ::
   String ->
   T.Text ->
   HC.TypeName ->
   OA.Schema ->
   [OA.Referenced OA.Schema] ->
   CGM (Maybe (SchemaMap, CGU.CodeGenDataFormat))
-mkOneOfAndAnyOfDataFormat schemaType schemaKey typeName schema schemas = do
+mkOneOfOrAnyOfDataFormat schemaType schemaKey typeName schema schemas = do
   components <- ask
 
   case OA._schemaDiscriminator schema of
