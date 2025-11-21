@@ -16,6 +16,10 @@ build-type:     Simple
 
 library
   exposed-modules:
+      TestCases.Operations.AnyOf.Option3
+      TestCases.Operations.AnyOf.Option3.Description
+      TestCases.Operations.AnyOf.Option3.Id
+      TestCases.Operations.AnyOf.Option3.Name
       TestCases.Operations.GetMultiplePathsParams
       TestCases.Operations.GetMultiplePathsParams.Param1
       TestCases.Operations.GetMultiplePathsParams.Param2
@@ -110,6 +114,7 @@ library
       TestCases.Types.AllOfRefObject
       TestCases.Types.AllOfRefObject.Description
       TestCases.Types.AllOfRefObject.Id
+      TestCases.Types.AnyOf
       TestCases.Types.ArrayWithNullableStrings
       TestCases.Types.AStringType
       TestCases.Types.BadRequestError

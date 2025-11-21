@@ -1153,3 +1153,20 @@ components:
           properties:
             age:
               type: integer
+
+    AnyOf:
+      anyOf:
+        - $ref: '#/components/schemas/Foo'
+        - $ref: '#/components/schemas/Bar'
+        - type: object
+          properties:
+            id:
+              type: number
+            name:
+              type: string
+            description:
+              type: string
+          required:
+            - id
+            - name
+        - $ref: '#/components/schemas/Baz'

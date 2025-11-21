@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.4.6.2
+version:        0.4.7.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -1865,6 +1865,10 @@ extra-source-files:
     examples/star-trek/StarTrek/Types/WeaponHeader/Uid.hs
     examples/test-cases/codegen.dhall
     examples/test-cases/test-cases.yaml
+    examples/test-cases/TestCases/Operations/AnyOf/Option3.hs
+    examples/test-cases/TestCases/Operations/AnyOf/Option3/Description.hs
+    examples/test-cases/TestCases/Operations/AnyOf/Option3/Id.hs
+    examples/test-cases/TestCases/Operations/AnyOf/Option3/Name.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param1.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param2.hs
@@ -1959,6 +1963,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/AllOfRefObject.hs
     examples/test-cases/TestCases/Types/AllOfRefObject/Description.hs
     examples/test-cases/TestCases/Types/AllOfRefObject/Id.hs
+    examples/test-cases/TestCases/Types/AnyOf.hs
     examples/test-cases/TestCases/Types/ArrayWithNullableStrings.hs
     examples/test-cases/TestCases/Types/AStringType.hs
     examples/test-cases/TestCases/Types/BadRequestError.hs
