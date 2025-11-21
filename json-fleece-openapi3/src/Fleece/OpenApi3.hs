@@ -281,7 +281,7 @@ lookupRequestBodySchema operationKey schemaMap mediaTypeObject =
   let
     requestError msg =
       lift . CGU.codeGenError $
-        "Error finding request body schema for operation "
+        "HELLO? Error finding request body schema for operation "
           <> show operationKey
           <> ": "
           <> msg
