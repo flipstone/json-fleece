@@ -16,9 +16,17 @@ build-type:     Simple
 
 library
   exposed-modules:
+      TestCases.Operations.AnyOf.Option3
+      TestCases.Operations.AnyOf.Option3.Description
+      TestCases.Operations.AnyOf.Option3.Id
+      TestCases.Operations.AnyOf.Option3.Name
       TestCases.Operations.GetMultiplePathsParams
       TestCases.Operations.GetMultiplePathsParams.Param1
       TestCases.Operations.GetMultiplePathsParams.Param2
+      TestCases.Operations.InlineAllOf
+      TestCases.Operations.InlineAllOf.Response200Body
+      TestCases.Operations.InlineOneOf
+      TestCases.Operations.InlineOneOf.Response200Body
       TestCases.Operations.Num2GetAResultNamedNumberSomething
       TestCases.Operations.OneOfWithInlineEnum.Option1
       TestCases.Operations.OneOfWithInlineEnum.Option2
@@ -98,6 +106,15 @@ library
       TestCases.Operations.TestCases.ReferenceResponses.Response500Body
       TestCases.Operations.TestCases.ReferenceResponses.Response500Body.Error
       TestCases.Operations.TestCases.RequestBody
+      TestCases.Types.AllOf
+      TestCases.Types.AllOf.Description
+      TestCases.Types.AllOf.Id
+      TestCases.Types.AllOf.Name
+      TestCases.Types.AllOf.Type
+      TestCases.Types.AllOfRefObject
+      TestCases.Types.AllOfRefObject.Description
+      TestCases.Types.AllOfRefObject.Id
+      TestCases.Types.AnyOf
       TestCases.Types.ArrayWithNullableStrings
       TestCases.Types.AStringType
       TestCases.Types.BadRequestError
@@ -137,6 +154,10 @@ library
       TestCases.Types.FieldTestCases.RequiredNullableField
       TestCases.Types.Foo
       TestCases.Types.Foo.Type
+      TestCases.Types.InlineAllOf.Response200Body.Description
+      TestCases.Types.InlineAllOf.Response200Body.Id
+      TestCases.Types.InlineAllOf.Response200Body.Name
+      TestCases.Types.InlineAllOf.Response200Body.Type
       TestCases.Types.InlineNoAdditionalPropertiesWithOneOfNullabilityOutside
       TestCases.Types.InlineYesAdditionalPropertiesWithOneOfNullablityInside
       TestCases.Types.InlineYesAdditionalPropertiesWithOneOfNullablityInside.Foobar
@@ -215,6 +236,12 @@ library
       TestCases.Types.OneOfWithInlineObject.Option4.Nested.Name
       TestCases.Types.OneOfWithInlineObject.Option4.Nested.Number
       TestCases.Types.OneOfWithNullable
+      TestCases.Types.RecursiveAllOf
+      TestCases.Types.RecursiveAllOf.Age
+      TestCases.Types.RecursiveAllOf.Description
+      TestCases.Types.RecursiveAllOf.Id
+      TestCases.Types.RecursiveAllOf.Name
+      TestCases.Types.RecursiveAllOf.Type
       TestCases.Types.ReferenceOneOf
       TestCases.Types.ReferenceOneOfInsideOneOf
       TestCases.Types.SingletonNonNullableOneOfRef

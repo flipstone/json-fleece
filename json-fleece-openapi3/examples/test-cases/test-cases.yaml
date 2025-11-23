@@ -499,6 +499,37 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
+  /test-cases/inline-one-of:
+    get:
+      operationId: InlineOneOf
+      responses:
+        '200':
+          description: "Successful Get"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: string
+                  - type: integer
+  /test-cases/inline-all-of:
+    get:
+      operationId: InlineAllOf
+      responses:
+        '200':
+          description: "Successful Get"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/AllOfRefObject'
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                      name:
+                        type: string
+                    required:
+                      - type
 components:
   responses:
     '404':
@@ -1092,3 +1123,50 @@ components:
           type: string
       required:
         - error
+
+    AllOf:
+      allOf:
+        - $ref: '#/components/schemas/AllOfRefObject'
+        - type: object
+          properties:
+            type:
+              type: string
+            name:
+              type: string
+          required:
+            - type
+
+    AllOfRefObject:
+      type: object
+      properties:
+        id:
+          type: integer
+        description:
+          type: string
+      required:
+        - id
+
+    RecursiveAllOf:
+      allOf:
+        - $ref: '#/components/schemas/AllOf'
+        - type: object
+          properties:
+            age:
+              type: integer
+
+    AnyOf:
+      anyOf:
+        - $ref: '#/components/schemas/Foo'
+        - $ref: '#/components/schemas/Bar'
+        - type: object
+          properties:
+            id:
+              type: number
+            name:
+              type: string
+            description:
+              type: string
+          required:
+            - id
+            - name
+        - $ref: '#/components/schemas/Baz'

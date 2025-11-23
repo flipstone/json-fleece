@@ -5,6 +5,7 @@ module Fleece.OpenApi3
   ( generateOpenApiFleeceCode
   ) where
 
+import Control.Applicative ((<|>))
 import Control.Monad (join, when, (<=<))
 import Control.Monad.Reader (ReaderT, asks, runReaderT)
 import Control.Monad.Trans (lift)
@@ -17,6 +18,7 @@ import Data.List.NonEmpty (NonEmpty ((:|)))
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map.Strict as Map
 import Data.Maybe (catMaybes, mapMaybe)
+import Data.Monoid (Ap (Ap, getAp))
 import qualified Data.NonEmptyText as NET
 import qualified Data.OpenApi as OA
 import qualified Data.Text as T
@@ -494,6 +496,28 @@ mkInlineObjectSchema raiseError schemaKey schemaMap schema =
           mkInlineBodyObjectWithNoAdditionalPropertiesSchema schemaKey schema
     else mkInlineBodyObjectWithNoAdditionalPropertiesSchema schemaKey schema
 
+mkInlineBodyOneOfOrAllOfSchema ::
+  (forall a. String -> CGM a) ->
+  T.Text ->
+  OA.Schema ->
+  CGM SchemaTypeInfoWithDeps
+mkInlineBodyOneOfOrAllOfSchema raiseError schemaKey schema = do
+  (_moduleName, typeName) <- lift $ CGU.inferTypeForInputName CGU.Operation schemaKey
+  mbInlinedTypesAndSchemaTypeInfo <-
+    mkSchemaTypeInfo
+      schemaKey
+      typeName
+      schema
+  case mbInlinedTypesAndSchemaTypeInfo of
+    Just (inlinedTypes, schemaTypeInfo) ->
+      pure $
+        SchemaTypeInfoWithDeps
+          { schemaTypeInfoDependent = Left schemaTypeInfo
+          , schemaTypeInfoDependencies = inlinedTypes
+          }
+    Nothing ->
+      raiseError "allOf or oneOf/anyOf cannot be a single object with no properties and additionalProperties: false."
+
 mkInlineBodyObjectWithNoAdditionalPropertiesSchema ::
   T.Text ->
   OA.Schema ->
@@ -625,7 +649,12 @@ mkInlineBodySchema raiseError schemaKey schemaMap schema =
     Just OA.OpenApiObject -> mkInlineObjectSchema raiseError schemaKey schemaMap schema
     Just OA.OpenApiNumber -> mkInlineNumberSchema schema
     Just OA.OpenApiNull -> mkInlineNullSchema
-    Nothing -> raiseError "Inline schema doesn't have a type."
+    Nothing ->
+      case OA._schemaOneOf schema <|> OA._schemaAnyOf schema <|> OA._schemaAllOf schema of
+        Just _ ->
+          mkInlineBodyOneOfOrAllOfSchema raiseError schemaKey schema
+        Nothing ->
+          raiseError "Inline schema doesn't have a type and is not oneOf/anyOf or allOf."
 
 type SchemaKeyBuilder = T.Text -> T.Text
 
@@ -954,78 +983,159 @@ mkOpenApiDataFormat ::
   HC.TypeName ->
   OA.Schema ->
   CGM (Maybe (SchemaMap, CGU.CodeGenDataFormat))
-mkOpenApiDataFormat schemaKey typeName schema = do
-  components <- asks OA._componentsSchemas
+mkOpenApiDataFormat schemaKey typeName schema =
   let
     noRefs mkFormat = do
       dataFormat <- mkFormat
       pure $ Just (Map.empty, dataFormat)
-  case OA._schemaOneOf schema of
-    Just schemas ->
-      case OA._schemaDiscriminator schema of
-        Nothing -> do
-          typeOptions <- lift $ CGU.lookupTypeOptions typeName
-          case NEL.nonEmpty schemas of
-            Nothing ->
-              lift . CGU.codeGenError $
-                "While handling oneOf: The list of types cannot be empty. The typeName is: "
-                  <> T.unpack (HC.typeNameText typeName)
-            Just (firstSchema :| []) ->
-              case firstSchema of
-                OA.Inline inlineSchema ->
-                  mkOpenApiDataFormat schemaKey typeName inlineSchema
-                OA.Ref ref ->
-                  case IOHM.lookup (OA.getReference ref) components of
-                    Nothing ->
-                      lift . CGU.codeGenError $
-                        "While looking up reference: \
-                        \Could not find ref with name: "
-                          <> T.unpack (OA.getReference ref)
-                    Just foundSchema ->
-                      mkOpenApiDataFormat schemaKey typeName foundSchema
-            Just neSchemas ->
-              Just <$> mkOneOfUnion schemaKey typeOptions neSchemas
-        Just discriminator ->
-          Just <$> mkOneOfTaggedUnion discriminator schemaKey
-    Nothing ->
-      case OA._schemaType schema of
-        Just OA.OpenApiString -> noRefs $ mkOpenApiStringFormat typeName schema
-        Just OA.OpenApiNumber -> noRefs $ mkOpenApiNumberFormat typeName schema
-        Just OA.OpenApiInteger -> noRefs $ mkOpenApiIntegerFormat typeName schema
-        Just OA.OpenApiBoolean -> do
-          typeOptions <- lift $ CGU.lookupTypeOptions typeName
-          noRefs $ pure (CGU.boolFormat typeOptions)
-        Just OA.OpenApiArray ->
-          Just <$> mkOpenApiArrayFormat schemaKey typeName schema
-        Just OA.OpenApiObject ->
-          mkOpenApiObjectFormatOrAdditionalPropertiesNewtype
-            CGU.Type
-            schemaKey
-            typeName
-            schema
-        Just OA.OpenApiNull -> do
-          typeOptions <- lift $ CGU.lookupTypeOptions typeName
-          noRefs $ pure (CGU.nullFormat typeOptions)
-        Nothing ->
-          mkOpenApiObjectFormatOrAdditionalPropertiesNewtype
-            CGU.Type
-            schemaKey
-            typeName
-            schema
+  in
+    case (OA._schemaOneOf schema, OA._schemaAnyOf schema, OA._schemaAllOf schema) of
+      (Just _, Just _, Just _) ->
+        lift . CGU.codeGenError $
+          "Schema cannot define oneOf, anyOf, and allOf. The typeName is: "
+            <> T.unpack (HC.typeNameText typeName)
+      (Just _, Just _, Nothing) ->
+        lift . CGU.codeGenError $
+          "Schema cannot define both oneOf and anyOf. The typeName is: "
+            <> T.unpack (HC.typeNameText typeName)
+      (Just _, Nothing, Just _) ->
+        lift . CGU.codeGenError $
+          "Schema cannot define both oneOf and allOf. The typeName is: "
+            <> T.unpack (HC.typeNameText typeName)
+      (Nothing, Just _, Just _) ->
+        lift . CGU.codeGenError $
+          "Schema cannot define both anyOf and allOf. The typeName is: "
+            <> T.unpack (HC.typeNameText typeName)
+      (Just schemas, Nothing, Nothing) ->
+        mkOneOfOrAnyOfDataFormat "oneOf" schemaKey typeName schema schemas
+      (Nothing, Just schemas, Nothing) ->
+        mkOneOfOrAnyOfDataFormat "anyOf" schemaKey typeName schema schemas
+      (Nothing, Nothing, Just schemas) ->
+        case NEL.nonEmpty schemas of
+          Nothing ->
+            lift . CGU.codeGenError $
+              "While handling allOf: The list of types cannot be empty. The typeName is: "
+                <> T.unpack (HC.typeNameText typeName)
+          Just neSchemas -> do
+            mergedSchemas <- getAp $ foldMap (Ap . getAllOfObjectSchema typeName) neSchemas
+            mkOpenApiObjectFormatOrAdditionalPropertiesNewtype
+              CGU.Type
+              schemaKey
+              typeName
+              (mergedSchemas {OA._schemaDescription = OA._schemaDescription schema})
+      (Nothing, Nothing, Nothing) ->
+        case OA._schemaType schema of
+          Just OA.OpenApiString -> noRefs $ mkOpenApiStringFormat typeName schema
+          Just OA.OpenApiNumber -> noRefs $ mkOpenApiNumberFormat typeName schema
+          Just OA.OpenApiInteger -> noRefs $ mkOpenApiIntegerFormat typeName schema
+          Just OA.OpenApiBoolean -> do
+            typeOptions <- lift $ CGU.lookupTypeOptions typeName
+            noRefs $ pure (CGU.boolFormat typeOptions)
+          Just OA.OpenApiArray ->
+            Just <$> mkOpenApiArrayFormat schemaKey typeName schema
+          Just OA.OpenApiObject ->
+            mkOpenApiObjectFormatOrAdditionalPropertiesNewtype
+              CGU.Type
+              schemaKey
+              typeName
+              schema
+          Just OA.OpenApiNull -> do
+            typeOptions <- lift $ CGU.lookupTypeOptions typeName
+            noRefs $ pure (CGU.nullFormat typeOptions)
+          Nothing ->
+            mkOpenApiObjectFormatOrAdditionalPropertiesNewtype
+              CGU.Type
+              schemaKey
+              typeName
+              schema
 
-mkOneOfUnion ::
+mkOneOfOrAnyOfDataFormat ::
+  String ->
+  T.Text ->
+  HC.TypeName ->
+  OA.Schema ->
+  [OA.Referenced OA.Schema] ->
+  CGM (Maybe (SchemaMap, CGU.CodeGenDataFormat))
+mkOneOfOrAnyOfDataFormat schemaType schemaKey typeName schema schemas = do
+  components <- asks OA._componentsSchemas
+
+  case OA._schemaDiscriminator schema of
+    Just discriminator ->
+      Just <$> mkOneOfAnyOfTaggedUnion discriminator schemaKey
+    Nothing -> do
+      typeOptions <- lift $ CGU.lookupTypeOptions typeName
+      case NEL.nonEmpty schemas of
+        Nothing ->
+          lift . CGU.codeGenError $
+            "While handling "
+              <> schemaType
+              <> ": The list of types cannot be empty. The typeName is: "
+              <> T.unpack (HC.typeNameText typeName)
+        Just (firstSchema :| []) ->
+          case firstSchema of
+            OA.Inline inlineSchema ->
+              mkOpenApiDataFormat schemaKey typeName inlineSchema
+            OA.Ref ref ->
+              case IOHM.lookup (OA.getReference ref) components of
+                Nothing ->
+                  lift . CGU.codeGenError $
+                    "While looking up reference: \
+                    \Could not find ref with name: "
+                      <> T.unpack (OA.getReference ref)
+                Just foundSchema ->
+                  mkOpenApiDataFormat schemaKey typeName foundSchema
+        Just neSchemas ->
+          Just <$> mkOneOfAnyOfUnion schemaKey typeOptions neSchemas
+
+getAllOfObjectSchema :: HC.TypeName -> OA.Referenced OA.Schema -> CGM OA.Schema
+getAllOfObjectSchema typeName referenced = do
+  components <- asks OA._componentsSchemas
+  schema <- case referenced of
+    OA.Inline inlineSchema ->
+      pure inlineSchema
+    OA.Ref ref ->
+      case IOHM.lookup (OA.getReference ref) components of
+        Nothing ->
+          lift . CGU.codeGenError $
+            "While looking up reference: \
+            \Could not find ref with name: "
+              <> T.unpack (OA.getReference ref)
+        Just foundSchema ->
+          pure foundSchema
+  case OA._schemaType schema of
+    Just OA.OpenApiObject ->
+      pure schema
+    _otherType -> case OA._schemaAllOf schema of
+      Just schemas ->
+        case NEL.nonEmpty schemas of
+          Just neSchemas ->
+            getAp $ foldMap (Ap . getAllOfObjectSchema typeName) neSchemas
+          Nothing ->
+            lift
+              . CGU.codeGenError
+              $ "While building merged allOf schema with typeName: "
+                <> T.unpack (HC.typeNameText typeName)
+                <> ": a recursively referenced allOf schema was empty."
+      Nothing ->
+        lift
+          . CGU.codeGenError
+          $ "While building merged allOf schema with typeName: "
+            <> T.unpack (HC.typeNameText typeName)
+            <> ": a schema in the allOf array was not an object or recursive allOf."
+
+mkOneOfAnyOfUnion ::
   T.Text ->
   CGU.TypeOptions ->
   NEL.NonEmpty (OA.Referenced OA.Schema) ->
   CGM (SchemaMap, CGU.CodeGenDataFormat)
-mkOneOfUnion schemaKey typeOptions refSchemas = do
+mkOneOfAnyOfUnion schemaKey typeOptions refSchemas = do
   let
     processRefSchema idx refSchema =
       case refSchema of
         OA.Inline schema -> do
           typeInfoWithDeps <-
             mkInlineOneOfSchema
-              (\err -> lift . CGU.codeGenError $ "Inside inline oneOf: " <> err)
+              (\err -> lift . CGU.codeGenError $ "Inside inline oneOf/anyOf: " <> err)
               (\txt -> schemaKey <> txt)
               mempty
               schema
@@ -1054,11 +1164,11 @@ mkOneOfUnion schemaKey typeOptions refSchemas = do
   schemaMap <- unionsErrorOnConflict maps
   pure (schemaMap, CGU.CodeGenUnion typeOptions codeGenUnionMembers)
 
-mkOneOfTaggedUnion ::
+mkOneOfAnyOfTaggedUnion ::
   OA.Discriminator ->
   T.Text ->
   CGM (SchemaMap, CGU.CodeGenDataFormat)
-mkOneOfTaggedUnion discriminator _schemaKey = do
+mkOneOfAnyOfTaggedUnion discriminator _schemaKey = do
   let
     processMappingEntry (tag, ref) =
       case T.stripPrefix "#/components/schemas/" ref of
