@@ -111,6 +111,7 @@ library
       TestCases.Types.AllOf.Id
       TestCases.Types.AllOf.Name
       TestCases.Types.AllOf.Type
+      TestCases.Types.AllOfNoObject
       TestCases.Types.AllOfRefObject
       TestCases.Types.AllOfRefObject.Description
       TestCases.Types.AllOfRefObject.Id

@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.4.7.0
+version:        0.4.7.1
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -1960,6 +1960,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/AllOf/Id.hs
     examples/test-cases/TestCases/Types/AllOf/Name.hs
     examples/test-cases/TestCases/Types/AllOf/Type.hs
+    examples/test-cases/TestCases/Types/AllOfNoObject.hs
     examples/test-cases/TestCases/Types/AllOfRefObject.hs
     examples/test-cases/TestCases/Types/AllOfRefObject/Description.hs
     examples/test-cases/TestCases/Types/AllOfRefObject/Id.hs

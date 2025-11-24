@@ -1154,6 +1154,11 @@ components:
             age:
               type: integer
 
+    AllOfNoObject:
+      allOf:
+        - type: string
+        - $ref: "#/components/schemas/CustomDateFormat"
+
     AnyOf:
       anyOf:
         - $ref: '#/components/schemas/Foo'

@@ -11,14 +11,14 @@ import Control.Monad.Reader (ReaderT, asks, runReaderT)
 import Control.Monad.Trans (lift)
 import qualified Data.Aeson as Aeson
 import Data.Bifunctor (bimap, first)
+import qualified Data.Foldable as Foldable
 import Data.Function (on)
 import qualified Data.HashMap.Strict.InsOrd as IOHM
 import qualified Data.List as List
 import Data.List.NonEmpty (NonEmpty ((:|)))
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map.Strict as Map
-import Data.Maybe (catMaybes, mapMaybe)
-import Data.Monoid (Ap (Ap, getAp))
+import Data.Maybe (catMaybes, fromMaybe, isNothing, mapMaybe)
 import qualified Data.NonEmptyText as NET
 import qualified Data.OpenApi as OA
 import qualified Data.Text as T
@@ -1016,13 +1016,9 @@ mkOpenApiDataFormat schemaKey typeName schema =
             lift . CGU.codeGenError $
               "While handling allOf: The list of types cannot be empty. The typeName is: "
                 <> T.unpack (HC.typeNameText typeName)
-          Just neSchemas -> do
-            mergedSchemas <- getAp $ foldMap (Ap . getAllOfObjectSchema typeName) neSchemas
-            mkOpenApiObjectFormatOrAdditionalPropertiesNewtype
-              CGU.Type
-              schemaKey
-              typeName
-              (mergedSchemas {OA._schemaDescription = OA._schemaDescription schema})
+          Just neSchemas ->
+            mkOpenApiDataFormat schemaKey typeName
+              =<< getAllOfSchema typeName neSchemas
       (Nothing, Nothing, Nothing) ->
         case OA._schemaType schema of
           Just OA.OpenApiString -> noRefs $ mkOpenApiStringFormat typeName schema
@@ -1087,8 +1083,12 @@ mkOneOfOrAnyOfDataFormat schemaType schemaKey typeName schema schemas = do
         Just neSchemas ->
           Just <$> mkOneOfAnyOfUnion schemaKey typeOptions neSchemas
 
-getAllOfObjectSchema :: HC.TypeName -> OA.Referenced OA.Schema -> CGM OA.Schema
-getAllOfObjectSchema typeName referenced = do
+getAllOfSchema :: HC.TypeName -> NEL.NonEmpty (OA.Referenced OA.Schema) -> CGM OA.Schema
+getAllOfSchema typeName =
+  Foldable.foldlM (foldGetAllOfSchema typeName) mempty
+
+foldGetAllOfSchema :: HC.TypeName -> OA.Schema -> OA.Referenced OA.Schema -> CGM OA.Schema
+foldGetAllOfSchema typeName acc referenced = do
   components <- asks OA._componentsSchemas
   schema <- case referenced of
     OA.Inline inlineSchema ->
@@ -1102,26 +1102,75 @@ getAllOfObjectSchema typeName referenced = do
               <> T.unpack (OA.getReference ref)
         Just foundSchema ->
           pure foundSchema
-  case OA._schemaType schema of
-    Just OA.OpenApiObject ->
-      pure schema
-    _otherType -> case OA._schemaAllOf schema of
-      Just schemas ->
-        case NEL.nonEmpty schemas of
-          Just neSchemas ->
-            getAp $ foldMap (Ap . getAllOfObjectSchema typeName) neSchemas
-          Nothing ->
+
+  mergeCompatibleAllOfSchemas typeName acc schema
+
+mergeCompatibleAllOfSchemas :: HC.TypeName -> OA.Schema -> OA.Schema -> CGM OA.Schema
+mergeCompatibleAllOfSchemas typeName acc schema =
+  let
+    mbAccType = OA._schemaType acc
+    mbSchemaType = OA._schemaType schema
+
+    -- TODO: We don't support this currently, but we would like to support it
+    -- eventually.
+    --
+    typesAreArrays =
+      all (== (Just OA.OpenApiArray)) [mbAccType, mbSchemaType]
+
+    typesMatchOrNoType = mbSchemaType == mbAccType || isNothing mbAccType
+    mbFormat1 = OA._schemaFormat acc
+    mbFormat2 = OA._schemaFormat schema
+    formatsMatch = fromMaybe True $ (==) <$> mbFormat1 <*> mbFormat2
+  in
+    case mbSchemaType of
+      Just _schemaType
+        | typesAreArrays ->
             lift
               . CGU.codeGenError
-              $ "While building merged allOf schema with typeName: "
-                <> T.unpack (HC.typeNameText typeName)
-                <> ": a recursively referenced allOf schema was empty."
+              $ "Multiple arrays in allOf schemas are not currently supported."
+        | typesMatchOrNoType ->
+            if formatsMatch
+              then
+                -- Min items is the only additional validation property that we
+                -- read right now, so we update it here.
+                --
+                pure $
+                  (acc <> schema)
+                    { OA._schemaMinItems =
+                        max (OA._schemaMinItems acc) (OA._schemaMinItems schema)
+                    }
+              else
+                lift
+                  . CGU.codeGenError
+                  . unwords
+                  $ [ "Schemas formats do not match for all items in allOf array: got"
+                    , maybe "<no format>" show mbFormat1
+                    , "and"
+                    , maybe "<no format>" show mbFormat2 <> "."
+                    ]
+        | otherwise ->
+            lift
+              . CGU.codeGenError
+              . unwords
+              $ [ "Schemas in allOf array must all be the same type, but got"
+                , maybe "<no type>" show mbAccType
+                , "and"
+                , maybe "<no type>" show mbSchemaType <> "."
+                ]
       Nothing ->
-        lift
-          . CGU.codeGenError
-          $ "While building merged allOf schema with typeName: "
-            <> T.unpack (HC.typeNameText typeName)
-            <> ": a schema in the allOf array was not an object or recursive allOf."
+        case OA._schemaAllOf schema of
+          Just schemas ->
+            case NEL.nonEmpty schemas of
+              Just neSchemas ->
+                mappend acc <$> getAllOfSchema typeName neSchemas
+              Nothing ->
+                lift
+                  . CGU.codeGenError
+                  $ "While building merged allOf schema with typeName: "
+                    <> T.unpack (HC.typeNameText typeName)
+                    <> ": a recursively referenced allOf schema was empty."
+          Nothing ->
+            pure $ acc <> schema
 
 mkOneOfAnyOfUnion ::
   T.Text ->
