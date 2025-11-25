@@ -2075,6 +2075,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/NullableString.hs
     examples/test-cases/TestCases/Types/Num2SchemaStartingWithNumber.hs
     examples/test-cases/TestCases/Types/ObjectWithDiscriminatedUnionRef.hs
+    examples/test-cases/TestCases/Types/ObjectWithFieldStartingWithNumber.hs
     examples/test-cases/TestCases/Types/OneOfWithDiscriminator.hs
     examples/test-cases/TestCases/Types/OneOfWithDiscriminatorTypeObject.hs
     examples/test-cases/TestCases/Types/OneOfWithInlineEnum.hs

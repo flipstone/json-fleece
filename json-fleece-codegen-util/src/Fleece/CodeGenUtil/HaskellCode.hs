@@ -71,7 +71,7 @@ module Fleece.CodeGenUtil.HaskellCode
   , nonEmptyType
   , fixDigitPrefixVarName
   , transformDigitPrefixes
-  , ShouldCapitalize(..)
+  , ShouldCapitalize (..)
   ) where
 
 -- import prelude explicitly since we want to define our own 'lines' function
@@ -282,7 +282,7 @@ indent n code =
 toTypeName :: ModuleName -> Maybe T.Text -> T.Text -> TypeName
 toTypeName moduleName mbQualifier t =
   TypeName
-    { typeNameText = (transformDigitPrefixes Uncapitalized) . Manip.toPascal $ t
+    { typeNameText = (transformDigitPrefixes Capitalized) . Manip.toPascal $ t
     , typeNameModule = moduleName
     , typeNameSuggestedQualifier = fmap ((transformDigitPrefixes Capitalized) . Manip.toPascal) mbQualifier
     }
@@ -364,10 +364,9 @@ transformDigitPrefixes shouldCapitalize original =
     hasNumberPrefix = any (flip T.isPrefixOf original) digits
   in
     if hasNumberPrefix
-      then
-        case shouldCapitalize of
-          Capitalized -> "Num" <> original
-          Uncapitalized -> "num" <> original
+      then case shouldCapitalize of
+        Capitalized -> "Num" <> original
+        Uncapitalized -> "num" <> original
       else original
 
 delimitLines :: Semigroup c => c -> c -> [c] -> [c]
