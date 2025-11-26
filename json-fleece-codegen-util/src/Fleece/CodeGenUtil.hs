@@ -242,7 +242,7 @@ mkReferencesMap =
           either mempty (mkSingletonReference NewtypeSource) typeInfoOrRef
         CodeGenEnum _options _enumValues -> mempty
         CodeGenObject _options fields mbAdditionalProperties ->
-          foldMap mkFieldReferences fields
+          foldMap mkFieldReferences (fixCodeGenFieldTypeLeadingDigit <$> fields)
             <> maybe mempty mkAdditionalPropertiesReferences mbAdditionalProperties
         CodeGenArray _options _mbMaxLength ref ->
           mkSingletonReference ArrayItemSource ref
@@ -353,6 +353,10 @@ data CodeGenObjectField = CodeGenObjectField
   , codeGenFieldType :: CodeGenRefType
   , codeGenFieldRequired :: Bool
   }
+
+fixCodeGenFieldTypeLeadingDigit :: CodeGenObjectField -> CodeGenObjectField
+fixCodeGenFieldTypeLeadingDigit (CodeGenObjectField name fieldType required) =
+  CodeGenObjectField (HC.transformDigitPrefixes HC.Uncapitalized name) fieldType required
 
 type SchemaTypeInfoOrRef = Either SchemaTypeInfo CodeGenRefType
 
@@ -1785,7 +1789,7 @@ generateFleeceObject typeMap references typeName rawCodeGenFields mbAdditionalPr
           ]
 
     fieldNameAndType field =
-      (fieldName field, fieldTypeName field, fieldDescription field)
+      (HC.fixDigitPrefixVarName $ fieldName field, fieldTypeName field, fieldDescription field)
 
     recordDecl =
       HC.record
@@ -1800,7 +1804,7 @@ generateFleeceObject typeMap references typeName rawCodeGenFields mbAdditionalPr
           <> " "
           <> HC.stringLiteral (fieldJSONName field)
           <> " "
-          <> HC.varNameToCode Nothing (fieldName field)
+          <> HC.varNameToCode Nothing (HC.fixDigitPrefixVarName $ fieldName field)
           <> " "
           <> fieldFleeceSchemaCode field
 
@@ -2009,7 +2013,7 @@ fleeceObjectForType typeName bodyLines =
       fleeceObjSchemaNameForType typeName
 
     declType =
-      HC.typeAnnotate schemaName $
+      HC.typeAnnotate (HC.fixDigitPrefixVarName schemaName) $
         HC.typeNameToCodeDefaultQualification fleeceClass
           <> " schema => "
           <> HC.typeNameToCode Nothing fleeceObject
@@ -2019,7 +2023,7 @@ fleeceObjectForType typeName bodyLines =
           <> HC.typeNameToCode Nothing typeName
 
     declImpl =
-      HC.varNameToCode Nothing schemaName <> " ="
+      HC.varNameToCode Nothing (HC.fixDigitPrefixVarName schemaName) <> " ="
   in
     HC.lines
       ( declType

@@ -69,6 +69,9 @@ module Fleece.CodeGenUtil.HaskellCode
   , preludeType
   , shrubberyType
   , nonEmptyType
+  , fixDigitPrefixVarName
+  , transformDigitPrefixes
+  , ShouldCapitalize (..)
   ) where
 
 -- import prelude explicitly since we want to define our own 'lines' function
@@ -157,7 +160,7 @@ typeNameToCode :: FromCode c => Maybe T.Text -> TypeName -> c
 typeNameToCode mbQualifier typeName =
   let
     nameText =
-      typeNameText typeName
+      transformDigitPrefixes Capitalized $ typeNameText typeName
 
     moduleName =
       typeNameModule typeName
@@ -205,11 +208,15 @@ data VarName = VarName
   }
   deriving (Eq, Ord)
 
+fixDigitPrefixVarName :: VarName -> VarName
+fixDigitPrefixVarName (VarName varText varModule mbQualifier) =
+  VarName (transformDigitPrefixes Uncapitalized varText) varModule mbQualifier
+
 varNameToCode :: FromCode c => Maybe T.Text -> VarName -> c
 varNameToCode mbQualifier varName =
   let
     nameText =
-      varNameText varName
+      transformDigitPrefixes Uncapitalized $ varNameText varName
 
     moduleName =
       varNameModule varName
@@ -275,9 +282,9 @@ indent n code =
 toTypeName :: ModuleName -> Maybe T.Text -> T.Text -> TypeName
 toTypeName moduleName mbQualifier t =
   TypeName
-    { typeNameText = transformDigitPrefixes . Manip.toPascal $ t
+    { typeNameText = (transformDigitPrefixes Capitalized) . Manip.toPascal $ t
     , typeNameModule = moduleName
-    , typeNameSuggestedQualifier = fmap (transformDigitPrefixes . Manip.toPascal) mbQualifier
+    , typeNameSuggestedQualifier = fmap ((transformDigitPrefixes Capitalized) . Manip.toPascal) mbQualifier
     }
 
 toConstructorName :: TypeName -> T.Text -> ConstructorName
@@ -287,7 +294,7 @@ toConstructorName typeName constructorName =
       | Char.isNumber c ->
           ConstructorName
             . fromText
-            $ Manip.toPascal (typeNameText typeName)
+            $ Manip.toPascal (transformDigitPrefixes Capitalized $ typeNameText typeName)
               <> Manip.toPascal constructorName
     _ -> ConstructorName . fromText $ Manip.toPascal constructorName
 
@@ -295,14 +302,14 @@ toModuleName :: T.Text -> ModuleName
 toModuleName =
   ModuleName
     . T.intercalate "."
-    . map transformDigitPrefixes
+    . map (transformDigitPrefixes Capitalized)
     . map Manip.toPascal
     . T.splitOn "."
 
 toVarName :: ModuleName -> Maybe T.Text -> T.Text -> VarName
 toVarName moduleName mbQualifier t =
   VarName
-    { varNameText = mkUnreservedVarName t
+    { varNameText = transformDigitPrefixes Uncapitalized $ mkUnreservedVarName t
     , varNameModule = moduleName
     , varNameSuggestedQualifier = fmap Manip.toPascal mbQualifier
     }
@@ -310,7 +317,7 @@ toVarName moduleName mbQualifier t =
 toConstructorVarName :: ModuleName -> Maybe T.Text -> T.Text -> VarName
 toConstructorVarName moduleName mbQualifier t =
   VarName
-    { varNameText = Manip.toPascal t
+    { varNameText = transformDigitPrefixes Uncapitalized $ Manip.toPascal t
     , varNameModule = moduleName
     , varNameSuggestedQualifier = fmap Manip.toPascal mbQualifier
     }
@@ -319,7 +326,7 @@ mkUnreservedVarName :: T.Text -> T.Text
 mkUnreservedVarName t =
   let
     camelCased =
-      Manip.toCamel t
+      transformDigitPrefixes Uncapitalized $ Manip.toCamel t
   in
     if Set.member camelCased reservedWords
       then camelCased <> "_"
@@ -350,14 +357,16 @@ reservedWords =
     , "where"
     ]
 
-transformDigitPrefixes :: T.Text -> T.Text
-transformDigitPrefixes original =
+transformDigitPrefixes :: ShouldCapitalize -> T.Text -> T.Text
+transformDigitPrefixes shouldCapitalize original =
   let
     digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     hasNumberPrefix = any (flip T.isPrefixOf original) digits
   in
     if hasNumberPrefix
-      then "Num" <> original
+      then case shouldCapitalize of
+        Capitalized -> "Num" <> original
+        Uncapitalized -> "num" <> original
       else original
 
 delimitLines :: Semigroup c => c -> c -> [c] -> [c]
@@ -383,7 +392,7 @@ record typeName fields mbDeriveClasses =
   let
     mkField :: (VarName, TypeExpression, Maybe NET.NonEmptyText) -> HaskellCode
     mkField (fieldName, fieldType, fieldDescription) =
-      typeAnnotate fieldName fieldType
+      typeAnnotate (fixDigitPrefixVarName fieldName) fieldType
         <> maybe
           ""
           ((" -- ^ " <>) . fromText . T.replace "\n" " " . NET.toText)
@@ -607,3 +616,5 @@ preludeType =
 shrubberyType :: T.Text -> TypeName
 shrubberyType =
   toTypeName "Shrubbery" (Just "Shrubbery")
+
+data ShouldCapitalize = Capitalized | Uncapitalized

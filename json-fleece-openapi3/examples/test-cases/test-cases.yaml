@@ -944,6 +944,12 @@ components:
           type: string
           description: ""
 
+    ObjectWithFieldStartingWithNumber:
+      type: object
+      properties:
+        2SchemaStartingWithNumber:
+          $ref: "#/components/schemas/2_SchemaStartingWithNumber"
+
     2_SchemaStartingWithNumber:
       type: string
       description: This Schema's name starts with a number and must be renamed for the generated code to be correct.
