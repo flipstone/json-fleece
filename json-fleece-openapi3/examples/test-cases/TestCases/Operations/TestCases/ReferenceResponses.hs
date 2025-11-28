@@ -13,8 +13,8 @@ import Beeline.Routing ((/-))
 import qualified Beeline.Routing as R
 import qualified Fleece.Aeson.Beeline as FA
 import Prelude (($), Eq, Show, fmap)
+import qualified TestCases.Operations.TestCases.ReferenceResponses.Response400Body as Response400Body
 import qualified TestCases.Operations.TestCases.ReferenceResponses.Response500Body as Response500Body
-import qualified TestCases.Types.BadRequestError as BadRequestError
 
 operation ::
   H.Operation
@@ -39,7 +39,7 @@ route =
 
 data Responses
   = Response201 H.NoResponseBody
-  | Response400 BadRequestError.BadRequestError
+  | Response400 Response400Body.Response400Body
   | Response404 H.NoResponseBody
   | Response500 Response500Body.Response500Body
   deriving (Eq, Show)
@@ -47,7 +47,7 @@ data Responses
 responseSchemas :: [(H.StatusRange, H.ResponseBodySchema FA.JSONDecodingError Responses)]
 responseSchemas =
   [ (H.Status 201, fmap Response201 (H.noResponseBody))
-  , (H.Status 400, fmap Response400 (H.responseBody FA.JSON BadRequestError.badRequestErrorSchema))
+  , (H.Status 400, fmap Response400 (H.responseBody FA.JSON Response400Body.response400BodySchema))
   , (H.Status 404, fmap Response404 (H.noResponseBody))
   , (H.Status 500, fmap Response500 (H.responseBody FA.JSON Response500Body.response500BodySchema))
   ]

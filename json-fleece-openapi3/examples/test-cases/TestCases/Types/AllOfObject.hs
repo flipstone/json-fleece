@@ -1,28 +1,26 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module TestCases.Operations.InlineAllOf.Response200Body
-  ( Response200Body(..)
-  , response200BodySchema
+module TestCases.Types.AllOfObject
+  ( AllOfObject(..)
+  , allOfObjectSchema
   ) where
 
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import Prelude (($), Either, Eq, Maybe, Show)
-import qualified TestCases.Operations.InlineAllOf.Response200Body.FieldAItem as FieldAItem
-import qualified TestCases.Operations.InlineAllOf.Response200Body.FieldB as FieldB
-import qualified TestCases.Operations.InlineAllOf.Response200Body.FieldC as FieldC
-import qualified TestCases.Operations.InlineAllOf.Response200Body.FieldD as FieldD
-import qualified TestCases.Operations.InlineAllOf.Response200Body.FieldE as FieldE
-import qualified TestCases.Operations.InlineAllOf.Response200Body.FieldF as FieldF
-import qualified TestCases.Operations.InlineAllOf.Response200Body.FieldH as FieldH
-import qualified TestCases.Operations.InlineAllOf.Response200Body.FieldK as FieldK
-import qualified TestCases.Operations.InlineAllOf.Response200Body.FieldL as FieldL
-import qualified TestCases.Operations.InlineAllOf.Response200Body.FieldM as FieldM
+import qualified TestCases.Types.AllOfObject.FieldAItem as FieldAItem
+import qualified TestCases.Types.AllOfObject.FieldB as FieldB
+import qualified TestCases.Types.AllOfObject.FieldC as FieldC
+import qualified TestCases.Types.AllOfObject.FieldD as FieldD
+import qualified TestCases.Types.AllOfObject.FieldE as FieldE
+import qualified TestCases.Types.AllOfObject.FieldF as FieldF
+import qualified TestCases.Types.AllOfObject.FieldH as FieldH
+import qualified TestCases.Types.AllOfObject.FieldK as FieldK
 import qualified TestCases.Types.AnyOf as AnyOf
 import qualified TestCases.Types.SingletonNullableOneOfRef as SingletonNullableOneOfRef
 import qualified TestCases.Types.UTCDateTime as UTCDateTime
 
-data Response200Body = Response200Body
+data AllOfObject = AllOfObject
   { fieldA :: [FieldAItem.FieldAItem]
   , fieldB :: Either FC.Null FieldB.FieldB -- ^ A nullable date-time.
   , fieldC :: FieldC.FieldC
@@ -34,15 +32,13 @@ data Response200Body = Response200Body
   , fieldI :: Maybe UTCDateTime.UTCDateTime
   , fieldJ :: Maybe AnyOf.AnyOf
   , fieldK :: FieldK.FieldK -- ^ Field K.
-  , fieldL :: FieldL.FieldL
-  , fieldM :: Maybe FieldM.FieldM
   }
   deriving (Eq, Show)
 
-response200BodySchema :: FC.Fleece schema => schema Response200Body
-response200BodySchema =
+allOfObjectSchema :: FC.Fleece schema => schema AllOfObject
+allOfObjectSchema =
   FC.object $
-    FC.constructor Response200Body
+    FC.constructor AllOfObject
       #+ FC.required "fieldA" fieldA (FC.list FieldAItem.fieldAItemSchema)
       #+ FC.required "fieldB" fieldB (FC.nullable FieldB.fieldBSchema)
       #+ FC.required "fieldC" fieldC FieldC.fieldCSchema
@@ -54,5 +50,3 @@ response200BodySchema =
       #+ FC.optional "fieldI" fieldI UTCDateTime.uTCDateTimeSchema
       #+ FC.optional "fieldJ" fieldJ AnyOf.anyOfSchema
       #+ FC.required "fieldK" fieldK FieldK.fieldKSchema
-      #+ FC.required "fieldL" fieldL FieldL.fieldLSchema
-      #+ FC.optional "fieldM" fieldM FieldM.fieldMSchema

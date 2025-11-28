@@ -2,3 +2,4 @@
 .env
 tags
 test-all-logs/
+.helix

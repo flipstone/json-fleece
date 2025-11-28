@@ -1,5 +1,5 @@
 name:                json-fleece-openapi3
-version:             0.4.7.1
+version:             0.4.7.2
 github:              "flipstone/json-fleece/json-fleece-openapi3"
 license:             BSD3
 author:              "Author name here"
@@ -77,6 +77,7 @@ library:
     - non-empty-text >= 0.2 && < 0.3
     - openapi3 >= 3.2 && < 3.3
     - text >= 1.2 && < 2.2
+    - pretty-show
 
 executables:
   fleece-openapi3:

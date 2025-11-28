@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
 
@@ -5,12 +6,17 @@ module Fleece.OpenApi3
   ( generateOpenApiFleeceCode
   ) where
 
+#if MIN_VERSION_base(4,18,0)
 import Control.Applicative ((<|>))
+#else
+import Control.Applicative (liftA2, (<|>))
+#endif
 import Control.Monad (join, when, (<=<))
 import Control.Monad.Reader (ReaderT, asks, runReaderT)
 import Control.Monad.Trans (lift)
 import qualified Data.Aeson as Aeson
 import Data.Bifunctor (bimap, first)
+import Data.Containers.ListUtils (nubOrd)
 import qualified Data.Foldable as Foldable
 import Data.Function (on)
 import qualified Data.HashMap.Strict.InsOrd as IOHM
@@ -18,21 +24,30 @@ import qualified Data.List as List
 import Data.List.NonEmpty (NonEmpty ((:|)))
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map.Strict as Map
-import Data.Maybe (catMaybes, fromMaybe, isNothing, mapMaybe)
+import Data.Maybe (catMaybes, fromMaybe, isJust, mapMaybe)
 import qualified Data.NonEmptyText as NET
 import qualified Data.OpenApi as OA
 import qualified Data.Text as T
+import qualified Debug.Trace as Debug
+import Text.Show.Pretty (ppShow)
 
 import qualified Fleece.CodeGenUtil as CGU
 import qualified Fleece.CodeGenUtil.HaskellCode as HC
+import qualified Fleece.OpenApi3.Traversal as OAT
 
-type CGM = ReaderT OA.Components CGU.CodeGen
+type CGM = ReaderT OA.OpenApi CGU.CodeGen
 
 generateOpenApiFleeceCode ::
   OA.OpenApi ->
   CGU.CodeGen CGU.Modules
 generateOpenApiFleeceCode openApi = do
-  typeMap <- runReaderT (mkCodeGenTypes openApi) (OA._openApiComponents openApi)
+  inlinedOpenApi <-
+    runReaderT
+      (OAT.traverseOpenApiSchemas inlineAllOfReferenced openApi)
+      openApi
+
+  typeMap <- runReaderT mkCodeGenTypes inlinedOpenApi
+
   CGU.generateFleeceCode typeMap
 
 type SchemaMap =
@@ -57,11 +72,10 @@ unionsErrorOnConflict maps =
         mempty
         (fmap (fmap pure) maps)
 
-mkCodeGenTypes :: OA.OpenApi -> CGM CGU.CodeGenMap
-mkCodeGenTypes openApi = do
-  let
-    components = OA._openApiComponents openApi
-
+mkCodeGenTypes :: CGM CGU.CodeGenMap
+mkCodeGenTypes = do
+  pathItems <- asks (IOHM.toList . OA._openApiPaths)
+  components <- asks OA._openApiComponents
   schemaMaps <-
     traverse (uncurry (mkSchemaMap CGU.Type))
       . IOHM.toList
@@ -70,15 +84,14 @@ mkCodeGenTypes openApi = do
   schemaMap <- unionsErrorOnConflict schemaMaps
 
   let
-    pathItems =
-      IOHM.toList
-        . OA._openApiPaths
-        $ openApi
-
     codeGenMap =
       fmap (CGU.CodeGenItemType . schemaCodeGenType) schemaMap
 
-  pathTypes <- traverse (uncurry $ mkPathItem (OA._componentsParameters components) schemaMap) pathItems
+  pathTypes <-
+    traverse
+      (uncurry $ mkPathItem (OA._componentsParameters components) schemaMap)
+      pathItems
+
   unionsErrorOnConflict (codeGenMap : pathTypes)
 
 mkPathItem :: OA.Definitions OA.Param -> SchemaMap -> FilePath -> OA.PathItem -> CGM CGU.CodeGenMap
@@ -361,7 +374,7 @@ lookupResponseBodySchema operationKey schemaMap responseStatus responseRef = do
             "Unable to resolve schema reference "
               <> show refKey
               <> "."
-  responses <- asks OA._componentsResponses
+  responses <- asks (OA._componentsResponses . OA._openApiComponents)
   response <- case responseRef of
     OA.Ref ref -> case IOHM.lookup (OA.getReference ref) responses of
       Nothing ->
@@ -378,7 +391,7 @@ lookupResponseBodySchema operationKey schemaMap responseStatus responseRef = do
         case OA._mediaTypeObjectSchema mediaTypeObject of
           Just (OA.Ref (OA.Reference refKey)) ->
             fmap schemaInfoWithoutDependencies (lookupCodeGenType refKey)
-          Just (OA.Inline schema) ->
+          Just (OA.Inline schema) -> do
             let
               responseName =
                 T.pack $
@@ -387,12 +400,12 @@ lookupResponseBodySchema operationKey schemaMap responseStatus responseRef = do
                       "Response" <> show n <> "Body"
                     CGU.DefaultResponse ->
                       "DefaultResponseBody"
-            in
-              mkInlineBodySchema
-                responseError
-                (operationKey <> "." <> responseName)
-                schemaMap
-                schema
+
+            mkInlineBodySchema
+              responseError
+              (operationKey <> "." <> responseName)
+              schemaMap
+              schema
           Nothing ->
             -- This indicates that the empty schema was specified for
             -- the media type.
@@ -989,37 +1002,16 @@ mkOpenApiDataFormat schemaKey typeName schema =
       dataFormat <- mkFormat
       pure $ Just (Map.empty, dataFormat)
   in
-    case (OA._schemaOneOf schema, OA._schemaAnyOf schema, OA._schemaAllOf schema) of
-      (Just _, Just _, Just _) ->
-        lift . CGU.codeGenError $
-          "Schema cannot define oneOf, anyOf, and allOf. The typeName is: "
-            <> T.unpack (HC.typeNameText typeName)
-      (Just _, Just _, Nothing) ->
+    case (OA._schemaOneOf schema, OA._schemaAnyOf schema) of
+      (Just _, Just _) ->
         lift . CGU.codeGenError $
           "Schema cannot define both oneOf and anyOf. The typeName is: "
             <> T.unpack (HC.typeNameText typeName)
-      (Just _, Nothing, Just _) ->
-        lift . CGU.codeGenError $
-          "Schema cannot define both oneOf and allOf. The typeName is: "
-            <> T.unpack (HC.typeNameText typeName)
-      (Nothing, Just _, Just _) ->
-        lift . CGU.codeGenError $
-          "Schema cannot define both anyOf and allOf. The typeName is: "
-            <> T.unpack (HC.typeNameText typeName)
-      (Just schemas, Nothing, Nothing) ->
+      (Just schemas, Nothing) ->
         mkOneOfOrAnyOfDataFormat "oneOf" schemaKey typeName schema schemas
-      (Nothing, Just schemas, Nothing) ->
+      (Nothing, Just schemas) ->
         mkOneOfOrAnyOfDataFormat "anyOf" schemaKey typeName schema schemas
-      (Nothing, Nothing, Just schemas) ->
-        case NEL.nonEmpty schemas of
-          Nothing ->
-            lift . CGU.codeGenError $
-              "While handling allOf: The list of types cannot be empty. The typeName is: "
-                <> T.unpack (HC.typeNameText typeName)
-          Just neSchemas ->
-            mkOpenApiDataFormat schemaKey typeName
-              =<< getAllOfSchema typeName neSchemas
-      (Nothing, Nothing, Nothing) ->
+      (Nothing, Nothing) ->
         case OA._schemaType schema of
           Just OA.OpenApiString -> noRefs $ mkOpenApiStringFormat typeName schema
           Just OA.OpenApiNumber -> noRefs $ mkOpenApiNumberFormat typeName schema
@@ -1053,7 +1045,7 @@ mkOneOfOrAnyOfDataFormat ::
   [OA.Referenced OA.Schema] ->
   CGM (Maybe (SchemaMap, CGU.CodeGenDataFormat))
 mkOneOfOrAnyOfDataFormat schemaType schemaKey typeName schema schemas = do
-  components <- asks OA._componentsSchemas
+  components <- asks (OA._componentsSchemas . OA._openApiComponents)
 
   case OA._schemaDiscriminator schema of
     Just discriminator ->
@@ -1075,21 +1067,33 @@ mkOneOfOrAnyOfDataFormat schemaType schemaKey typeName schema schemas = do
               case IOHM.lookup (OA.getReference ref) components of
                 Nothing ->
                   lift . CGU.codeGenError $
-                    "While looking up reference: \
-                    \Could not find ref with name: "
+                    "While looking up reference: Could not find ref with name: "
                       <> T.unpack (OA.getReference ref)
                 Just foundSchema ->
                   mkOpenApiDataFormat schemaKey typeName foundSchema
         Just neSchemas ->
           Just <$> mkOneOfAnyOfUnion schemaKey typeOptions neSchemas
 
-getAllOfSchema :: HC.TypeName -> NEL.NonEmpty (OA.Referenced OA.Schema) -> CGM OA.Schema
-getAllOfSchema typeName =
-  Foldable.foldlM (foldGetAllOfSchema typeName) mempty
+inlineAllOfReferenced :: T.Text -> OA.Referenced OA.Schema -> CGM (OA.Referenced OA.Schema)
+inlineAllOfReferenced key schema =
+  case schema of
+    OA.Ref _ref -> pure schema
+    OA.Inline a -> OA.Inline <$> inlineAllOf key a
 
-foldGetAllOfSchema :: HC.TypeName -> OA.Schema -> OA.Referenced OA.Schema -> CGM OA.Schema
+inlineAllOf :: T.Text -> OA.Schema -> CGM OA.Schema
+inlineAllOf typeNameText schema =
+  case OA._schemaAllOf schema of
+    Nothing ->
+      pure schema
+    Just schemas -> do
+      inlined <- Foldable.foldlM (foldGetAllOfSchema typeNameText) (schema {OA._schemaAllOf = Nothing}) schemas
+      when (typeNameText == schemaToLog) $ do
+        Debug.traceM ("post-slurp: " <> ppShow typeNameText <> ": " <> ppShow inlined) -- ???
+      pure inlined
+
+foldGetAllOfSchema :: T.Text -> OA.Schema -> OA.Referenced OA.Schema -> CGM OA.Schema
 foldGetAllOfSchema typeName acc referenced = do
-  components <- asks OA._componentsSchemas
+  components <- asks (OA._componentsSchemas . OA._openApiComponents)
   schema <- case referenced of
     OA.Inline inlineSchema ->
       pure inlineSchema
@@ -1097,80 +1101,25 @@ foldGetAllOfSchema typeName acc referenced = do
       case IOHM.lookup (OA.getReference ref) components of
         Nothing ->
           lift . CGU.codeGenError $
-            "While looking up reference: \
-            \Could not find ref with name: "
+            "While looking up reference: Could not find ref with name: "
               <> T.unpack (OA.getReference ref)
         Just foundSchema ->
           pure foundSchema
 
   mergeCompatibleAllOfSchemas typeName acc schema
 
-mergeCompatibleAllOfSchemas :: HC.TypeName -> OA.Schema -> OA.Schema -> CGM OA.Schema
-mergeCompatibleAllOfSchemas typeName acc schema =
-  let
-    mbAccType = OA._schemaType acc
-    mbSchemaType = OA._schemaType schema
+schemaToLog :: T.Text
+schemaToLog =
+  "AllOfDateTime"
 
-    -- TODO: We don't support this currently, but we would like to support it
-    -- eventually.
-    --
-    typesAreArrays =
-      all (== (Just OA.OpenApiArray)) [mbAccType, mbSchemaType]
-
-    typesMatchOrNoType = mbSchemaType == mbAccType || isNothing mbAccType
-    mbFormat1 = OA._schemaFormat acc
-    mbFormat2 = OA._schemaFormat schema
-    formatsMatch = fromMaybe True $ (==) <$> mbFormat1 <*> mbFormat2
-  in
-    case mbSchemaType of
-      Just _schemaType
-        | typesAreArrays ->
-            lift
-              . CGU.codeGenError
-              $ "Multiple arrays in allOf schemas are not currently supported."
-        | typesMatchOrNoType ->
-            if formatsMatch
-              then
-                -- Min items is the only additional validation property that we
-                -- read right now, so we update it here.
-                --
-                pure $
-                  (acc <> schema)
-                    { OA._schemaMinItems =
-                        max (OA._schemaMinItems acc) (OA._schemaMinItems schema)
-                    }
-              else
-                lift
-                  . CGU.codeGenError
-                  . unwords
-                  $ [ "Schemas formats do not match for all items in allOf array: got"
-                    , maybe "<no format>" show mbFormat1
-                    , "and"
-                    , maybe "<no format>" show mbFormat2 <> "."
-                    ]
-        | otherwise ->
-            lift
-              . CGU.codeGenError
-              . unwords
-              $ [ "Schemas in allOf array must all be the same type, but got"
-                , maybe "<no type>" show mbAccType
-                , "and"
-                , maybe "<no type>" show mbSchemaType <> "."
-                ]
-      Nothing ->
-        case OA._schemaAllOf schema of
-          Just schemas ->
-            case NEL.nonEmpty schemas of
-              Just neSchemas ->
-                mappend acc <$> getAllOfSchema typeName neSchemas
-              Nothing ->
-                lift
-                  . CGU.codeGenError
-                  $ "While building merged allOf schema with typeName: "
-                    <> T.unpack (HC.typeNameText typeName)
-                    <> ": a recursively referenced allOf schema was empty."
-          Nothing ->
-            pure $ acc <> schema
+mergeCompatibleAllOfSchemas :: T.Text -> OA.Schema -> OA.Schema -> CGM OA.Schema
+mergeCompatibleAllOfSchemas typeName acc schema = do
+  inlined <- inlineAllOf typeName schema
+  when (typeName == schemaToLog) $ do
+    Debug.traceM ("og schema " <> ppShow typeName <> ": " <> ppShow schema) -- ???
+    Debug.traceM ("acc " <> ppShow typeName <> ": " <> ppShow acc) -- ???
+    Debug.traceM ("slurped " <> ppShow typeName <> ": " <> ppShow inlined) -- ???
+  appendSchemasForAllOf typeName acc inlined
 
 mkOneOfAnyOfUnion ::
   T.Text ->
@@ -1442,7 +1391,6 @@ mkOpenApiArrayFormat schemaKey typeName schema = do
       schemaKey
       schema
       schemaKey
-      (OA._schemaItems schema)
 
 propertyToCodeGenField ::
   CGU.CodeSection ->
@@ -1475,7 +1423,7 @@ schemaRefToFieldType section parentKey fieldName schemaRef =
   case schemaRef of
     OA.Ref ref ->
       pure (Map.empty, CGU.TypeReference . OA.getReference $ ref)
-    OA.Inline inlineSchema ->
+    OA.Inline inlineSchema -> do
       case OA._schemaType inlineSchema of
         Just OA.OpenApiArray ->
           let
@@ -1494,7 +1442,6 @@ schemaRefToFieldType section parentKey fieldName schemaRef =
                 parentKey
                 inlineSchema
                 fieldName
-                (OA._schemaItems inlineSchema)
         _ -> do
           let
             key =
@@ -1511,10 +1458,10 @@ schemaArrayItemsToFieldType ::
   T.Text ->
   OA.Schema ->
   OA.ParamName ->
-  Maybe OA.OpenApiItems ->
   CGM (SchemaMap, CGU.CodeGenRefType)
-schemaArrayItemsToFieldType section parentKey schema fieldName arrayItems =
+schemaArrayItemsToFieldType section parentKey schema fieldName =
   let
+    arrayItems = OA._schemaItems schema
     fieldError err =
       lift . CGU.codeGenError $
         "Unable to generate type for field "
@@ -1623,3 +1570,126 @@ mkAdditionalPropertiesSchema raiseError schemaKey mkInlineItemSchema mbAdditiona
           schemaKey <> "Item"
       in
         Just <$> mkInlineItemSchema itemKey innerSchema
+
+-- The 'Monoid' instance for 'OA.Schema' always picks the last 'Just' value for each 'Maybe' field,
+-- rather than combining the values inside when appropriate. This function implements the schema-combining
+-- behavior we want for 'allOf'.
+appendSchemasForAllOf :: T.Text -> OA.Schema -> OA.Schema -> CGM OA.Schema
+appendSchemasForAllOf typeNameText schemaA schemaB = do
+  discriminator <-
+    let
+      mbDiscA = OA._schemaDiscriminator schemaA
+      mbDiscB = OA._schemaDiscriminator schemaB
+    in
+      case liftA2 (,) mbDiscA mbDiscB of
+        Nothing ->
+          pure (mbDiscA <|> mbDiscB)
+        Just (discA, discB) ->
+          let
+            propA = OA._discriminatorPropertyName discA
+            propB = OA._discriminatorPropertyName discB
+          in
+            if propA == propB
+              then
+                pure
+                  . Just
+                  $ OA.Discriminator
+                    { OA._discriminatorPropertyName = propA
+                    , OA._discriminatorMapping =
+                        OA._discriminatorMapping discA <> OA._discriminatorMapping discB
+                    }
+              else
+                lift . CGU.codeGenError $
+                  T.unpack typeNameText <> ": Cannot combine discriminators with different property names."
+
+  format <-
+    let
+      schemaFormatA = OA._schemaFormat schemaA
+      schemaFormatB = OA._schemaFormat schemaB
+    in
+      if fromMaybe True $ liftA2 (==) schemaFormatA schemaFormatB
+        then pure (schemaFormatA <|> schemaFormatB)
+        else
+          lift
+            . CGU.codeGenError
+            . unwords
+            $ [ T.unpack typeNameText <> ":"
+              , "Schema formats do not match for all items in allOf array: got"
+              , maybe "<no format>" show schemaFormatA
+              , "and"
+              , maybe "<no format>" show schemaFormatB <> "."
+              ]
+
+  items <-
+    let
+      schemaItemsA = OA._schemaItems schemaA
+      schemaItemsB = OA._schemaItems schemaB
+    in
+      if all isJust [schemaItemsA, schemaItemsB]
+        then
+          lift
+            . CGU.codeGenError
+            $ T.unpack typeNameText <> ": Multiple arrays in allOf schemas are not currently supported."
+        else
+          traverse (inlineAllOfItems (typeNameText <> ".Items")) (OA._schemaItems schemaA <|> OA._schemaItems schemaB)
+
+  schemaType <-
+    let
+      schemaTypeA = OA._schemaType schemaA
+      schemaTypeB = OA._schemaType schemaB
+    in
+      if fromMaybe True $ liftA2 (==) schemaTypeA schemaTypeB
+        then pure (schemaTypeA <|> schemaTypeB)
+        else
+          lift
+            . CGU.codeGenError
+            . unwords
+            $ [ T.unpack typeNameText <> ":"
+              , "Schemas in allOf array must all be the same type, but got"
+              , maybe "<no type>" show schemaTypeA
+              , "and"
+              , maybe "<no type>" show schemaTypeB <> "."
+              ]
+
+  let
+    traverseInline = (traverse . traverse) (inlineAllOfReferenced typeNameText)
+    traverseProps = IOHM.unorderedTraverseWithKey (\k v -> inlineAllOfReferenced (typeNameText <> "." <> k) v)
+
+  props <- traverseProps $ OA._schemaProperties schemaA <> OA._schemaProperties schemaB
+  allOf <- traverseInline $ OA._schemaAllOf schemaA <> OA._schemaAllOf schemaB
+  anyOf <- traverseInline $ OA._schemaAnyOf schemaA <> OA._schemaAnyOf schemaB
+  oneOf <- traverseInline $ OA._schemaOneOf schemaA <> OA._schemaOneOf schemaB
+
+  pure $
+    (schemaA <> schemaB)
+      { OA._schemaAllOf =
+          allOf
+      , OA._schemaAnyOf =
+          anyOf
+      , OA._schemaDiscriminator =
+          discriminator
+      , OA._schemaEnum =
+          fmap nubOrd (OA._schemaEnum schemaA <> OA._schemaEnum schemaB)
+      , OA._schemaFormat =
+          format
+      , OA._schemaItems =
+          items
+      , OA._schemaMinItems =
+          max (OA._schemaMinItems schemaA) (OA._schemaMinItems schemaB)
+      , OA._schemaNullable =
+          fmap and (NEL.nonEmpty (mapMaybe OA._schemaNullable [schemaA, schemaB]))
+      , OA._schemaOneOf =
+          oneOf
+      , OA._schemaType =
+          schemaType
+      , OA._schemaProperties =
+          props
+      }
+
+inlineAllOfItems :: T.Text -> OA.OpenApiItems -> CGM OA.OpenApiItems
+inlineAllOfItems typeName items =
+  case items of
+    OA.OpenApiItemsObject refSchema ->
+      fmap OA.OpenApiItemsObject $ inlineAllOfReferenced typeName refSchema
+    OA.OpenApiItemsArray refSchemas ->
+      fmap OA.OpenApiItemsArray $ traverse (inlineAllOfReferenced typeName) refSchemas
