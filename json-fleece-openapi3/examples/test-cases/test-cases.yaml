@@ -17,7 +17,8 @@ paths:
           required: true
           schema:
             type: integer
-            format: int32
+            format: int32              
+          
       responses:
         '200':
           description: "Successful Get"
@@ -512,8 +513,35 @@ paths:
                   - type: string
                   - type: integer
   /test-cases/inline-all-of:
-    get:
+    post:
       operationId: InlineAllOf
+      parameters:
+        - $ref: '#/components/parameters/AllOfParam'
+        - name: inline-allof-param
+          in: query
+          required: true
+          schema:
+            allOf:
+              - type: string
+              - enum:
+                  - "100"
+                  - "200"
+                  - "300" 
+                  - "Green"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/AllOfObject'
+                - type: object
+                  properties:
+                    fieldL:
+                      type: string
+                    fieldM:
+                      type: string
+                  required:
+                    - fieldL
       responses:
         '200':
           description: "Successful Get"
@@ -521,15 +549,19 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/AllOfRefObject'
+                  - $ref: '#/components/schemas/AllOfObject'
                   - type: object
                     properties:
-                      type:
+                      fieldL:
                         type: string
-                      name:
+                      fieldM:
                         type: string
                     required:
-                      - type
+                      - fieldL
+        '400':
+          $ref: '#/components/responses/400'
+          
+
 components:
   responses:
     '404':
@@ -550,13 +582,26 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/BadRequestError'
+            allOf:
+              - $ref: '#/components/schemas/BadRequestError'
+              - type: object
+                properties:
+                  bad:
+                    type: string
   parameters:
     AParam:
       in: header
       name: X-Sample-Header-Param
       schema:
         type: boolean
+      required: true
+    AllOfParam:
+      in: header
+      name: X-Sample-AllOf-Param
+      schema:
+        allOf:
+          - type: integer
+          - format: int32
       required: true
   schemas:
     string-param:
@@ -811,6 +856,18 @@ components:
           type: string
         bazName:
           type: string
+
+    ScheduledDateTime:
+      required:
+        - datetime_type
+      type: object
+      properties:
+        datetime_type:
+          minLength: 1
+          type: string
+          description: Type of the datetime
+      additionalProperties: false
+
 
     TopLevelArray:
       type: array
@@ -1088,7 +1145,10 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/NullableString'
-
+        
+    # NOTE: Does not generate a newtype around Either FC.Null.
+    # When the reference is used, it will be wrapped with Either FC.Null
+    # at the use site.
     NullableString:
       nullable: true
       type: string
@@ -1130,41 +1190,72 @@ components:
       required:
         - error
 
-    AllOf:
-      allOf:
-        - $ref: '#/components/schemas/AllOfRefObject'
-        - type: object
-          properties:
-            type:
-              type: string
-            name:
-              type: string
-          required:
-            - type
-
-    AllOfRefObject:
+    AllOfObject:
       type: object
       properties:
-        id:
-          type: integer
-        description:
+        fieldA:
+          type: array
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+        fieldB:
           type: string
-      required:
-        - id
-
-    RecursiveAllOf:
+          allOf:
+            - nullable: true
+            - format: date-time
+            - allOf:
+                - description: "A nullable date-time."
       allOf:
-        - $ref: '#/components/schemas/AllOf'
-        - type: object
-          properties:
-            age:
+        - properties:
+            fieldC:
+              type: object
+              allOf:
+                - {}
+                - {}
+                - {}
+                - {}
+              properties:
+                fieldC1:
+                  type: string
+                fieldC2:
+                  type: string
+            fieldD:
               type: integer
-
-    AllOfNoObject:
+        - $ref: '#/components/schemas/AllOfFieldsEthroughG'
+        - $ref: '#/components/schemas/AllOfFieldsHthroughK'
+        - required:
+            - fieldA
+            - fieldB
+            - fieldC
+            - fieldD
+            - fieldE
+            - fieldK
+                
+    AllOfFieldsEthroughG:
+      type: object
+      properties:
+        fieldE:
+          type: string
+          nullable: true
+        fieldF:
+          type: string
+        fieldG:
+          $ref: '#/components/schemas/SingletonNullableOneOfRef'
+            
+    AllOfFieldsHthroughK:
       allOf:
-        - type: string
-        - $ref: "#/components/schemas/CustomDateFormat"
-
+        - properties:
+            fieldH:
+              type: "null"
+            fieldI:
+              $ref: '#/components/schemas/UTCDateTime'
+            fieldJ:
+              $ref: '#/components/schemas/AnyOf'
+            fieldK:
+              type: object
+              description: "Field K."
+              
     AnyOf:
       anyOf:
         - $ref: '#/components/schemas/Foo'
@@ -1181,3 +1272,25 @@ components:
             - id
             - name
         - $ref: '#/components/schemas/Baz'
+
+    UTCDateTime:
+      required:
+        - datetime_type
+        - datetime_value
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ScheduledDateTime'
+      properties:
+        datetime_type:
+          minLength: 1
+          enum:
+            - utc_datetime
+          type: string
+          description: Type of the datetime
+        datetime_value:
+          type: string
+          description: UTC datetime value
+          format: date-time
+          example: '2024-05-27T14:05:00Z'
+      additionalProperties: false
+
