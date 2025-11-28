@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.4.7.1
+version:        0.4.7.2
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -1873,7 +1873,33 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param1.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param2.hs
     examples/test-cases/TestCases/Operations/InlineAllOf.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/InlineAllofParam.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody/FieldAItem.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody/FieldB.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody/FieldC.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody/FieldD.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody/FieldE.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody/FieldF.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody/FieldH.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody/FieldK.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody/FieldL.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody/FieldM.hs
     examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldAItem.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldB.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldC.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldD.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldE.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldF.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldH.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldK.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldL.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldM.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/Response400Body.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/Response400Body/Bad.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/Response400Body/Error.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/XSampleAllOfParam.hs
     examples/test-cases/TestCases/Operations/InlineOneOf.hs
     examples/test-cases/TestCases/Operations/InlineOneOf/Response200Body.hs
     examples/test-cases/TestCases/Operations/Num2GetAResultNamedNumberSomething.hs
@@ -1952,18 +1978,29 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/RequiredArrayParam.hs
     examples/test-cases/TestCases/Operations/TestCases/QueryParams/StringParam.hs
     examples/test-cases/TestCases/Operations/TestCases/ReferenceResponses.hs
+    examples/test-cases/TestCases/Operations/TestCases/ReferenceResponses/Response400Body.hs
+    examples/test-cases/TestCases/Operations/TestCases/ReferenceResponses/Response400Body/Bad.hs
+    examples/test-cases/TestCases/Operations/TestCases/ReferenceResponses/Response400Body/Error.hs
     examples/test-cases/TestCases/Operations/TestCases/ReferenceResponses/Response500Body.hs
     examples/test-cases/TestCases/Operations/TestCases/ReferenceResponses/Response500Body/Error.hs
     examples/test-cases/TestCases/Operations/TestCases/RequestBody.hs
-    examples/test-cases/TestCases/Types/AllOf.hs
-    examples/test-cases/TestCases/Types/AllOf/Description.hs
-    examples/test-cases/TestCases/Types/AllOf/Id.hs
-    examples/test-cases/TestCases/Types/AllOf/Name.hs
-    examples/test-cases/TestCases/Types/AllOf/Type.hs
-    examples/test-cases/TestCases/Types/AllOfNoObject.hs
-    examples/test-cases/TestCases/Types/AllOfRefObject.hs
-    examples/test-cases/TestCases/Types/AllOfRefObject/Description.hs
-    examples/test-cases/TestCases/Types/AllOfRefObject/Id.hs
+    examples/test-cases/TestCases/Types/AllOfFieldsEthroughG.hs
+    examples/test-cases/TestCases/Types/AllOfFieldsEthroughG/FieldE.hs
+    examples/test-cases/TestCases/Types/AllOfFieldsEthroughG/FieldF.hs
+    examples/test-cases/TestCases/Types/AllOfFieldsHthroughK.hs
+    examples/test-cases/TestCases/Types/AllOfFieldsHthroughK/FieldH.hs
+    examples/test-cases/TestCases/Types/AllOfFieldsHthroughK/FieldK.hs
+    examples/test-cases/TestCases/Types/AllOfObject.hs
+    examples/test-cases/TestCases/Types/AllOfObject/FieldAItem.hs
+    examples/test-cases/TestCases/Types/AllOfObject/FieldB.hs
+    examples/test-cases/TestCases/Types/AllOfObject/FieldC.hs
+    examples/test-cases/TestCases/Types/AllOfObject/FieldC/FieldC1.hs
+    examples/test-cases/TestCases/Types/AllOfObject/FieldC/FieldC2.hs
+    examples/test-cases/TestCases/Types/AllOfObject/FieldD.hs
+    examples/test-cases/TestCases/Types/AllOfObject/FieldE.hs
+    examples/test-cases/TestCases/Types/AllOfObject/FieldF.hs
+    examples/test-cases/TestCases/Types/AllOfObject/FieldH.hs
+    examples/test-cases/TestCases/Types/AllOfObject/FieldK.hs
     examples/test-cases/TestCases/Types/AnyOf.hs
     examples/test-cases/TestCases/Types/ArrayWithNullableStrings.hs
     examples/test-cases/TestCases/Types/AStringType.hs
@@ -2004,10 +2041,10 @@ extra-source-files:
     examples/test-cases/TestCases/Types/FieldTestCases/RequiredNullableField.hs
     examples/test-cases/TestCases/Types/Foo.hs
     examples/test-cases/TestCases/Types/Foo/Type.hs
-    examples/test-cases/TestCases/Types/InlineAllOf/Response200Body/Description.hs
-    examples/test-cases/TestCases/Types/InlineAllOf/Response200Body/Id.hs
-    examples/test-cases/TestCases/Types/InlineAllOf/Response200Body/Name.hs
-    examples/test-cases/TestCases/Types/InlineAllOf/Response200Body/Type.hs
+    examples/test-cases/TestCases/Types/InlineAllOf/RequestBody/FieldC/FieldC1.hs
+    examples/test-cases/TestCases/Types/InlineAllOf/RequestBody/FieldC/FieldC2.hs
+    examples/test-cases/TestCases/Types/InlineAllOf/Response200Body/FieldC/FieldC1.hs
+    examples/test-cases/TestCases/Types/InlineAllOf/Response200Body/FieldC/FieldC2.hs
     examples/test-cases/TestCases/Types/InlineNoAdditionalPropertiesWithOneOfNullabilityOutside.hs
     examples/test-cases/TestCases/Types/InlineYesAdditionalPropertiesWithOneOfNullablityInside.hs
     examples/test-cases/TestCases/Types/InlineYesAdditionalPropertiesWithOneOfNullablityInside/Foobar.hs
@@ -2087,14 +2124,10 @@ extra-source-files:
     examples/test-cases/TestCases/Types/OneOfWithInlineObject/Option4/Nested/Name.hs
     examples/test-cases/TestCases/Types/OneOfWithInlineObject/Option4/Nested/Number.hs
     examples/test-cases/TestCases/Types/OneOfWithNullable.hs
-    examples/test-cases/TestCases/Types/RecursiveAllOf.hs
-    examples/test-cases/TestCases/Types/RecursiveAllOf/Age.hs
-    examples/test-cases/TestCases/Types/RecursiveAllOf/Description.hs
-    examples/test-cases/TestCases/Types/RecursiveAllOf/Id.hs
-    examples/test-cases/TestCases/Types/RecursiveAllOf/Name.hs
-    examples/test-cases/TestCases/Types/RecursiveAllOf/Type.hs
     examples/test-cases/TestCases/Types/ReferenceOneOf.hs
     examples/test-cases/TestCases/Types/ReferenceOneOfInsideOneOf.hs
+    examples/test-cases/TestCases/Types/ScheduledDateTime.hs
+    examples/test-cases/TestCases/Types/ScheduledDateTime/DatetimeType.hs
     examples/test-cases/TestCases/Types/SingletonNonNullableOneOfRef.hs
     examples/test-cases/TestCases/Types/SingletonNullableOneOfPrimitive.hs
     examples/test-cases/TestCases/Types/SingletonNullableOneOfRef.hs
@@ -2106,6 +2139,9 @@ extra-source-files:
     examples/test-cases/TestCases/Types/TopLevelArrayNullable/TopLevelArrayNullableItem.hs
     examples/test-cases/TestCases/Types/TopLevelOneOf.hs
     examples/test-cases/TestCases/Types/TopLevelOneOfOneOption.hs
+    examples/test-cases/TestCases/Types/UTCDateTime.hs
+    examples/test-cases/TestCases/Types/UTCDateTime/DatetimeType.hs
+    examples/test-cases/TestCases/Types/UTCDateTime/DatetimeValue.hs
     examples/test-cases/TestCases/Types/UtcTimeType.hs
     examples/test-cases/TestCases/Types/ZonedTimeType.hs
 
@@ -2123,6 +2159,7 @@ library
   exposed-modules:
       Fleece.OpenApi3
   other-modules:
+      Fleece.OpenApi3.Traversal
       Paths_json_fleece_openapi3
   hs-source-dirs:
       src

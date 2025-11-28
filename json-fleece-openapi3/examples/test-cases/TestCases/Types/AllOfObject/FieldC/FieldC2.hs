@@ -1,0 +1,17 @@
+{-# LANGUAGE NoImplicitPrelude #-}
+
+module TestCases.Types.AllOfObject.FieldC.FieldC2
+  ( FieldC2(..)
+  , fieldC2Schema
+  ) where
+
+import qualified Data.Text as T
+import qualified Fleece.Core as FC
+import Prelude (Eq, Show)
+
+newtype FieldC2 = FieldC2 T.Text
+  deriving (Show, Eq)
+
+fieldC2Schema :: FC.Fleece schema => schema FieldC2
+fieldC2Schema =
+  FC.coerceSchema FC.text

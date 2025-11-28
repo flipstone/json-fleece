@@ -24,7 +24,33 @@ library
       TestCases.Operations.GetMultiplePathsParams.Param1
       TestCases.Operations.GetMultiplePathsParams.Param2
       TestCases.Operations.InlineAllOf
+      TestCases.Operations.InlineAllOf.InlineAllofParam
+      TestCases.Operations.InlineAllOf.RequestBody
+      TestCases.Operations.InlineAllOf.RequestBody.FieldAItem
+      TestCases.Operations.InlineAllOf.RequestBody.FieldB
+      TestCases.Operations.InlineAllOf.RequestBody.FieldC
+      TestCases.Operations.InlineAllOf.RequestBody.FieldD
+      TestCases.Operations.InlineAllOf.RequestBody.FieldE
+      TestCases.Operations.InlineAllOf.RequestBody.FieldF
+      TestCases.Operations.InlineAllOf.RequestBody.FieldH
+      TestCases.Operations.InlineAllOf.RequestBody.FieldK
+      TestCases.Operations.InlineAllOf.RequestBody.FieldL
+      TestCases.Operations.InlineAllOf.RequestBody.FieldM
       TestCases.Operations.InlineAllOf.Response200Body
+      TestCases.Operations.InlineAllOf.Response200Body.FieldAItem
+      TestCases.Operations.InlineAllOf.Response200Body.FieldB
+      TestCases.Operations.InlineAllOf.Response200Body.FieldC
+      TestCases.Operations.InlineAllOf.Response200Body.FieldD
+      TestCases.Operations.InlineAllOf.Response200Body.FieldE
+      TestCases.Operations.InlineAllOf.Response200Body.FieldF
+      TestCases.Operations.InlineAllOf.Response200Body.FieldH
+      TestCases.Operations.InlineAllOf.Response200Body.FieldK
+      TestCases.Operations.InlineAllOf.Response200Body.FieldL
+      TestCases.Operations.InlineAllOf.Response200Body.FieldM
+      TestCases.Operations.InlineAllOf.Response400Body
+      TestCases.Operations.InlineAllOf.Response400Body.Bad
+      TestCases.Operations.InlineAllOf.Response400Body.Error
+      TestCases.Operations.InlineAllOf.XSampleAllOfParam
       TestCases.Operations.InlineOneOf
       TestCases.Operations.InlineOneOf.Response200Body
       TestCases.Operations.Num2GetAResultNamedNumberSomething
@@ -103,18 +129,29 @@ library
       TestCases.Operations.TestCases.QueryParams.RequiredArrayParam
       TestCases.Operations.TestCases.QueryParams.StringParam
       TestCases.Operations.TestCases.ReferenceResponses
+      TestCases.Operations.TestCases.ReferenceResponses.Response400Body
+      TestCases.Operations.TestCases.ReferenceResponses.Response400Body.Bad
+      TestCases.Operations.TestCases.ReferenceResponses.Response400Body.Error
       TestCases.Operations.TestCases.ReferenceResponses.Response500Body
       TestCases.Operations.TestCases.ReferenceResponses.Response500Body.Error
       TestCases.Operations.TestCases.RequestBody
-      TestCases.Types.AllOf
-      TestCases.Types.AllOf.Description
-      TestCases.Types.AllOf.Id
-      TestCases.Types.AllOf.Name
-      TestCases.Types.AllOf.Type
-      TestCases.Types.AllOfNoObject
-      TestCases.Types.AllOfRefObject
-      TestCases.Types.AllOfRefObject.Description
-      TestCases.Types.AllOfRefObject.Id
+      TestCases.Types.AllOfFieldsEthroughG
+      TestCases.Types.AllOfFieldsEthroughG.FieldE
+      TestCases.Types.AllOfFieldsEthroughG.FieldF
+      TestCases.Types.AllOfFieldsHthroughK
+      TestCases.Types.AllOfFieldsHthroughK.FieldH
+      TestCases.Types.AllOfFieldsHthroughK.FieldK
+      TestCases.Types.AllOfObject
+      TestCases.Types.AllOfObject.FieldAItem
+      TestCases.Types.AllOfObject.FieldB
+      TestCases.Types.AllOfObject.FieldC
+      TestCases.Types.AllOfObject.FieldC.FieldC1
+      TestCases.Types.AllOfObject.FieldC.FieldC2
+      TestCases.Types.AllOfObject.FieldD
+      TestCases.Types.AllOfObject.FieldE
+      TestCases.Types.AllOfObject.FieldF
+      TestCases.Types.AllOfObject.FieldH
+      TestCases.Types.AllOfObject.FieldK
       TestCases.Types.AnyOf
       TestCases.Types.ArrayWithNullableStrings
       TestCases.Types.AStringType
@@ -155,10 +192,10 @@ library
       TestCases.Types.FieldTestCases.RequiredNullableField
       TestCases.Types.Foo
       TestCases.Types.Foo.Type
-      TestCases.Types.InlineAllOf.Response200Body.Description
-      TestCases.Types.InlineAllOf.Response200Body.Id
-      TestCases.Types.InlineAllOf.Response200Body.Name
-      TestCases.Types.InlineAllOf.Response200Body.Type
+      TestCases.Types.InlineAllOf.RequestBody.FieldC.FieldC1
+      TestCases.Types.InlineAllOf.RequestBody.FieldC.FieldC2
+      TestCases.Types.InlineAllOf.Response200Body.FieldC.FieldC1
+      TestCases.Types.InlineAllOf.Response200Body.FieldC.FieldC2
       TestCases.Types.InlineNoAdditionalPropertiesWithOneOfNullabilityOutside
       TestCases.Types.InlineYesAdditionalPropertiesWithOneOfNullablityInside
       TestCases.Types.InlineYesAdditionalPropertiesWithOneOfNullablityInside.Foobar
@@ -238,14 +275,10 @@ library
       TestCases.Types.OneOfWithInlineObject.Option4.Nested.Name
       TestCases.Types.OneOfWithInlineObject.Option4.Nested.Number
       TestCases.Types.OneOfWithNullable
-      TestCases.Types.RecursiveAllOf
-      TestCases.Types.RecursiveAllOf.Age
-      TestCases.Types.RecursiveAllOf.Description
-      TestCases.Types.RecursiveAllOf.Id
-      TestCases.Types.RecursiveAllOf.Name
-      TestCases.Types.RecursiveAllOf.Type
       TestCases.Types.ReferenceOneOf
       TestCases.Types.ReferenceOneOfInsideOneOf
+      TestCases.Types.ScheduledDateTime
+      TestCases.Types.ScheduledDateTime.DatetimeType
       TestCases.Types.SingletonNonNullableOneOfRef
       TestCases.Types.SingletonNullableOneOfPrimitive
       TestCases.Types.SingletonNullableOneOfRef
@@ -257,6 +290,9 @@ library
       TestCases.Types.TopLevelArrayNullable.TopLevelArrayNullableItem
       TestCases.Types.TopLevelOneOf
       TestCases.Types.TopLevelOneOfOneOption
+      TestCases.Types.UTCDateTime
+      TestCases.Types.UTCDateTime.DatetimeType
+      TestCases.Types.UTCDateTime.DatetimeValue
       TestCases.Types.UtcTimeType
       TestCases.Types.ZonedTimeType
   other-modules:
