@@ -4,6 +4,8 @@ set -e
 
 source scripts/lib/run-in-container.sh
 
+./scripts/format-repo
+
 # This includes testing that the code-gen libraries generate code that
 # matches the previously generated code for the examples. This script
 # does _not_ automatically re-generate the examples to avoid un-intentional
@@ -13,7 +15,6 @@ source scripts/lib/run-in-container.sh
 # because you've altered the code gen.
 ./scripts/test-all
 
-./scripts/format-repo
 
 # Check the that examples still compile with the latest fleece code.
 ./scripts/test-examples

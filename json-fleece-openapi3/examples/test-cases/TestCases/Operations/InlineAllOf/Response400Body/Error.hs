@@ -1,0 +1,17 @@
+{-# LANGUAGE NoImplicitPrelude #-}
+
+module TestCases.Operations.InlineAllOf.Response400Body.Error
+  ( Error(..)
+  , errorSchema
+  ) where
+
+import qualified Data.Text as T
+import qualified Fleece.Core as FC
+import Prelude (Eq, Show)
+
+newtype Error = Error T.Text
+  deriving (Show, Eq)
+
+errorSchema :: FC.Fleece schema => schema Error
+errorSchema =
+  FC.coerceSchema FC.text
