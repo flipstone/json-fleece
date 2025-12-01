@@ -22,7 +22,7 @@ import qualified TestCases.Types.UTCDateTime as UTCDateTime
 
 data AllOfObject = AllOfObject
   { fieldA :: [FieldAItem.FieldAItem]
-  , fieldB :: Either FC.Null FieldB.FieldB -- ^ A nullable date-time.
+  , fieldB :: FieldB.FieldB
   , fieldC :: FieldC.FieldC
   , fieldD :: FieldD.FieldD
   , fieldE :: Either FC.Null FieldE.FieldE
@@ -40,7 +40,7 @@ allOfObjectSchema =
   FC.object $
     FC.constructor AllOfObject
       #+ FC.required "fieldA" fieldA (FC.list FieldAItem.fieldAItemSchema)
-      #+ FC.required "fieldB" fieldB (FC.nullable FieldB.fieldBSchema)
+      #+ FC.required "fieldB" fieldB FieldB.fieldBSchema
       #+ FC.required "fieldC" fieldC FieldC.fieldCSchema
       #+ FC.required "fieldD" fieldD FieldD.fieldDSchema
       #+ FC.required "fieldE" fieldE (FC.nullable FieldE.fieldESchema)

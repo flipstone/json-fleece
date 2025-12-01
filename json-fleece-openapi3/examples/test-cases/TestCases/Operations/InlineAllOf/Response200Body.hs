@@ -24,7 +24,7 @@ import qualified TestCases.Types.UTCDateTime as UTCDateTime
 
 data Response200Body = Response200Body
   { fieldA :: [FieldAItem.FieldAItem]
-  , fieldB :: Either FC.Null FieldB.FieldB -- ^ A nullable date-time.
+  , fieldB :: FieldB.FieldB
   , fieldC :: FieldC.FieldC
   , fieldD :: FieldD.FieldD
   , fieldE :: Either FC.Null FieldE.FieldE
@@ -44,7 +44,7 @@ response200BodySchema =
   FC.object $
     FC.constructor Response200Body
       #+ FC.required "fieldA" fieldA (FC.list FieldAItem.fieldAItemSchema)
-      #+ FC.required "fieldB" fieldB (FC.nullable FieldB.fieldBSchema)
+      #+ FC.required "fieldB" fieldB FieldB.fieldBSchema
       #+ FC.required "fieldC" fieldC FieldC.fieldCSchema
       #+ FC.required "fieldD" fieldD FieldD.fieldDSchema
       #+ FC.required "fieldE" fieldE (FC.nullable FieldE.fieldESchema)

@@ -1653,9 +1653,6 @@ appendSchemasForAllOf typeNameText schemaA schemaB = do
 
   let
     traverseInline = (traverse . traverse) (inlineAllOfReferenced typeNameText)
-    traverseProps = IOHM.unorderedTraverseWithKey (\k v -> inlineAllOfReferenced (typeNameText <> "." <> k) v)
-
-  props <- traverseProps $ OA._schemaProperties schemaA <> OA._schemaProperties schemaB
   allOf <- traverseInline $ OA._schemaAllOf schemaA <> OA._schemaAllOf schemaB
   anyOf <- traverseInline $ OA._schemaAnyOf schemaA <> OA._schemaAnyOf schemaB
   oneOf <- traverseInline $ OA._schemaOneOf schemaA <> OA._schemaOneOf schemaB
@@ -1683,7 +1680,7 @@ appendSchemasForAllOf typeNameText schemaA schemaB = do
       , OA._schemaType =
           schemaType
       , OA._schemaProperties =
-          props
+          OA._schemaProperties schemaA <> OA._schemaProperties schemaB
       }
 
 inlineAllOfItems :: T.Text -> OA.OpenApiItems -> CGM OA.OpenApiItems
