@@ -1711,8 +1711,31 @@ appendSchemasForAllOf typeNameText schemaA schemaB = do
       IOHM.unorderedTraverseWithKey
         (\k v -> inlineAllOfReferenced (typeNameText <> "." <> k) v)
 
+    insertProperty ::
+      IOHM.InsOrdHashMap T.Text (OA.Referenced OA.Schema) ->
+      (T.Text, OA.Referenced OA.Schema) ->
+      CGM (IOHM.InsOrdHashMap T.Text (OA.Referenced OA.Schema))
+    insertProperty existingProps (schemaName, propSchema) =
+      if IOHM.member schemaName existingProps
+        then
+          lift
+            . CGU.codeGenError
+            . unwords
+            $ [ T.unpack typeNameText <> ": More than one property with name"
+              , T.unpack schemaName
+              , "in allOf schema."
+              ]
+        else
+          pure $ IOHM.insert schemaName propSchema existingProps
+
+  mergedProps <-
+    Foldable.foldlM
+      insertProperty
+      (OA._schemaProperties schemaA)
+      (IOHM.toList $ OA._schemaProperties schemaB)
+
   -- TODO: This prefers properties from the left map. May not match OpenAPI spec.
-  props <- traverseProps $ OA._schemaProperties schemaA <> OA._schemaProperties schemaB
+  props <- traverseProps mergedProps
   allOf <- traverseInline $ OA._schemaAllOf schemaA <> OA._schemaAllOf schemaB
   anyOf <- traverseInline $ OA._schemaAnyOf schemaA <> OA._schemaAnyOf schemaB
   oneOf <- traverseInline $ OA._schemaOneOf schemaA <> OA._schemaOneOf schemaB

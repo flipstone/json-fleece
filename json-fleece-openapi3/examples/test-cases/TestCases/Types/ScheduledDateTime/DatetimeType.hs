@@ -3,15 +3,23 @@
 module TestCases.Types.ScheduledDateTime.DatetimeType
   ( DatetimeType(..)
   , datetimeTypeSchema
+  , datetimeTypeToText
   ) where
 
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (Eq, Show)
+import Prelude (($), Bounded, Enum, Eq, Ord, Show)
 
-newtype DatetimeType = DatetimeType T.Text
-  deriving (Show, Eq)
+data DatetimeType
+  = UtcDatetime
+  deriving (Eq, Show, Ord, Enum, Bounded)
+
+datetimeTypeToText :: DatetimeType -> T.Text
+datetimeTypeToText v =
+  T.pack $
+    case v of
+      UtcDatetime -> "utc_datetime"
 
 datetimeTypeSchema :: FC.Fleece schema => schema DatetimeType
 datetimeTypeSchema =
-  FC.coerceSchema FC.text
+  FC.boundedEnum datetimeTypeToText

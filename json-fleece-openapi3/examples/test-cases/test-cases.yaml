@@ -17,8 +17,8 @@ paths:
           required: true
           schema:
             type: integer
-            format: int32              
-          
+            format: int32
+
       responses:
         '200':
           description: "Successful Get"
@@ -526,7 +526,7 @@ paths:
               - enum:
                   - "100"
                   - "200"
-                  - "300" 
+                  - "300"
                   - "Green"
       requestBody:
         content:
@@ -560,7 +560,6 @@ paths:
                       - fieldL
         '400':
           $ref: '#/components/responses/400'
-          
 
 components:
   responses:
@@ -864,6 +863,8 @@ components:
       properties:
         datetime_type:
           minLength: 1
+          enum:
+            - utc_datetime
           type: string
           description: Type of the datetime
       additionalProperties: false
@@ -1145,7 +1146,7 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/NullableString'
-        
+
     # NOTE: Does not generate a newtype around Either FC.Null.
     # When the reference is used, it will be wrapped with Either FC.Null
     # at the use site.
@@ -1231,7 +1232,7 @@ components:
             - fieldD
             - fieldE
             - fieldK
-                
+
     AllOfFieldsEthroughG:
       type: object
       properties:
@@ -1242,7 +1243,7 @@ components:
           type: string
         fieldG:
           $ref: '#/components/schemas/SingletonNullableOneOfRef'
-            
+
     AllOfFieldsHthroughK:
       allOf:
         - properties:
@@ -1284,16 +1285,9 @@ components:
       allOf:
         - $ref: '#/components/schemas/ScheduledDateTime'
       properties:
-        datetime_type:
-          minLength: 1
-          enum:
-            - utc_datetime
-          type: string
-          description: Type of the datetime
         datetime_value:
           type: string
           description: UTC datetime value
           format: date-time
           example: '2024-05-27T14:05:00Z'
       additionalProperties: false
-
