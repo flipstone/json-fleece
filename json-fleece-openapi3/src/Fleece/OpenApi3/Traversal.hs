@@ -9,9 +9,12 @@ module Fleece.OpenApi3.Traversal
 #else
 import Control.Applicative (liftA2)
 #endif
+import qualified Data.ByteString.Char8 as BS8
 import qualified Data.HashMap.Strict.InsOrd as IOHM
 import qualified Data.OpenApi as OA
+import qualified Data.Swagger as Swagger
 import qualified Data.Text as T
+import qualified Network.HTTP.Media as Media
 
 {- | Traversal of all of the 'OA.Referenced OA.Schema's in the 'OA.OpenApi'.
 The traversal is shallow. It does not recursively traverse the 'OA.Schema's found inside of 'OA.Schema'.
@@ -73,7 +76,10 @@ traverseResponseSchemas ::
   f OA.Response
 traverseResponseSchemas fn responseKey response =
   let
-    mkMediaTypeObjectKey child = responseKey <> "." <> T.pack (show child)
+    mkMediaTypeObjectKey :: Media.MediaType -> T.Text
+    mkMediaTypeObjectKey child =
+      responseKey <> "." <> renderMediaType child
+
     mkResponseKey child = responseKey <> "." <> child
     mkResponse content headers =
       response
@@ -237,7 +243,9 @@ traverseResponsesSchemas ::
   f OA.Responses
 traverseResponsesSchemas fn operationKey responses =
   let
-    mkResponseKey k = operationKey <> "." <> T.pack (show k)
+    mkResponseKey :: Swagger.HttpStatusCode -> T.Text
+    mkResponseKey statusCode = operationKey <> "." <> T.pack (show statusCode)
+
     mkResponses def res =
       responses
         { OA._responsesDefault = def
@@ -248,3 +256,7 @@ traverseResponsesSchemas fn operationKey responses =
       mkResponses
       (traverse (traverseInlineReferenced (traverseResponseSchemas fn operationKey)) (OA._responsesDefault responses))
       (IOHM.unorderedTraverseWithKey (\k -> traverseInlineReferenced (traverseResponseSchemas fn $ mkResponseKey k)) (OA._responsesResponses responses))
+
+renderMediaType :: Media.MediaType -> T.Text
+renderMediaType =
+  T.pack . BS8.unpack . Media.renderHeader

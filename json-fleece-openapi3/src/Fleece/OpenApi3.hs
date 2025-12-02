@@ -1,6 +1,8 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Fleece.OpenApi3
   ( generateOpenApiFleeceCode
@@ -27,6 +29,7 @@ import qualified Data.Map.Strict as Map
 import Data.Maybe (catMaybes, fromMaybe, isJust, mapMaybe)
 import qualified Data.NonEmptyText as NET
 import qualified Data.OpenApi as OA
+import qualified Data.Scientific as Scientific
 import qualified Data.Text as T
 
 import qualified Fleece.CodeGenUtil as CGU
@@ -1094,7 +1097,10 @@ For example, given a schema:
           type: string
     - properties:
         fieldB:
-          type: integer
+          type: object
+          properties:
+            fieldC:
+              type: string
       required:
         - fieldB
 @@
@@ -1106,7 +1112,10 @@ This function will produce:
     fieldA:
       type: string
     fieldB:
-      type: integer
+      type: object
+      properties:
+        fieldC:
+          type: string
   required:
     - fieldB
 @@
@@ -1642,19 +1651,40 @@ appendSchemasForAllOf typeNameText schemaA schemaB = do
           let
             propA = OA._discriminatorPropertyName discA
             propB = OA._discriminatorPropertyName discB
+            mappingA = OA._discriminatorMapping discA
+            mappingB = OA._discriminatorMapping discB
+
+            checkMatch ::
+              IOHM.InsOrdHashMap T.Text T.Text ->
+              Bool ->
+              T.Text ->
+              T.Text ->
+              Bool
+            checkMatch existingMappings matchFound k v =
+              if matchFound
+                then True
+                else case IOHM.lookup k existingMappings of
+                  Just match -> v == match
+                  Nothing -> False
           in
             if propA == propB
               then
-                pure
-                  . Just
-                  $ OA.Discriminator
-                    { OA._discriminatorPropertyName = propA
-                    , OA._discriminatorMapping =
-                        OA._discriminatorMapping discA <> OA._discriminatorMapping discB
-                    }
+                if IOHM.foldlWithKey' (checkMatch mappingA) False mappingB
+                  then
+                    pure
+                      . Just
+                      $ OA.Discriminator
+                        { OA._discriminatorPropertyName = propA
+                        , OA._discriminatorMapping = mappingA <> mappingB
+                        }
+                  else
+                    lift . CGU.codeGenError $
+                      T.unpack typeNameText
+                        <> ": Cannot combine discriminators with different mappings under the same name."
               else
                 lift . CGU.codeGenError $
-                  T.unpack typeNameText <> ": Cannot combine discriminators with different property names."
+                  T.unpack typeNameText
+                    <> ": Cannot combine discriminators with different property names."
 
   format <-
     let
@@ -1728,6 +1758,14 @@ appendSchemasForAllOf typeNameText schemaA schemaB = do
         else
           pure $ IOHM.insert schemaName propSchema existingProps
 
+    anyTrue :: (OA.Schema -> Maybe Bool) -> Maybe Bool
+    anyTrue fn =
+      fmap or . NEL.nonEmpty $ mapMaybe fn [schemaA, schemaB]
+
+    altSchema :: (OA.Schema -> Maybe a) -> Maybe a
+    altSchema fn =
+      fn schemaA <|> fn schemaB
+
   mergedProps <-
     Foldable.foldlM
       insertProperty
@@ -1739,31 +1777,107 @@ appendSchemasForAllOf typeNameText schemaA schemaB = do
   allOf <- traverseInline $ OA._schemaAllOf schemaA <> OA._schemaAllOf schemaB
   anyOf <- traverseInline $ OA._schemaAnyOf schemaA <> OA._schemaAnyOf schemaB
   oneOf <- traverseInline $ OA._schemaOneOf schemaA <> OA._schemaOneOf schemaB
+  schemaDefault <-
+    case (OA._schemaDefault schemaA, OA._schemaDefault schemaB) of
+      (Just _defA, Just _defB) ->
+        lift
+          . CGU.codeGenError
+          $ T.unpack typeNameText <> ": Multiple schemas with defaults."
+      (Just defA, Nothing) ->
+        pure $ Just defA
+      (Nothing, Just defB) ->
+        pure $ Just defB
+      (Nothing, Nothing) ->
+        pure Nothing
+
+  pattern <-
+    case (OA._schemaPattern schemaA, OA._schemaPattern schemaB) of
+      (Just _patA, Just _patB) ->
+        lift
+          . CGU.codeGenError
+          $ T.unpack typeNameText <> ": Multiple schemas with patterns."
+      (Just patA, Nothing) ->
+        pure $ Just patA
+      (Nothing, Just patB) ->
+        pure $ Just patB
+      (Nothing, Nothing) ->
+        pure Nothing
+
+  multipleOf <-
+    case (OA._schemaMultipleOf schemaA, OA._schemaMultipleOf schemaB) of
+      (Just moA, Just moB) ->
+        case Scientific.floatingOrInteger (max moA moB / min moA moB) of
+          Left (_f :: Double) ->
+            lift
+              . CGU.codeGenError
+              . unwords
+              $ [ T.unpack typeNameText <> ": Incompatible multiples"
+                , Scientific.formatScientific Scientific.Fixed Nothing moA
+                , "and"
+                , Scientific.formatScientific Scientific.Fixed Nothing moB
+                ]
+          Right (_i :: Integer) ->
+            pure . Just $ min moA moB
+      (Just moA, Nothing) ->
+        pure $ Just moA
+      (Nothing, Just moB) ->
+        pure $ Just moB
+      (Nothing, Nothing) ->
+        pure Nothing
 
   pure $
-    (schemaA <> schemaB)
-      { OA._schemaAllOf =
-          allOf
-      , OA._schemaAnyOf =
-          anyOf
-      , OA._schemaDiscriminator =
-          discriminator
-      , OA._schemaEnum =
-          fmap nubOrd (OA._schemaEnum schemaA <> OA._schemaEnum schemaB)
-      , OA._schemaFormat =
-          format
-      , OA._schemaItems =
-          items
-      , OA._schemaMinItems =
-          max (OA._schemaMinItems schemaA) (OA._schemaMinItems schemaB)
+    OA.Schema
+      { OA._schemaTitle = altSchema OA._schemaTitle
+      , OA._schemaDescription = altSchema OA._schemaDescription
+      , OA._schemaRequired =
+          nubOrd (OA._schemaRequired schemaA <> OA._schemaRequired schemaB)
       , OA._schemaNullable =
           fmap and (NEL.nonEmpty (mapMaybe OA._schemaNullable [schemaA, schemaB]))
-      , OA._schemaOneOf =
-          oneOf
-      , OA._schemaType =
-          schemaType
-      , OA._schemaProperties =
-          props
+      , OA._schemaAllOf = allOf
+      , OA._schemaOneOf = oneOf
+      , OA._schemaNot = altSchema OA._schemaNot
+      , OA._schemaAnyOf = anyOf
+      , OA._schemaProperties = props
+      , OA._schemaAdditionalProperties =
+          altSchema OA._schemaAdditionalProperties
+      , OA._schemaDiscriminator = discriminator
+      , OA._schemaReadOnly = anyTrue OA._schemaReadOnly
+      , OA._schemaWriteOnly = anyTrue OA._schemaWriteOnly
+      , OA._schemaXml = OA._schemaXml schemaA <|> OA._schemaXml schemaB
+      , OA._schemaExternalDocs = altSchema OA._schemaExternalDocs
+      , OA._schemaExample = altSchema OA._schemaExample
+      , OA._schemaDeprecated = anyTrue OA._schemaWriteOnly
+      , OA._schemaMaxProperties =
+          min
+            (OA._schemaMaxProperties schemaA)
+            (OA._schemaMaxProperties schemaB)
+      , OA._schemaMinProperties =
+          max
+            (OA._schemaMinProperties schemaA)
+            (OA._schemaMinProperties schemaB)
+      , OA._schemaDefault = schemaDefault
+      , OA._schemaType = schemaType
+      , OA._schemaFormat = format
+      , OA._schemaItems = items
+      , OA._schemaMaximum =
+          min (OA._schemaMaximum schemaA) (OA._schemaMaximum schemaB)
+      , OA._schemaExclusiveMaximum = anyTrue OA._schemaExclusiveMaximum
+      , OA._schemaMinimum =
+          max (OA._schemaMinimum schemaA) (OA._schemaMinimum schemaB)
+      , OA._schemaExclusiveMinimum = anyTrue OA._schemaExclusiveMinimum
+      , OA._schemaMaxLength =
+          min (OA._schemaMinLength schemaA) (OA._schemaMinLength schemaB)
+      , OA._schemaMinLength =
+          max (OA._schemaMaxLength schemaA) (OA._schemaMaxLength schemaB)
+      , OA._schemaPattern = pattern
+      , OA._schemaMaxItems =
+          max (OA._schemaMinItems schemaA) (OA._schemaMinItems schemaB)
+      , OA._schemaMinItems =
+          max (OA._schemaMinItems schemaA) (OA._schemaMinItems schemaB)
+      , OA._schemaUniqueItems = anyTrue (fmap not . OA._schemaUniqueItems)
+      , OA._schemaEnum =
+          fmap nubOrd (OA._schemaEnum schemaA <> OA._schemaEnum schemaB)
+      , OA._schemaMultipleOf = multipleOf
       }
 
 inlineAllOfItems :: T.Text -> OA.OpenApiItems -> CGM OA.OpenApiItems
