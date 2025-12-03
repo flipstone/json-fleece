@@ -1754,6 +1754,17 @@ appendSchemasForAllOf typeNameText schemaA schemaB = do
               (\_existingProp -> Just $ OA.Inline mergedPropSchemas)
               schemaName
               existingProps
+        (Just (OA.Ref match), OA.Ref prop) ->
+          if match == prop
+            then pure existingProps
+            else
+              lift
+                . CGU.codeGenError
+                . unwords
+                $ [ T.unpack typeNameText <> ": Cannot merge property"
+                  , "'" <> T.unpack schemaName <> "'"
+                  , "in allOf where both schemas are referenced, but not the same reference."
+                  ]
         (Nothing, _propSchema) ->
           pure $ IOHM.insert schemaName propSchema existingProps
         _ ->
@@ -1761,8 +1772,8 @@ appendSchemasForAllOf typeNameText schemaA schemaB = do
             . CGU.codeGenError
             . unwords
             $ [ T.unpack typeNameText <> ": Cannot merge property"
-              , T.unpack schemaName
-              , "in allOf where at least one identical property name is referenced."
+              , "'" <> T.unpack schemaName <> "'"
+              , "in allOf one identical property name is referenced, and the other is inline."
               ]
 
     anyTrue :: (OA.Schema -> Maybe Bool) -> Maybe Bool

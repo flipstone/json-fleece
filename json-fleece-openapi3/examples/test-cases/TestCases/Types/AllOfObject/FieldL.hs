@@ -1,6 +1,6 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module TestCases.Operations.InlineAllOf.RequestBody.FieldL
+module TestCases.Types.AllOfObject.FieldL
   ( FieldL(..)
   , fieldLSchema
   ) where

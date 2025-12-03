@@ -37,6 +37,7 @@ library
       TestCases.Operations.InlineAllOf.RequestBody.FieldK
       TestCases.Operations.InlineAllOf.RequestBody.FieldL
       TestCases.Operations.InlineAllOf.RequestBody.FieldM
+      TestCases.Operations.InlineAllOf.RequestBody.FieldN
       TestCases.Operations.InlineAllOf.Response200Body
       TestCases.Operations.InlineAllOf.Response200Body.FieldAItem
       TestCases.Operations.InlineAllOf.Response200Body.FieldB
@@ -49,6 +50,7 @@ library
       TestCases.Operations.InlineAllOf.Response200Body.FieldK
       TestCases.Operations.InlineAllOf.Response200Body.FieldL
       TestCases.Operations.InlineAllOf.Response200Body.FieldM
+      TestCases.Operations.InlineAllOf.Response200Body.FieldN
       TestCases.Operations.InlineAllOf.Response400Body
       TestCases.Operations.InlineAllOf.Response400Body.Bad
       TestCases.Operations.InlineAllOf.Response400Body.Error
@@ -162,6 +164,7 @@ library
       TestCases.Types.AllOfObject.FieldI.DatetimeValue
       TestCases.Types.AllOfObject.FieldI.Type
       TestCases.Types.AllOfObject.FieldK
+      TestCases.Types.AllOfObject.FieldL
       TestCases.Types.AnyOf
       TestCases.Types.ArrayWithNullableStrings
       TestCases.Types.AStringType
@@ -191,6 +194,7 @@ library
       TestCases.Types.FieldDescriptions.EmptyDescription
       TestCases.Types.FieldDescriptions.NoDescription
       TestCases.Types.FieldDescriptions.WithDescription
+      TestCases.Types.FieldL1
       TestCases.Types.FieldTestCases
       TestCases.Types.FieldTestCases.ArrayFieldItem
       TestCases.Types.FieldTestCases.NullableArrayFieldItem
@@ -298,6 +302,7 @@ library
       TestCases.Types.SingletonNonNullableOneOfRef
       TestCases.Types.SingletonNullableOneOfPrimitive
       TestCases.Types.SingletonNullableOneOfRef
+      TestCases.Types.Status
       TestCases.Types.StringParam
       TestCases.Types.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body.Baz.Bax
       TestCases.Types.TopLevelArray

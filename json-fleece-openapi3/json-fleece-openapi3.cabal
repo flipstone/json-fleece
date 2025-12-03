@@ -1886,6 +1886,7 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody/FieldK.hs
     examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody/FieldL.hs
     examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody/FieldM.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody/FieldN.hs
     examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body.hs
     examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldAItem.hs
     examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldB.hs
@@ -1898,6 +1899,7 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldK.hs
     examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldL.hs
     examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldM.hs
+    examples/test-cases/TestCases/Operations/InlineAllOf/Response200Body/FieldN.hs
     examples/test-cases/TestCases/Operations/InlineAllOf/Response400Body.hs
     examples/test-cases/TestCases/Operations/InlineAllOf/Response400Body/Bad.hs
     examples/test-cases/TestCases/Operations/InlineAllOf/Response400Body/Error.hs
@@ -2011,6 +2013,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/AllOfObject/FieldI/DatetimeValue.hs
     examples/test-cases/TestCases/Types/AllOfObject/FieldI/Type.hs
     examples/test-cases/TestCases/Types/AllOfObject/FieldK.hs
+    examples/test-cases/TestCases/Types/AllOfObject/FieldL.hs
     examples/test-cases/TestCases/Types/AnyOf.hs
     examples/test-cases/TestCases/Types/ArrayWithNullableStrings.hs
     examples/test-cases/TestCases/Types/AStringType.hs
@@ -2040,6 +2043,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/FieldDescriptions/EmptyDescription.hs
     examples/test-cases/TestCases/Types/FieldDescriptions/NoDescription.hs
     examples/test-cases/TestCases/Types/FieldDescriptions/WithDescription.hs
+    examples/test-cases/TestCases/Types/FieldL1.hs
     examples/test-cases/TestCases/Types/FieldTestCases.hs
     examples/test-cases/TestCases/Types/FieldTestCases/ArrayFieldItem.hs
     examples/test-cases/TestCases/Types/FieldTestCases/NullableArrayFieldItem.hs
@@ -2147,6 +2151,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/SingletonNonNullableOneOfRef.hs
     examples/test-cases/TestCases/Types/SingletonNullableOneOfPrimitive.hs
     examples/test-cases/TestCases/Types/SingletonNullableOneOfRef.hs
+    examples/test-cases/TestCases/Types/Status.hs
     examples/test-cases/TestCases/Types/StringParam.hs
     examples/test-cases/TestCases/Types/TestCases/InlineObjectWithPropertiesJsonResponse/Response200Body/Baz/Bax.hs
     examples/test-cases/TestCases/Types/TopLevelArray.hs

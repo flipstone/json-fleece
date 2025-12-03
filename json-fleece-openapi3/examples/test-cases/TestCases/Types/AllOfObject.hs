@@ -17,6 +17,7 @@ import qualified TestCases.Types.AllOfObject.FieldF as FieldF
 import qualified TestCases.Types.AllOfObject.FieldH as FieldH
 import qualified TestCases.Types.AllOfObject.FieldI as FieldI
 import qualified TestCases.Types.AllOfObject.FieldK as FieldK
+import qualified TestCases.Types.AllOfObject.FieldL as FieldL
 import qualified TestCases.Types.AnyOf as AnyOf
 import qualified TestCases.Types.SingletonNullableOneOfRef as SingletonNullableOneOfRef
 
@@ -32,6 +33,7 @@ data AllOfObject = AllOfObject
   , fieldI :: Maybe FieldI.FieldI -- ^ Some description.
   , fieldJ :: Maybe AnyOf.AnyOf
   , fieldK :: FieldK.FieldK -- ^ Field K.
+  , fieldL :: Maybe FieldL.FieldL
   }
   deriving (Eq, Show)
 
@@ -50,3 +52,4 @@ allOfObjectSchema =
       #+ FC.optional "fieldI" fieldI FieldI.fieldISchema
       #+ FC.optional "fieldJ" fieldJ AnyOf.anyOfSchema
       #+ FC.required "fieldK" fieldK FieldK.fieldKSchema
+      #+ FC.optional "fieldL" fieldL FieldL.fieldLSchema
