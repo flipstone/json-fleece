@@ -67,6 +67,9 @@ instance FC.Fleece ToValue where
   schemaName (ToValue name _toJSON) =
     name
 
+  format _ =
+    id
+
   number =
     ToValue (FC.unqualifiedName "number") Aeson.toJSON
 
@@ -140,6 +143,9 @@ instance FC.Fleece ToValue where
   validateNamed name uncheck _check (ToValue _unvalidatedName toJSON) =
     ToValue name (toJSON . uncheck)
 
+  validateAnonymous uncheck _check (ToValue unvalidatedName toJSON) =
+    ToValue unvalidatedName (toJSON . uncheck)
+
   unionNamed name (UnionMembers builder) =
     let
       branches =
@@ -181,10 +187,10 @@ instance FC.Fleece ToValue where
     proxy tag ->
     FC.Object ToValue a a ->
     FC.TaggedUnionMembers ToValue allTags '[tag @= a]
-  taggedUnionMemberWithTag tag (Object mkFields) =
+  taggedUnionMemberWithTag tagV (Object mkFields) =
     let
       tagValue =
-        T.pack (symbolVal tag)
+        T.pack (symbolVal tagV)
     in
       TaggedUnionMembers (Shrubbery.taggedSingleBranch @tag (\a -> (tagValue, mkFields a)))
 

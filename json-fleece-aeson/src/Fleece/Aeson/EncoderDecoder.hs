@@ -41,6 +41,12 @@ instance FC.Fleece EncoderDecoder where
 
   schemaName = FC.schemaName . encoder
 
+  format formatString encoderDecoder =
+    EncoderDecoder
+      { encoder = FC.format formatString $ encoder encoderDecoder
+      , decoder = FC.format formatString $ decoder encoderDecoder
+      }
+
   number =
     EncoderDecoder
       { encoder = FC.number
@@ -131,6 +137,12 @@ instance FC.Fleece EncoderDecoder where
     EncoderDecoder
       { encoder = FC.validateNamed name uncheck check $ encoder itemEncoderDecoder
       , decoder = FC.validateNamed name uncheck check $ decoder itemEncoderDecoder
+      }
+
+  validateAnonymous uncheck check itemEncoderDecoder =
+    EncoderDecoder
+      { encoder = FC.validateAnonymous uncheck check $ encoder itemEncoderDecoder
+      , decoder = FC.validateAnonymous uncheck check $ decoder itemEncoderDecoder
       }
 
   boundedEnumNamed name toText =

@@ -41,6 +41,16 @@ data Pretty
   | Block [Pretty]
   | Indent Pretty
 
+instance Semigroup Pretty where
+  left <> right =
+    case (left, right) of
+      (Inline inlLeft, Inline inlRight) ->
+        Inline (inlLeft <> inlRight)
+      (Block bLeft, Block bRight) ->
+        Block (bLeft <> bRight)
+      _ ->
+        Block [left, right]
+
 prettyToBuilder :: LTB.Builder -> Pretty -> LTB.Builder
 prettyToBuilder indentation pretty =
   case pretty of
@@ -88,8 +98,19 @@ instance FC.Fleece PrettyPrinter where
   newtype TaggedUnionMembers PrettyPrinter _allTags handledTags
     = TaggedUnionMembers (Shrubbery.TaggedBranchBuilder handledTags (T.Text, DList.DList Pretty))
 
-  schemaName (PrettyPrinter name _toBuilder) =
+  schemaName (PrettyPrinter name _toPretty) =
     name
+
+  format formatString (PrettyPrinter name toPretty) =
+    let
+      annotation =
+        " (" <> formatString <> ")"
+
+      annotatedToPretty =
+        toPretty
+          <> const (Inline (Plain (LTB.fromString annotation)))
+    in
+      PrettyPrinter name annotatedToPretty
 
   number =
     PrettyPrinter "number" $ \scientific ->
@@ -166,11 +187,14 @@ instance FC.Fleece PrettyPrinter where
         , Indent (Block (map (\f -> f object) (DList.toList fields)))
         ]
 
-  validateNamed name unvalidate _check (PrettyPrinter _name toPretty) =
+  validateNamed name unvalidate _check (PrettyPrinter _unvalidatedName toPretty) =
     PrettyPrinter name $ \value ->
       prefixConstructor
         (renderName name)
         (toPretty (unvalidate value))
+
+  validateAnonymous unvalidate _check (PrettyPrinter unvalidatedName toPretty) =
+    PrettyPrinter unvalidatedName (toPretty . unvalidate)
 
   boundedEnumNamed name toText =
     PrettyPrinter name (showInline . toText)

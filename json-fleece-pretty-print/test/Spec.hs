@@ -139,7 +139,7 @@ prop_jsonEmptyArray =
         FC.mkJSONArray []
 
       expected =
-        [ "AnyJSON ([AnyJSON] [])"
+        [ "AnyJSON []"
         ]
     in
       assertPrettyPrintEquals FC.anyJSON value expected
@@ -153,9 +153,8 @@ prop_jsonStringArray =
 
       expected =
         [ "AnyJSON"
-        , "  [AnyJSON]"
-        , "    - AnyJSON \"foo\""
-        , "    - AnyJSON \"bar\""
+        , "  - AnyJSON \"foo\""
+        , "  - AnyJSON \"bar\""
         ]
     in
       assertPrettyPrintEquals FC.anyJSON value expected
@@ -172,15 +171,14 @@ prop_jsonObjectArray =
 
       expected =
         [ "AnyJSON"
-        , "  [AnyJSON]"
-        , "    - AnyJSON"
-        , "        AnyJSON object"
-        , "          -- additional fields --"
-        , "          foo = AnyJSON \"bar\""
-        , "    - AnyJSON"
-        , "        AnyJSON object"
-        , "          -- additional fields --"
-        , "          baz = AnyJSON \"bat\""
+        , "  - AnyJSON"
+        , "      AnyJSON object"
+        , "        -- additional fields --"
+        , "        foo = AnyJSON \"bar\""
+        , "  - AnyJSON"
+        , "      AnyJSON object"
+        , "        -- additional fields --"
+        , "        baz = AnyJSON \"bat\""
         ]
     in
       assertPrettyPrintEquals FC.anyJSON value expected
@@ -243,7 +241,7 @@ prop_taggedUnion =
         [ "TaggedUnionExample"
         , "  type = \"person\""
         , "  name = \"Alice\""
-        , "  age = Int 42"
+        , "  age = 42"
         ]
     in
       assertPrettyPrintEquals Examples.taggedUnionExampleSchema value expected
@@ -343,17 +341,11 @@ prop_abnormalNumbers =
       value =
         Examples.AbnormalNumbersExample
           { Examples.stringyNumber = 3.14
-          , Examples.bareOrStringyNumber = 6.28
           }
 
-      -- Ideally we would like to not include the long type number with
-      -- 'bareOrStringyNumber' number below, but naively doing so would mean
-      -- not including the name of any union schemas which is also not what we
-      -- want
       expected =
         [ "AbnormalNumbersExample"
         , "  stringyNumber = 3.14"
-        , "  bareOrStringyNumber = number (bare or encoded as json string) 6.28"
         ]
     in
       assertPrettyPrintEquals Examples.abnormalNumbersExampleSchema value expected

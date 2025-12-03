@@ -14,22 +14,7 @@ module Fleece.Core.Schemas
   , nonEmpty
   , nonEmptyText
   , integer
-  , int
-  , int8
-  , int16
-  , int32
-  , int64
-  , word
-  , word8
-  , word16
-  , word32
-  , word64
-  , double
-  , float
-  , realFloat
-  , realFloatNamed
   , fixed
-  , fixedNamed
   , string
   , utcTime
   , utcTimeWithFormat
@@ -40,21 +25,15 @@ module Fleece.Core.Schemas
   , day
   , dayWithFormat
   , timeWithFormat
-  , boundedIntegralNumber
-  , boundedIntegralNumberNamed
-  , unboundedIntegralNumber
-  , unboundedIntegralNumberNamed
-  , transform
-  , transformNamed
   , coerceSchema
   , coerceSchemaNamed
+  , coerceSchemaAnonymous
   , eitherOf
   , eitherOfNamed
   , union
   , unionMember
   , taggedUnion
   , taggedUnionMember
-  , bareOrJSONString
   , set
   , SetDuplicateHandling (AllowInputDuplicates, RejectInputDuplicates)
   , NothingEncoding (EmitNull, OmitKey)
@@ -64,21 +43,19 @@ import qualified Data.Attoparsec.Text as AttoText
 import qualified Data.Attoparsec.Time as AttoTime
 import Data.Coerce (Coercible, coerce)
 import Data.Fixed (Fixed, HasResolution (resolution))
-import qualified Data.Int as I
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map as Map
 import qualified Data.NonEmptyText as NET
 import Data.Proxy (Proxy (Proxy))
-import Data.Scientific (Scientific, base10Exponent, floatingOrInteger, fromFloatDigits, normalize, toBoundedInteger, toRealFloat)
+import Data.Scientific (Scientific, base10Exponent, normalize)
 import qualified Data.Set as Set
 import qualified Data.Text as T
 import qualified Data.Time as Time
 import qualified Data.Time.Format.ISO8601 as ISO8601
 import Data.Typeable (Typeable)
 import qualified Data.Vector as V
-import qualified Data.Word as W
 import GHC.TypeLits (KnownNat, KnownSymbol, Symbol)
-import Shrubbery (Tag, TagIndex, TagType, TaggedTypes, TaggedUnion, TypeAtIndex, Union, branch, branchBuild, branchEnd, dissectUnion, firstIndexOfType, index0, index1, unify, unifyWithIndex, type (@=))
+import Shrubbery (Tag, TagIndex, TagType, TaggedTypes, TaggedUnion, TypeAtIndex, Union, branch, branchBuild, branchEnd, dissectUnion, firstIndexOfType, unify, type (@=))
 import Shrubbery.TypeList (FirstIndexOf, Length)
 
 import Fleece.Core.Class
@@ -92,7 +69,7 @@ import Fleece.Core.Class
   , array
   , boundedEnumNamed
   , constructor
-  , jsonString
+  , format
   , nullable
   , number
   , objectNamed
@@ -101,19 +78,20 @@ import Fleece.Core.Class
   , taggedUnionMemberWithTag
   , taggedUnionNamed
   , text
-  , unionCombine
+  , transformAnonymous
+  , transformNamed
+  , unboundedIntegralNumber
   , unionMemberWithIndex
   , unionNamed
+  , validateAnonymous
   , validateNamed
   , (#*)
   , (#|)
   )
 import Fleece.Core.Name
   ( Name
-  , annotateName
   , defaultSchemaName
   , nameToString
-  , nameUnqualified
   , unqualifiedName
   )
 
@@ -276,32 +254,6 @@ validate uncheck check schemaB =
   in
     schemaA
 
-transform ::
-  (Fleece schema, Typeable a) =>
-  (a -> b) ->
-  (b -> a) ->
-  schema b ->
-  schema a
-transform aToB bToA schemaB =
-  let
-    name =
-      defaultSchemaName schemaA
-
-    schemaA =
-      transformNamed name aToB bToA schemaB
-  in
-    schemaA
-
-transformNamed ::
-  Fleece schema =>
-  Name ->
-  (a -> b) ->
-  (b -> a) ->
-  schema b ->
-  schema a
-transformNamed name aToB bToA =
-  validateNamed name aToB (Right . bToA)
-
 coerceSchema ::
   (Fleece schema, Typeable a, Coercible a b) =>
   schema b ->
@@ -323,6 +275,13 @@ coerceSchemaNamed ::
   schema a
 coerceSchemaNamed name schemaB =
   transformNamed name coerce coerce schemaB
+
+coerceSchemaAnonymous ::
+  (Fleece schema, Coercible a b) =>
+  schema b ->
+  schema a
+coerceSchemaAnonymous schemaB =
+  transformAnonymous coerce coerce schemaB
 
 data NothingEncoding
   = EmitNull
@@ -353,8 +312,7 @@ optionalNullable encoding name accessor schema =
 
 list :: Fleece schema => schema a -> schema [a]
 list itemSchema =
-  transformNamed
-    (unqualifiedName $ "[" <> nameUnqualified (schemaName itemSchema) <> "]")
+  transformAnonymous
     V.fromList
     V.toList
     (array itemSchema)
@@ -373,8 +331,7 @@ nonEmpty itemSchema =
         Just nonEmptyItems -> Right nonEmptyItems
         Nothing -> Left "Expected non-empty array for NonEmpty list, but array was empty"
   in
-    validateNamed
-      (unqualifiedName $ "NonEmpty " <> nameUnqualified (schemaName itemSchema))
+    validateAnonymous
       NEL.toList
       validateNonEmpty
       (list itemSchema)
@@ -387,8 +344,7 @@ set :: (Ord a, Fleece schema) => SetDuplicateHandling -> schema a -> schema (Set
 set handling itemSchema =
   case handling of
     AllowInputDuplicates ->
-      transformNamed
-        (unqualifiedName $ "Set [" <> nameUnqualified (schemaName itemSchema) <> "]")
+      transformAnonymous
         (V.fromList . Set.toList)
         (Set.fromList . V.toList)
         (array itemSchema)
@@ -402,8 +358,7 @@ set handling itemSchema =
             _ ->
               Left "Unexpected duplicates found in input"
       in
-        validateNamed
-          (unqualifiedName $ "Set [" <> nameUnqualified (schemaName itemSchema) <> "]")
+        validateAnonymous
           (V.fromList . Set.toList)
           validateNoDuplicates
           (array itemSchema)
@@ -416,8 +371,7 @@ nonEmptyText =
         Just net -> Right net
         Nothing -> Left "Expected non-empty text for NonEmptyText, but text was empty"
   in
-    validateNamed
-      (unqualifiedName "NonEmptyText")
+    validateAnonymous
       NET.toText
       validateNonEmptyText
       text
@@ -426,170 +380,18 @@ integer :: Fleece schema => schema Integer
 integer =
   unboundedIntegralNumber
 
-unboundedIntegralNumberNamed ::
-  (Fleece schema, Integral n) =>
-  Name ->
-  schema n
-unboundedIntegralNumberNamed name =
-  let
-    asDouble :: Double -> a -> a
-    asDouble _ = id
-
-    validateInteger s =
-      case floatingOrInteger s of
-        Right n -> pure n
-        Left f ->
-          asDouble f $
-            Left $
-              "Error parsing bounded integer value for "
-                <> nameToString name
-                <> ". Value not integral: "
-                <> show s
-  in
-    validateNamed
-      name
-      fromIntegral
-      validateInteger
-      number
-
-unboundedIntegralNumber ::
-  (Fleece schema, Integral n, Typeable n) =>
-  schema n
-unboundedIntegralNumber =
-  let
-    name =
-      defaultSchemaName schema
-
-    schema =
-      unboundedIntegralNumberNamed name
-  in
-    schema
-
-boundedIntegralNumberNamed ::
-  (Fleece schema, Integral n, Bounded n) =>
-  Name ->
-  schema n
-boundedIntegralNumberNamed name =
-  let
-    validateInteger s =
-      case toBoundedInteger s of
-        Just n -> pure n
-        Nothing ->
-          Left $
-            "Error parsing bounded integer value for "
-              <> nameToString name
-              <> ". Value not integral, or exceeds the bounds of the expected type: "
-              <> show s
-  in
-    validateNamed
-      name
-      fromIntegral
-      validateInteger
-      number
-
-boundedIntegralNumber ::
-  (Fleece schema, Integral n, Bounded n, Typeable n) =>
-  schema n
-boundedIntegralNumber =
-  let
-    name =
-      defaultSchemaName schema
-
-    schema =
-      boundedIntegralNumberNamed name
-  in
-    schema
-
-int :: Fleece schema => schema Int
-int = boundedIntegralNumber
-
-int8 :: Fleece schema => schema I.Int8
-int8 = boundedIntegralNumber
-
-int16 :: Fleece schema => schema I.Int16
-int16 = boundedIntegralNumber
-
-int32 :: Fleece schema => schema I.Int32
-int32 = boundedIntegralNumber
-
-int64 :: Fleece schema => schema I.Int64
-int64 = boundedIntegralNumber
-
-word :: Fleece schema => schema Word
-word = boundedIntegralNumber
-
-word8 :: Fleece schema => schema W.Word8
-word8 = boundedIntegralNumber
-
-word16 :: Fleece schema => schema W.Word16
-word16 = boundedIntegralNumber
-
-word32 :: Fleece schema => schema W.Word32
-word32 = boundedIntegralNumber
-
-word64 :: Fleece schema => schema W.Word64
-word64 = boundedIntegralNumber
-
-double :: Fleece schema => schema Double
-double =
-  realFloat
-
-float :: Fleece schema => schema Float
-float =
-  realFloat
-
-realFloat ::
-  (Fleece schema, RealFloat f, Typeable f) =>
-  schema f
-realFloat =
-  let
-    name =
-      defaultSchemaName schema
-
-    schema =
-      realFloatNamed name
-  in
-    schema
-
-realFloatNamed ::
-  (Fleece schema, RealFloat f) =>
-  Name ->
-  schema f
-realFloatNamed name =
-  transformNamed
-    name
-    fromFloatDigits
-    toRealFloat
-    number
-
 -- | Validates a 'number', failing if the precision is too high for the given resolution.
 fixed ::
-  (Fleece schema, HasResolution r, Typeable r) =>
+  (Fleece schema, HasResolution r) =>
   schema (Fixed r)
 fixed =
-  let
-    name =
-      defaultSchemaName schema
-
-    schema =
-      fixedNamed name
-  in
-    schema
-
--- | Validates a 'number', failing if the precision is too high for the given resolution.
-fixedNamed ::
-  (Fleece schema, HasResolution r) =>
-  Name ->
-  schema (Fixed r)
-fixedNamed name =
-  validateNamed
-    name
+  validateAnonymous
     realToFrac
-    (fixedFromScientific name)
+    fixedFromScientific
     number
 
-fixedFromScientific :: forall r. HasResolution r => Name -> Scientific -> Either String (Fixed r)
-fixedFromScientific name sci =
+fixedFromScientific :: forall r. HasResolution r => Scientific -> Either String (Fixed r)
+fixedFromScientific sci =
   let
     normalized = normalize sci
     fixedResolution = resolution (Proxy :: Proxy r)
@@ -599,39 +401,57 @@ fixedFromScientific name sci =
       then Right (realToFrac normalized)
       else
         Left $
-          "Invalid fixed precision number "
-            <> nameToString name
-            <> ", max precision is "
+          "Invalid fixed precision number. Max precision is "
             <> show (floor (logBase 10 (fromInteger fixedResolution) :: Double) :: Integer)
             <> " decimal places."
 
 string :: Fleece schema => schema String
-string = transform T.pack T.unpack text
+string = transformAnonymous T.pack T.unpack text
 
 utcTime :: Fleece schema => schema Time.UTCTime
 utcTime =
-  iso8601Formatted "UTCTime" ISO8601.iso8601Format AttoTime.utcTime
+  iso8601Formatted $
+    ISO8601Format
+      { iso8601FormatLogical = "date-time"
+      , iso8601FormatString = ISO8601.iso8601Format
+      , iso8601FormatParser = AttoTime.utcTime
+      }
 
 utcTimeWithFormat :: Fleece schema => String -> schema Time.UTCTime
 utcTimeWithFormat = timeWithFormat "UTCTime"
 
 localTime :: Fleece schema => schema Time.LocalTime
 localTime =
-  iso8601Formatted "LocalTime" ISO8601.iso8601Format AttoTime.localTime
+  iso8601Formatted $
+    ISO8601Format
+      { iso8601FormatLogical = "date-time-local"
+      , iso8601FormatString = ISO8601.iso8601Format
+      , iso8601FormatParser = AttoTime.localTime
+      }
 
 localTimeWithFormat :: Fleece schema => String -> schema Time.LocalTime
 localTimeWithFormat = timeWithFormat "LocalTime"
 
 zonedTime :: Fleece schema => schema Time.ZonedTime
 zonedTime =
-  iso8601Formatted "ZonedTime" ISO8601.iso8601Format AttoTime.zonedTime
+  iso8601Formatted $
+    ISO8601Format
+      { iso8601FormatLogical = "date-time"
+      , iso8601FormatString = ISO8601.iso8601Format
+      , iso8601FormatParser = AttoTime.zonedTime
+      }
 
 zonedTimeWithFormat :: Fleece schema => String -> schema Time.ZonedTime
 zonedTimeWithFormat = timeWithFormat "ZonedTime"
 
 day :: Fleece schema => schema Time.Day
 day =
-  iso8601Formatted "Day" ISO8601.iso8601Format AttoTime.day
+  iso8601Formatted $
+    ISO8601Format
+      { iso8601FormatLogical = "date"
+      , iso8601FormatString = ISO8601.iso8601Format
+      , iso8601FormatParser = AttoTime.day
+      }
 
 dayWithFormat :: Fleece schema => String -> schema Time.Day
 dayWithFormat = timeWithFormat "Day"
@@ -646,53 +466,36 @@ timeWithFormat typeName formatString =
           Left $
             "Invalid " <> typeName <> ", custom format is: " <> formatString
   in
-    validateNamed
-      (unqualifiedName $ typeName <> " in " <> formatString <> " format")
-      (Time.formatTime Time.defaultTimeLocale formatString)
-      decode
-      string
+    format formatString $
+      validateNamed
+        (unqualifiedName typeName)
+        (Time.formatTime Time.defaultTimeLocale formatString)
+        decode
+        string
 
-bareOrJSONString :: Fleece schema => schema a -> schema a
-bareOrJSONString baseSchema =
-  let
-    toUnion :: a -> Union '[a, a]
-    toUnion =
-      unifyWithIndex index0
-
-    fromUnion :: Union '[a, a] -> a
-    fromUnion =
-      dissectUnion
-        . branchBuild
-        . branch id
-        . branch id
-        $ branchEnd
-
-    name =
-      annotateName
-        (schemaName baseSchema)
-        "(bare or encoded as json string)"
-
-    unionSchema =
-      unionNamed name $
-        unionCombine
-          (unionMemberWithIndex index0 baseSchema)
-          (unionMemberWithIndex index1 (jsonString baseSchema))
-  in
-    transformNamed
-      name
-      toUnion
-      fromUnion
-      unionSchema
+data ISO8601Format t
+  = ISO8601Format
+  { iso8601FormatLogical :: String
+  , iso8601FormatString :: ISO8601.Format t
+  , iso8601FormatParser :: AttoText.Parser t
+  }
 
 -- An internal helper for building building time schemes
 iso8601Formatted ::
   Fleece schema =>
-  String ->
-  ISO8601.Format t ->
-  AttoText.Parser t ->
+  ISO8601Format t ->
   schema t
-iso8601Formatted name format parser =
+iso8601Formatted iso8601Format =
   let
+    formatLogical =
+      iso8601FormatLogical iso8601Format
+
+    formatString =
+      iso8601FormatString iso8601Format
+
+    parser =
+      iso8601FormatParser iso8601Format
+
     parseTime jsonText =
       case AttoText.parseOnly (parser <* AttoText.endOfInput) jsonText of
         Right time ->
@@ -700,14 +503,16 @@ iso8601Formatted name format parser =
         Left err ->
           Left $
             "Invalid time format for "
-              <> name
-              <> " value "
+              <> formatLogical
+              <> ", value "
               <> show jsonText
               <> ": "
               <> err
+
+    baseSchema =
+      validateAnonymous
+        (T.pack . ISO8601.formatShow formatString)
+        parseTime
+        text
   in
-    validateNamed
-      (unqualifiedName name)
-      (T.pack . ISO8601.formatShow format)
-      parseTime
-      text
+    format formatLogical baseSchema
