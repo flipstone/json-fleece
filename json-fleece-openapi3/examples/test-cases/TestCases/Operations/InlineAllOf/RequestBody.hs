@@ -19,6 +19,7 @@ import qualified TestCases.Operations.InlineAllOf.RequestBody.FieldI as FieldI
 import qualified TestCases.Operations.InlineAllOf.RequestBody.FieldK as FieldK
 import qualified TestCases.Operations.InlineAllOf.RequestBody.FieldL as FieldL
 import qualified TestCases.Operations.InlineAllOf.RequestBody.FieldM as FieldM
+import qualified TestCases.Operations.InlineAllOf.RequestBody.FieldN as FieldN
 import qualified TestCases.Types.AnyOf as AnyOf
 import qualified TestCases.Types.SingletonNullableOneOfRef as SingletonNullableOneOfRef
 
@@ -34,8 +35,9 @@ data RequestBody = RequestBody
   , fieldI :: Maybe FieldI.FieldI -- ^ Some description.
   , fieldJ :: Maybe AnyOf.AnyOf
   , fieldK :: FieldK.FieldK -- ^ Field K.
-  , fieldL :: FieldL.FieldL
-  , fieldM :: Maybe FieldM.FieldM
+  , fieldL :: Maybe FieldL.FieldL
+  , fieldM :: FieldM.FieldM
+  , fieldN :: Maybe FieldN.FieldN
   }
   deriving (Eq, Show)
 
@@ -54,5 +56,6 @@ requestBodySchema =
       #+ FC.optional "fieldI" fieldI FieldI.fieldISchema
       #+ FC.optional "fieldJ" fieldJ AnyOf.anyOfSchema
       #+ FC.required "fieldK" fieldK FieldK.fieldKSchema
-      #+ FC.required "fieldL" fieldL FieldL.fieldLSchema
-      #+ FC.optional "fieldM" fieldM FieldM.fieldMSchema
+      #+ FC.optional "fieldL" fieldL FieldL.fieldLSchema
+      #+ FC.required "fieldM" fieldM FieldM.fieldMSchema
+      #+ FC.optional "fieldN" fieldN FieldN.fieldNSchema

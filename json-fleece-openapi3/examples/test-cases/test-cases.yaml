@@ -536,12 +536,12 @@ paths:
                 - $ref: '#/components/schemas/AllOfObject'
                 - type: object
                   properties:
-                    fieldL:
-                      type: string
                     fieldM:
                       type: string
+                    fieldN:
+                      type: string
                   required:
-                    - fieldL
+                    - fieldM
       responses:
         '200':
           description: "Successful Get"
@@ -552,12 +552,12 @@ paths:
                   - $ref: '#/components/schemas/AllOfObject'
                   - type: object
                     properties:
-                      fieldL:
-                        type: string
                       fieldM:
                         type: string
+                      fieldN:
+                        type: string
                     required:
-                      - fieldL
+                      - fieldM
         '400':
           $ref: '#/components/responses/400'
 
@@ -1227,6 +1227,14 @@ components:
               type: string
               description: "This is also defined in AllOfFieldsEthroughG"
               enum: [ enum1, enum2 ]
+            fieldL:
+              allOf:
+                - $ref: '#/components/schemas/FieldL1'
+                - type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/Status'
+
         - $ref: '#/components/schemas/AllOfFieldsEthroughG'
         - $ref: '#/components/schemas/AllOfFieldsHthroughK'
         - required:
@@ -1264,6 +1272,19 @@ components:
             fieldK:
               type: object
               description: "Field K."
+
+    FieldL1:
+      type: object
+      properties:
+        status:
+          $ref: "#/components/schemas/Status"
+
+    Status:
+      type: string
+      enum:
+        - GOOD
+        - BAD
+        - UGLY
 
     AnyOf:
       anyOf:
