@@ -132,7 +132,9 @@ traverseRequestBodySchemas ::
   f OA.RequestBody
 traverseRequestBodySchemas fn requestBodyKey requestBody =
   let
-    mkMediaTypeObjectKey child = requestBodyKey <> "." <> T.pack (show child)
+    mkMediaTypeObjectKey :: Media.MediaType -> T.Text
+    mkMediaTypeObjectKey child =
+      requestBodyKey <> "." <> renderMediaType child
     mkRequestBodies content =
       requestBody
         { OA._requestBodyContent = content

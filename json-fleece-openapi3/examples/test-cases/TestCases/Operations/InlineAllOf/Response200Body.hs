@@ -27,7 +27,7 @@ data Response200Body = Response200Body
   , fieldB :: Either FC.Null FieldB.FieldB -- ^ A nullable date-time.
   , fieldC :: FieldC.FieldC
   , fieldD :: FieldD.FieldD
-  , fieldE :: Either FC.Null FieldE.FieldE
+  , fieldE :: Either FC.Null FieldE.FieldE -- ^ This is also defined in AllOfFieldsEthroughG
   , fieldF :: Maybe FieldF.FieldF
   , fieldG :: Maybe (Either FC.Null SingletonNullableOneOfRef.SingletonNullableOneOfRef)
   , fieldH :: Maybe FieldH.FieldH

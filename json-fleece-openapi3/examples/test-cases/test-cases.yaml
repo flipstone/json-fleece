@@ -1223,6 +1223,10 @@ components:
                   type: string
             fieldD:
               type: integer
+            fieldE:
+              type: string
+              description: "This is also defined in AllOfFieldsEthroughG"
+              enum: [ enum1, enum2 ]
         - $ref: '#/components/schemas/AllOfFieldsEthroughG'
         - $ref: '#/components/schemas/AllOfFieldsHthroughK'
         - required:
@@ -1239,6 +1243,7 @@ components:
         fieldE:
           type: string
           nullable: true
+          enum: [ enum1, enum3 ]
         fieldF:
           type: string
         fieldG:

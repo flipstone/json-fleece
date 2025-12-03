@@ -1746,17 +1746,24 @@ appendSchemasForAllOf typeNameText schemaA schemaB = do
       (T.Text, OA.Referenced OA.Schema) ->
       CGM (IOHM.InsOrdHashMap T.Text (OA.Referenced OA.Schema))
     insertProperty existingProps (schemaName, propSchema) =
-      if IOHM.member schemaName existingProps
-        then
+      case (IOHM.lookup schemaName existingProps, propSchema) of
+        (Just (OA.Inline match), OA.Inline prop) -> do
+          mergedPropSchemas <- appendSchemasForAllOf (typeNameText <> "." <> schemaName) match prop
+          pure $
+            IOHM.update
+              (\_existingProp -> Just $ OA.Inline mergedPropSchemas)
+              schemaName
+              existingProps
+        (Nothing, _propSchema) ->
+          pure $ IOHM.insert schemaName propSchema existingProps
+        _ ->
           lift
             . CGU.codeGenError
             . unwords
-            $ [ T.unpack typeNameText <> ": More than one property with name"
+            $ [ T.unpack typeNameText <> ": Cannot merge property"
               , T.unpack schemaName
-              , "in allOf schema."
+              , "in allOf where at least one identical property name is referenced."
               ]
-        else
-          pure $ IOHM.insert schemaName propSchema existingProps
 
     anyTrue :: (OA.Schema -> Maybe Bool) -> Maybe Bool
     anyTrue fn =
