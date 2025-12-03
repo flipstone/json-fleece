@@ -87,6 +87,9 @@ instance FC.Fleece Decoder where
   schemaName (Decoder name _parseValue) =
     name
 
+  format _ =
+    id
+
   number =
     Decoder (FC.unqualifiedName "number") $ Aeson.withScientific "number" pure
 
@@ -186,11 +189,10 @@ instance FC.Fleece Decoder where
                   <> show textValue
 
   validateNamed name _uncheck check (Decoder _unvalidatedName parseValue) =
-    Decoder name $ \jsonValue -> do
-      uncheckedValue <- parseValue jsonValue
-      case check uncheckedValue of
-        Right checkedValue -> pure checkedValue
-        Left err -> fail $ "Error validating " <> FC.nameToString name <> ": " <> err
+    validatingDecoder name parseValue check
+
+  validateAnonymous _uncheck check (Decoder unvalidatedName parseValue) =
+    validatingDecoder unvalidatedName parseValue check
 
   unionNamed name (UnionMembers parseMembers) =
     Decoder name (parseMembers name)
@@ -253,3 +255,15 @@ instance FC.Fleece Decoder where
         case Aeson.eitherDecodeStrict (Enc.encodeUtf8 jsonText) of
           Left err -> fail ("Error decoding nested json string:" <> err)
           Right value -> parseValue value
+
+validatingDecoder ::
+  FC.Name ->
+  (Aeson.Value -> AesonTypes.Parser a) ->
+  (a -> Either String b) ->
+  Decoder b
+validatingDecoder name parseValue check =
+  Decoder name $ \jsonValue -> do
+    uncheckedValue <- parseValue jsonValue
+    case check uncheckedValue of
+      Right checkedValue -> pure checkedValue
+      Left err -> fail $ "Error validating " <> FC.nameToString name <> ": " <> err

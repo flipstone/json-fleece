@@ -23,7 +23,7 @@ import Fleece.Markdown.SchemaDocumentation
       , fieldSchemaDocs
       )
   , FieldList
-  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, TaggedUnionEntry, UnionEntry)
+  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, TaggedUnionEntry, UnionEntry, WithFormat)
   , SchemaDocumentation
     ( SchemaDocumentation
     , schemaExcludeFromRender
@@ -61,6 +61,12 @@ instance FC.Fleece Markdown where
 
   schemaName (Markdown schemaDoc) =
     schemaName schemaDoc
+
+  format formatString (Markdown schemaDoc) =
+    Markdown $
+      schemaDoc
+        { schemaMainEntry = WithFormat formatString (schemaMainEntry schemaDoc)
+        }
 
   number =
     primitiveMarkdown "number"
@@ -122,7 +128,14 @@ instance FC.Fleece Markdown where
         , schemaReferences = foldMap (schemaSelfReference . fieldSchemaDocs) fields
         }
 
-  validateNamed _name _check _unvalidate (Markdown schemaDocs) =
+  validateNamed name _check _unvalidate (Markdown schemaDocs) =
+    Markdown
+      schemaDocs
+        { schemaName = name
+        , schemaExcludeFromRender = False
+        }
+
+  validateAnonymous _check _unvalidate (Markdown schemaDocs) =
     Markdown schemaDocs
 
   boundedEnumNamed name toText =

@@ -4,6 +4,7 @@ module Fleece.Core
   ( -- * A class for defining Fleece schemas
     Fleece
   , schemaName
+  , format
 
     -- * Schemas for dealing with JSON primitives
   , text
@@ -37,10 +38,13 @@ module Fleece.Core
   , nullable
   , validate
   , validateNamed
+  , validateAnonymous
   , transform
   , transformNamed
+  , transformAnonymous
   , coerceSchema
   , coerceSchemaNamed
+  , coerceSchemaAnonymous
 
     -- * Schemas for common Haskell data types that are useful with JSON
   , boundedEnum
@@ -64,8 +68,8 @@ module Fleece.Core
   , float
   , realFloat
   , realFloatNamed
+  , realFloatAnonymous
   , fixed
-  , fixedNamed
   , SetDuplicateHandling (AllowInputDuplicates, RejectInputDuplicates)
   , set
   , string
@@ -77,10 +81,13 @@ module Fleece.Core
   , zonedTimeWithFormat
   , day
   , dayWithFormat
+  , timeWithFormat
   , boundedIntegralNumber
   , boundedIntegralNumberNamed
+  , boundedIntegralNumberAnonymous
   , unboundedIntegralNumber
   , unboundedIntegralNumberNamed
+  , unboundedIntegralNumberAnonymous
   , eitherOf
   , eitherOfNamed
 
@@ -122,7 +129,6 @@ module Fleece.Core
 
     -- * Schema helpers for dealing with JSON strings within json
   , jsonString
-  , bareOrJSONString
 
     -- * Schema Names
   , Name (nameQualification, nameUnqualified)

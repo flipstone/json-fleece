@@ -61,6 +61,9 @@ instance FC.Fleece Decoder where
   schemaName (Decoder name _parseValue) =
     name
 
+  format _ =
+    id
+
   {-# INLINE number #-}
   number =
     Decoder (FC.unqualifiedName "number") H.scientific
@@ -161,11 +164,10 @@ instance FC.Fleece Decoder where
                   <> show textValue
 
   validateNamed name _uncheck check (Decoder _unvalidatedName parseValue) =
-    Decoder name $ do
-      uncheckedValue <- parseValue
-      case check uncheckedValue of
-        Right checkedValue -> pure checkedValue
-        Left err -> fail $ "Error validating " <> FC.nameToString name <> ": " <> err
+    validatingDecoder name parseValue check
+
+  validateAnonymous _uncheck check (Decoder unvalidatedName parseValue) =
+    validatingDecoder unvalidatedName parseValue check
 
   {-# INLINE unionNamed #-}
   unionNamed name (UnionMembers parseMembers) =
@@ -234,3 +236,15 @@ instance FC.Fleece Decoder where
         case H.decodeEither (H.object $ H.atKey (T.pack "") parseValue) obj of
           Left err -> fail ("Error decoding nested json string: " <> show err)
           Right value -> pure value
+
+validatingDecoder ::
+  FC.Name ->
+  H.Decoder a ->
+  (a -> Either String b) ->
+  Decoder b
+validatingDecoder name parseValue check =
+  Decoder name $ do
+    uncheckedValue <- parseValue
+    case check uncheckedValue of
+      Right checkedValue -> pure checkedValue
+      Left err -> fail $ "Error validating " <> FC.nameToString name <> ": " <> err

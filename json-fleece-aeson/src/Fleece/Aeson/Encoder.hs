@@ -59,6 +59,9 @@ instance FC.Fleece Encoder where
   schemaName (Encoder name _toEncoding) =
     name
 
+  format _ =
+    id
+
   number =
     Encoder (FC.unqualifiedName "number") Aeson.toEncoding
 
@@ -130,6 +133,9 @@ instance FC.Fleece Encoder where
 
   validateNamed name uncheck _check (Encoder _unvalidatedName toEncoding) =
     Encoder name (toEncoding . uncheck)
+
+  validateAnonymous uncheck _check (Encoder unvalidatedName toEncoding) =
+    Encoder unvalidatedName (toEncoding . uncheck)
 
   unionNamed name (UnionMembers builder) =
     let

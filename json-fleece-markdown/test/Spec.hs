@@ -5,11 +5,9 @@ module Main
   ) where
 
 import qualified Data.Text as T
-import qualified Data.Text.Lazy as LT
-import GHC.Stack (withFrozenCallStack)
-import Hedgehog ((===))
-import qualified Hedgehog as HH
-import qualified Hedgehog.Main as HHM
+import qualified Data.Text.Lazy.Encoding as LTE
+import qualified Test.Tasty as Tasty
+import Test.Tasty.Golden (goldenVsStringDiff)
 
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
@@ -18,251 +16,177 @@ import qualified Fleece.Markdown as FM
 
 main :: IO ()
 main =
-  HHM.defaultMain [HH.checkParallel (HH.Group "json-fleece-markdown" tests)]
-
-tests :: [(HH.PropertyName, HH.Property)]
-tests =
-  [ ("prop_object", prop_object)
-  , ("prop_boundedEnum", prop_boundedEnum)
-  , ("prop_nullableField", prop_nullableField)
-  , ("prop_anyJSON", prop_anyJSON)
-  , ("prop_validate", prop_validate)
-  , ("prop_optional", prop_optional)
-  , ("prop_optionalNullableFieldEmitNull", prop_optionalNullableFieldEmitNull)
-  , ("prop_optionalNullableFieldOmitKey", prop_optionalNullableFieldOmitKey)
-  , ("prop_additional", prop_additional)
-  , ("prop_abnormalNumbers", prop_abnormalNumbers)
-  , ("prop_listField", prop_listField)
-  , ("prop_union", prop_union)
-  , ("prop_taggedUnion", prop_taggedUnion)
-  , ("prop_nestedObject", prop_nestedObject)
-  , ("prop_nameDisambiguation", prop_nameDisambiguation)
-  ]
-
-prop_object :: HH.Property
-prop_object =
-  HH.withTests 1 . HH.property $
-    assertMarkdownEquals
-      Examples.fooBarSchema
-      [ "# FooBar"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|foo|yes|no|string|"
-      , "|bar|yes|no|number|"
+  Tasty.defaultMain $
+    Tasty.testGroup
+      "json-fleece-markdown"
+      [ testGroup
       ]
 
-prop_boundedEnum :: HH.Property
-prop_boundedEnum =
-  HH.withTests 1 . HH.property $
-    assertMarkdownEquals
-      Examples.boundedEnumSchema
-      [ "# BoundedEnum"
-      , ""
-      , "Enum values:"
-      , ""
-      , "- apple"
-      , "- orange"
-      , "- kumquat"
-      ]
+testGroup :: Tasty.TestTree
+testGroup =
+  Tasty.testGroup
+    "Markdown Rendering"
+    [ test_object
+    , test_optional
+    , test_optionalNullableFieldEmitNull
+    , test_optionalNullableFieldOmitKey
+    , test_additional
+    , test_boundedEnum
+    , test_nullableField
+    , test_anyJSON
+    , test_format
+    , test_validate
+    , test_validateNamedFormat
+    , test_validatedFields
+    , test_formattedFields
+    , test_abnormalNumbers
+    , test_listField
+    , test_union
+    , test_taggedUnion
+    , test_nestedObject
+    , test_nameDisambiguation
+    ]
 
-prop_nullableField :: HH.Property
-prop_nullableField =
-  HH.withTests 1 . HH.property $
-    assertMarkdownEquals
-      Examples.nullableFieldSchema
-      [ "# NullableField"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|nullableField|yes|yes|string|"
-      ]
+test_object :: Tasty.TestTree
+test_object =
+  mkGoldenTest
+    "An object describes its fields in the rendered Markdown"
+    "test/examples/object.md"
+    Examples.fooBarSchema
 
-prop_anyJSON :: HH.Property
-prop_anyJSON =
-  HH.withTests 1 . HH.property $
-    assertMarkdownEquals
-      FC.anyJSON
-      [ "# AnyJSON"
-      , ""
-      , "Any one of the following"
-      , ""
-      , "- string"
-      , "- boolean"
-      , "- number"
-      , "- AnyJSON array"
-      , "- AnyJSON object"
-      , "- null"
-      , ""
-      , "# AnyJSON object"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|All Other Keys|no|no|AnyJSON|"
-      ]
+test_nullableField :: Tasty.TestTree
+test_nullableField =
+  mkGoldenTest
+    "Nullable fields are notated propertly in the rendered Markdown"
+    "test/examples/nullable.md"
+    Examples.nullableFieldSchema
 
-prop_validate :: HH.Property
-prop_validate =
-  HH.withTests 1 . HH.property $
-    assertMarkdownEquals
-      Examples.validationSchema
-      [ "# string"
-      , ""
-      , "string"
-      ]
+test_optional :: Tasty.TestTree
+test_optional =
+  mkGoldenTest
+    "Optional fields are notated propertly in the rendered Markdown"
+    "test/examples/optional.md"
+    Examples.optionalFieldSchema
 
-prop_optional :: HH.Property
-prop_optional =
-  HH.withTests 1 . HH.property $
-    assertMarkdownEquals
-      Examples.optionalFieldSchema
-      [ "# OptionalField"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|optionalField|no|no|string|"
-      ]
+test_optionalNullableFieldEmitNull :: Tasty.TestTree
+test_optionalNullableFieldEmitNull =
+  mkGoldenTest
+    "OptionalNullable EmitNull fields are notated propertly in the rendered Markdown"
+    "test/examples/optional-nullable-field-emit-null.md"
+    Examples.optionalNullableFieldEmitNullSchema
 
-prop_optionalNullableFieldEmitNull :: HH.Property
-prop_optionalNullableFieldEmitNull =
-  HH.withTests 1 . HH.property $
-    assertMarkdownEquals
-      Examples.optionalNullableFieldEmitNullSchema
-      [ "# OptionalNullableFieldEmitNull"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|optionalNullableField|no|yes|string|"
-      ]
+test_optionalNullableFieldOmitKey :: Tasty.TestTree
+test_optionalNullableFieldOmitKey =
+  mkGoldenTest
+    "OptionalNullable OmitKey fields are notated propertly in the rendered Markdown"
+    "test/examples/optional-nullable-field-omit-key.md"
+    Examples.optionalNullableFieldOmitKeySchema
 
-prop_optionalNullableFieldOmitKey :: HH.Property
-prop_optionalNullableFieldOmitKey =
-  HH.withTests 1 . HH.property $
-    assertMarkdownEquals
-      Examples.optionalNullableFieldOmitKeySchema
-      [ "# OptionalNullableFieldOmitKey"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|optionalNullableField|no|yes|string|"
-      ]
+test_additional :: Tasty.TestTree
+test_additional =
+  mkGoldenTest
+    "Additional properties are included in the object fields in the rendered Markdown"
+    "test/examples/additional.md"
+    Examples.additionalFieldsExampleSchema
 
-prop_additional :: HH.Property
-prop_additional =
-  HH.withTests 1 . HH.property $
-    assertMarkdownEquals
-      Examples.additionalFieldsExampleSchema
-      [ "# AdditionalFieldsExample"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|field1|yes|no|string|"
-      , "|field2|yes|no|string|"
-      , "|All Other Keys|no|no|string|"
-      ]
+test_boundedEnum :: Tasty.TestTree
+test_boundedEnum =
+  mkGoldenTest
+    "A bounded Enum fullly describes itself in the rendered Markdown"
+    "test/examples/bounded-enum.md"
+    Examples.boundedEnumSchema
 
-prop_abnormalNumbers :: HH.Property
-prop_abnormalNumbers =
-  HH.withTests 1 . HH.property $
-    assertMarkdownEquals
-      Examples.abnormalNumbersExampleSchema
-      [ "# AbnormalNumbersExample"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|stringyNumber|yes|no|number (encoded as json string)|"
-      , "|bareOrStringyNumber|yes|no|number (bare or encoded as json string)|"
-      , ""
-      , "# number (bare or encoded as json string)"
-      , ""
-      , "Any one of the following"
-      , ""
-      , "- number"
-      , "- number (encoded as json string)"
-      ]
+test_anyJSON :: Tasty.TestTree
+test_anyJSON =
+  mkGoldenTest
+    "AnyJSON fuly describes itself in the rendered Markdown"
+    "test/examples/any-json.md"
+    FC.anyJSON
 
-prop_listField :: HH.Property
-prop_listField =
-  HH.withTests 1 . HH.property $
-    assertMarkdownEquals
-      Examples.listFieldExampleSchema
-      [ "# ListFieldExample"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|listField|yes|no|BoundedEnum array|"
-      , ""
-      , "# BoundedEnum"
-      , ""
-      , "Enum values:"
-      , ""
-      , "- apple"
-      , "- orange"
-      , "- kumquat"
-      ]
+test_format :: Tasty.TestTree
+test_format =
+  mkGoldenTest
+    "Formatted primitives are rendered to Markdown"
+    "test/examples/format.md"
+    (FC.format "abc123" FC.text)
 
-prop_union :: HH.Property
-prop_union =
-  HH.withTests 1 . HH.property $
-    assertMarkdownEquals
-      Examples.unionExampleSchema
-      [ "# UnionExample"
-      , ""
-      , "Any one of the following"
-      , ""
-      , "- string"
-      , "- number"
-      ]
+test_validate :: Tasty.TestTree
+test_validate =
+  mkGoldenTest
+    "Validated type at the root are included in teh markdown"
+    "test/examples/validate.md"
+    Examples.validationSchema
 
-prop_taggedUnion :: HH.Property
-prop_taggedUnion =
-  HH.withTests 1 . HH.property $
-    assertMarkdownEquals
-      Examples.taggedUnionExampleSchema
-      [ "# TaggedUnionExample"
-      , ""
-      , "One of the following field structures, depending on the value found in the type field."
-      , ""
-      , "## type = person"
-      , ""
-      , "When the \"type\" field has the value \"person\", the object has the following fields:"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|name|yes|no|string|"
-      , "|age|yes|no|number|"
-      , ""
-      , "## type = company"
-      , ""
-      , "When the \"type\" field has the value \"company\", the object has the following fields:"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|name|yes|no|string|"
-      , "|tooBigToFail|yes|no|boolean|"
-      , ""
-      ]
+test_validateNamedFormat :: Tasty.TestTree
+test_validateNamedFormat =
+  mkGoldenTest
+    "Formatted named types are rendered to Markdown with their name"
+    "test/examples/validate-named-format.md"
+    (FC.validateNamed "ValidatedFormat" id Right $ FC.format "abc123" FC.text)
 
-prop_nestedObject :: HH.Property
-prop_nestedObject =
-  HH.withTests 1 . HH.property $
-    assertMarkdownEquals
-      parentSchema
-      [ "# Parent"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|field1|yes|no|string|"
-      , "|field2|yes|no|string|"
-      , "|nested|yes|no|NestedObject|"
-      , ""
-      , "# NestedObject"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|field1|yes|no|string|"
-      , "|field2|yes|no|string|"
-      ]
+test_validatedFields :: Tasty.TestTree
+test_validatedFields =
+  let
+    testSchema =
+      FC.objectNamed "SomeObject" $
+        FC.constructor (\_ _ -> ())
+          #+ FC.required "validateNamedField" (const "") (FC.validateNamed "SomeString" id Right $ FC.text)
+          #+ FC.required "validateAnonymousField" (const "") (FC.validateAnonymous id Right $ FC.text)
+  in
+    mkGoldenTest
+      "Variations of validated fields are rendered to Markdown as expected"
+      "test/examples/validated-fields.md"
+      testSchema
+
+test_formattedFields :: Tasty.TestTree
+test_formattedFields =
+  let
+    testSchema =
+      FC.objectNamed "SomeObject" $
+        FC.constructor (\_ _ _ -> ())
+          #+ FC.required "formattedField" (const "") (FC.format "abc123" FC.text)
+          #+ FC.required "validatedFormattedField" (const "") (FC.validateNamed "ValidatedFormattedString" id Right . FC.format "abc123" $ FC.text)
+          #+ FC.required "formattedValidatedField" (const "") (FC.format "abc123" . FC.validateNamed "FormattedValidatedString" id Right $ FC.text)
+  in
+    mkGoldenTest
+      "Variations of formatted fields are rendered to Markdown as expected"
+      "test/examples/formatted-fields.md"
+      testSchema
+
+test_abnormalNumbers :: Tasty.TestTree
+test_abnormalNumbers =
+  mkGoldenTest
+    "Abnormal numbers have their types listed with their fields"
+    "test/examples/abnormal-numbers.md"
+    Examples.abnormalNumbersExampleSchema
+
+test_listField :: Tasty.TestTree
+test_listField =
+  mkGoldenTest
+    "Lists fields have array type listed with the field and the item schema included in the rendered Markdown"
+    "test/examples/test-field.md"
+    Examples.listFieldExampleSchema
+
+test_union :: Tasty.TestTree
+test_union =
+  mkGoldenTest
+    "Unions are included with their members in the rendered markdown"
+    "test/examples/union.md"
+    Examples.unionExampleSchema
+
+test_taggedUnion :: Tasty.TestTree
+test_taggedUnion =
+  mkGoldenTest
+    "Tagged Unions are intluded with their members in the rendered Markdown"
+    "test/examples/tagged-union.md"
+    Examples.taggedUnionExampleSchema
+
+test_nestedObject :: Tasty.TestTree
+test_nestedObject =
+  mkGoldenTest
+    "Nested objects are included in the rendered Markdown"
+    "test/examples/nested-object.md"
+    parentSchema
 
 data Parent = Parent
   { parentField1 :: T.Text
@@ -290,30 +214,12 @@ nestedObjectSchema =
       #+ FC.required "field1" nestedField1 FC.text
       #+ FC.required "field2" nestedField2 FC.text
 
-prop_nameDisambiguation :: HH.Property
-prop_nameDisambiguation =
-  HH.withTests 1 . HH.property $
-    assertMarkdownEquals
-      ambiguousNameParentSchema
-      [ "# AmbiguousNameParent"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|child1|yes|no|Child1.AmbiguousName|"
-      , "|child2|yes|no|Child2.AmbiguousName|"
-      , ""
-      , "# Child1.AmbiguousName"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|value|yes|no|string|"
-      , ""
-      , "# Child2.AmbiguousName"
-      , ""
-      , "|Field|Key Required|Null Allowed|Type|"
-      , "|---|---|---|---|"
-      , "|value|yes|no|string|"
-      ]
+test_nameDisambiguation :: Tasty.TestTree
+test_nameDisambiguation =
+  mkGoldenTest
+    "Ambiguous Names get qualified in rendered Markdown"
+    "test/examples/name-disambiguation.md"
+    ambiguousNameParentSchema
 
 data AmbiguousNameParent = AmbiguousNameParent
   { ambiguousNameChild1 :: AmbiguousNameChild1
@@ -347,7 +253,16 @@ ambiguousNameChild2Schema =
     FC.constructor AmbiguousNameChild2
       #+ FC.required "value" ambiguousNameChild2Value FC.text
 
-assertMarkdownEquals :: FM.Markdown a -> [LT.Text] -> HH.PropertyT IO ()
-assertMarkdownEquals schema expected =
-  withFrozenCallStack $
-    LT.lines (FM.renderMarkdown schema) === expected
+mkGoldenTest ::
+  Tasty.TestName ->
+  FilePath ->
+  FM.Markdown a ->
+  Tasty.TestTree
+mkGoldenTest testName goldenPath schema = do
+  -- Using VsStringDiff instead of VsString because the output for failing
+  -- tests is better
+  goldenVsStringDiff
+    testName
+    (\ref new -> ["diff", "-u", ref, new])
+    goldenPath
+    (pure . LTE.encodeUtf8 . FM.renderMarkdown $ schema)
