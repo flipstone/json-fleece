@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE TypeApplications #-}
 
 module Main
@@ -488,7 +489,7 @@ encodeAesonText :: Aeson.ToJSON a => a -> T.Text
 encodeAesonText =
   LT.toStrict . AesonText.encodeToLazyText
 
-dummyObj :: FC.Fleece schema => String -> schema a -> schema a
+dummyObj :: FC.Fleece schema => String -> (forall anySchema. FC.Fleece anySchema => anySchema a) -> schema a
 dummyObj field schema =
   FC.objectNamed "" $
     FC.constructor id

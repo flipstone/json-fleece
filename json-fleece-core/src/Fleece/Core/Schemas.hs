@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
@@ -97,7 +98,6 @@ import Fleece.Core.Class
   , number
   , objectNamed
   , optional
-  , schemaName
   , taggedUnionMemberWithTag
   , taggedUnionNamed
   , text
@@ -116,14 +116,15 @@ import Fleece.Core.Name
   , nameUnqualified
   , unqualifiedName
   )
+import Fleece.Core.SchemaName (schemaName)
 
 eitherOf ::
   forall schema a b.
   ( Fleece schema
   , FirstIndexOf b '[a, b] ~ 1
   ) =>
-  schema a ->
-  schema b ->
+  (forall anySchema. Fleece anySchema => anySchema a) ->
+  (forall anySchema. Fleece anySchema => anySchema b) ->
   schema (Either a b)
 eitherOf leftSchema rightSchema =
   let
@@ -143,8 +144,8 @@ eitherOfNamed ::
   , FirstIndexOf b '[a, b] ~ 1
   ) =>
   Name ->
-  schema a ->
-  schema b ->
+  (forall anySchema. Fleece anySchema => anySchema a) ->
+  (forall anySchema. Fleece anySchema => anySchema b) ->
   schema (Either a b)
 eitherOfNamed name leftSchema rightSchema =
   let
@@ -162,7 +163,7 @@ eitherOfNamed name leftSchema rightSchema =
         . branch Right
         $ branchEnd
 
-    unionSchema :: schema (Union '[a, b])
+    unionSchema :: forall anySchema. Fleece anySchema => anySchema (Union '[a, b])
     unionSchema =
       unionNamed name $
         unionMember leftSchema
@@ -193,7 +194,7 @@ unionMember ::
   , KnownNat branchIndex
   , branchIndex ~ FirstIndexOf a types
   ) =>
-  schema a ->
+  (forall anySchema. Fleece anySchema => anySchema a) ->
   UnionMembers schema types '[a]
 unionMember =
   unionMemberWithIndex firstIndexOfType
@@ -264,7 +265,7 @@ validate ::
   (Fleece schema, Typeable a) =>
   (a -> b) ->
   (b -> Either String a) ->
-  schema b ->
+  (forall anySchema. Fleece anySchema => anySchema b) ->
   schema a
 validate uncheck check schemaB =
   let
@@ -280,7 +281,7 @@ transform ::
   (Fleece schema, Typeable a) =>
   (a -> b) ->
   (b -> a) ->
-  schema b ->
+  (forall anySchema. Fleece anySchema => anySchema b) ->
   schema a
 transform aToB bToA schemaB =
   let
@@ -297,14 +298,14 @@ transformNamed ::
   Name ->
   (a -> b) ->
   (b -> a) ->
-  schema b ->
+  (forall anySchema. Fleece anySchema => anySchema b) ->
   schema a
 transformNamed name aToB bToA =
   validateNamed name aToB (Right . bToA)
 
 coerceSchema ::
   (Fleece schema, Typeable a, Coercible a b) =>
-  schema b ->
+  (forall anySchema. Fleece anySchema => anySchema b) ->
   schema a
 coerceSchema schemaB =
   let
@@ -319,7 +320,7 @@ coerceSchema schemaB =
 coerceSchemaNamed ::
   (Fleece schema, Coercible a b) =>
   Name ->
-  schema b ->
+  (forall anySchema. Fleece anySchema => anySchema b) ->
   schema a
 coerceSchemaNamed name schemaB =
   transformNamed name coerce coerce schemaB
@@ -333,7 +334,7 @@ optionalNullable ::
   NothingEncoding ->
   String ->
   (objectType -> Maybe a) ->
-  schema a ->
+  (forall anySchema. Fleece anySchema => anySchema a) ->
   Field schema objectType (Maybe a)
 optionalNullable encoding name accessor schema =
   let
@@ -351,7 +352,7 @@ optionalNullable encoding name accessor schema =
     fmap collapseNull $
       optional name nullableAccessor (nullable schema)
 
-list :: Fleece schema => schema a -> schema [a]
+list :: forall schema a. Fleece schema => (forall anySchema. Fleece anySchema => anySchema a) -> schema [a]
 list itemSchema =
   transformNamed
     (unqualifiedName $ "[" <> nameUnqualified (schemaName itemSchema) <> "]")
@@ -359,13 +360,13 @@ list itemSchema =
     V.toList
     (array itemSchema)
 
-map :: (Fleece schema, Typeable a) => schema a -> schema (Map.Map T.Text a)
+map :: (Fleece schema, Typeable a) => (forall anySchema. Fleece anySchema => anySchema a) -> schema (Map.Map T.Text a)
 map innerSchema =
   object $
     constructor id
       #* additionalFields id innerSchema
 
-nonEmpty :: Fleece schema => schema a -> schema (NEL.NonEmpty a)
+nonEmpty :: forall schema a. Fleece schema => (forall anySchema. Fleece anySchema => anySchema a) -> schema (NEL.NonEmpty a)
 nonEmpty itemSchema =
   let
     validateNonEmpty items =
@@ -383,7 +384,7 @@ data SetDuplicateHandling
   = AllowInputDuplicates
   | RejectInputDuplicates
 
-set :: (Ord a, Fleece schema) => SetDuplicateHandling -> schema a -> schema (Set.Set a)
+set :: forall schema a. (Ord a, Fleece schema) => SetDuplicateHandling -> (forall anySchema. Fleece anySchema => anySchema a) -> schema (Set.Set a)
 set handling itemSchema =
   case handling of
     AllowInputDuplicates ->
@@ -652,7 +653,7 @@ timeWithFormat typeName formatString =
       decode
       string
 
-bareOrJSONString :: Fleece schema => schema a -> schema a
+bareOrJSONString :: forall schema a. Fleece schema => (forall anySchema. Fleece anySchema => anySchema a) -> schema a
 bareOrJSONString baseSchema =
   let
     toUnion :: a -> Union '[a, a]
@@ -672,6 +673,7 @@ bareOrJSONString baseSchema =
         (schemaName baseSchema)
         "(bare or encoded as json string)"
 
+    unionSchema :: forall anySchema. Fleece anySchema => anySchema (Union '[a, a])
     unionSchema =
       unionNamed name $
         unionCombine

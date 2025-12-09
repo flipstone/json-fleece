@@ -3,7 +3,6 @@
 module Fleece.Core
   ( -- * A class for defining Fleece schemas
     Fleece
-  , schemaName
 
     -- * Schemas for dealing with JSON primitives
   , text
@@ -131,9 +130,14 @@ module Fleece.Core
   , autoQualifiedName
   , nameToString
   , annotateName
+
+    -- * Interpreter that obtains the name of a schema
+  , SchemaName
+  , schemaName
   ) where
 
 import Fleece.Core.AnyJSON
 import Fleece.Core.Class
 import Fleece.Core.Name
+import Fleece.Core.SchemaName
 import Fleece.Core.Schemas

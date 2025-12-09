@@ -1,3 +1,4 @@
+{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module Fleece.Markdown.FleeceInstance
@@ -37,7 +38,7 @@ import Fleece.Markdown.SchemaDocumentation
   , schemaSelfReference
   )
 
-newtype Markdown a = Markdown SchemaDocumentation
+newtype Markdown a = Markdown {toSchemaDocumentation :: SchemaDocumentation}
 
 renderMarkdown :: Markdown a -> LT.Text
 renderMarkdown (Markdown schemaDocs) =
@@ -59,34 +60,27 @@ instance FC.Fleece Markdown where
   newtype TaggedUnionMembers Markdown _allTags _handledTags
     = TaggedUnionMembers (DList.DList TaggedUnionMemberDocumentation)
 
-  schemaName (Markdown schemaDoc) =
-    schemaName schemaDoc
-
   number =
-    primitiveMarkdown "number"
+    primitiveMarkdown FC.number
 
   text =
-    primitiveMarkdown "string"
+    primitiveMarkdown FC.text
 
   boolean =
-    primitiveMarkdown "boolean"
+    primitiveMarkdown FC.boolean
 
-  array (Markdown itemSchemaDocs) =
-    let
-      arrayName =
-        FC.annotateName (schemaName itemSchemaDocs) "array"
-    in
-      Markdown $
-        SchemaDocumentation
-          { schemaName = arrayName
-          , schemaExcludeFromRender = True
-          , schemaNullability = NotNull
-          , schemaMainEntry = ArrayEntry (schemaMainEntry itemSchemaDocs)
-          , schemaReferences = schemaSelfReference itemSchemaDocs
-          }
+  array itemSchema =
+    Markdown $
+      SchemaDocumentation
+        { schemaName = FC.schemaName (FC.array itemSchema)
+        , schemaExcludeFromRender = True
+        , schemaNullability = NotNull
+        , schemaMainEntry = ArrayEntry (schemaMainEntry $ toSchemaDocumentation itemSchema)
+        , schemaReferences = schemaSelfReference $ toSchemaDocumentation itemSchema
+        }
 
   null =
-    primitiveMarkdown "null"
+    primitiveMarkdown FC.null
 
   nullable =
     markNullable
@@ -203,15 +197,14 @@ instance FC.Fleece Markdown where
         { schemaName = FC.annotateName (schemaName schemaDocs) "(encoded as json string)"
         }
 
-primitiveMarkdown :: String -> Markdown a
-primitiveMarkdown nameString =
+primitiveMarkdown :: (forall schema. FC.Fleece schema => schema a) -> Markdown a
+primitiveMarkdown schema =
   let
-    name =
-      FC.unqualifiedName nameString
+    name = FC.schemaName schema
   in
     Markdown $
       SchemaDocumentation
-        { schemaName = name
+        { schemaName = FC.schemaName schema
         , schemaExcludeFromRender = True
         , schemaNullability = NotNull
         , schemaMainEntry = NameOnly name

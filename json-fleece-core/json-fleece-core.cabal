@@ -35,6 +35,7 @@ library
       Fleece.Core.Name
       Fleece.Core.Schemas
   other-modules:
+      Fleece.Core.SchemaName
       Paths_json_fleece_core
   hs-source-dirs:
       src

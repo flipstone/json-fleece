@@ -39,8 +39,6 @@ instance FC.Fleece EncoderDecoder where
     , taggedUnionMembersDecoder :: FC.TaggedUnionMembers Decoder allTags handledTags
     }
 
-  schemaName = FC.schemaName . encoder
-
   number =
     EncoderDecoder
       { encoder = FC.number
@@ -61,8 +59,8 @@ instance FC.Fleece EncoderDecoder where
 
   array itemEncoderDecoder =
     EncoderDecoder
-      { encoder = FC.array $ encoder itemEncoderDecoder
-      , decoder = FC.array $ decoder itemEncoderDecoder
+      { encoder = FC.array itemEncoderDecoder
+      , decoder = FC.array itemEncoderDecoder
       }
 
   null =
@@ -73,20 +71,20 @@ instance FC.Fleece EncoderDecoder where
 
   nullable itemEncoderDecoder =
     EncoderDecoder
-      { encoder = FC.nullable $ encoder itemEncoderDecoder
-      , decoder = FC.nullable $ decoder itemEncoderDecoder
+      { encoder = FC.nullable itemEncoderDecoder
+      , decoder = FC.nullable itemEncoderDecoder
       }
 
   required name accessor itemEncoderDecoder =
     Field
-      { fieldEncoder = FC.required name accessor $ encoder itemEncoderDecoder
-      , fieldDecoder = FC.required name accessor $ decoder itemEncoderDecoder
+      { fieldEncoder = FC.required name accessor itemEncoderDecoder
+      , fieldDecoder = FC.required name accessor itemEncoderDecoder
       }
 
   optional name accessor itemEncoderDecoder =
     Field
-      { fieldEncoder = FC.optional name accessor $ encoder itemEncoderDecoder
-      , fieldDecoder = FC.optional name accessor $ decoder itemEncoderDecoder
+      { fieldEncoder = FC.optional name accessor itemEncoderDecoder
+      , fieldDecoder = FC.optional name accessor itemEncoderDecoder
       }
 
   mapField f fieldEncoderDecoder =
@@ -97,8 +95,8 @@ instance FC.Fleece EncoderDecoder where
 
   additionalFields accessor itemEncoderDecoder =
     AdditionalFields
-      { additionalFieldsEncoder = FC.additionalFields accessor $ encoder itemEncoderDecoder
-      , additionalFieldsDecoder = FC.additionalFields accessor $ decoder itemEncoderDecoder
+      { additionalFieldsEncoder = FC.additionalFields accessor itemEncoderDecoder
+      , additionalFieldsDecoder = FC.additionalFields accessor itemEncoderDecoder
       }
 
   objectNamed name objectEncoderDecoder =
@@ -129,8 +127,8 @@ instance FC.Fleece EncoderDecoder where
 
   validateNamed name uncheck check itemEncoderDecoder =
     EncoderDecoder
-      { encoder = FC.validateNamed name uncheck check $ encoder itemEncoderDecoder
-      , decoder = FC.validateNamed name uncheck check $ decoder itemEncoderDecoder
+      { encoder = FC.validateNamed name uncheck check itemEncoderDecoder
+      , decoder = FC.validateNamed name uncheck check itemEncoderDecoder
       }
 
   boundedEnumNamed name toText =
@@ -147,8 +145,8 @@ instance FC.Fleece EncoderDecoder where
 
   unionMemberWithIndex index itemEncoderDecoder =
     UnionMembers
-      { unionMembersEncoder = FC.unionMemberWithIndex index $ encoder itemEncoderDecoder
-      , unionMembersDecoder = FC.unionMemberWithIndex index $ decoder itemEncoderDecoder
+      { unionMembersEncoder = FC.unionMemberWithIndex index itemEncoderDecoder
+      , unionMembersDecoder = FC.unionMemberWithIndex index itemEncoderDecoder
       }
 
   unionCombine leftMembers rightMembers =
@@ -187,8 +185,8 @@ instance FC.Fleece EncoderDecoder where
             (taggedUnionMembersDecoder rightMembers)
       }
 
-  jsonString itemEncoderDecoder =
+  jsonString item =
     EncoderDecoder
-      { encoder = FC.jsonString $ encoder itemEncoderDecoder
-      , decoder = FC.jsonString $ decoder itemEncoderDecoder
+      { encoder = FC.jsonString item
+      , decoder = FC.jsonString item
       }

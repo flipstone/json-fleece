@@ -58,9 +58,6 @@ instance FC.Fleece Decoder where
   newtype TaggedUnionMembers Decoder allTags _handledTags
     = TaggedUnionMembers (Map.Map T.Text (H.FieldsDecoder (Shrubbery.TaggedUnion allTags)))
 
-  schemaName (Decoder name _parseValue) =
-    name
-
   {-# INLINE number #-}
   number =
     Decoder (FC.unqualifiedName "number") H.scientific

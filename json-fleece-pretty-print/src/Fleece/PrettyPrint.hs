@@ -22,8 +22,7 @@ import qualified Shrubbery
 
 import qualified Fleece.Core as FC
 
-data PrettyPrinter a
-  = PrettyPrinter FC.Name (a -> Pretty)
+newtype PrettyPrinter a = PrettyPrinter (a -> Pretty)
 
 data Inline
   = Plain LTB.Builder
@@ -61,7 +60,7 @@ inlineToBuilder inline =
       inlineToBuilder left <> inlineToBuilder right
 
 prettyPrintLazyText :: PrettyPrinter a -> a -> LT.Text
-prettyPrintLazyText (PrettyPrinter _name toPretty) a =
+prettyPrintLazyText (PrettyPrinter toPretty) a =
   LTB.toLazyText (prettyToBuilder "" (toPretty a))
 
 prettyPrintText :: PrettyPrinter a -> a -> T.Text
@@ -88,23 +87,20 @@ instance FC.Fleece PrettyPrinter where
   newtype TaggedUnionMembers PrettyPrinter _allTags handledTags
     = TaggedUnionMembers (Shrubbery.TaggedBranchBuilder handledTags (T.Text, DList.DList Pretty))
 
-  schemaName (PrettyPrinter name _toBuilder) =
-    name
-
   number =
-    PrettyPrinter "number" $ \scientific ->
+    PrettyPrinter $ \scientific ->
       case Scientific.toBoundedInteger scientific :: Maybe Int64 of
         Just n -> showInline n
         Nothing -> showInline scientific
 
   text =
-    PrettyPrinter "text" showInline
+    PrettyPrinter showInline
 
   boolean =
-    PrettyPrinter "boolean" showInline
+    PrettyPrinter showInline
 
-  array (PrettyPrinter name itemToPretty) =
-    PrettyPrinter (FC.annotateName name "array") $ \array ->
+  array (PrettyPrinter itemToPretty) =
+    PrettyPrinter $ \array ->
       case Fold.toList array of
         [] -> Inline "[]"
         nonEmptyList ->
@@ -113,17 +109,17 @@ instance FC.Fleece PrettyPrinter where
             $ nonEmptyList
 
   null =
-    PrettyPrinter "null" showInline
+    PrettyPrinter showInline
 
-  nullable (PrettyPrinter name renderNotNull) =
-    PrettyPrinter (FC.annotateName name "nullable") $ \mbValue ->
+  nullable (PrettyPrinter renderNotNull) =
+    PrettyPrinter $ \mbValue ->
       renderEither showInline renderNotNull mbValue
 
-  required fieldName accessor (PrettyPrinter _name renderField) =
+  required fieldName accessor (PrettyPrinter renderField) =
     Field $ \object ->
       prettyPrintField fieldName (renderField (accessor object))
 
-  optional fieldName accessor (PrettyPrinter _name renderField) =
+  optional fieldName accessor (PrettyPrinter renderField) =
     Field $ \object ->
       prettyPrintField fieldName $
         renderMaybe renderField (accessor object)
@@ -131,7 +127,7 @@ instance FC.Fleece PrettyPrinter where
   mapField _f (Field renderField) =
     Field renderField
 
-  additionalFields accessor (PrettyPrinter _name renderField) =
+  additionalFields accessor (PrettyPrinter renderField) =
     AdditionalFields $ \object ->
       let
         printField (key, value) =
@@ -160,32 +156,32 @@ instance FC.Fleece PrettyPrinter where
     Object (DList.snoc fields renderAdditional)
 
   objectNamed name (Object fields) =
-    PrettyPrinter name $ \object ->
+    PrettyPrinter $ \object ->
       Block
         [ Inline (Plain (renderName name))
         , Indent (Block (map (\f -> f object) (DList.toList fields)))
         ]
 
-  validateNamed name unvalidate _check (PrettyPrinter _name toPretty) =
-    PrettyPrinter name $ \value ->
+  validateNamed name unvalidate _check (PrettyPrinter toPretty) =
+    PrettyPrinter $ \value ->
       prefixConstructor
         (renderName name)
         (toPretty (unvalidate value))
 
-  boundedEnumNamed name toText =
-    PrettyPrinter name (showInline . toText)
+  boundedEnumNamed _name toText =
+    PrettyPrinter (showInline . toText)
 
-  unionNamed name (UnionMembers branches) =
-    PrettyPrinter name (Shrubbery.dissect (Shrubbery.branchBuild branches))
+  unionNamed _name (UnionMembers branches) =
+    PrettyPrinter (Shrubbery.dissect (Shrubbery.branchBuild branches))
 
-  unionMemberWithIndex _index (PrettyPrinter _name toPretty) =
+  unionMemberWithIndex _index (PrettyPrinter toPretty) =
     UnionMembers (Shrubbery.singleBranch toPretty)
 
   unionCombine (UnionMembers leftBranches) (UnionMembers rightBranches) =
     UnionMembers (Shrubbery.appendBranches leftBranches rightBranches)
 
   taggedUnionNamed name tagProperty (TaggedUnionMembers branches) =
-    PrettyPrinter name $ \value ->
+    PrettyPrinter $ \value ->
       let
         (tagValue, memberFields) =
           Shrubbery.dissectTaggedUnion

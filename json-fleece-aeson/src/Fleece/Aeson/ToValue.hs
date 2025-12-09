@@ -64,9 +64,6 @@ instance FC.Fleece ToValue where
   newtype TaggedUnionMembers ToValue _allTypes handledTypes
     = TaggedUnionMembers (Shrubbery.TaggedBranchBuilder handledTypes (T.Text, [AesonTypes.Pair]))
 
-  schemaName (ToValue name _toJSON) =
-    name
-
   number =
     ToValue (FC.unqualifiedName "number") Aeson.toJSON
 

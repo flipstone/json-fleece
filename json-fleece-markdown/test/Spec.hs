@@ -48,7 +48,7 @@ prop_object =
       , ""
       , "|Field|Key Required|Null Allowed|Type|"
       , "|---|---|---|---|"
-      , "|foo|yes|no|string|"
+      , "|foo|yes|no|text|"
       , "|bar|yes|no|number|"
       ]
 
@@ -75,7 +75,7 @@ prop_nullableField =
       , ""
       , "|Field|Key Required|Null Allowed|Type|"
       , "|---|---|---|---|"
-      , "|nullableField|yes|yes|string|"
+      , "|nullableField|yes|yes|text|"
       ]
 
 prop_anyJSON :: HH.Property
@@ -87,7 +87,7 @@ prop_anyJSON =
       , ""
       , "Any one of the following"
       , ""
-      , "- string"
+      , "- text"
       , "- boolean"
       , "- number"
       , "- AnyJSON array"
@@ -106,9 +106,9 @@ prop_validate =
   HH.withTests 1 . HH.property $
     assertMarkdownEquals
       Examples.validationSchema
-      [ "# string"
+      [ "# text"
       , ""
-      , "string"
+      , "text"
       ]
 
 prop_optional :: HH.Property
@@ -120,7 +120,7 @@ prop_optional =
       , ""
       , "|Field|Key Required|Null Allowed|Type|"
       , "|---|---|---|---|"
-      , "|optionalField|no|no|string|"
+      , "|optionalField|no|no|text|"
       ]
 
 prop_optionalNullableFieldEmitNull :: HH.Property
@@ -132,7 +132,7 @@ prop_optionalNullableFieldEmitNull =
       , ""
       , "|Field|Key Required|Null Allowed|Type|"
       , "|---|---|---|---|"
-      , "|optionalNullableField|no|yes|string|"
+      , "|optionalNullableField|no|yes|text|"
       ]
 
 prop_optionalNullableFieldOmitKey :: HH.Property
@@ -144,7 +144,7 @@ prop_optionalNullableFieldOmitKey =
       , ""
       , "|Field|Key Required|Null Allowed|Type|"
       , "|---|---|---|---|"
-      , "|optionalNullableField|no|yes|string|"
+      , "|optionalNullableField|no|yes|text|"
       ]
 
 prop_additional :: HH.Property
@@ -156,9 +156,9 @@ prop_additional =
       , ""
       , "|Field|Key Required|Null Allowed|Type|"
       , "|---|---|---|---|"
-      , "|field1|yes|no|string|"
-      , "|field2|yes|no|string|"
-      , "|All Other Keys|no|no|string|"
+      , "|field1|yes|no|text|"
+      , "|field2|yes|no|text|"
+      , "|All Other Keys|no|no|text|"
       ]
 
 prop_abnormalNumbers :: HH.Property
@@ -210,7 +210,7 @@ prop_union =
       , ""
       , "Any one of the following"
       , ""
-      , "- string"
+      , "- text"
       , "- number"
       ]
 
@@ -229,7 +229,7 @@ prop_taggedUnion =
       , ""
       , "|Field|Key Required|Null Allowed|Type|"
       , "|---|---|---|---|"
-      , "|name|yes|no|string|"
+      , "|name|yes|no|text|"
       , "|age|yes|no|number|"
       , ""
       , "## type = company"
@@ -238,7 +238,7 @@ prop_taggedUnion =
       , ""
       , "|Field|Key Required|Null Allowed|Type|"
       , "|---|---|---|---|"
-      , "|name|yes|no|string|"
+      , "|name|yes|no|text|"
       , "|tooBigToFail|yes|no|boolean|"
       , ""
       ]
@@ -252,16 +252,16 @@ prop_nestedObject =
       , ""
       , "|Field|Key Required|Null Allowed|Type|"
       , "|---|---|---|---|"
-      , "|field1|yes|no|string|"
-      , "|field2|yes|no|string|"
+      , "|field1|yes|no|text|"
+      , "|field2|yes|no|text|"
       , "|nested|yes|no|NestedObject|"
       , ""
       , "# NestedObject"
       , ""
       , "|Field|Key Required|Null Allowed|Type|"
       , "|---|---|---|---|"
-      , "|field1|yes|no|string|"
-      , "|field2|yes|no|string|"
+      , "|field1|yes|no|text|"
+      , "|field2|yes|no|text|"
       ]
 
 data Parent = Parent
@@ -306,13 +306,13 @@ prop_nameDisambiguation =
       , ""
       , "|Field|Key Required|Null Allowed|Type|"
       , "|---|---|---|---|"
-      , "|value|yes|no|string|"
+      , "|value|yes|no|text|"
       , ""
       , "# Child2.AmbiguousName"
       , ""
       , "|Field|Key Required|Null Allowed|Type|"
       , "|---|---|---|---|"
-      , "|value|yes|no|string|"
+      , "|value|yes|no|text|"
       ]
 
 data AmbiguousNameParent = AmbiguousNameParent

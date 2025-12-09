@@ -11,7 +11,6 @@ module Fleece.Core.Class
       , Object
       , UnionMembers
       , TaggedUnionMembers
-      , schemaName
       , text
       , number
       , boolean
@@ -61,30 +60,28 @@ class Fleece schema where
   data UnionMembers schema :: [Type] -> [Type] -> Type
   data TaggedUnionMembers schema :: [Tag] -> [Tag] -> Type
 
-  schemaName :: schema a -> Name
-
   number :: schema Scientific
 
   text :: schema T.Text
 
   boolean :: schema Bool
 
-  array :: schema a -> schema (V.Vector a)
+  array :: (forall anySchema. Fleece anySchema => anySchema a) -> schema (V.Vector a)
 
   null :: schema Null
 
-  nullable :: schema a -> schema (Either Null a)
+  nullable :: (forall anySchema. Fleece anySchema => anySchema a) -> schema (Either Null a)
 
   required ::
     String ->
     (object -> a) ->
-    schema a ->
+    (forall anySchema. Fleece anySchema => anySchema a) ->
     Field schema object a
 
   optional ::
     String ->
     (object -> Maybe a) ->
-    schema a ->
+    (forall anySchema. Fleece anySchema => anySchema a) ->
     Field schema object (Maybe a)
 
   mapField ::
@@ -94,7 +91,7 @@ class Fleece schema where
 
   additionalFields ::
     (object -> Map.Map T.Text a) ->
-    schema a ->
+    (forall anySchema. Fleece anySchema => anySchema a) ->
     AdditionalFields schema object (Map.Map T.Text a)
 
   objectNamed ::
@@ -120,8 +117,8 @@ class Fleece schema where
     Name ->
     (a -> b) ->
     (b -> Either String a) ->
-    (schema b) ->
-    (schema a)
+    (forall anySchema. Fleece anySchema => anySchema b) ->
+    schema a
 
   boundedEnumNamed ::
     (Bounded a, Enum a) =>
@@ -137,7 +134,7 @@ class Fleece schema where
 
   unionMemberWithIndex ::
     BranchIndex a types ->
-    schema a ->
+    (forall anySchema. Fleece anySchema => anySchema a) ->
     UnionMembers schema types '[a]
 
   unionCombine ::
@@ -171,7 +168,7 @@ class Fleece schema where
     TaggedUnionMembers schema tags (Append left right)
 
   jsonString ::
-    schema a ->
+    (forall anySchema. Fleece anySchema => anySchema a) ->
     schema a
 
 instance Fleece schema => Functor (Field schema object) where
