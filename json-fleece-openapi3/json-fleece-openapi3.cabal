@@ -9,10 +9,11 @@ version:        0.4.7.2
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2023 Author name here
-license:        BSD3
+author:         Flipstone Technology Partners
+maintainer:     maintainers@flipstone.com
+copyright:      2025 Flipstone Technology Partners
+license:        MIT
+license-file:   LICENSE
 build-type:     Simple
 tested-with:
     GHC == 9.4.8, GHC == 9.6.7, GHC == 9.8.4, GHC == 9.10.2

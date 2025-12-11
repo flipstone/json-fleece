@@ -1,10 +1,11 @@
 name:                json-fleece-openapi3
 version:             0.4.7.2
 github:              "flipstone/json-fleece/json-fleece-openapi3"
-license:             BSD3
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2023 Author name here"
+license:             MIT
+license-file:        LICENSE
+author:              Flipstone Technology Partners
+copyright:           2025 Flipstone Technology Partners
+maintainer:          maintainers@flipstone.com
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package
