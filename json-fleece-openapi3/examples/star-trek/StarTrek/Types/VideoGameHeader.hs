@@ -17,7 +17,7 @@ data VideoGameHeader = VideoGameHeader
   }
   deriving (Eq, Show)
 
-videoGameHeaderSchema :: FC.Fleece schema => schema VideoGameHeader
+videoGameHeaderSchema :: FC.Fleece t => FC.Schema t VideoGameHeader
 videoGameHeaderSchema =
   FC.object $
     FC.constructor VideoGameHeader

@@ -40,7 +40,7 @@ data VideoGameFull = VideoGameFull
   }
   deriving (Eq, Show)
 
-videoGameFullSchema :: FC.Fleece schema => schema VideoGameFull
+videoGameFullSchema :: FC.Fleece t => FC.Schema t VideoGameFull
 videoGameFullSchema =
   FC.object $
     FC.constructor VideoGameFull

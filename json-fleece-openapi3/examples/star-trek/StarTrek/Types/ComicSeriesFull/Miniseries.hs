@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Miniseries = Miniseries Bool
   deriving (Show, Eq)
 
-miniseriesSchema :: FC.Fleece schema => schema Miniseries
+miniseriesSchema :: FC.Fleece t => FC.Schema t Miniseries
 miniseriesSchema =
   FC.coerceSchema FC.boolean

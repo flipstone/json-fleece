@@ -13,6 +13,7 @@ import qualified Data.ByteString.Lazy as LBS
 import qualified Network.HTTP.Client as HTTP
 
 import qualified Fleece.Aeson as FA
+import qualified Fleece.Core as FC
 
 {-
   A content type tag for dealing with JSON text
@@ -29,7 +30,7 @@ data JSONDecodingError = JSONDecodingError
 instance Exc.Exception JSONDecodingError
 
 instance BHC.ContentTypeEncoder JSON where
-  type EncodeSchema JSON = FA.Encoder
+  type EncodeSchema JSON = FC.Schema FA.Encoder
 
   toRequestContentType JSON _ =
     jsonContentType
@@ -38,7 +39,7 @@ instance BHC.ContentTypeEncoder JSON where
     HTTP.RequestBodyLBS . FA.encode schema
 
 instance BHC.ContentTypeDecoder JSON where
-  type DecodeSchema JSON = FA.Decoder
+  type DecodeSchema JSON = FC.Schema FA.Decoder
   type DecodingError JSON = JSONDecodingError
 
   toResponseContentType JSON _ =

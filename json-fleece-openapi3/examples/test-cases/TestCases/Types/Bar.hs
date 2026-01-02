@@ -16,7 +16,7 @@ data Bar = Bar
   }
   deriving (Eq, Show)
 
-barSchema :: FC.Fleece schema => schema Bar
+barSchema :: FC.Fleece t => FC.Schema t Bar
 barSchema =
   FC.object barObjSchema
 

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Fuel = Fuel Bool
   deriving (Show, Eq)
 
-fuelSchema :: FC.Fleece schema => schema Fuel
+fuelSchema :: FC.Fleece t => FC.Schema t Fuel
 fuelSchema =
   FC.coerceSchema FC.boolean

@@ -14,6 +14,6 @@ import qualified TestCases.Types.SingletonNullableOneOfRef as SingletonNullableO
 newtype InlineNoAdditionalPropertiesWithOneOfNullabilityOutside = InlineNoAdditionalPropertiesWithOneOfNullabilityOutside (Map.Map T.Text (Either FC.Null SingletonNullableOneOfRef.SingletonNullableOneOfRef))
   deriving (Show, Eq)
 
-inlineNoAdditionalPropertiesWithOneOfNullabilityOutsideSchema :: FC.Fleece schema => schema InlineNoAdditionalPropertiesWithOneOfNullabilityOutside
+inlineNoAdditionalPropertiesWithOneOfNullabilityOutsideSchema :: FC.Fleece t => FC.Schema t InlineNoAdditionalPropertiesWithOneOfNullabilityOutside
 inlineNoAdditionalPropertiesWithOneOfNullabilityOutsideSchema =
   FC.coerceSchema (FC.map (FC.nullable SingletonNullableOneOfRef.singletonNullableOneOfRefSchema))

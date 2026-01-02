@@ -21,7 +21,7 @@ data SoundtrackBase = SoundtrackBase
   }
   deriving (Eq, Show)
 
-soundtrackBaseSchema :: FC.Fleece schema => schema SoundtrackBase
+soundtrackBaseSchema :: FC.Fleece t => FC.Schema t SoundtrackBase
 soundtrackBaseSchema =
   FC.object $
     FC.constructor SoundtrackBase

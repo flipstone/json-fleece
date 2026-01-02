@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype BazName = BazName T.Text
   deriving (Show, Eq)
 
-bazNameSchema :: FC.Fleece schema => schema BazName
+bazNameSchema :: FC.Fleece t => FC.Schema t BazName
 bazNameSchema =
   FC.coerceSchema FC.text

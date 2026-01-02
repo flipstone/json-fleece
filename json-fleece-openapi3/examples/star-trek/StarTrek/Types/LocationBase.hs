@@ -63,7 +63,7 @@ data LocationBase = LocationBase
   }
   deriving (Eq, Show)
 
-locationBaseSchema :: FC.Fleece schema => schema LocationBase
+locationBaseSchema :: FC.Fleece t => FC.Schema t LocationBase
 locationBaseSchema =
   FC.object $
     FC.constructor LocationBase

@@ -1,5 +1,5 @@
 # ValidatedFormat
 
-string
+text
 
 format: abc123

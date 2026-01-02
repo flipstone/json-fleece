@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype AmazonDigitalRelease = AmazonDigitalRelease Bool
   deriving (Show, Eq)
 
-amazonDigitalReleaseSchema :: FC.Fleece schema => schema AmazonDigitalRelease
+amazonDigitalReleaseSchema :: FC.Fleece t => FC.Schema t AmazonDigitalRelease
 amazonDigitalReleaseSchema =
   FC.coerceSchema FC.boolean

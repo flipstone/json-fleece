@@ -19,7 +19,7 @@ data InlineYesAdditionalPropertiesWithOneOfNullablityInside = InlineYesAdditiona
   }
   deriving (Eq, Show)
 
-inlineYesAdditionalPropertiesWithOneOfNullablityInsideSchema :: FC.Fleece schema => schema InlineYesAdditionalPropertiesWithOneOfNullablityInside
+inlineYesAdditionalPropertiesWithOneOfNullablityInsideSchema :: FC.Fleece t => FC.Schema t InlineYesAdditionalPropertiesWithOneOfNullablityInside
 inlineYesAdditionalPropertiesWithOneOfNullablityInsideSchema =
   FC.object $
     FC.constructor InlineYesAdditionalPropertiesWithOneOfNullablityInside

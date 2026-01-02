@@ -17,7 +17,7 @@ data LocationHeader = LocationHeader
   }
   deriving (Eq, Show)
 
-locationHeaderSchema :: FC.Fleece schema => schema LocationHeader
+locationHeaderSchema :: FC.Fleece t => FC.Schema t LocationHeader
 locationHeaderSchema =
   FC.object $
     FC.constructor LocationHeader

@@ -26,6 +26,7 @@ import Shrubbery (Union, branch, branchBuild, branchEnd, dissectUnion, unify)
 import Fleece.Core.Class
   ( Fleece
   , Null (Null)
+  , Schema
   , additionalFields
   , boolean
   , constructor
@@ -149,7 +150,7 @@ handleAnyJSON handleText handleBool handleNumber handleArray handleObject handle
   in
     \(AnyJSON u) -> handler u
 
-anyJSON :: Fleece schema => schema AnyJSON
+anyJSON :: Fleece t => Schema t AnyJSON
 anyJSON =
   transform (\(AnyJSON u) -> u) AnyJSON $
     unionNamed (unqualifiedName "AnyJSON") $
@@ -160,11 +161,11 @@ anyJSON =
         #| unionMember anyObject
         #| unionMember Fleece.Core.Class.null
 
-anyArray :: Fleece schema => schema [AnyJSON]
+anyArray :: Fleece t => Schema t [AnyJSON]
 anyArray =
   list anyJSON
 
-anyObject :: Fleece schema => schema (Map.Map T.Text AnyJSON)
+anyObject :: Fleece t => Schema t (Map.Map T.Text AnyJSON)
 anyObject =
   objectNamed (unqualifiedName "AnyJSON object") $
     constructor id

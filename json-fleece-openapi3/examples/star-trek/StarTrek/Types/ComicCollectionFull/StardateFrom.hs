@@ -11,6 +11,6 @@ import Prelude (Eq, Float, Show)
 newtype StardateFrom = StardateFrom Float
   deriving (Show, Eq)
 
-stardateFromSchema :: FC.Fleece schema => schema StardateFrom
+stardateFromSchema :: FC.Fleece t => FC.Schema t StardateFrom
 stardateFromSchema =
   FC.coerceSchema FC.float

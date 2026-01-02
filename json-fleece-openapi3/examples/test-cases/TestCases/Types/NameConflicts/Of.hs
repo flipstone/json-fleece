@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Of = Of T.Text
   deriving (Show, Eq)
 
-ofSchema :: FC.Fleece schema => schema Of
+ofSchema :: FC.Fleece t => FC.Schema t Of
 ofSchema =
   FC.coerceSchema FC.text

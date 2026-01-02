@@ -15,7 +15,7 @@ data ObjectWithFieldStartingWithNumber = ObjectWithFieldStartingWithNumber
   }
   deriving (Eq, Show)
 
-objectWithFieldStartingWithNumberSchema :: FC.Fleece schema => schema ObjectWithFieldStartingWithNumber
+objectWithFieldStartingWithNumberSchema :: FC.Fleece t => FC.Schema t ObjectWithFieldStartingWithNumber
 objectWithFieldStartingWithNumberSchema =
   FC.object $
     FC.constructor ObjectWithFieldStartingWithNumber

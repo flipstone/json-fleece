@@ -15,7 +15,7 @@ data ReferenceOneOf = ReferenceOneOf
   }
   deriving (Eq, Show)
 
-referenceOneOfSchema :: FC.Fleece schema => schema ReferenceOneOf
+referenceOneOfSchema :: FC.Fleece t => FC.Schema t ReferenceOneOf
 referenceOneOfSchema =
   FC.object $
     FC.constructor ReferenceOneOf

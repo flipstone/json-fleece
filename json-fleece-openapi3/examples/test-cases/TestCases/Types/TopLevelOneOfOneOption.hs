@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype TopLevelOneOfOneOption = TopLevelOneOfOneOption T.Text
   deriving (Show, Eq)
 
-topLevelOneOfOneOptionSchema :: FC.Fleece schema => schema TopLevelOneOfOneOption
+topLevelOneOfOneOptionSchema :: FC.Fleece t => FC.Schema t TopLevelOneOfOneOption
 topLevelOneOfOneOptionSchema =
   FC.coerceSchema FC.text

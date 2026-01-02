@@ -63,6 +63,7 @@ import Fleece.Core.Class
   , Fleece
   , Null (Null)
   , Object
+  , Schema
   , TaggedUnionMembers
   , UnionMembers
   , additionalFields
@@ -96,13 +97,13 @@ import Fleece.Core.Name
   )
 
 eitherOf ::
-  forall schema a b.
-  ( Fleece schema
+  forall t a b.
+  ( Fleece t
   , FirstIndexOf b '[a, b] ~ 1
   ) =>
-  schema a ->
-  schema b ->
-  schema (Either a b)
+  Schema t a ->
+  Schema t b ->
+  Schema t (Either a b)
 eitherOf leftSchema rightSchema =
   let
     name =
@@ -116,14 +117,14 @@ eitherOf leftSchema rightSchema =
     eitherOfNamed name leftSchema rightSchema
 
 eitherOfNamed ::
-  forall schema a b.
-  ( Fleece schema
+  forall t a b.
+  ( Fleece t
   , FirstIndexOf b '[a, b] ~ 1
   ) =>
   Name ->
-  schema a ->
-  schema b ->
-  schema (Either a b)
+  Schema t a ->
+  Schema t b ->
+  Schema t (Either a b)
 eitherOfNamed name leftSchema rightSchema =
   let
     toUnion :: Either a b -> Union '[a, b]
@@ -140,7 +141,7 @@ eitherOfNamed name leftSchema rightSchema =
         . branch Right
         $ branchEnd
 
-    unionSchema :: schema (Union '[a, b])
+    unionSchema :: Schema t (Union '[a, b])
     unionSchema =
       unionNamed name $
         unionMember leftSchema
@@ -153,9 +154,9 @@ eitherOfNamed name leftSchema rightSchema =
       unionSchema
 
 union ::
-  (Typeable types, Fleece schema, KnownNat (Length types)) =>
-  UnionMembers schema types types ->
-  schema (Union types)
+  (Typeable types, Fleece t, KnownNat (Length types)) =>
+  UnionMembers t types types ->
+  Schema t (Union types)
 union members =
   let
     name =
@@ -167,21 +168,21 @@ union members =
     schema
 
 unionMember ::
-  ( Fleece schema
+  ( Fleece t
   , KnownNat branchIndex
   , branchIndex ~ FirstIndexOf a types
   ) =>
-  schema a ->
-  UnionMembers schema types '[a]
+  Schema t a ->
+  UnionMembers t types '[a]
 unionMember =
   unionMemberWithIndex firstIndexOfType
 
 taggedUnion ::
-  forall (tags :: [Tag]) schema.
-  (Typeable tags, Fleece schema, KnownNat (Length (TaggedTypes tags))) =>
+  forall (tags :: [Tag]) t.
+  (Typeable tags, Fleece t, KnownNat (Length (TaggedTypes tags))) =>
   String ->
-  TaggedUnionMembers schema tags tags ->
-  schema (TaggedUnion tags)
+  TaggedUnionMembers t tags tags ->
+  Schema t (TaggedUnion tags)
 taggedUnion tagProperty members =
   let
     name =
@@ -193,16 +194,16 @@ taggedUnion tagProperty members =
     schema
 
 taggedUnionMember ::
-  forall (tag :: Symbol) (tags :: [Tag]) schema a n.
+  forall (tag :: Symbol) (tags :: [Tag]) t a n.
   ( KnownSymbol tag
   , n ~ TagIndex tag tags
   , KnownNat n
   , TagType tag tags ~ a
   , TypeAtIndex n (TaggedTypes tags) ~ a
   ) =>
-  Fleece schema =>
-  Object schema a a ->
-  TaggedUnionMembers schema tags '[tag @= a]
+  Fleece t =>
+  Object t a a ->
+  TaggedUnionMembers t tags '[tag @= a]
 taggedUnionMember =
   let
     tagProxy :: Proxy tag
@@ -211,9 +212,9 @@ taggedUnionMember =
     taggedUnionMemberWithTag tagProxy
 
 object ::
-  (Fleece schema, Typeable a) =>
-  Object schema a a ->
-  schema a
+  (Fleece t, Typeable a) =>
+  Object t a a ->
+  Schema t a
 object o =
   let
     name =
@@ -225,9 +226,9 @@ object o =
     schema
 
 boundedEnum ::
-  (Fleece schema, Typeable a, Enum a, Bounded a) =>
+  (Fleece t, Typeable a, Enum a, Bounded a) =>
   (a -> T.Text) ->
-  schema a
+  Schema t a
 boundedEnum toText =
   let
     name =
@@ -239,11 +240,11 @@ boundedEnum toText =
     schema
 
 validate ::
-  (Fleece schema, Typeable a) =>
+  (Fleece t, Typeable a) =>
   (a -> b) ->
   (b -> Either String a) ->
-  schema b ->
-  schema a
+  Schema t b ->
+  Schema t a
 validate uncheck check schemaB =
   let
     name =
@@ -255,9 +256,9 @@ validate uncheck check schemaB =
     schemaA
 
 coerceSchema ::
-  (Fleece schema, Typeable a, Coercible a b) =>
-  schema b ->
-  schema a
+  (Fleece t, Typeable a, Coercible a b) =>
+  Schema t b ->
+  Schema t a
 coerceSchema schemaB =
   let
     name =
@@ -269,17 +270,17 @@ coerceSchema schemaB =
     schemaA
 
 coerceSchemaNamed ::
-  (Fleece schema, Coercible a b) =>
+  (Fleece t, Coercible a b) =>
   Name ->
-  schema b ->
-  schema a
+  Schema t b ->
+  Schema t a
 coerceSchemaNamed name schemaB =
   transformNamed name coerce coerce schemaB
 
 coerceSchemaAnonymous ::
-  (Fleece schema, Coercible a b) =>
-  schema b ->
-  schema a
+  (Fleece t, Coercible a b) =>
+  Schema t b ->
+  Schema t a
 coerceSchemaAnonymous schemaB =
   transformAnonymous coerce coerce schemaB
 
@@ -288,12 +289,12 @@ data NothingEncoding
   | OmitKey
 
 optionalNullable ::
-  Fleece schema =>
+  Fleece t =>
   NothingEncoding ->
   String ->
   (objectType -> Maybe a) ->
-  schema a ->
-  Field schema objectType (Maybe a)
+  Schema t a ->
+  Field t objectType (Maybe a)
 optionalNullable encoding name accessor schema =
   let
     nullableAccessor o =
@@ -310,20 +311,20 @@ optionalNullable encoding name accessor schema =
     fmap collapseNull $
       optional name nullableAccessor (nullable schema)
 
-list :: Fleece schema => schema a -> schema [a]
+list :: Fleece t => Schema t a -> Schema t [a]
 list itemSchema =
   transformAnonymous
     V.fromList
     V.toList
     (array itemSchema)
 
-map :: (Fleece schema, Typeable a) => schema a -> schema (Map.Map T.Text a)
+map :: (Fleece t, Typeable a) => Schema t a -> Schema t (Map.Map T.Text a)
 map innerSchema =
   object $
     constructor id
       #* additionalFields id innerSchema
 
-nonEmpty :: Fleece schema => schema a -> schema (NEL.NonEmpty a)
+nonEmpty :: Fleece t => Schema t a -> Schema t (NEL.NonEmpty a)
 nonEmpty itemSchema =
   let
     validateNonEmpty items =
@@ -340,7 +341,7 @@ data SetDuplicateHandling
   = AllowInputDuplicates
   | RejectInputDuplicates
 
-set :: (Ord a, Fleece schema) => SetDuplicateHandling -> schema a -> schema (Set.Set a)
+set :: (Ord a, Fleece t) => SetDuplicateHandling -> Schema t a -> Schema t (Set.Set a)
 set handling itemSchema =
   case handling of
     AllowInputDuplicates ->
@@ -363,7 +364,7 @@ set handling itemSchema =
           validateNoDuplicates
           (array itemSchema)
 
-nonEmptyText :: Fleece schema => schema NET.NonEmptyText
+nonEmptyText :: Fleece t => Schema t NET.NonEmptyText
 nonEmptyText =
   let
     validateNonEmptyText value =
@@ -376,14 +377,14 @@ nonEmptyText =
       validateNonEmptyText
       text
 
-integer :: Fleece schema => schema Integer
+integer :: Fleece t => Schema t Integer
 integer =
   unboundedIntegralNumber
 
 -- | Validates a 'number', failing if the precision is too high for the given resolution.
 fixed ::
-  (Fleece schema, HasResolution r) =>
-  schema (Fixed r)
+  (Fleece t, HasResolution r) =>
+  Schema t (Fixed r)
 fixed =
   validateAnonymous
     realToFrac
@@ -405,10 +406,10 @@ fixedFromScientific sci =
             <> show (floor (logBase 10 (fromInteger fixedResolution) :: Double) :: Integer)
             <> " decimal places."
 
-string :: Fleece schema => schema String
+string :: Fleece t => Schema t String
 string = transformAnonymous T.pack T.unpack text
 
-utcTime :: Fleece schema => schema Time.UTCTime
+utcTime :: Fleece t => Schema t Time.UTCTime
 utcTime =
   iso8601Formatted $
     ISO8601Format
@@ -417,10 +418,10 @@ utcTime =
       , iso8601FormatParser = AttoTime.utcTime
       }
 
-utcTimeWithFormat :: Fleece schema => String -> schema Time.UTCTime
+utcTimeWithFormat :: Fleece t => String -> Schema t Time.UTCTime
 utcTimeWithFormat = timeWithFormat "UTCTime"
 
-localTime :: Fleece schema => schema Time.LocalTime
+localTime :: Fleece t => Schema t Time.LocalTime
 localTime =
   iso8601Formatted $
     ISO8601Format
@@ -429,10 +430,10 @@ localTime =
       , iso8601FormatParser = AttoTime.localTime
       }
 
-localTimeWithFormat :: Fleece schema => String -> schema Time.LocalTime
+localTimeWithFormat :: Fleece t => String -> Schema t Time.LocalTime
 localTimeWithFormat = timeWithFormat "LocalTime"
 
-zonedTime :: Fleece schema => schema Time.ZonedTime
+zonedTime :: Fleece t => Schema t Time.ZonedTime
 zonedTime =
   iso8601Formatted $
     ISO8601Format
@@ -441,10 +442,10 @@ zonedTime =
       , iso8601FormatParser = AttoTime.zonedTime
       }
 
-zonedTimeWithFormat :: Fleece schema => String -> schema Time.ZonedTime
+zonedTimeWithFormat :: Fleece t => String -> Schema t Time.ZonedTime
 zonedTimeWithFormat = timeWithFormat "ZonedTime"
 
-day :: Fleece schema => schema Time.Day
+day :: Fleece t => Schema t Time.Day
 day =
   iso8601Formatted $
     ISO8601Format
@@ -453,10 +454,10 @@ day =
       , iso8601FormatParser = AttoTime.day
       }
 
-dayWithFormat :: Fleece schema => String -> schema Time.Day
+dayWithFormat :: Fleece t => String -> Schema t Time.Day
 dayWithFormat = timeWithFormat "Day"
 
-timeWithFormat :: (Time.FormatTime t, Time.ParseTime t) => Fleece schema => String -> String -> schema t
+timeWithFormat :: (Time.FormatTime time, Time.ParseTime time) => Fleece t => String -> String -> Schema t time
 timeWithFormat typeName formatString =
   let
     decode raw =
@@ -473,18 +474,18 @@ timeWithFormat typeName formatString =
         decode
         string
 
-data ISO8601Format t
+data ISO8601Format time
   = ISO8601Format
   { iso8601FormatLogical :: String
-  , iso8601FormatString :: ISO8601.Format t
-  , iso8601FormatParser :: AttoText.Parser t
+  , iso8601FormatString :: ISO8601.Format time
+  , iso8601FormatParser :: AttoText.Parser time
   }
 
 -- An internal helper for building building time schemes
 iso8601Formatted ::
-  Fleece schema =>
-  ISO8601Format t ->
-  schema t
+  Fleece t =>
+  ISO8601Format time ->
+  Schema t time
 iso8601Formatted iso8601Format =
   let
     formatLogical =

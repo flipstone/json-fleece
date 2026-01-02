@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Novelization = Novelization Bool
   deriving (Show, Eq)
 
-novelizationSchema :: FC.Fleece schema => schema Novelization
+novelizationSchema :: FC.Fleece t => FC.Schema t Novelization
 novelizationSchema =
   FC.coerceSchema FC.boolean

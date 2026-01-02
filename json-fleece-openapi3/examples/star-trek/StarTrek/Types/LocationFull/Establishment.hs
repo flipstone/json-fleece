@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Establishment = Establishment Bool
   deriving (Show, Eq)
 
-establishmentSchema :: FC.Fleece schema => schema Establishment
+establishmentSchema :: FC.Fleece t => FC.Schema t Establishment
 establishmentSchema =
   FC.coerceSchema FC.boolean

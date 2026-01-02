@@ -41,7 +41,7 @@ data RequestBody = RequestBody
   }
   deriving (Eq, Show)
 
-requestBodySchema :: FC.Fleece schema => schema RequestBody
+requestBodySchema :: FC.Fleece t => FC.Schema t RequestBody
 requestBodySchema =
   FC.object $
     FC.constructor RequestBody

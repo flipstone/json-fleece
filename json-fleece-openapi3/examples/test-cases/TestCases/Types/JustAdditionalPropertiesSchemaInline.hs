@@ -14,6 +14,6 @@ import qualified TestCases.Types.JustAdditionalPropertiesSchemaInlineItem as Jus
 newtype JustAdditionalPropertiesSchemaInline = JustAdditionalPropertiesSchemaInline (Map.Map T.Text JustAdditionalPropertiesSchemaInlineItem.JustAdditionalPropertiesSchemaInlineItem)
   deriving (Show, Eq)
 
-justAdditionalPropertiesSchemaInlineSchema :: FC.Fleece schema => schema JustAdditionalPropertiesSchemaInline
+justAdditionalPropertiesSchemaInlineSchema :: FC.Fleece t => FC.Schema t JustAdditionalPropertiesSchemaInline
 justAdditionalPropertiesSchemaInlineSchema =
   FC.coerceSchema (FC.map JustAdditionalPropertiesSchemaInlineItem.justAdditionalPropertiesSchemaInlineItemSchema)

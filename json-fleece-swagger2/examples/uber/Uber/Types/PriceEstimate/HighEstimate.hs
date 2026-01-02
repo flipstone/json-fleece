@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype HighEstimate = HighEstimate Sci.Scientific
   deriving (Show, Eq)
 
-highEstimateSchema :: FC.Fleece schema => schema HighEstimate
+highEstimateSchema :: FC.Fleece t => FC.Schema t HighEstimate
 highEstimateSchema =
   FC.coerceSchema FC.number

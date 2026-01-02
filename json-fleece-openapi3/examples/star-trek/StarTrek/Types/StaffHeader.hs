@@ -17,7 +17,7 @@ data StaffHeader = StaffHeader
   }
   deriving (Eq, Show)
 
-staffHeaderSchema :: FC.Fleece schema => schema StaffHeader
+staffHeaderSchema :: FC.Fleece t => FC.Schema t StaffHeader
 staffHeaderSchema =
   FC.object $
     FC.constructor StaffHeader

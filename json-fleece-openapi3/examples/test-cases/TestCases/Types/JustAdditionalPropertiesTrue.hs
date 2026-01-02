@@ -13,6 +13,6 @@ import Prelude (Eq, Show)
 newtype JustAdditionalPropertiesTrue = JustAdditionalPropertiesTrue (Map.Map T.Text FC.AnyJSON)
   deriving (Show, Eq)
 
-justAdditionalPropertiesTrueSchema :: FC.Fleece schema => schema JustAdditionalPropertiesTrue
+justAdditionalPropertiesTrueSchema :: FC.Fleece t => FC.Schema t JustAdditionalPropertiesTrue
 justAdditionalPropertiesTrueSchema =
   FC.coerceSchema (FC.map FC.anyJSON)

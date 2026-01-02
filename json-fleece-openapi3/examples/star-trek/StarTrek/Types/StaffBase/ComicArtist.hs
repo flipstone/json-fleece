@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype ComicArtist = ComicArtist Bool
   deriving (Show, Eq)
 
-comicArtistSchema :: FC.Fleece schema => schema ComicArtist
+comicArtistSchema :: FC.Fleece t => FC.Schema t ComicArtist
 comicArtistSchema =
   FC.coerceSchema FC.boolean

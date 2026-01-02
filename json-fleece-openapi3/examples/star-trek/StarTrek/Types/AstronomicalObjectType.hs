@@ -72,6 +72,6 @@ astronomicalObjectTypeToText v =
       SECTOR -> "SECTOR"
       REGION -> "REGION"
 
-astronomicalObjectTypeSchema :: FC.Fleece schema => schema AstronomicalObjectType
+astronomicalObjectTypeSchema :: FC.Fleece t => FC.Schema t AstronomicalObjectType
 astronomicalObjectTypeSchema =
   FC.boundedEnum astronomicalObjectTypeToText

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype LastName = LastName T.Text
   deriving (Show, Eq)
 
-lastNameSchema :: FC.Fleece schema => schema LastName
+lastNameSchema :: FC.Fleece t => FC.Schema t LastName
 lastNameSchema =
   FC.coerceSchema FC.text

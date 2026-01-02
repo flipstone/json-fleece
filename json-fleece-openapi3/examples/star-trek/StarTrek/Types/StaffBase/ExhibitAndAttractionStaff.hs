@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype ExhibitAndAttractionStaff = ExhibitAndAttractionStaff Bool
   deriving (Show, Eq)
 
-exhibitAndAttractionStaffSchema :: FC.Fleece schema => schema ExhibitAndAttractionStaff
+exhibitAndAttractionStaffSchema :: FC.Fleece t => FC.Schema t ExhibitAndAttractionStaff
 exhibitAndAttractionStaffSchema =
   FC.coerceSchema FC.boolean

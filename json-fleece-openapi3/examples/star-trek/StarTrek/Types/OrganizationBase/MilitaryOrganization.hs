@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype MilitaryOrganization = MilitaryOrganization Bool
   deriving (Show, Eq)
 
-militaryOrganizationSchema :: FC.Fleece schema => schema MilitaryOrganization
+militaryOrganizationSchema :: FC.Fleece t => FC.Schema t MilitaryOrganization
 militaryOrganizationSchema =
   FC.coerceSchema FC.boolean

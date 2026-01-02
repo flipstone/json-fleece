@@ -70,6 +70,6 @@ contentRatingSystemToText v =
       GSRR -> "GSRR"
       ITUNES -> "ITUNES"
 
-contentRatingSystemSchema :: FC.Fleece schema => schema ContentRatingSystem
+contentRatingSystemSchema :: FC.Fleece t => FC.Schema t ContentRatingSystem
 contentRatingSystemSchema =
   FC.boundedEnum contentRatingSystemToText

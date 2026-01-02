@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype TitlePolish = TitlePolish T.Text
   deriving (Show, Eq)
 
-titlePolishSchema :: FC.Fleece schema => schema TitlePolish
+titlePolishSchema :: FC.Fleece t => FC.Schema t TitlePolish
 titlePolishSchema =
   FC.coerceSchema FC.text

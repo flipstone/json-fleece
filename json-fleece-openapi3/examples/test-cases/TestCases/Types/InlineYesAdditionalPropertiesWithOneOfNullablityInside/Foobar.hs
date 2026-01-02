@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Foobar = Foobar Bool
   deriving (Show, Eq)
 
-foobarSchema :: FC.Fleece schema => schema Foobar
+foobarSchema :: FC.Fleece t => FC.Schema t Foobar
 foobarSchema =
   FC.coerceSchema FC.boolean

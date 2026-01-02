@@ -481,7 +481,7 @@ encodeAesonText :: Aeson.ToJSON a => a -> T.Text
 encodeAesonText =
   LT.toStrict . AesonText.encodeToLazyText
 
-dummyObj :: FC.Fleece schema => String -> schema a -> schema a
+dummyObj :: FC.Fleece t => String -> FC.Schema t a -> FC.Schema t a
 dummyObj field schema =
   FC.objectNamed "" $
     FC.constructor id

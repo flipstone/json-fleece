@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype ArtDepartment = ArtDepartment Bool
   deriving (Show, Eq)
 
-artDepartmentSchema :: FC.Fleece schema => schema ArtDepartment
+artDepartmentSchema :: FC.Fleece t => FC.Schema t ArtDepartment
 artDepartmentSchema =
   FC.coerceSchema FC.boolean

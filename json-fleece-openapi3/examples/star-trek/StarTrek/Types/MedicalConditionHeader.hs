@@ -17,7 +17,7 @@ data MedicalConditionHeader = MedicalConditionHeader
   }
   deriving (Eq, Show)
 
-medicalConditionHeaderSchema :: FC.Fleece schema => schema MedicalConditionHeader
+medicalConditionHeaderSchema :: FC.Fleece t => FC.Schema t MedicalConditionHeader
 medicalConditionHeaderSchema =
   FC.object $
     FC.constructor MedicalConditionHeader

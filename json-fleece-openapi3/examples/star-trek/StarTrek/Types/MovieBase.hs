@@ -49,7 +49,7 @@ data MovieBase = MovieBase
   }
   deriving (Eq, Show)
 
-movieBaseSchema :: FC.Fleece schema => schema MovieBase
+movieBaseSchema :: FC.Fleece t => FC.Schema t MovieBase
 movieBaseSchema =
   FC.object $
     FC.constructor MovieBase

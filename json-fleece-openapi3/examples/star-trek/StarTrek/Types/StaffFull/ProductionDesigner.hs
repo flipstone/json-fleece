@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype ProductionDesigner = ProductionDesigner Bool
   deriving (Show, Eq)
 
-productionDesignerSchema :: FC.Fleece schema => schema ProductionDesigner
+productionDesignerSchema :: FC.Fleece t => FC.Schema t ProductionDesigner
 productionDesignerSchema =
   FC.coerceSchema FC.boolean

@@ -23,7 +23,7 @@ data Profile = Profile
   }
   deriving (Eq, Show)
 
-profileSchema :: FC.Fleece schema => schema Profile
+profileSchema :: FC.Fleece t => FC.Schema t Profile
 profileSchema =
   FC.object $
     FC.constructor Profile

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype TitleJapanese = TitleJapanese T.Text
   deriving (Show, Eq)
 
-titleJapaneseSchema :: FC.Fleece schema => schema TitleJapanese
+titleJapaneseSchema :: FC.Fleece t => FC.Schema t TitleJapanese
 titleJapaneseSchema =
   FC.coerceSchema FC.text

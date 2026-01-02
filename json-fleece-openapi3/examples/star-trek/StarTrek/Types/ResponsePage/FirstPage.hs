@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype FirstPage = FirstPage Bool
   deriving (Show, Eq)
 
-firstPageSchema :: FC.Fleece schema => schema FirstPage
+firstPageSchema :: FC.Fleece t => FC.Schema t FirstPage
 firstPageSchema =
   FC.coerceSchema FC.boolean

@@ -18,7 +18,7 @@ newtype FieldAItem = FieldAItem (Shrubbery.Union
    ])
   deriving (Show, Eq)
 
-fieldAItemSchema :: FC.Fleece schema => schema FieldAItem
+fieldAItemSchema :: FC.Fleece t => FC.Schema t FieldAItem
 fieldAItemSchema =
   FC.coerceSchema $
     FC.unionNamed (FC.qualifiedName "TestCases.Types.AllOfObject.FieldAItem" "FieldAItem") $

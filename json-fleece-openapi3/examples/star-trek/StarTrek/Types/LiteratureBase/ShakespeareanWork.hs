@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype ShakespeareanWork = ShakespeareanWork Bool
   deriving (Show, Eq)
 
-shakespeareanWorkSchema :: FC.Fleece schema => schema ShakespeareanWork
+shakespeareanWorkSchema :: FC.Fleece t => FC.Schema t ShakespeareanWork
 shakespeareanWorkSchema =
   FC.coerceSchema FC.boolean

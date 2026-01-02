@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype JustAdditionalPropertiesNullableBooleanItem = JustAdditionalPropertiesNullableBooleanItem Bool
   deriving (Show, Eq)
 
-justAdditionalPropertiesNullableBooleanItemSchema :: FC.Fleece schema => schema JustAdditionalPropertiesNullableBooleanItem
+justAdditionalPropertiesNullableBooleanItemSchema :: FC.Fleece t => FC.Schema t JustAdditionalPropertiesNullableBooleanItem
 justAdditionalPropertiesNullableBooleanItemSchema =
   FC.coerceSchema FC.boolean

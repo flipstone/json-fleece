@@ -19,7 +19,7 @@ data ContentRating = ContentRating
   }
   deriving (Eq, Show)
 
-contentRatingSchema :: FC.Fleece schema => schema ContentRating
+contentRatingSchema :: FC.Fleece t => FC.Schema t ContentRating
 contentRatingSchema =
   FC.object $
     FC.constructor ContentRating

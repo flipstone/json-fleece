@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype RegionFreeReleaseDate = RegionFreeReleaseDate Time.Day
   deriving (Show, Eq)
 
-regionFreeReleaseDateSchema :: FC.Fleece schema => schema RegionFreeReleaseDate
+regionFreeReleaseDateSchema :: FC.Fleece t => FC.Schema t RegionFreeReleaseDate
 regionFreeReleaseDateSchema =
   FC.coerceSchema FC.day

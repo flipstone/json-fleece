@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Adaptation = Adaptation Bool
   deriving (Show, Eq)
 
-adaptationSchema :: FC.Fleece schema => schema Adaptation
+adaptationSchema :: FC.Fleece t => FC.Schema t Adaptation
 adaptationSchema =
   FC.coerceSchema FC.boolean

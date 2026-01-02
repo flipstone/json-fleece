@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype SoundDepartment = SoundDepartment Bool
   deriving (Show, Eq)
 
-soundDepartmentSchema :: FC.Fleece schema => schema SoundDepartment
+soundDepartmentSchema :: FC.Fleece t => FC.Schema t SoundDepartment
 soundDepartmentSchema =
   FC.coerceSchema FC.boolean

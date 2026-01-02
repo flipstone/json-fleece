@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Government = Government Bool
   deriving (Show, Eq)
 
-governmentSchema :: FC.Fleece schema => schema Government
+governmentSchema :: FC.Fleece t => FC.Schema t Government
 governmentSchema =
   FC.coerceSchema FC.boolean

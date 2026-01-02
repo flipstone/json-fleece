@@ -17,7 +17,7 @@ data Error = Error
   }
   deriving (Eq, Show)
 
-errorSchema :: FC.Fleece schema => schema Error
+errorSchema :: FC.Fleece t => FC.Schema t Error
 errorSchema =
   FC.object $
     FC.constructor Error

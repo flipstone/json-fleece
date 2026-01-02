@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype OriginalRunEndDate = OriginalRunEndDate Time.Day
   deriving (Show, Eq)
 
-originalRunEndDateSchema :: FC.Fleece schema => schema OriginalRunEndDate
+originalRunEndDateSchema :: FC.Fleece t => FC.Schema t OriginalRunEndDate
 originalRunEndDateSchema =
   FC.coerceSchema FC.day

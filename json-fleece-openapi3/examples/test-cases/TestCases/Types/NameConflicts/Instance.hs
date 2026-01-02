@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Instance = Instance T.Text
   deriving (Show, Eq)
 
-instanceSchema :: FC.Fleece schema => schema Instance
+instanceSchema :: FC.Fleece t => FC.Schema t Instance
 instanceSchema =
   FC.coerceSchema FC.text

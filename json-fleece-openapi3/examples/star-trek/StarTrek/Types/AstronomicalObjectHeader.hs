@@ -17,7 +17,7 @@ data AstronomicalObjectHeader = AstronomicalObjectHeader
   }
   deriving (Eq, Show)
 
-astronomicalObjectHeaderSchema :: FC.Fleece schema => schema AstronomicalObjectHeader
+astronomicalObjectHeaderSchema :: FC.Fleece t => FC.Schema t AstronomicalObjectHeader
 astronomicalObjectHeaderSchema =
   FC.object $
     FC.constructor AstronomicalObjectHeader

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype XboxSmartGlassDigitalRelease = XboxSmartGlassDigitalRelease Bool
   deriving (Show, Eq)
 
-xboxSmartGlassDigitalReleaseSchema :: FC.Fleece schema => schema XboxSmartGlassDigitalRelease
+xboxSmartGlassDigitalReleaseSchema :: FC.Fleece t => FC.Schema t XboxSmartGlassDigitalRelease
 xboxSmartGlassDigitalReleaseSchema =
   FC.coerceSchema FC.boolean

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype StuntPerformer = StuntPerformer Bool
   deriving (Show, Eq)
 
-stuntPerformerSchema :: FC.Fleece schema => schema StuntPerformer
+stuntPerformerSchema :: FC.Fleece t => FC.Schema t StuntPerformer
 stuntPerformerSchema =
   FC.coerceSchema FC.boolean

@@ -31,7 +31,7 @@ data ConflictBase = ConflictBase
   }
   deriving (Eq, Show)
 
-conflictBaseSchema :: FC.Fleece schema => schema ConflictBase
+conflictBaseSchema :: FC.Fleece t => FC.Schema t ConflictBase
 conflictBaseSchema =
   FC.object $
     FC.constructor ConflictBase

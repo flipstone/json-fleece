@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Tea = Tea Bool
   deriving (Show, Eq)
 
-teaSchema :: FC.Fleece schema => schema Tea
+teaSchema :: FC.Fleece t => FC.Schema t Tea
 teaSchema =
   FC.coerceSchema FC.boolean

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype BirthName = BirthName T.Text
   deriving (Show, Eq)
 
-birthNameSchema :: FC.Fleece schema => schema BirthName
+birthNameSchema :: FC.Fleece t => FC.Schema t BirthName
 birthNameSchema =
   FC.coerceSchema FC.text

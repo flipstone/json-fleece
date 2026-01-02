@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype BarName = BarName T.Text
   deriving (Show, Eq)
 
-barNameSchema :: FC.Fleece schema => schema BarName
+barNameSchema :: FC.Fleece t => FC.Schema t BarName
 barNameSchema =
   FC.coerceSchema FC.text

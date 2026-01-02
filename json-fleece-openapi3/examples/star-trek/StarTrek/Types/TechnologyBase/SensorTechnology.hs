@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype SensorTechnology = SensorTechnology Bool
   deriving (Show, Eq)
 
-sensorTechnologySchema :: FC.Fleece schema => schema SensorTechnology
+sensorTechnologySchema :: FC.Fleece t => FC.Schema t SensorTechnology
 sensorTechnologySchema =
   FC.coerceSchema FC.boolean

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype DateStatus = DateStatus T.Text
   deriving (Show, Eq)
 
-dateStatusSchema :: FC.Fleece schema => schema DateStatus
+dateStatusSchema :: FC.Fleece t => FC.Schema t DateStatus
 dateStatusSchema =
   FC.coerceSchema FC.text

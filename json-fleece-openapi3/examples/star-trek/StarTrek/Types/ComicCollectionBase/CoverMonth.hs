@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype CoverMonth = CoverMonth Integer
   deriving (Show, Eq)
 
-coverMonthSchema :: FC.Fleece schema => schema CoverMonth
+coverMonthSchema :: FC.Fleece t => FC.Schema t CoverMonth
 coverMonthSchema =
   FC.coerceSchema FC.integer

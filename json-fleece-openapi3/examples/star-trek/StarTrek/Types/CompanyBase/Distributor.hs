@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Distributor = Distributor Bool
   deriving (Show, Eq)
 
-distributorSchema :: FC.Fleece schema => schema Distributor
+distributorSchema :: FC.Fleece t => FC.Schema t Distributor
 distributorSchema =
   FC.coerceSchema FC.boolean

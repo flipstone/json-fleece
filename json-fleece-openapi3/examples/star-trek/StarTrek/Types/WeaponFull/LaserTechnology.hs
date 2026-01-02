@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype LaserTechnology = LaserTechnology Bool
   deriving (Show, Eq)
 
-laserTechnologySchema :: FC.Fleece schema => schema LaserTechnology
+laserTechnologySchema :: FC.Fleece t => FC.Schema t LaserTechnology
 laserTechnologySchema =
   FC.coerceSchema FC.boolean

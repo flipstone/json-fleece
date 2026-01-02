@@ -15,7 +15,7 @@ data ScheduledDateTime = ScheduledDateTime
   }
   deriving (Eq, Show)
 
-scheduledDateTimeSchema :: FC.Fleece schema => schema ScheduledDateTime
+scheduledDateTimeSchema :: FC.Fleece t => FC.Schema t ScheduledDateTime
 scheduledDateTimeSchema =
   FC.object $
     FC.constructor ScheduledDateTime

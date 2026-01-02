@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Error = Error T.Text
   deriving (Show, Eq)
 
-errorSchema :: FC.Fleece schema => schema Error
+errorSchema :: FC.Fleece t => FC.Schema t Error
 errorSchema =
   FC.coerceSchema FC.text

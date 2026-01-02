@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Status = Status T.Text
   deriving (Show, Eq)
 
-statusSchema :: FC.Fleece schema => schema Status
+statusSchema :: FC.Fleece t => FC.Schema t Status
 statusSchema =
   FC.coerceSchema FC.text

@@ -22,6 +22,6 @@ referenceTypeToText v =
       ASIN -> "ASIN"
       ISBN -> "ISBN"
 
-referenceTypeSchema :: FC.Fleece schema => schema ReferenceType
+referenceTypeSchema :: FC.Fleece t => FC.Schema t ReferenceType
 referenceTypeSchema =
   FC.boundedEnum referenceTypeToText

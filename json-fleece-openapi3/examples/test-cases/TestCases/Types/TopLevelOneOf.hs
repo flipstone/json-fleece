@@ -27,7 +27,7 @@ newtype TopLevelOneOf = TopLevelOneOf (Shrubbery.Union
    ])
   deriving (Show, Eq)
 
-topLevelOneOfSchema :: FC.Fleece schema => schema TopLevelOneOf
+topLevelOneOfSchema :: FC.Fleece t => FC.Schema t TopLevelOneOf
 topLevelOneOfSchema =
   FC.coerceSchema $
     FC.unionNamed (FC.qualifiedName "TestCases.Types.TopLevelOneOf" "TopLevelOneOf") $

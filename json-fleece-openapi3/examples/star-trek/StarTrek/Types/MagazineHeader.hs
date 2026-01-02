@@ -17,7 +17,7 @@ data MagazineHeader = MagazineHeader
   }
   deriving (Eq, Show)
 
-magazineHeaderSchema :: FC.Fleece schema => schema MagazineHeader
+magazineHeaderSchema :: FC.Fleece t => FC.Schema t MagazineHeader
 magazineHeaderSchema =
   FC.object $
     FC.constructor MagazineHeader

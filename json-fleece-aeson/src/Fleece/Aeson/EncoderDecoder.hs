@@ -2,6 +2,8 @@
 
 module Fleece.Aeson.EncoderDecoder
   ( EncoderDecoder (..)
+  , encoder
+  , decoder
   ) where
 
 import Fleece.Aeson.Decoder (Decoder)
@@ -9,9 +11,15 @@ import Fleece.Aeson.Encoder (Encoder)
 import qualified Fleece.Core as FC
 
 data EncoderDecoder a = EncoderDecoder
-  { encoder :: Encoder a
-  , decoder :: Decoder a
+  { encoderDecoderEncoder :: Encoder a
+  , encoderDecoderDecoder :: Decoder a
   }
+
+encoder :: FC.Schema EncoderDecoder a -> FC.Schema Encoder a
+encoder = FC.hoistSchema encoderDecoderEncoder
+
+decoder :: FC.Schema EncoderDecoder a -> FC.Schema Decoder a
+decoder = FC.hoistSchema encoderDecoderDecoder
 
 instance FC.Fleece EncoderDecoder where
   data Object EncoderDecoder object constructor = Object
@@ -39,60 +47,58 @@ instance FC.Fleece EncoderDecoder where
     , taggedUnionMembersDecoder :: FC.TaggedUnionMembers Decoder allTags handledTags
     }
 
-  schemaName = FC.schemaName . encoder
-
-  format formatString encoderDecoder =
+  interpretFormat formatString schema =
     EncoderDecoder
-      { encoder = FC.format formatString $ encoder encoderDecoder
-      , decoder = FC.format formatString $ decoder encoderDecoder
+      { encoderDecoderEncoder = FC.interpretFormat formatString (encoder schema)
+      , encoderDecoderDecoder = FC.interpretFormat formatString (decoder schema)
       }
 
-  number =
+  interpretNumber name =
     EncoderDecoder
-      { encoder = FC.number
-      , decoder = FC.number
+      { encoderDecoderEncoder = FC.interpretNumber name
+      , encoderDecoderDecoder = FC.interpretNumber name
       }
 
-  text =
+  interpretText name =
     EncoderDecoder
-      { encoder = FC.text
-      , decoder = FC.text
+      { encoderDecoderEncoder = FC.interpretText name
+      , encoderDecoderDecoder = FC.interpretText name
       }
 
-  boolean =
+  interpretBoolean name =
     EncoderDecoder
-      { encoder = FC.boolean
-      , decoder = FC.boolean
+      { encoderDecoderEncoder = FC.interpretBoolean name
+      , encoderDecoderDecoder = FC.interpretBoolean name
       }
 
-  array itemEncoderDecoder =
+  interpretArray name itemSchema =
     EncoderDecoder
-      { encoder = FC.array $ encoder itemEncoderDecoder
-      , decoder = FC.array $ decoder itemEncoderDecoder
+      { encoderDecoderEncoder = FC.interpretArray name (encoder itemSchema)
+      , encoderDecoderDecoder = FC.interpretArray name (decoder itemSchema)
       }
 
-  null =
+  interpretNull name =
     EncoderDecoder
-      { encoder = FC.null
-      , decoder = FC.null
+      { encoderDecoderEncoder = FC.interpretNull name
+      , encoderDecoderDecoder = FC.interpretNull name
       }
 
-  nullable itemEncoderDecoder =
+  interpretNullable name itemSchema =
     EncoderDecoder
-      { encoder = FC.nullable $ encoder itemEncoderDecoder
-      , decoder = FC.nullable $ decoder itemEncoderDecoder
+      { encoderDecoderEncoder = FC.interpretNullable name (encoder itemSchema)
+      , encoderDecoderDecoder = FC.interpretNullable name (decoder itemSchema)
       }
 
-  required name accessor itemEncoderDecoder =
+  required name accessor itemSchema =
     Field
-      { fieldEncoder = FC.required name accessor $ encoder itemEncoderDecoder
-      , fieldDecoder = FC.required name accessor $ decoder itemEncoderDecoder
+      { fieldEncoder = FC.required name accessor (encoder itemSchema)
+      , fieldDecoder = FC.required name accessor (decoder itemSchema)
       }
 
-  optional name accessor itemEncoderDecoder =
+  optional name accessor itemSchema =
     Field
-      { fieldEncoder = FC.optional name accessor $ encoder itemEncoderDecoder
-      , fieldDecoder = FC.optional name accessor $ decoder itemEncoderDecoder
+      { fieldEncoder = FC.optional name accessor (encoder itemSchema)
+      , fieldDecoder = FC.optional name accessor (decoder itemSchema)
       }
 
   mapField f fieldEncoderDecoder =
@@ -101,16 +107,16 @@ instance FC.Fleece EncoderDecoder where
       , fieldDecoder = FC.mapField f $ fieldDecoder fieldEncoderDecoder
       }
 
-  additionalFields accessor itemEncoderDecoder =
+  additionalFields accessor itemSchema =
     AdditionalFields
-      { additionalFieldsEncoder = FC.additionalFields accessor $ encoder itemEncoderDecoder
-      , additionalFieldsDecoder = FC.additionalFields accessor $ decoder itemEncoderDecoder
+      { additionalFieldsEncoder = FC.additionalFields accessor (encoder itemSchema)
+      , additionalFieldsDecoder = FC.additionalFields accessor (decoder itemSchema)
       }
 
-  objectNamed name objectEncoderDecoder =
+  interpretObjectNamed name objectEncoderDecoder =
     EncoderDecoder
-      { encoder = FC.objectNamed name $ objectEncoder objectEncoderDecoder
-      , decoder = FC.objectNamed name $ objectDecoder objectEncoderDecoder
+      { encoderDecoderEncoder = FC.interpretObjectNamed name $ objectEncoder objectEncoderDecoder
+      , encoderDecoderDecoder = FC.interpretObjectNamed name $ objectDecoder objectEncoderDecoder
       }
 
   constructor f =
@@ -133,34 +139,34 @@ instance FC.Fleece EncoderDecoder where
           FC.additional (objectDecoder object) (additionalFieldsDecoder addFields)
       }
 
-  validateNamed name uncheck check itemEncoderDecoder =
+  interpretValidateNamed name uncheck check itemSchema =
     EncoderDecoder
-      { encoder = FC.validateNamed name uncheck check $ encoder itemEncoderDecoder
-      , decoder = FC.validateNamed name uncheck check $ decoder itemEncoderDecoder
+      { encoderDecoderEncoder = FC.interpretValidateNamed name uncheck check (encoder itemSchema)
+      , encoderDecoderDecoder = FC.interpretValidateNamed name uncheck check (decoder itemSchema)
       }
 
-  validateAnonymous uncheck check itemEncoderDecoder =
+  interpretValidateAnonymous uncheck check itemSchema =
     EncoderDecoder
-      { encoder = FC.validateAnonymous uncheck check $ encoder itemEncoderDecoder
-      , decoder = FC.validateAnonymous uncheck check $ decoder itemEncoderDecoder
+      { encoderDecoderEncoder = FC.interpretValidateAnonymous uncheck check (encoder itemSchema)
+      , encoderDecoderDecoder = FC.interpretValidateAnonymous uncheck check (decoder itemSchema)
       }
 
-  boundedEnumNamed name toText =
+  interpretBoundedEnumNamed name toText =
     EncoderDecoder
-      { encoder = FC.boundedEnumNamed name toText
-      , decoder = FC.boundedEnumNamed name toText
+      { encoderDecoderEncoder = FC.interpretBoundedEnumNamed name toText
+      , encoderDecoderDecoder = FC.interpretBoundedEnumNamed name toText
       }
 
-  unionNamed name members =
+  interpretUnionNamed name members =
     EncoderDecoder
-      { encoder = FC.unionNamed name $ unionMembersEncoder members
-      , decoder = FC.unionNamed name $ unionMembersDecoder members
+      { encoderDecoderEncoder = FC.interpretUnionNamed name $ unionMembersEncoder members
+      , encoderDecoderDecoder = FC.interpretUnionNamed name $ unionMembersDecoder members
       }
 
-  unionMemberWithIndex index itemEncoderDecoder =
+  unionMemberWithIndex index itemSchema =
     UnionMembers
-      { unionMembersEncoder = FC.unionMemberWithIndex index $ encoder itemEncoderDecoder
-      , unionMembersDecoder = FC.unionMemberWithIndex index $ decoder itemEncoderDecoder
+      { unionMembersEncoder = FC.unionMemberWithIndex index (encoder itemSchema)
+      , unionMembersDecoder = FC.unionMemberWithIndex index (decoder itemSchema)
       }
 
   unionCombine leftMembers rightMembers =
@@ -175,10 +181,10 @@ instance FC.Fleece EncoderDecoder where
             (unionMembersDecoder rightMembers)
       }
 
-  taggedUnionNamed name tagProperty members =
+  interpretTaggedUnionNamed name tagProperty members =
     EncoderDecoder
-      { encoder = FC.taggedUnionNamed name tagProperty $ taggedUnionMembersEncoder members
-      , decoder = FC.taggedUnionNamed name tagProperty $ taggedUnionMembersDecoder members
+      { encoderDecoderEncoder = FC.interpretTaggedUnionNamed name tagProperty $ taggedUnionMembersEncoder members
+      , encoderDecoderDecoder = FC.interpretTaggedUnionNamed name tagProperty $ taggedUnionMembersDecoder members
       }
 
   taggedUnionMemberWithTag tag membersEncoderDecoder =
@@ -199,8 +205,8 @@ instance FC.Fleece EncoderDecoder where
             (taggedUnionMembersDecoder rightMembers)
       }
 
-  jsonString itemEncoderDecoder =
+  interpretJsonString itemSchema =
     EncoderDecoder
-      { encoder = FC.jsonString $ encoder itemEncoderDecoder
-      , decoder = FC.jsonString $ decoder itemEncoderDecoder
+      { encoderDecoderEncoder = FC.interpretJsonString (encoder itemSchema)
+      , encoderDecoderDecoder = FC.interpretJsonString (decoder itemSchema)
       }

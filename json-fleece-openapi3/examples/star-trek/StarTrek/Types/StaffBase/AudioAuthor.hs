@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype AudioAuthor = AudioAuthor Bool
   deriving (Show, Eq)
 
-audioAuthorSchema :: FC.Fleece schema => schema AudioAuthor
+audioAuthorSchema :: FC.Fleece t => FC.Schema t AudioAuthor
 audioAuthorSchema =
   FC.coerceSchema FC.boolean

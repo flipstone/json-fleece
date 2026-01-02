@@ -13,6 +13,6 @@ import qualified TestCases.Types.MinItemsOne.MinItemsOneItem as MinItemsOneItem
 newtype MinItemsOne = MinItemsOne (NEL.NonEmpty MinItemsOneItem.MinItemsOneItem)
   deriving (Show, Eq)
 
-minItemsOneSchema :: FC.Fleece schema => schema MinItemsOne
+minItemsOneSchema :: FC.Fleece t => FC.Schema t MinItemsOne
 minItemsOneSchema =
   FC.coerceSchema (FC.nonEmpty MinItemsOneItem.minItemsOneItemSchema)

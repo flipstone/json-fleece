@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype DisPerformer = DisPerformer Bool
   deriving (Show, Eq)
 
-disPerformerSchema :: FC.Fleece schema => schema DisPerformer
+disPerformerSchema :: FC.Fleece t => FC.Schema t DisPerformer
 disPerformerSchema =
   FC.coerceSchema FC.boolean

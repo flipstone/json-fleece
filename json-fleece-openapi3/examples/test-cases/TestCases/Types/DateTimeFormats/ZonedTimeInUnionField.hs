@@ -19,7 +19,7 @@ newtype ZonedTimeInUnionField = ZonedTimeInUnionField (Shrubbery.Union
    ])
   deriving (Show)
 
-zonedTimeInUnionFieldSchema :: FC.Fleece schema => schema ZonedTimeInUnionField
+zonedTimeInUnionFieldSchema :: FC.Fleece t => FC.Schema t ZonedTimeInUnionField
 zonedTimeInUnionFieldSchema =
   FC.coerceSchema $
     FC.unionNamed (FC.qualifiedName "TestCases.Types.DateTimeFormats.ZonedTimeInUnionField" "ZonedTimeInUnionField") $

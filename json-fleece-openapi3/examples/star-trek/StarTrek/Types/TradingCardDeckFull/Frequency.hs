@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Frequency = Frequency T.Text
   deriving (Show, Eq)
 
-frequencySchema :: FC.Fleece schema => schema Frequency
+frequencySchema :: FC.Fleece t => FC.Schema t Frequency
 frequencySchema =
   FC.coerceSchema FC.text

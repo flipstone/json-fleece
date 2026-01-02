@@ -17,7 +17,7 @@ data Nested = Nested
   }
   deriving (Eq, Show)
 
-nestedSchema :: FC.Fleece schema => schema Nested
+nestedSchema :: FC.Fleece t => FC.Schema t Nested
 nestedSchema =
   FC.object $
     FC.constructor Nested

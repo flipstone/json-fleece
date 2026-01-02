@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Code = Code T.Text
   deriving (Show, Eq)
 
-codeSchema :: FC.Fleece schema => schema Code
+codeSchema :: FC.Fleece t => FC.Schema t Code
 codeSchema =
   FC.coerceSchema FC.text

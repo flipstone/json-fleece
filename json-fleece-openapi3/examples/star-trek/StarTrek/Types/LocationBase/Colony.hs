@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Colony = Colony Bool
   deriving (Show, Eq)
 
-colonySchema :: FC.Fleece schema => schema Colony
+colonySchema :: FC.Fleece t => FC.Schema t Colony
 colonySchema =
   FC.coerceSchema FC.boolean

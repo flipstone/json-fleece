@@ -19,7 +19,7 @@ data TechnologyBaseResponse = TechnologyBaseResponse
   }
   deriving (Eq, Show)
 
-technologyBaseResponseSchema :: FC.Fleece schema => schema TechnologyBaseResponse
+technologyBaseResponseSchema :: FC.Fleece t => FC.Schema t TechnologyBaseResponse
 technologyBaseResponseSchema =
   FC.object $
     FC.constructor TechnologyBaseResponse

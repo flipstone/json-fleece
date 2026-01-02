@@ -22,6 +22,6 @@ responseSortDirectionToText v =
       ASC -> "ASC"
       DESC -> "DESC"
 
-responseSortDirectionSchema :: FC.Fleece schema => schema ResponseSortDirection
+responseSortDirectionSchema :: FC.Fleece t => FC.Schema t ResponseSortDirection
 responseSortDirectionSchema =
   FC.boundedEnum responseSortDirectionToText

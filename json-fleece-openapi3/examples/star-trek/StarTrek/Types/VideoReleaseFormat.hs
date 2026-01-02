@@ -46,6 +46,6 @@ videoReleaseFormatToText v =
       BLURAY4KUHD -> "BLU_RAY_4K_UHD"
       DIGITALFORMAT -> "DIGITAL_FORMAT"
 
-videoReleaseFormatSchema :: FC.Fleece schema => schema VideoReleaseFormat
+videoReleaseFormatSchema :: FC.Fleece t => FC.Schema t VideoReleaseFormat
 videoReleaseFormatSchema =
   FC.boundedEnum videoReleaseFormatToText

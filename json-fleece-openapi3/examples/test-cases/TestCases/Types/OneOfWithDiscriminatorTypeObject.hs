@@ -25,7 +25,7 @@ newtype OneOfWithDiscriminatorTypeObject = OneOfWithDiscriminatorTypeObject (Shr
    ])
   deriving (Show, Eq)
 
-oneOfWithDiscriminatorTypeObjectSchema :: FC.Fleece schema => schema OneOfWithDiscriminatorTypeObject
+oneOfWithDiscriminatorTypeObjectSchema :: FC.Fleece t => FC.Schema t OneOfWithDiscriminatorTypeObject
 oneOfWithDiscriminatorTypeObjectSchema =
   FC.coerceSchema $
     FC.taggedUnionNamed (FC.qualifiedName "TestCases.Types.OneOfWithDiscriminatorTypeObject" "OneOfWithDiscriminatorTypeObject") "type" $

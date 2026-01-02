@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype FeatureLength = FeatureLength Bool
   deriving (Show, Eq)
 
-featureLengthSchema :: FC.Fleece schema => schema FeatureLength
+featureLengthSchema :: FC.Fleece t => FC.Schema t FeatureLength
 featureLengthSchema =
   FC.coerceSchema FC.boolean

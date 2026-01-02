@@ -9,10 +9,10 @@
 
 |Field|Key Required|Null Allowed|Type|
 |---|---|---|---|
-|value|yes|no|string|
+|value|yes|no|text|
 
 # Child2.AmbiguousName
 
 |Field|Key Required|Null Allowed|Type|
 |---|---|---|---|
-|value|yes|no|string|
+|value|yes|no|text|

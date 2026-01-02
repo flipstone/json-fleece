@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype MixedInJustAdditionalPropertiesSchemaInlineItem = MixedInJustAdditionalPropertiesSchemaInlineItem T.Text
   deriving (Show, Eq)
 
-mixedInJustAdditionalPropertiesSchemaInlineItemSchema :: FC.Fleece schema => schema MixedInJustAdditionalPropertiesSchemaInlineItem
+mixedInJustAdditionalPropertiesSchemaInlineItemSchema :: FC.Fleece t => FC.Schema t MixedInJustAdditionalPropertiesSchemaInlineItem
 mixedInJustAdditionalPropertiesSchemaInlineItemSchema =
   FC.coerceSchema FC.text

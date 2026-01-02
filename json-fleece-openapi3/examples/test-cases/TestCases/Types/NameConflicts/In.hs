@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype In = In T.Text
   deriving (Show, Eq)
 
-inSchema :: FC.Fleece schema => schema In
+inSchema :: FC.Fleece t => FC.Schema t In
 inSchema =
   FC.coerceSchema FC.text

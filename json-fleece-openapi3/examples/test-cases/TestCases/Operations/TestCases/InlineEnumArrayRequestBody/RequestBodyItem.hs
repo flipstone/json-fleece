@@ -24,6 +24,6 @@ requestBodyItemToText v =
       Bar -> "bar"
       Baz -> "baz"
 
-requestBodyItemSchema :: FC.Fleece schema => schema RequestBodyItem
+requestBodyItemSchema :: FC.Fleece t => FC.Schema t RequestBodyItem
 requestBodyItemSchema =
   FC.boundedEnum requestBodyItemToText

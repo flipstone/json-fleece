@@ -14,6 +14,6 @@ import qualified TestCases.Types.NullableBoolean as NullableBoolean
 newtype JustAdditionalPropertiesNullableBooleanRef = JustAdditionalPropertiesNullableBooleanRef (Map.Map T.Text (Either FC.Null NullableBoolean.NullableBoolean))
   deriving (Show, Eq)
 
-justAdditionalPropertiesNullableBooleanRefSchema :: FC.Fleece schema => schema JustAdditionalPropertiesNullableBooleanRef
+justAdditionalPropertiesNullableBooleanRefSchema :: FC.Fleece t => FC.Schema t JustAdditionalPropertiesNullableBooleanRef
 justAdditionalPropertiesNullableBooleanRefSchema =
   FC.coerceSchema (FC.map (FC.nullable NullableBoolean.nullableBooleanSchema))

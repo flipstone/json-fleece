@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype FictionalTechnology = FictionalTechnology Bool
   deriving (Show, Eq)
 
-fictionalTechnologySchema :: FC.Fleece schema => schema FictionalTechnology
+fictionalTechnologySchema :: FC.Fleece t => FC.Schema t FictionalTechnology
 fictionalTechnologySchema =
   FC.coerceSchema FC.boolean

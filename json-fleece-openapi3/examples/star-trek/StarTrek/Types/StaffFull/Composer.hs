@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Composer = Composer Bool
   deriving (Show, Eq)
 
-composerSchema :: FC.Fleece schema => schema Composer
+composerSchema :: FC.Fleece t => FC.Schema t Composer
 composerSchema =
   FC.coerceSchema FC.boolean

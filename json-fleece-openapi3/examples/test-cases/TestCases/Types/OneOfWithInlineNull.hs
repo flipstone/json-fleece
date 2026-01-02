@@ -17,7 +17,7 @@ newtype OneOfWithInlineNull = OneOfWithInlineNull (Shrubbery.Union
    ])
   deriving (Show, Eq)
 
-oneOfWithInlineNullSchema :: FC.Fleece schema => schema OneOfWithInlineNull
+oneOfWithInlineNullSchema :: FC.Fleece t => FC.Schema t OneOfWithInlineNull
 oneOfWithInlineNullSchema =
   FC.coerceSchema $
     FC.unionNamed (FC.qualifiedName "TestCases.Types.OneOfWithInlineNull" "OneOfWithInlineNull") $

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Photonovel = Photonovel Bool
   deriving (Show, Eq)
 
-photonovelSchema :: FC.Fleece schema => schema Photonovel
+photonovelSchema :: FC.Fleece t => FC.Schema t Photonovel
 photonovelSchema =
   FC.coerceSchema FC.boolean

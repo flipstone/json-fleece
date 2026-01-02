@@ -2,5 +2,5 @@
 
 Any one of the following
 
-- string
+- text
 - number

@@ -21,7 +21,7 @@ data CharacterSpecies = CharacterSpecies
   }
   deriving (Eq, Show)
 
-characterSpeciesSchema :: FC.Fleece schema => schema CharacterSpecies
+characterSpeciesSchema :: FC.Fleece t => FC.Schema t CharacterSpecies
 characterSpeciesSchema =
   FC.object $
     FC.constructor CharacterSpecies

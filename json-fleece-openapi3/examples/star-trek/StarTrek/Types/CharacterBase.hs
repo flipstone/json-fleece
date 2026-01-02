@@ -61,7 +61,7 @@ data CharacterBase = CharacterBase
   }
   deriving (Eq, Show)
 
-characterBaseSchema :: FC.Fleece schema => schema CharacterBase
+characterBaseSchema :: FC.Fleece t => FC.Schema t CharacterBase
 characterBaseSchema =
   FC.object $
     FC.constructor CharacterBase

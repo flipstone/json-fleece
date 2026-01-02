@@ -69,7 +69,7 @@ data VideoReleaseBase = VideoReleaseBase
   }
   deriving (Eq, Show)
 
-videoReleaseBaseSchema :: FC.Fleece schema => schema VideoReleaseBase
+videoReleaseBaseSchema :: FC.Fleece t => FC.Schema t VideoReleaseBase
 videoReleaseBaseSchema =
   FC.object $
     FC.constructor VideoReleaseBase

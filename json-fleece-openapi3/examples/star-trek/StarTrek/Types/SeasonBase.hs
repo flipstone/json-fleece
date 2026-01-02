@@ -23,7 +23,7 @@ data SeasonBase = SeasonBase
   }
   deriving (Eq, Show)
 
-seasonBaseSchema :: FC.Fleece schema => schema SeasonBase
+seasonBaseSchema :: FC.Fleece t => FC.Schema t SeasonBase
 seasonBaseSchema =
   FC.object $
     FC.constructor SeasonBase

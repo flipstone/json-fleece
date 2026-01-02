@@ -17,7 +17,7 @@ data Option1 = Option1
   }
   deriving (Eq, Show)
 
-option1Schema :: FC.Fleece schema => schema Option1
+option1Schema :: FC.Fleece t => FC.Schema t Option1
 option1Schema =
   FC.object $
     FC.constructor Option1

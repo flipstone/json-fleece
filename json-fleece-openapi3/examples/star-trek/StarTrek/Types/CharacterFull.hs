@@ -77,7 +77,7 @@ data CharacterFull = CharacterFull
   }
   deriving (Eq, Show)
 
-characterFullSchema :: FC.Fleece schema => schema CharacterFull
+characterFullSchema :: FC.Fleece t => FC.Schema t CharacterFull
 characterFullSchema =
   FC.object $
     FC.constructor CharacterFull

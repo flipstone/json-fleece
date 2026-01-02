@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype HologramDateStatus = HologramDateStatus T.Text
   deriving (Show, Eq)
 
-hologramDateStatusSchema :: FC.Fleece schema => schema HologramDateStatus
+hologramDateStatusSchema :: FC.Fleece t => FC.Schema t HologramDateStatus
 hologramDateStatusSchema =
   FC.coerceSchema FC.text

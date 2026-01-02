@@ -65,7 +65,7 @@ data PerformerFull = PerformerFull
   }
   deriving (Eq, Show)
 
-performerFullSchema :: FC.Fleece schema => schema PerformerFull
+performerFullSchema :: FC.Fleece t => FC.Schema t PerformerFull
 performerFullSchema =
   FC.object $
     FC.constructor PerformerFull

@@ -15,7 +15,7 @@ data ResponseSort = ResponseSort
   }
   deriving (Eq, Show)
 
-responseSortSchema :: FC.Fleece schema => schema ResponseSort
+responseSortSchema :: FC.Fleece t => FC.Schema t ResponseSort
 responseSortSchema =
   FC.object $
     FC.constructor ResponseSort

@@ -1994,7 +1994,9 @@ fleeceSchemaForType typeName bodyLines =
     declType =
       HC.typeAnnotate schemaName $
         HC.typeNameToCodeDefaultQualification fleeceClass
-          <> " schema => schema "
+          <> " t => "
+          <> HC.typeNameToCodeDefaultQualification fleeceSchemaTypeConstructor
+          <> " t "
           <> HC.typeNameToCode Nothing typeName
 
     declImpl =
@@ -2150,6 +2152,10 @@ boolType =
 fleeceClass :: HC.TypeName
 fleeceClass =
   fleeceCoreType "Fleece"
+
+fleeceSchemaTypeConstructor :: HC.TypeName
+fleeceSchemaTypeConstructor =
+  fleeceCoreType "Schema"
 
 fleeceObject :: HC.TypeName
 fleeceObject =

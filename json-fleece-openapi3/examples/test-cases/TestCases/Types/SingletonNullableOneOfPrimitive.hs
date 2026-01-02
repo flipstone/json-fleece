@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype SingletonNullableOneOfPrimitive = SingletonNullableOneOfPrimitive Bool
   deriving (Show, Eq)
 
-singletonNullableOneOfPrimitiveSchema :: FC.Fleece schema => schema SingletonNullableOneOfPrimitive
+singletonNullableOneOfPrimitiveSchema :: FC.Fleece t => FC.Schema t SingletonNullableOneOfPrimitive
 singletonNullableOneOfPrimitiveSchema =
   FC.coerceSchema FC.boolean

@@ -27,7 +27,7 @@ data PriceEstimate = PriceEstimate
   }
   deriving (Eq, Show)
 
-priceEstimateSchema :: FC.Fleece schema => schema PriceEstimate
+priceEstimateSchema :: FC.Fleece t => FC.Schema t PriceEstimate
 priceEstimateSchema =
   FC.object $
     FC.constructor PriceEstimate

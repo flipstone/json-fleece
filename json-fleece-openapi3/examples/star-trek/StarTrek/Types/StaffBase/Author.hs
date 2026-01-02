@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Author = Author Bool
   deriving (Show, Eq)
 
-authorSchema :: FC.Fleece schema => schema Author
+authorSchema :: FC.Fleece t => FC.Schema t Author
 authorSchema =
   FC.coerceSchema FC.boolean

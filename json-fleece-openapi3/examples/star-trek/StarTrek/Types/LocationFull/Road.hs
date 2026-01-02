@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Road = Road Bool
   deriving (Show, Eq)
 
-roadSchema :: FC.Fleece schema => schema Road
+roadSchema :: FC.Fleece t => FC.Schema t Road
 roadSchema =
   FC.coerceSchema FC.boolean

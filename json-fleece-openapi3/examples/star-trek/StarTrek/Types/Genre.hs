@@ -17,7 +17,7 @@ data Genre = Genre
   }
   deriving (Eq, Show)
 
-genreSchema :: FC.Fleece schema => schema Genre
+genreSchema :: FC.Fleece t => FC.Schema t Genre
 genreSchema =
   FC.object $
     FC.constructor Genre

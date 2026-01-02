@@ -12,6 +12,6 @@ import qualified TestCases.Types.TopLevelArray.TopLevelArrayItem as TopLevelArra
 newtype TopLevelArray = TopLevelArray [TopLevelArrayItem.TopLevelArrayItem]
   deriving (Show, Eq)
 
-topLevelArraySchema :: FC.Fleece schema => schema TopLevelArray
+topLevelArraySchema :: FC.Fleece t => FC.Schema t TopLevelArray
 topLevelArraySchema =
   FC.coerceSchema (FC.list TopLevelArrayItem.topLevelArrayItemSchema)

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype MilitaryRank = MilitaryRank Bool
   deriving (Show, Eq)
 
-militaryRankSchema :: FC.Fleece schema => schema MilitaryRank
+militaryRankSchema :: FC.Fleece t => FC.Schema t MilitaryRank
 militaryRankSchema =
   FC.coerceSchema FC.boolean

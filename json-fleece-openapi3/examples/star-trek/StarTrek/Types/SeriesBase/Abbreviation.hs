@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Abbreviation = Abbreviation T.Text
   deriving (Show, Eq)
 
-abbreviationSchema :: FC.Fleece schema => schema Abbreviation
+abbreviationSchema :: FC.Fleece t => FC.Schema t Abbreviation
 abbreviationSchema =
   FC.coerceSchema FC.text

@@ -47,7 +47,7 @@ data EpisodeBase = EpisodeBase
   }
   deriving (Eq, Show)
 
-episodeBaseSchema :: FC.Fleece schema => schema EpisodeBase
+episodeBaseSchema :: FC.Fleece t => FC.Schema t EpisodeBase
 episodeBaseSchema =
   FC.object $
     FC.constructor EpisodeBase

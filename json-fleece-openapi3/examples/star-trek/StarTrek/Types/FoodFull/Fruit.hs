@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Fruit = Fruit Bool
   deriving (Show, Eq)
 
-fruitSchema :: FC.Fleece schema => schema Fruit
+fruitSchema :: FC.Fleece t => FC.Schema t Fruit
 fruitSchema =
   FC.coerceSchema FC.boolean

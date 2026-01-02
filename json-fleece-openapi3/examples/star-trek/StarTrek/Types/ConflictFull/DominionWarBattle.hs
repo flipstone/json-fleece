@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype DominionWarBattle = DominionWarBattle Bool
   deriving (Show, Eq)
 
-dominionWarBattleSchema :: FC.Fleece schema => schema DominionWarBattle
+dominionWarBattleSchema :: FC.Fleece t => FC.Schema t DominionWarBattle
 dominionWarBattleSchema =
   FC.coerceSchema FC.boolean

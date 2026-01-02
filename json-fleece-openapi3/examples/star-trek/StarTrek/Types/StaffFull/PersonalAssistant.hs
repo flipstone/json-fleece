@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype PersonalAssistant = PersonalAssistant Bool
   deriving (Show, Eq)
 
-personalAssistantSchema :: FC.Fleece schema => schema PersonalAssistant
+personalAssistantSchema :: FC.Fleece t => FC.Schema t PersonalAssistant
 personalAssistantSchema =
   FC.coerceSchema FC.boolean

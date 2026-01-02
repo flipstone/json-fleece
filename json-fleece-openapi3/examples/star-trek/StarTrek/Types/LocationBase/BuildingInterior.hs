@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype BuildingInterior = BuildingInterior Bool
   deriving (Show, Eq)
 
-buildingInteriorSchema :: FC.Fleece schema => schema BuildingInterior
+buildingInteriorSchema :: FC.Fleece t => FC.Schema t BuildingInterior
 buildingInteriorSchema =
   FC.coerceSchema FC.boolean

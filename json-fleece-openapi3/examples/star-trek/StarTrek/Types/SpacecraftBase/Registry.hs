@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Registry = Registry T.Text
   deriving (Show, Eq)
 
-registrySchema :: FC.Fleece schema => schema Registry
+registrySchema :: FC.Fleece t => FC.Schema t Registry
 registrySchema =
   FC.coerceSchema FC.text

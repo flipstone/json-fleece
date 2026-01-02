@@ -3,8 +3,37 @@
 module Fleece.Core
   ( -- * A class for defining Fleece schemas
     Fleece
-  , schemaName
+  , Schema (Schema, schemaName, schemaInterpreter)
+  , hoistSchema
   , format
+
+    -- * 'Fleece' class methods used to implement primitives and combinators
+  , interpretFormat
+  , interpretText
+  , interpretNumber
+  , interpretBoolean
+  , interpretArray
+  , interpretNull
+  , interpretObjectNamed
+  , interpretNullable
+  , interpretValidateNamed
+  , interpretValidateAnonymous
+  , interpretBoundedEnumNamed
+  , interpretUnionNamed
+  , interpretTaggedUnionNamed
+  , interpretJsonString
+  , interpretInt
+  , interpretInt8
+  , interpretInt16
+  , interpretInt32
+  , interpretInt64
+  , interpretWord
+  , interpretWord8
+  , interpretWord16
+  , interpretWord32
+  , interpretWord64
+  , interpretDouble
+  , interpretFloat
 
     -- * Schemas for dealing with JSON primitives
   , text

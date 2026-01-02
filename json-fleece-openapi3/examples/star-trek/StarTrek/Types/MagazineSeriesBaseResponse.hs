@@ -19,7 +19,7 @@ data MagazineSeriesBaseResponse = MagazineSeriesBaseResponse
   }
   deriving (Eq, Show)
 
-magazineSeriesBaseResponseSchema :: FC.Fleece schema => schema MagazineSeriesBaseResponse
+magazineSeriesBaseResponseSchema :: FC.Fleece t => FC.Schema t MagazineSeriesBaseResponse
 magazineSeriesBaseResponseSchema =
   FC.object $
     FC.constructor MagazineSeriesBaseResponse

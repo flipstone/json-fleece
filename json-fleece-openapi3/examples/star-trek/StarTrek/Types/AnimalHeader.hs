@@ -17,7 +17,7 @@ data AnimalHeader = AnimalHeader
   }
   deriving (Eq, Show)
 
-animalHeaderSchema :: FC.Fleece schema => schema AnimalHeader
+animalHeaderSchema :: FC.Fleece t => FC.Schema t AnimalHeader
 animalHeaderSchema =
   FC.object $
     FC.constructor AnimalHeader

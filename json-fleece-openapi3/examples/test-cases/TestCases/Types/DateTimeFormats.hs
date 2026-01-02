@@ -29,7 +29,7 @@ data DateTimeFormats = DateTimeFormats
   }
   deriving (Show)
 
-dateTimeFormatsSchema :: FC.Fleece schema => schema DateTimeFormats
+dateTimeFormatsSchema :: FC.Fleece t => FC.Schema t DateTimeFormats
 dateTimeFormatsSchema =
   FC.object $
     FC.constructor DateTimeFormats

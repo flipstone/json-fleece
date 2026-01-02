@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype RecordLabel = RecordLabel Bool
   deriving (Show, Eq)
 
-recordLabelSchema :: FC.Fleece schema => schema RecordLabel
+recordLabelSchema :: FC.Fleece t => FC.Schema t RecordLabel
 recordLabelSchema =
   FC.coerceSchema FC.boolean

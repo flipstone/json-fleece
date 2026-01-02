@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Bad = Bad T.Text
   deriving (Show, Eq)
 
-badSchema :: FC.Fleece schema => schema Bad
+badSchema :: FC.Fleece t => FC.Schema t Bad
 badSchema =
   FC.coerceSchema FC.text

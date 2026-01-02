@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype VoicePerformer = VoicePerformer Bool
   deriving (Show, Eq)
 
-voicePerformerSchema :: FC.Fleece schema => schema VoicePerformer
+voicePerformerSchema :: FC.Fleece t => FC.Schema t VoicePerformer
 voicePerformerSchema =
   FC.coerceSchema FC.boolean

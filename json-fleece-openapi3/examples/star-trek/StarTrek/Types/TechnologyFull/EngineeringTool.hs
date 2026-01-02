@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype EngineeringTool = EngineeringTool Bool
   deriving (Show, Eq)
 
-engineeringToolSchema :: FC.Fleece schema => schema EngineeringTool
+engineeringToolSchema :: FC.Fleece t => FC.Schema t EngineeringTool
 engineeringToolSchema =
   FC.coerceSchema FC.boolean

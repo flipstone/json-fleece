@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Cinematographer = Cinematographer Bool
   deriving (Show, Eq)
 
-cinematographerSchema :: FC.Fleece schema => schema Cinematographer
+cinematographerSchema :: FC.Fleece t => FC.Schema t Cinematographer
 cinematographerSchema =
   FC.coerceSchema FC.boolean

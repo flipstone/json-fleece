@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype TosPerformer = TosPerformer Bool
   deriving (Show, Eq)
 
-tosPerformerSchema :: FC.Fleece schema => schema TosPerformer
+tosPerformerSchema :: FC.Fleece t => FC.Schema t TosPerformer
 tosPerformerSchema =
   FC.coerceSchema FC.boolean

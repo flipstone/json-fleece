@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype GammaSeries = GammaSeries Bool
   deriving (Show, Eq)
 
-gammaSeriesSchema :: FC.Fleece schema => schema GammaSeries
+gammaSeriesSchema :: FC.Fleece t => FC.Schema t GammaSeries
 gammaSeriesSchema =
   FC.coerceSchema FC.boolean

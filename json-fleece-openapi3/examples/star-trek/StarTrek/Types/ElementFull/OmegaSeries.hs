@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype OmegaSeries = OmegaSeries Bool
   deriving (Show, Eq)
 
-omegaSeriesSchema :: FC.Fleece schema => schema OmegaSeries
+omegaSeriesSchema :: FC.Fleece t => FC.Schema t OmegaSeries
 omegaSeriesSchema =
   FC.coerceSchema FC.boolean

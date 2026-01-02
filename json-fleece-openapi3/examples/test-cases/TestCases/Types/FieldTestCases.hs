@@ -29,7 +29,7 @@ data FieldTestCases = FieldTestCases
   }
   deriving (Eq, Show)
 
-fieldTestCasesSchema :: FC.Fleece schema => schema FieldTestCases
+fieldTestCasesSchema :: FC.Fleece t => FC.Schema t FieldTestCases
 fieldTestCasesSchema =
   FC.object $
     FC.constructor FieldTestCases

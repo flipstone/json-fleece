@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype ProductionStartYear = ProductionStartYear Integer
   deriving (Show, Eq)
 
-productionStartYearSchema :: FC.Fleece schema => schema ProductionStartYear
+productionStartYearSchema :: FC.Fleece t => FC.Schema t ProductionStartYear
 productionStartYearSchema =
   FC.coerceSchema FC.integer

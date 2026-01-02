@@ -37,7 +37,7 @@ data MaterialFull = MaterialFull
   }
   deriving (Eq, Show)
 
-materialFullSchema :: FC.Fleece schema => schema MaterialFull
+materialFullSchema :: FC.Fleece t => FC.Schema t MaterialFull
 materialFullSchema =
   FC.object $
     FC.constructor MaterialFull

@@ -19,7 +19,7 @@ data MaterialBaseResponse = MaterialBaseResponse
   }
   deriving (Eq, Show)
 
-materialBaseResponseSchema :: FC.Fleece schema => schema MaterialBaseResponse
+materialBaseResponseSchema :: FC.Fleece t => FC.Schema t MaterialBaseResponse
 materialBaseResponseSchema =
   FC.object $
     FC.constructor MaterialBaseResponse

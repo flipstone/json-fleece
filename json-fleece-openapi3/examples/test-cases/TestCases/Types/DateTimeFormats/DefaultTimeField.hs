@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype DefaultTimeField = DefaultTimeField Time.UTCTime
   deriving (Show, Eq)
 
-defaultTimeFieldSchema :: FC.Fleece schema => schema DefaultTimeField
+defaultTimeFieldSchema :: FC.Fleece t => FC.Schema t DefaultTimeField
 defaultTimeFieldSchema =
   FC.coerceSchema FC.utcTime

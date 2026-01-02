@@ -7,9 +7,8 @@
 {-# LANGUAGE TypeOperators #-}
 
 module Fleece.Hermes
-  ( Decoder
+  ( Decoder (Decoder, toDecoder)
   , decode
-  , toDecoder
   ) where
 
 import Control.Applicative ((<|>))
@@ -26,16 +25,13 @@ import qualified Shrubbery
 
 import qualified Fleece.Core as FC
 
-data Decoder a
-  = Decoder FC.Name (H.Decoder a)
+newtype Decoder a
+  = Decoder {toDecoder :: H.Decoder a}
 
-toDecoder :: Decoder a -> H.Decoder a
-toDecoder (Decoder _name f) = f
-
-decode :: Decoder a -> BS.ByteString -> Either String a
+decode :: FC.Schema Decoder a -> BS.ByteString -> Either String a
 decode decoder input =
   first (T.unpack . H.formatException) $
-    H.decodeEither (toDecoder decoder) input
+    H.decodeEither (toDecoder (FC.schemaInterpreter decoder)) input
 
 instance FC.Fleece Decoder where
   data Object Decoder _object a = Object
@@ -58,61 +54,58 @@ instance FC.Fleece Decoder where
   newtype TaggedUnionMembers Decoder allTags _handledTags
     = TaggedUnionMembers (Map.Map T.Text (H.FieldsDecoder (Shrubbery.TaggedUnion allTags)))
 
-  schemaName (Decoder name _parseValue) =
-    name
+  interpretFormat _ =
+    FC.schemaInterpreter
 
-  format _ =
-    id
+  {-# INLINE interpretNumber #-}
+  interpretNumber _name =
+    Decoder H.scientific
 
-  {-# INLINE number #-}
-  number =
-    Decoder (FC.unqualifiedName "number") H.scientific
+  {-# INLINE interpretText #-}
+  interpretText _name =
+    Decoder H.text
 
-  {-# INLINE text #-}
-  text =
-    Decoder (FC.unqualifiedName "text") H.text
+  {-# INLINE interpretBoolean #-}
+  interpretBoolean _name =
+    Decoder H.bool
 
-  {-# INLINE boolean #-}
-  boolean =
-    Decoder (FC.unqualifiedName "boolean") H.bool
-
-  {-# INLINE array #-}
-  array (Decoder name itemFromValue) =
-    Decoder (FC.annotateName name "array") $
+  {-# INLINE interpretArray #-}
+  interpretArray _arrayName (FC.Schema _itemSchemaName (Decoder itemFromValue)) =
+    Decoder $
       H.vector itemFromValue
 
-  {-# INLINE null #-}
-  null =
-    Decoder (FC.unqualifiedName "null") $ do
+  {-# INLINE interpretNull #-}
+  interpretNull _name =
+    Decoder $ do
       isNull <- H.isNull
       if isNull
         then pure FC.Null
         else fail "expected null"
 
-  {-# INLINE nullable #-}
-  nullable (Decoder name parseValue) =
-    Decoder (FC.annotateName name "nullable") $ do
+  {-# INLINE interpretNullable #-}
+  interpretNullable _nullableName (FC.Schema _schemaName (Decoder parseValue)) =
+    Decoder $ do
       isNull <- H.isNull
       if isNull
         then pure (Left FC.Null)
         else fmap Right parseValue
 
   {-# INLINE required #-}
-  required name _accessor (Decoder _name parseValue) =
+  required name _accessor (FC.Schema _name (Decoder parseValue)) =
     let
       key = T.pack name
     in
       Field key (H.atKey key parseValue)
 
   {-# INLINE optional #-}
-  optional name _accessor (Decoder _name parseValue) =
+  optional name _accessor (FC.Schema _name (Decoder parseValue)) =
     let
       key = T.pack name
     in
       Field key (H.atKeyOptional key parseValue)
 
   {-# INLINE additionalFields #-}
-  additionalFields _accessor (Decoder _name parseValue) =
+  additionalFields _accessor (FC.Schema _name (Decoder parseValue)) =
     AdditionalFields $ \definedFields ->
       H.liftObjectDecoder $ H.objectAsMapExcluding definedFields pure parseValue
 
@@ -140,19 +133,19 @@ instance FC.Fleece Decoder where
           parseF <*> additionalFieldsDecoder fields fieldNames
       }
 
-  {-# INLINE objectNamed #-}
-  objectNamed name (Object _definedFields parseObject) =
-    Decoder name $ H.object parseObject
+  {-# INLINE interpretObjectNamed #-}
+  interpretObjectNamed _name (Object _definedFields parseObject) =
+    Decoder $ H.object parseObject
 
-  {-# INLINE boundedEnumNamed #-}
-  boundedEnumNamed name toText =
+  {-# INLINE interpretBoundedEnumNamed #-}
+  interpretBoundedEnumNamed name toText =
     let
       decodingMap =
         Map.fromList
           . map (\e -> (toText e, e))
           $ [minBound .. maxBound]
     in
-      Decoder name $
+      Decoder $
         H.withText $ \textValue ->
           case Map.lookup textValue decodingMap of
             Just enumValue -> pure enumValue
@@ -163,18 +156,18 @@ instance FC.Fleece Decoder where
                   <> " enum: "
                   <> show textValue
 
-  validateNamed name _uncheck check (Decoder _unvalidatedName parseValue) =
+  interpretValidateNamed name _uncheck check (FC.Schema _unvalidatedName (Decoder parseValue)) =
     validatingDecoder name parseValue check
 
-  validateAnonymous _uncheck check (Decoder unvalidatedName parseValue) =
+  interpretValidateAnonymous _uncheck check (FC.Schema unvalidatedName (Decoder parseValue)) =
     validatingDecoder unvalidatedName parseValue check
 
-  {-# INLINE unionNamed #-}
-  unionNamed name (UnionMembers parseMembers) =
-    Decoder name (parseMembers name)
+  {-# INLINE interpretUnionNamed #-}
+  interpretUnionNamed name (UnionMembers parseMembers) =
+    Decoder (parseMembers name)
 
   {-# INLINE unionMemberWithIndex #-}
-  unionMemberWithIndex index (Decoder _name parseMember) =
+  unionMemberWithIndex index (FC.Schema _name (Decoder parseMember)) =
     UnionMembers (\_name -> fmap (Shrubbery.unifyUnion index) parseMember)
 
   {-# INLINE unionCombine #-}
@@ -184,7 +177,8 @@ instance FC.Fleece Decoder where
         <|> parseRight name
         <|> fail ("All union parsing options for " <> FC.nameUnqualified name <> " failed.")
 
-  taggedUnionNamed name tagProperty (TaggedUnionMembers parserMap) =
+  {-# INLINE interpretTaggedUnionNamed #-}
+  interpretTaggedUnionNamed name tagProperty (TaggedUnionMembers parserMap) =
     let
       tagPropKey =
         T.pack tagProperty
@@ -192,10 +186,9 @@ instance FC.Fleece Decoder where
       nameString =
         FC.nameToString name
     in
-      Decoder name $
+      Decoder $
         H.object $ do
           tagValue <- H.atKey tagPropKey H.text
-          pure ()
           case Map.lookup tagValue parserMap of
             Just parseFields -> parseFields
             Nothing -> fail ("Invalid tag found for tagged union " <> nameString <> ": " <> T.unpack tagValue)
@@ -227,8 +220,8 @@ instance FC.Fleece Decoder where
   taggedUnionCombine (TaggedUnionMembers left) (TaggedUnionMembers right) =
     TaggedUnionMembers (Map.union left right)
 
-  jsonString (Decoder name parseValue) =
-    Decoder name $
+  interpretJsonString (FC.Schema _name (Decoder parseValue)) =
+    Decoder $
       H.withText $ \jsonText -> do
         -- hermes currently cannot decode scalars. So we make a dummy object.
         let
@@ -243,7 +236,7 @@ validatingDecoder ::
   (a -> Either String b) ->
   Decoder b
 validatingDecoder name parseValue check =
-  Decoder name $ do
+  Decoder $ do
     uncheckedValue <- parseValue
     case check uncheckedValue of
       Right checkedValue -> pure checkedValue

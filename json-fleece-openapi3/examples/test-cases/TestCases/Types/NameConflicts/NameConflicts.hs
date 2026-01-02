@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype NameConflicts = NameConflicts T.Text
   deriving (Show, Eq)
 
-nameConflictsSchema :: FC.Fleece schema => schema NameConflicts
+nameConflictsSchema :: FC.Fleece t => FC.Schema t NameConflicts
 nameConflictsSchema =
   FC.coerceSchema FC.text

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Region2SlimlineReleaseDate = Region2SlimlineReleaseDate Time.Day
   deriving (Show, Eq)
 
-region2SlimlineReleaseDateSchema :: FC.Fleece schema => schema Region2SlimlineReleaseDate
+region2SlimlineReleaseDateSchema :: FC.Fleece t => FC.Schema t Region2SlimlineReleaseDate
 region2SlimlineReleaseDateSchema =
   FC.coerceSchema FC.day

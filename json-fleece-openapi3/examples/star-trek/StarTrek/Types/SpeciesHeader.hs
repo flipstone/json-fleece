@@ -17,7 +17,7 @@ data SpeciesHeader = SpeciesHeader
   }
   deriving (Eq, Show)
 
-speciesHeaderSchema :: FC.Fleece schema => schema SpeciesHeader
+speciesHeaderSchema :: FC.Fleece t => FC.Schema t SpeciesHeader
 speciesHeaderSchema =
   FC.object $
     FC.constructor SpeciesHeader

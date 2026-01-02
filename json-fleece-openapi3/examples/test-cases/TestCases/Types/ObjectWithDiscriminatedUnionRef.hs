@@ -15,7 +15,7 @@ data ObjectWithDiscriminatedUnionRef = ObjectWithDiscriminatedUnionRef
   }
   deriving (Eq, Show)
 
-objectWithDiscriminatedUnionRefSchema :: FC.Fleece schema => schema ObjectWithDiscriminatedUnionRef
+objectWithDiscriminatedUnionRefSchema :: FC.Fleece t => FC.Schema t ObjectWithDiscriminatedUnionRef
 objectWithDiscriminatedUnionRefSchema =
   FC.object $
     FC.constructor ObjectWithDiscriminatedUnionRef

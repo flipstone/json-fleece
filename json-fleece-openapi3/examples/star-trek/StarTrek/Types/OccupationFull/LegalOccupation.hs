@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype LegalOccupation = LegalOccupation Bool
   deriving (Show, Eq)
 
-legalOccupationSchema :: FC.Fleece schema => schema LegalOccupation
+legalOccupationSchema :: FC.Fleece t => FC.Schema t LegalOccupation
 legalOccupationSchema =
   FC.coerceSchema FC.boolean

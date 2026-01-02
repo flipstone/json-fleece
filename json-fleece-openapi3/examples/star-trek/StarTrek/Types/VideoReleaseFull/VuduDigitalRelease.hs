@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype VuduDigitalRelease = VuduDigitalRelease Bool
   deriving (Show, Eq)
 
-vuduDigitalReleaseSchema :: FC.Fleece schema => schema VuduDigitalRelease
+vuduDigitalReleaseSchema :: FC.Fleece t => FC.Schema t VuduDigitalRelease
 vuduDigitalReleaseSchema =
   FC.coerceSchema FC.boolean

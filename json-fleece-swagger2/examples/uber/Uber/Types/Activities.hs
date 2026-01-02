@@ -21,7 +21,7 @@ data Activities = Activities
   }
   deriving (Eq, Show)
 
-activitiesSchema :: FC.Fleece schema => schema Activities
+activitiesSchema :: FC.Fleece t => FC.Schema t Activities
 activitiesSchema =
   FC.object $
     FC.constructor Activities

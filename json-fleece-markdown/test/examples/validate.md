@@ -1,3 +1,3 @@
 # Validation
 
-string
+text

@@ -11,6 +11,6 @@ import Prelude (Double, Eq, Show)
 newtype CardWidth = CardWidth Double
   deriving (Show, Eq)
 
-cardWidthSchema :: FC.Fleece schema => schema CardWidth
+cardWidthSchema :: FC.Fleece t => FC.Schema t CardWidth
 cardWidthSchema =
   FC.coerceSchema FC.double

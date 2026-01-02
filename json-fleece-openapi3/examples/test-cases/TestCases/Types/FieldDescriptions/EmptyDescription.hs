@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype EmptyDescription = EmptyDescription T.Text
   deriving (Show, Eq)
 
-emptyDescriptionSchema :: FC.Fleece schema => schema EmptyDescription
+emptyDescriptionSchema :: FC.Fleece t => FC.Schema t EmptyDescription
 emptyDescriptionSchema =
   FC.coerceSchema FC.text

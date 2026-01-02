@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Position = Position Bool
   deriving (Show, Eq)
 
-positionSchema :: FC.Fleece schema => schema Position
+positionSchema :: FC.Fleece t => FC.Schema t Position
 positionSchema =
   FC.coerceSchema FC.boolean

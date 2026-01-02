@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype CastingDepartment = CastingDepartment Bool
   deriving (Show, Eq)
 
-castingDepartmentSchema :: FC.Fleece schema => schema CastingDepartment
+castingDepartmentSchema :: FC.Fleece t => FC.Schema t CastingDepartment
 castingDepartmentSchema =
   FC.coerceSchema FC.boolean

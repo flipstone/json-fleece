@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype TopLevelArrayItem = TopLevelArrayItem T.Text
   deriving (Show, Eq)
 
-topLevelArrayItemSchema :: FC.Fleece schema => schema TopLevelArrayItem
+topLevelArrayItemSchema :: FC.Fleece t => FC.Schema t TopLevelArrayItem
 topLevelArrayItemSchema =
   FC.coerceSchema FC.text

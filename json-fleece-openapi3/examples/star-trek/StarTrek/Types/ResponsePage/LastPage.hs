@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype LastPage = LastPage Bool
   deriving (Show, Eq)
 
-lastPageSchema :: FC.Fleece schema => schema LastPage
+lastPageSchema :: FC.Fleece t => FC.Schema t LastPage
 lastPageSchema =
   FC.coerceSchema FC.boolean

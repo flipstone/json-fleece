@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype PsychologicalCondition = PsychologicalCondition Bool
   deriving (Show, Eq)
 
-psychologicalConditionSchema :: FC.Fleece schema => schema PsychologicalCondition
+psychologicalConditionSchema :: FC.Fleece t => FC.Schema t PsychologicalCondition
 psychologicalConditionSchema =
   FC.coerceSchema FC.boolean

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Mineral = Mineral Bool
   deriving (Show, Eq)
 
-mineralSchema :: FC.Fleece schema => schema Mineral
+mineralSchema :: FC.Fleece t => FC.Schema t Mineral
 mineralSchema =
   FC.coerceSchema FC.boolean

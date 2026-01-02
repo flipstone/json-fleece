@@ -19,7 +19,7 @@ data WeaponBaseResponse = WeaponBaseResponse
   }
   deriving (Eq, Show)
 
-weaponBaseResponseSchema :: FC.Fleece schema => schema WeaponBaseResponse
+weaponBaseResponseSchema :: FC.Fleece t => FC.Schema t WeaponBaseResponse
 weaponBaseResponseSchema =
   FC.object $
     FC.constructor WeaponBaseResponse

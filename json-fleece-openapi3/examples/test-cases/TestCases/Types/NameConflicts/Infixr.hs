@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Infixr = Infixr T.Text
   deriving (Show, Eq)
 
-infixrSchema :: FC.Fleece schema => schema Infixr
+infixrSchema :: FC.Fleece t => FC.Schema t Infixr
 infixrSchema =
   FC.coerceSchema FC.text

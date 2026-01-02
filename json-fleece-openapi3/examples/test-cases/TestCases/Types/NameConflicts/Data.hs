@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Data = Data T.Text
   deriving (Show, Eq)
 
-dataSchema :: FC.Fleece schema => schema Data
+dataSchema :: FC.Fleece t => FC.Schema t Data
 dataSchema =
   FC.coerceSchema FC.text

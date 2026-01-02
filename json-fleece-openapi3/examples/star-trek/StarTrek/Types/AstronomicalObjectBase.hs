@@ -21,7 +21,7 @@ data AstronomicalObjectBase = AstronomicalObjectBase
   }
   deriving (Eq, Show)
 
-astronomicalObjectBaseSchema :: FC.Fleece schema => schema AstronomicalObjectBase
+astronomicalObjectBaseSchema :: FC.Fleece t => FC.Schema t AstronomicalObjectBase
 astronomicalObjectBaseSchema =
   FC.object $
     FC.constructor AstronomicalObjectBase

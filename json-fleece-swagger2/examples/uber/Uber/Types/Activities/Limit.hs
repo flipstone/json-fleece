@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Limit = Limit I.Int32
   deriving (Show, Eq)
 
-limitSchema :: FC.Fleece schema => schema Limit
+limitSchema :: FC.Fleece t => FC.Schema t Limit
 limitSchema =
   FC.coerceSchema FC.int32

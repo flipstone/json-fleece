@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype PublicationArtist = PublicationArtist Bool
   deriving (Show, Eq)
 
-publicationArtistSchema :: FC.Fleece schema => schema PublicationArtist
+publicationArtistSchema :: FC.Fleece t => FC.Schema t PublicationArtist
 publicationArtistSchema =
   FC.coerceSchema FC.boolean

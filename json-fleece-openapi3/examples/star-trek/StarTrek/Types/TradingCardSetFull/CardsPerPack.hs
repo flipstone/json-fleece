@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype CardsPerPack = CardsPerPack Integer
   deriving (Show, Eq)
 
-cardsPerPackSchema :: FC.Fleece schema => schema CardsPerPack
+cardsPerPackSchema :: FC.Fleece t => FC.Schema t CardsPerPack
 cardsPerPackSchema =
   FC.coerceSchema FC.integer

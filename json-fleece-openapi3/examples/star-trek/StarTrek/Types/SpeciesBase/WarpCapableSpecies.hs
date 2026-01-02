@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype WarpCapableSpecies = WarpCapableSpecies Bool
   deriving (Show, Eq)
 
-warpCapableSpeciesSchema :: FC.Fleece schema => schema WarpCapableSpecies
+warpCapableSpeciesSchema :: FC.Fleece t => FC.Schema t WarpCapableSpecies
 warpCapableSpeciesSchema =
   FC.coerceSchema FC.boolean

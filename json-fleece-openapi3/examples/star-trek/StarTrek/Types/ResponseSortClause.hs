@@ -19,7 +19,7 @@ data ResponseSortClause = ResponseSortClause
   }
   deriving (Eq, Show)
 
-responseSortClauseSchema :: FC.Fleece schema => schema ResponseSortClause
+responseSortClauseSchema :: FC.Fleece t => FC.Schema t ResponseSortClause
 responseSortClauseSchema =
   FC.object $
     FC.constructor ResponseSortClause

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype ReleaseDate = ReleaseDate Time.Day
   deriving (Show, Eq)
 
-releaseDateSchema :: FC.Fleece schema => schema ReleaseDate
+releaseDateSchema :: FC.Fleece t => FC.Schema t ReleaseDate
 releaseDateSchema =
   FC.coerceSchema FC.day

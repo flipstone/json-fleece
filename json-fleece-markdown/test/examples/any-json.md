@@ -2,7 +2,7 @@
 
 Any one of the following
 
-- string
+- text
 - boolean
 - number
 - AnyJSON array

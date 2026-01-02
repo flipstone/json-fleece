@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Soup = Soup Bool
   deriving (Show, Eq)
 
-soupSchema :: FC.Fleece schema => schema Soup
+soupSchema :: FC.Fleece t => FC.Schema t Soup
 soupSchema =
   FC.coerceSchema FC.boolean

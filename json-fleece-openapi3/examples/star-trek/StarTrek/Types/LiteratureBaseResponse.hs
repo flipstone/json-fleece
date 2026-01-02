@@ -19,7 +19,7 @@ data LiteratureBaseResponse = LiteratureBaseResponse
   }
   deriving (Eq, Show)
 
-literatureBaseResponseSchema :: FC.Fleece schema => schema LiteratureBaseResponse
+literatureBaseResponseSchema :: FC.Fleece t => FC.Schema t LiteratureBaseResponse
 literatureBaseResponseSchema =
   FC.object $
     FC.constructor LiteratureBaseResponse

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype PlaceOfBirth = PlaceOfBirth T.Text
   deriving (Show, Eq)
 
-placeOfBirthSchema :: FC.Fleece schema => schema PlaceOfBirth
+placeOfBirthSchema :: FC.Fleece t => FC.Schema t PlaceOfBirth
 placeOfBirthSchema =
   FC.coerceSchema FC.text

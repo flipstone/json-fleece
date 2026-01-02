@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype AlcoholicBeverage = AlcoholicBeverage Bool
   deriving (Show, Eq)
 
-alcoholicBeverageSchema :: FC.Fleece schema => schema AlcoholicBeverage
+alcoholicBeverageSchema :: FC.Fleece t => FC.Schema t AlcoholicBeverage
 alcoholicBeverageSchema =
   FC.coerceSchema FC.boolean

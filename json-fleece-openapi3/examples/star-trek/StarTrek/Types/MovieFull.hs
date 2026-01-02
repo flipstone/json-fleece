@@ -61,7 +61,7 @@ data MovieFull = MovieFull
   }
   deriving (Eq, Show)
 
-movieFullSchema :: FC.Fleece schema => schema MovieFull
+movieFullSchema :: FC.Fleece t => FC.Schema t MovieFull
 movieFullSchema =
   FC.object $
     FC.constructor MovieFull

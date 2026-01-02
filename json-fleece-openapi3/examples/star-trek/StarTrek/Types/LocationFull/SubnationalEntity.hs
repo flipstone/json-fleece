@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype SubnationalEntity = SubnationalEntity Bool
   deriving (Show, Eq)
 
-subnationalEntitySchema :: FC.Fleece schema => schema SubnationalEntity
+subnationalEntitySchema :: FC.Fleece t => FC.Schema t SubnationalEntity
 subnationalEntitySchema =
   FC.coerceSchema FC.boolean

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Else = Else T.Text
   deriving (Show, Eq)
 
-elseSchema :: FC.Fleece schema => schema Else
+elseSchema :: FC.Fleece t => FC.Schema t Else
 elseSchema =
   FC.coerceSchema FC.text

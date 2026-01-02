@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype InlineYesAdditionalPropertiesWithOneOfNullablityInsideItem = InlineYesAdditionalPropertiesWithOneOfNullablityInsideItem T.Text
   deriving (Show, Eq)
 
-inlineYesAdditionalPropertiesWithOneOfNullablityInsideItemSchema :: FC.Fleece schema => schema InlineYesAdditionalPropertiesWithOneOfNullablityInsideItem
+inlineYesAdditionalPropertiesWithOneOfNullablityInsideItemSchema :: FC.Fleece t => FC.Schema t InlineYesAdditionalPropertiesWithOneOfNullablityInsideItem
 inlineYesAdditionalPropertiesWithOneOfNullablityInsideItemSchema =
   FC.coerceSchema FC.text

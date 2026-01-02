@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Subroutine = Subroutine Bool
   deriving (Show, Eq)
 
-subroutineSchema :: FC.Fleece schema => schema Subroutine
+subroutineSchema :: FC.Fleece t => FC.Schema t Subroutine
 subroutineSchema =
   FC.coerceSchema FC.boolean

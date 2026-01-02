@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype PublicationStaff = PublicationStaff Bool
   deriving (Show, Eq)
 
-publicationStaffSchema :: FC.Fleece schema => schema PublicationStaff
+publicationStaffSchema :: FC.Fleece t => FC.Schema t PublicationStaff
 publicationStaffSchema =
   FC.coerceSchema FC.boolean

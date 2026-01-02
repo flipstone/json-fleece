@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype ShapeshiftingSpecies = ShapeshiftingSpecies Bool
   deriving (Show, Eq)
 
-shapeshiftingSpeciesSchema :: FC.Fleece schema => schema ShapeshiftingSpecies
+shapeshiftingSpeciesSchema :: FC.Fleece t => FC.Schema t ShapeshiftingSpecies
 shapeshiftingSpeciesSchema =
   FC.coerceSchema FC.boolean

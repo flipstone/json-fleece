@@ -17,7 +17,7 @@ data SpacecraftClassHeader = SpacecraftClassHeader
   }
   deriving (Eq, Show)
 
-spacecraftClassHeaderSchema :: FC.Fleece schema => schema SpacecraftClassHeader
+spacecraftClassHeaderSchema :: FC.Fleece t => FC.Schema t SpacecraftClassHeader
 spacecraftClassHeaderSchema =
   FC.object $
     FC.constructor SpacecraftClassHeader

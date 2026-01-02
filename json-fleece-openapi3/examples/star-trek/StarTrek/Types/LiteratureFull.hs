@@ -29,7 +29,7 @@ data LiteratureFull = LiteratureFull
   }
   deriving (Eq, Show)
 
-literatureFullSchema :: FC.Fleece schema => schema LiteratureFull
+literatureFullSchema :: FC.Fleece t => FC.Schema t LiteratureFull
 literatureFullSchema =
   FC.object $
     FC.constructor LiteratureFull

@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype ClauseOrder = ClauseOrder Integer
   deriving (Show, Eq)
 
-clauseOrderSchema :: FC.Fleece schema => schema ClauseOrder
+clauseOrderSchema :: FC.Fleece t => FC.Schema t ClauseOrder
 clauseOrderSchema =
   FC.coerceSchema FC.integer

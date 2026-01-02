@@ -26,7 +26,7 @@ newtype OneOfWithNullable = OneOfWithNullable (Shrubbery.Union
    ])
   deriving (Show, Eq)
 
-oneOfWithNullableSchema :: FC.Fleece schema => schema OneOfWithNullable
+oneOfWithNullableSchema :: FC.Fleece t => FC.Schema t OneOfWithNullable
 oneOfWithNullableSchema =
   FC.coerceSchema $
     FC.unionNamed (FC.qualifiedName "TestCases.Types.OneOfWithNullable" "OneOfWithNullable") $

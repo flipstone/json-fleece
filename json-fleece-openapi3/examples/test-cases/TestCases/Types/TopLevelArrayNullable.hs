@@ -12,6 +12,6 @@ import qualified TestCases.Types.TopLevelArrayNullable.TopLevelArrayNullableItem
 newtype TopLevelArrayNullable = TopLevelArrayNullable [Either FC.Null TopLevelArrayNullableItem.TopLevelArrayNullableItem]
   deriving (Show, Eq)
 
-topLevelArrayNullableSchema :: FC.Fleece schema => schema TopLevelArrayNullable
+topLevelArrayNullableSchema :: FC.Fleece t => FC.Schema t TopLevelArrayNullable
 topLevelArrayNullableSchema =
   FC.coerceSchema (FC.list (FC.nullable TopLevelArrayNullableItem.topLevelArrayNullableItemSchema))

@@ -37,7 +37,7 @@ data FoodBase = FoodBase
   }
   deriving (Eq, Show)
 
-foodBaseSchema :: FC.Fleece schema => schema FoodBase
+foodBaseSchema :: FC.Fleece t => FC.Schema t FoodBase
 foodBaseSchema =
   FC.object $
     FC.constructor FoodBase

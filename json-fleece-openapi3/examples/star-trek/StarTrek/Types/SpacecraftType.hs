@@ -17,7 +17,7 @@ data SpacecraftType = SpacecraftType
   }
   deriving (Eq, Show)
 
-spacecraftTypeSchema :: FC.Fleece schema => schema SpacecraftType
+spacecraftTypeSchema :: FC.Fleece t => FC.Schema t SpacecraftType
 spacecraftTypeSchema =
   FC.object $
     FC.constructor SpacecraftType

@@ -23,7 +23,7 @@ data Product = Product
   }
   deriving (Eq, Show)
 
-productSchema :: FC.Fleece schema => schema Product
+productSchema :: FC.Fleece t => FC.Schema t Product
 productSchema =
   FC.object $
     FC.constructor Product

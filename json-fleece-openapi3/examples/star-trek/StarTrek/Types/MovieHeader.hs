@@ -17,7 +17,7 @@ data MovieHeader = MovieHeader
   }
   deriving (Eq, Show)
 
-movieHeaderSchema :: FC.Fleece schema => schema MovieHeader
+movieHeaderSchema :: FC.Fleece t => FC.Schema t MovieHeader
 movieHeaderSchema =
   FC.object $
     FC.constructor MovieHeader

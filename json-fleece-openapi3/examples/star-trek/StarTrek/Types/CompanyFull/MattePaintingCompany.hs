@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype MattePaintingCompany = MattePaintingCompany Bool
   deriving (Show, Eq)
 
-mattePaintingCompanySchema :: FC.Fleece schema => schema MattePaintingCompany
+mattePaintingCompanySchema :: FC.Fleece t => FC.Schema t MattePaintingCompany
 mattePaintingCompanySchema =
   FC.coerceSchema FC.boolean

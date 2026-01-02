@@ -22,6 +22,6 @@ productionRunUnitToText v =
       BOX -> "BOX"
       SET -> "SET"
 
-productionRunUnitSchema :: FC.Fleece schema => schema ProductionRunUnit
+productionRunUnitSchema :: FC.Fleece t => FC.Schema t ProductionRunUnit
 productionRunUnitSchema =
   FC.boundedEnum productionRunUnitToText

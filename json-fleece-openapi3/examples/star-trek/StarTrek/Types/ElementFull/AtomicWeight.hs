@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype AtomicWeight = AtomicWeight Integer
   deriving (Show, Eq)
 
-atomicWeightSchema :: FC.Fleece schema => schema AtomicWeight
+atomicWeightSchema :: FC.Fleece t => FC.Schema t AtomicWeight
 atomicWeightSchema =
   FC.coerceSchema FC.integer

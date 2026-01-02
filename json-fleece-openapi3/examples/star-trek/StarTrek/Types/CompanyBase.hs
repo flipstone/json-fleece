@@ -51,7 +51,7 @@ data CompanyBase = CompanyBase
   }
   deriving (Eq, Show)
 
-companyBaseSchema :: FC.Fleece schema => schema CompanyBase
+companyBaseSchema :: FC.Fleece t => FC.Schema t CompanyBase
 companyBaseSchema =
   FC.object $
     FC.constructor CompanyBase

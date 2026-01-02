@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype HologramStatus = HologramStatus T.Text
   deriving (Show, Eq)
 
-hologramStatusSchema :: FC.Fleece schema => schema HologramStatus
+hologramStatusSchema :: FC.Fleece t => FC.Schema t HologramStatus
 hologramStatusSchema =
   FC.coerceSchema FC.text

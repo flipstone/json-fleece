@@ -2,4 +2,4 @@
 
 |Field|Key Required|Null Allowed|Type|
 |---|---|---|---|
-|optionalField|no|no|string|
+|optionalField|no|no|text|

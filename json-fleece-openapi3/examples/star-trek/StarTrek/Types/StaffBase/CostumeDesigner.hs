@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype CostumeDesigner = CostumeDesigner Bool
   deriving (Show, Eq)
 
-costumeDesignerSchema :: FC.Fleece schema => schema CostumeDesigner
+costumeDesignerSchema :: FC.Fleece t => FC.Schema t CostumeDesigner
 costumeDesignerSchema =
   FC.coerceSchema FC.boolean

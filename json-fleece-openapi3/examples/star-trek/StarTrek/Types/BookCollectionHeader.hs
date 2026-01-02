@@ -17,7 +17,7 @@ data BookCollectionHeader = BookCollectionHeader
   }
   deriving (Eq, Show)
 
-bookCollectionHeaderSchema :: FC.Fleece schema => schema BookCollectionHeader
+bookCollectionHeaderSchema :: FC.Fleece t => FC.Schema t BookCollectionHeader
 bookCollectionHeaderSchema =
   FC.object $
     FC.constructor BookCollectionHeader

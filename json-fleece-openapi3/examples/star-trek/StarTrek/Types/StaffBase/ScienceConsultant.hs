@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype ScienceConsultant = ScienceConsultant Bool
   deriving (Show, Eq)
 
-scienceConsultantSchema :: FC.Fleece schema => schema ScienceConsultant
+scienceConsultantSchema :: FC.Fleece t => FC.Schema t ScienceConsultant
 scienceConsultantSchema =
   FC.coerceSchema FC.boolean

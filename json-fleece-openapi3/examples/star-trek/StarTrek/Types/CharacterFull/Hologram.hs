@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Hologram = Hologram Bool
   deriving (Show, Eq)
 
-hologramSchema :: FC.Fleece schema => schema Hologram
+hologramSchema :: FC.Fleece t => FC.Schema t Hologram
 hologramSchema =
   FC.coerceSchema FC.boolean

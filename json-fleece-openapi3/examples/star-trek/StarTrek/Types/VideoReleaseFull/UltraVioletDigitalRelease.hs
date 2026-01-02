@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype UltraVioletDigitalRelease = UltraVioletDigitalRelease Bool
   deriving (Show, Eq)
 
-ultraVioletDigitalReleaseSchema :: FC.Fleece schema => schema UltraVioletDigitalRelease
+ultraVioletDigitalReleaseSchema :: FC.Fleece t => FC.Schema t UltraVioletDigitalRelease
 ultraVioletDigitalReleaseSchema =
   FC.coerceSchema FC.boolean

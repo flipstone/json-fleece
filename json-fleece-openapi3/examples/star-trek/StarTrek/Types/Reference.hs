@@ -19,7 +19,7 @@ data Reference = Reference
   }
   deriving (Eq, Show)
 
-referenceSchema :: FC.Fleece schema => schema Reference
+referenceSchema :: FC.Fleece t => FC.Schema t Reference
 referenceSchema =
   FC.object $
     FC.constructor Reference

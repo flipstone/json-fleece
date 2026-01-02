@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype AudiobookRunTime = AudiobookRunTime Integer
   deriving (Show, Eq)
 
-audiobookRunTimeSchema :: FC.Fleece schema => schema AudiobookRunTime
+audiobookRunTimeSchema :: FC.Fleece t => FC.Schema t AudiobookRunTime
 audiobookRunTimeSchema =
   FC.coerceSchema FC.integer

@@ -57,7 +57,7 @@ data TechnologyFull = TechnologyFull
   }
   deriving (Eq, Show)
 
-technologyFullSchema :: FC.Fleece schema => schema TechnologyFull
+technologyFullSchema :: FC.Fleece t => FC.Schema t TechnologyFull
 technologyFullSchema =
   FC.object $
     FC.constructor TechnologyFull

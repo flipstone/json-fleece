@@ -194,7 +194,7 @@ data Parent = Parent
   , nestedObject :: NestedObject
   }
 
-parentSchema :: FC.Fleece schema => schema Parent
+parentSchema :: FC.Fleece t => FC.Schema t Parent
 parentSchema =
   FC.object $
     FC.constructor Parent
@@ -207,7 +207,7 @@ data NestedObject = NestedObject
   , nestedField2 :: T.Text
   }
 
-nestedObjectSchema :: FC.Fleece schema => schema NestedObject
+nestedObjectSchema :: FC.Fleece t => FC.Schema t NestedObject
 nestedObjectSchema =
   FC.object $
     FC.constructor NestedObject
@@ -226,7 +226,7 @@ data AmbiguousNameParent = AmbiguousNameParent
   , ambiguousNameChild2 :: AmbiguousNameChild2
   }
 
-ambiguousNameParentSchema :: FC.Fleece schema => schema AmbiguousNameParent
+ambiguousNameParentSchema :: FC.Fleece t => FC.Schema t AmbiguousNameParent
 ambiguousNameParentSchema =
   FC.objectNamed "Parent.AmbiguousNameParent" $
     FC.constructor AmbiguousNameParent
@@ -237,7 +237,7 @@ newtype AmbiguousNameChild1 = AmbiguousNameChild1
   { ambiguousNameChild1Value :: T.Text
   }
 
-ambiguousNameChild1Schema :: FC.Fleece schema => schema AmbiguousNameChild1
+ambiguousNameChild1Schema :: FC.Fleece t => FC.Schema t AmbiguousNameChild1
 ambiguousNameChild1Schema =
   FC.objectNamed "Child1.AmbiguousName" $
     FC.constructor AmbiguousNameChild1
@@ -247,7 +247,7 @@ newtype AmbiguousNameChild2 = AmbiguousNameChild2
   { ambiguousNameChild2Value :: T.Text
   }
 
-ambiguousNameChild2Schema :: FC.Fleece schema => schema AmbiguousNameChild2
+ambiguousNameChild2Schema :: FC.Fleece t => FC.Schema t AmbiguousNameChild2
 ambiguousNameChild2Schema =
   FC.objectNamed "Child2.AmbiguousName" $
     FC.constructor AmbiguousNameChild2
@@ -256,7 +256,7 @@ ambiguousNameChild2Schema =
 mkGoldenTest ::
   Tasty.TestName ->
   FilePath ->
-  FM.Markdown a ->
+  FC.Schema FM.Markdown a ->
   Tasty.TestTree
 mkGoldenTest testName goldenPath schema = do
   -- Using VsStringDiff instead of VsString because the output for failing

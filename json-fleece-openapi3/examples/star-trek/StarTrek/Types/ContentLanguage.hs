@@ -19,7 +19,7 @@ data ContentLanguage = ContentLanguage
   }
   deriving (Eq, Show)
 
-contentLanguageSchema :: FC.Fleece schema => schema ContentLanguage
+contentLanguageSchema :: FC.Fleece t => FC.Schema t ContentLanguage
 contentLanguageSchema =
   FC.object $
     FC.constructor ContentLanguage

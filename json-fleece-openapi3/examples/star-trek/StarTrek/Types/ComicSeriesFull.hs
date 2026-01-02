@@ -50,7 +50,7 @@ data ComicSeriesFull = ComicSeriesFull
   }
   deriving (Eq, Show)
 
-comicSeriesFullSchema :: FC.Fleece schema => schema ComicSeriesFull
+comicSeriesFullSchema :: FC.Fleece t => FC.Schema t ComicSeriesFull
 comicSeriesFullSchema =
   FC.object $
     FC.constructor ComicSeriesFull

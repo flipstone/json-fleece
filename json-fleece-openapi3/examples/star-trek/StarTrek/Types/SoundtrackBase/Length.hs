@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype Length = Length Integer
   deriving (Show, Eq)
 
-lengthSchema :: FC.Fleece schema => schema Length
+lengthSchema :: FC.Fleece t => FC.Schema t Length
 lengthSchema =
   FC.coerceSchema FC.integer

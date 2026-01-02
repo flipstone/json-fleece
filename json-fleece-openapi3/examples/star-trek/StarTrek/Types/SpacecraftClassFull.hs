@@ -37,7 +37,7 @@ data SpacecraftClassFull = SpacecraftClassFull
   }
   deriving (Eq, Show)
 
-spacecraftClassFullSchema :: FC.Fleece schema => schema SpacecraftClassFull
+spacecraftClassFullSchema :: FC.Fleece t => FC.Schema t SpacecraftClassFull
 spacecraftClassFullSchema =
   FC.object $
     FC.constructor SpacecraftClassFull

@@ -17,7 +17,7 @@ data SoundtrackHeader = SoundtrackHeader
   }
   deriving (Eq, Show)
 
-soundtrackHeaderSchema :: FC.Fleece schema => schema SoundtrackHeader
+soundtrackHeaderSchema :: FC.Fleece t => FC.Schema t SoundtrackHeader
 soundtrackHeaderSchema =
   FC.object $
     FC.constructor SoundtrackHeader

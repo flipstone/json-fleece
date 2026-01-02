@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype NullableString = NullableString T.Text
   deriving (Show, Eq)
 
-nullableStringSchema :: FC.Fleece schema => schema NullableString
+nullableStringSchema :: FC.Fleece t => FC.Schema t NullableString
 nullableStringSchema =
   FC.coerceSchema FC.text

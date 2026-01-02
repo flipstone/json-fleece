@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype VideoGameProductionStaff = VideoGameProductionStaff Bool
   deriving (Show, Eq)
 
-videoGameProductionStaffSchema :: FC.Fleece schema => schema VideoGameProductionStaff
+videoGameProductionStaffSchema :: FC.Fleece t => FC.Schema t VideoGameProductionStaff
 videoGameProductionStaffSchema =
   FC.coerceSchema FC.boolean

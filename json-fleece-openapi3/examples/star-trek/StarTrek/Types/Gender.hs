@@ -22,6 +22,6 @@ genderToText v =
       F -> "F"
       M -> "M"
 
-genderSchema :: FC.Fleece schema => schema Gender
+genderSchema :: FC.Fleece t => FC.Schema t Gender
 genderSchema =
   FC.boundedEnum genderToText

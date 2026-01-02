@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype ExtraGalacticSpecies = ExtraGalacticSpecies Bool
   deriving (Show, Eq)
 
-extraGalacticSpeciesSchema :: FC.Fleece schema => schema ExtraGalacticSpecies
+extraGalacticSpeciesSchema :: FC.Fleece t => FC.Schema t ExtraGalacticSpecies
 extraGalacticSpeciesSchema =
   FC.coerceSchema FC.boolean

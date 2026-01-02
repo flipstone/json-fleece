@@ -27,7 +27,7 @@ data AnimalFull = AnimalFull
   }
   deriving (Eq, Show)
 
-animalFullSchema :: FC.Fleece schema => schema AnimalFull
+animalFullSchema :: FC.Fleece t => FC.Schema t AnimalFull
 animalFullSchema =
   FC.object $
     FC.constructor AnimalFull

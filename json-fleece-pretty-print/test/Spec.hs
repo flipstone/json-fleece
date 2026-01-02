@@ -383,7 +383,7 @@ data Parent = Parent
   , nestedObject :: NestedObject
   }
 
-parentSchema :: FC.Fleece schema => schema Parent
+parentSchema :: FC.Fleece t => FC.Schema t Parent
 parentSchema =
   FC.object $
     FC.constructor Parent
@@ -396,14 +396,14 @@ data NestedObject = NestedObject
   , nestedField2 :: T.Text
   }
 
-nestedObjectSchema :: FC.Fleece schema => schema NestedObject
+nestedObjectSchema :: FC.Fleece t => FC.Schema t NestedObject
 nestedObjectSchema =
   FC.object $
     FC.constructor NestedObject
       #+ FC.required "field1" nestedField1 FC.text
       #+ FC.required "field2" nestedField2 FC.text
 
-assertPrettyPrintEquals :: FPP.PrettyPrinter a -> a -> [LT.Text] -> HH.PropertyT IO ()
+assertPrettyPrintEquals :: FC.Schema FPP.PrettyPrinter a -> a -> [LT.Text] -> HH.PropertyT IO ()
 assertPrettyPrintEquals schema a expected =
   withFrozenCallStack $
     LT.lines (FPP.prettyPrintLazyText schema a) === expected

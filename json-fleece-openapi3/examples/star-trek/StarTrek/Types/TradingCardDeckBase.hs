@@ -21,7 +21,7 @@ data TradingCardDeckBase = TradingCardDeckBase
   }
   deriving (Eq, Show)
 
-tradingCardDeckBaseSchema :: FC.Fleece schema => schema TradingCardDeckBase
+tradingCardDeckBaseSchema :: FC.Fleece t => FC.Schema t TradingCardDeckBase
 tradingCardDeckBaseSchema =
   FC.object $
     FC.constructor TradingCardDeckBase

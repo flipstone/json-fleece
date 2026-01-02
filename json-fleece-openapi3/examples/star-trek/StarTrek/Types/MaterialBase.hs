@@ -37,7 +37,7 @@ data MaterialBase = MaterialBase
   }
   deriving (Eq, Show)
 
-materialBaseSchema :: FC.Fleece schema => schema MaterialBase
+materialBaseSchema :: FC.Fleece t => FC.Schema t MaterialBase
 materialBaseSchema =
   FC.object $
     FC.constructor MaterialBase

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Scientific = Scientific Sci.Scientific
   deriving (Show, Eq)
 
-scientificSchema :: FC.Fleece schema => schema Scientific
+scientificSchema :: FC.Fleece t => FC.Schema t Scientific
 scientificSchema =
   FC.coerceSchema FC.number

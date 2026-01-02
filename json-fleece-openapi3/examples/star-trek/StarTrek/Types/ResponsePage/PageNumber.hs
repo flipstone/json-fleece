@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype PageNumber = PageNumber I.Int32
   deriving (Show, Eq)
 
-pageNumberSchema :: FC.Fleece schema => schema PageNumber
+pageNumberSchema :: FC.Fleece t => FC.Schema t PageNumber
 pageNumberSchema =
   FC.coerceSchema FC.int32

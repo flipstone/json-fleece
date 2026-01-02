@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype If = If T.Text
   deriving (Show, Eq)
 
-ifSchema :: FC.Fleece schema => schema If
+ifSchema :: FC.Fleece t => FC.Schema t If
 ifSchema =
   FC.coerceSchema FC.text

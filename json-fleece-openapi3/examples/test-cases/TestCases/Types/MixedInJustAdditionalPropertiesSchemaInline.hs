@@ -21,7 +21,7 @@ data MixedInJustAdditionalPropertiesSchemaInline = MixedInJustAdditionalProperti
   }
   deriving (Eq, Show)
 
-mixedInJustAdditionalPropertiesSchemaInlineSchema :: FC.Fleece schema => schema MixedInJustAdditionalPropertiesSchemaInline
+mixedInJustAdditionalPropertiesSchemaInlineSchema :: FC.Fleece t => FC.Schema t MixedInJustAdditionalPropertiesSchemaInline
 mixedInJustAdditionalPropertiesSchemaInlineSchema =
   FC.object $
     FC.constructor MixedInJustAdditionalPropertiesSchemaInline

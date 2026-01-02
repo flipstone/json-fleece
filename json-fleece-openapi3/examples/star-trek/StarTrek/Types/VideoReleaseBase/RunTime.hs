@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype RunTime = RunTime Integer
   deriving (Show, Eq)
 
-runTimeSchema :: FC.Fleece schema => schema RunTime
+runTimeSchema :: FC.Fleece t => FC.Schema t RunTime
 runTimeSchema =
   FC.coerceSchema FC.integer

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype School = School Bool
   deriving (Show, Eq)
 
-schoolSchema :: FC.Fleece schema => schema School
+schoolSchema :: FC.Fleece t => FC.Schema t School
 schoolSchema =
   FC.coerceSchema FC.boolean

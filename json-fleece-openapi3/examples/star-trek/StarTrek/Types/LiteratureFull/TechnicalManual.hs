@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype TechnicalManual = TechnicalManual Bool
   deriving (Show, Eq)
 
-technicalManualSchema :: FC.Fleece schema => schema TechnicalManual
+technicalManualSchema :: FC.Fleece t => FC.Schema t TechnicalManual
 technicalManualSchema =
   FC.coerceSchema FC.boolean

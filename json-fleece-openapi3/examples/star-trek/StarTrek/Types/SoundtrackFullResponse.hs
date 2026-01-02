@@ -15,7 +15,7 @@ data SoundtrackFullResponse = SoundtrackFullResponse
   }
   deriving (Eq, Show)
 
-soundtrackFullResponseSchema :: FC.Fleece schema => schema SoundtrackFullResponse
+soundtrackFullResponseSchema :: FC.Fleece t => FC.Schema t SoundtrackFullResponse
 soundtrackFullResponseSchema =
   FC.object $
     FC.constructor SoundtrackFullResponse

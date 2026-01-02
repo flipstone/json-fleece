@@ -19,7 +19,7 @@ data PerformerBaseResponse = PerformerBaseResponse
   }
   deriving (Eq, Show)
 
-performerBaseResponseSchema :: FC.Fleece schema => schema PerformerBaseResponse
+performerBaseResponseSchema :: FC.Fleece t => FC.Schema t PerformerBaseResponse
 performerBaseResponseSchema =
   FC.object $
     FC.constructor PerformerBaseResponse

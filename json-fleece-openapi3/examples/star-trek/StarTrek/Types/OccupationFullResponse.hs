@@ -15,7 +15,7 @@ data OccupationFullResponse = OccupationFullResponse
   }
   deriving (Eq, Show)
 
-occupationFullResponseSchema :: FC.Fleece schema => schema OccupationFullResponse
+occupationFullResponseSchema :: FC.Fleece t => FC.Schema t OccupationFullResponse
 occupationFullResponseSchema =
   FC.object $
     FC.constructor OccupationFullResponse

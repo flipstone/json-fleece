@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype CustomDateFormat = CustomDateFormat Time.Day
   deriving (Show, Eq)
 
-customDateFormatSchema :: FC.Fleece schema => schema CustomDateFormat
+customDateFormatSchema :: FC.Fleece t => FC.Schema t CustomDateFormat
 customDateFormatSchema =
   FC.coerceSchema (FC.dayWithFormat "%m/%d/%y")

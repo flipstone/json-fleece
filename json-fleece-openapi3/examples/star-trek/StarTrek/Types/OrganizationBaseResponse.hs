@@ -19,7 +19,7 @@ data OrganizationBaseResponse = OrganizationBaseResponse
   }
   deriving (Eq, Show)
 
-organizationBaseResponseSchema :: FC.Fleece schema => schema OrganizationBaseResponse
+organizationBaseResponseSchema :: FC.Fleece t => FC.Schema t OrganizationBaseResponse
 organizationBaseResponseSchema =
   FC.object $
     FC.constructor OrganizationBaseResponse

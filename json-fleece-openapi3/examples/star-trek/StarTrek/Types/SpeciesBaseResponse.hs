@@ -19,7 +19,7 @@ data SpeciesBaseResponse = SpeciesBaseResponse
   }
   deriving (Eq, Show)
 
-speciesBaseResponseSchema :: FC.Fleece schema => schema SpeciesBaseResponse
+speciesBaseResponseSchema :: FC.Fleece t => FC.Schema t SpeciesBaseResponse
 speciesBaseResponseSchema =
   FC.object $
     FC.constructor SpeciesBaseResponse

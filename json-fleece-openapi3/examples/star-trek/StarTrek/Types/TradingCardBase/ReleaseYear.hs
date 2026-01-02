@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype ReleaseYear = ReleaseYear Integer
   deriving (Show, Eq)
 
-releaseYearSchema :: FC.Fleece schema => schema ReleaseYear
+releaseYearSchema :: FC.Fleece t => FC.Schema t ReleaseYear
 releaseYearSchema =
   FC.coerceSchema FC.integer

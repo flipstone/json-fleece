@@ -13,7 +13,7 @@ import Prelude (Eq, Show)
 data Foo = Foo
   deriving (Eq, Show)
 
-fooSchema :: FC.Fleece schema => schema Foo
+fooSchema :: FC.Fleece t => FC.Schema t Foo
 fooSchema =
   FC.object fooObjSchema
 

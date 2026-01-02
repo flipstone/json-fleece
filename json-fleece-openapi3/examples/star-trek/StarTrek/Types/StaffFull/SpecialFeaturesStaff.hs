@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype SpecialFeaturesStaff = SpecialFeaturesStaff Bool
   deriving (Show, Eq)
 
-specialFeaturesStaffSchema :: FC.Fleece schema => schema SpecialFeaturesStaff
+specialFeaturesStaffSchema :: FC.Fleece t => FC.Schema t SpecialFeaturesStaff
 specialFeaturesStaffSchema =
   FC.coerceSchema FC.boolean

@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype Height = Height Integer
   deriving (Show, Eq)
 
-heightSchema :: FC.Fleece schema => schema Height
+heightSchema :: FC.Fleece t => FC.Schema t Height
 heightSchema =
   FC.coerceSchema FC.integer

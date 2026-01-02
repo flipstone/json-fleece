@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype EarthlyLocation = EarthlyLocation Bool
   deriving (Show, Eq)
 
-earthlyLocationSchema :: FC.Fleece schema => schema EarthlyLocation
+earthlyLocationSchema :: FC.Fleece t => FC.Schema t EarthlyLocation
 earthlyLocationSchema =
   FC.coerceSchema FC.boolean

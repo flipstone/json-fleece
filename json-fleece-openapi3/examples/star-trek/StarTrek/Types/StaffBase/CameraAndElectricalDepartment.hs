@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype CameraAndElectricalDepartment = CameraAndElectricalDepartment Bool
   deriving (Show, Eq)
 
-cameraAndElectricalDepartmentSchema :: FC.Fleece schema => schema CameraAndElectricalDepartment
+cameraAndElectricalDepartmentSchema :: FC.Fleece t => FC.Schema t CameraAndElectricalDepartment
 cameraAndElectricalDepartmentSchema =
   FC.coerceSchema FC.boolean

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Drug = Drug Bool
   deriving (Show, Eq)
 
-drugSchema :: FC.Fleece schema => schema Drug
+drugSchema :: FC.Fleece t => FC.Schema t Drug
 drugSchema =
   FC.coerceSchema FC.boolean

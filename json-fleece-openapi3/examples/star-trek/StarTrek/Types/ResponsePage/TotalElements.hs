@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype TotalElements = TotalElements I.Int32
   deriving (Show, Eq)
 
-totalElementsSchema :: FC.Fleece schema => schema TotalElements
+totalElementsSchema :: FC.Fleece t => FC.Schema t TotalElements
 totalElementsSchema =
   FC.coerceSchema FC.int32

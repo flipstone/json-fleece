@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype PageSize = PageSize I.Int32
   deriving (Show, Eq)
 
-pageSizeSchema :: FC.Fleece schema => schema PageSize
+pageSizeSchema :: FC.Fleece t => FC.Schema t PageSize
 pageSizeSchema =
   FC.coerceSchema FC.int32

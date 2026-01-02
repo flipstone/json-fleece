@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype ReferenceBook = ReferenceBook Bool
   deriving (Show, Eq)
 
-referenceBookSchema :: FC.Fleece schema => schema ReferenceBook
+referenceBookSchema :: FC.Fleece t => FC.Schema t ReferenceBook
 referenceBookSchema =
   FC.coerceSchema FC.boolean

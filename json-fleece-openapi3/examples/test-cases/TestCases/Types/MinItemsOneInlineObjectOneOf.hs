@@ -16,7 +16,7 @@ data MinItemsOneInlineObjectOneOf = MinItemsOneInlineObjectOneOf
   }
   deriving (Eq, Show)
 
-minItemsOneInlineObjectOneOfSchema :: FC.Fleece schema => schema MinItemsOneInlineObjectOneOf
+minItemsOneInlineObjectOneOfSchema :: FC.Fleece t => FC.Schema t MinItemsOneInlineObjectOneOf
 minItemsOneInlineObjectOneOfSchema =
   FC.object $
     FC.constructor MinItemsOneInlineObjectOneOf

@@ -34,6 +34,6 @@ maritalStatusToText v =
       WIDOWED -> "WIDOWED"
       CAPTAINSWOMAN -> "CAPTAINS_WOMAN"
 
-maritalStatusSchema :: FC.Fleece schema => schema MaritalStatus
+maritalStatusSchema :: FC.Fleece t => FC.Schema t MaritalStatus
 maritalStatusSchema =
   FC.boundedEnum maritalStatusToText

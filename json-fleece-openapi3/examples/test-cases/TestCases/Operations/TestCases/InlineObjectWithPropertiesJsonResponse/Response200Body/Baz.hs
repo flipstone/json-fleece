@@ -15,7 +15,7 @@ data Baz = Baz
   }
   deriving (Eq, Show)
 
-bazSchema :: FC.Fleece schema => schema Baz
+bazSchema :: FC.Fleece t => FC.Schema t Baz
 bazSchema =
   FC.object $
     FC.constructor Baz

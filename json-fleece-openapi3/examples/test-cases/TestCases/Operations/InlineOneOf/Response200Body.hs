@@ -18,7 +18,7 @@ newtype Response200Body = Response200Body (Shrubbery.Union
    ])
   deriving (Show, Eq)
 
-response200BodySchema :: FC.Fleece schema => schema Response200Body
+response200BodySchema :: FC.Fleece t => FC.Schema t Response200Body
 response200BodySchema =
   FC.coerceSchema $
     FC.unionNamed (FC.qualifiedName "TestCases.Operations.InlineOneOf.Response200Body" "Response200Body") $

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Periodical = Periodical T.Text
   deriving (Show, Eq)
 
-periodicalSchema :: FC.Fleece schema => schema Periodical
+periodicalSchema :: FC.Fleece t => FC.Schema t Periodical
 periodicalSchema =
   FC.coerceSchema FC.text

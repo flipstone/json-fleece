@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype HumanoidSpecies = HumanoidSpecies Bool
   deriving (Show, Eq)
 
-humanoidSpeciesSchema :: FC.Fleece schema => schema HumanoidSpecies
+humanoidSpeciesSchema :: FC.Fleece t => FC.Schema t HumanoidSpecies
 humanoidSpeciesSchema =
   FC.coerceSchema FC.boolean

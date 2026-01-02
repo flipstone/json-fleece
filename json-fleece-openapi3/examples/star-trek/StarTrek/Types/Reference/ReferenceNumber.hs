@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype ReferenceNumber = ReferenceNumber T.Text
   deriving (Show, Eq)
 
-referenceNumberSchema :: FC.Fleece schema => schema ReferenceNumber
+referenceNumberSchema :: FC.Fleece t => FC.Schema t ReferenceNumber
 referenceNumberSchema =
   FC.coerceSchema FC.text

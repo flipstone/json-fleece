@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype PoisonousSubstance = PoisonousSubstance Bool
   deriving (Show, Eq)
 
-poisonousSubstanceSchema :: FC.Fleece schema => schema PoisonousSubstance
+poisonousSubstanceSchema :: FC.Fleece t => FC.Schema t PoisonousSubstance
 poisonousSubstanceSchema =
   FC.coerceSchema FC.boolean

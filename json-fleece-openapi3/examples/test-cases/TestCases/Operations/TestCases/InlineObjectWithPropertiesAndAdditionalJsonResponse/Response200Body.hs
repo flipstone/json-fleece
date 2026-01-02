@@ -21,7 +21,7 @@ data Response200Body = Response200Body
   }
   deriving (Eq, Show)
 
-response200BodySchema :: FC.Fleece schema => schema Response200Body
+response200BodySchema :: FC.Fleece t => FC.Schema t Response200Body
 response200BodySchema =
   FC.object $
     FC.constructor Response200Body

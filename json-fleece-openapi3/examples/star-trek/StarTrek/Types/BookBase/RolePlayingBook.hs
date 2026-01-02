@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype RolePlayingBook = RolePlayingBook Bool
   deriving (Show, Eq)
 
-rolePlayingBookSchema :: FC.Fleece schema => schema RolePlayingBook
+rolePlayingBookSchema :: FC.Fleece t => FC.Schema t RolePlayingBook
 rolePlayingBookSchema =
   FC.coerceSchema FC.boolean

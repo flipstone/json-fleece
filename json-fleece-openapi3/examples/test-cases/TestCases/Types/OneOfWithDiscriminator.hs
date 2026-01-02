@@ -25,7 +25,7 @@ newtype OneOfWithDiscriminator = OneOfWithDiscriminator (Shrubbery.TaggedUnion
    ])
   deriving (Show, Eq)
 
-oneOfWithDiscriminatorSchema :: FC.Fleece schema => schema OneOfWithDiscriminator
+oneOfWithDiscriminatorSchema :: FC.Fleece t => FC.Schema t OneOfWithDiscriminator
 oneOfWithDiscriminatorSchema =
   FC.coerceSchema $
     FC.taggedUnionNamed (FC.qualifiedName "TestCases.Types.OneOfWithDiscriminator" "OneOfWithDiscriminator") "type" $

@@ -30,14 +30,14 @@ import qualified Shrubbery
 import qualified Fleece.Core as FC
 
 data Encoder a
-  = Encoder FC.Name (a -> Aeson.Encoding)
+  = Encoder (a -> Aeson.Encoding)
 
-encode :: Encoder a -> a -> LBS.ByteString
-encode (Encoder _name toEncoding) =
+encode :: FC.Schema Encoder a -> a -> LBS.ByteString
+encode (FC.Schema _name (Encoder toEncoding)) =
   AesonEncoding.encodingToLazyByteString . toEncoding
 
-encodeStrict :: Encoder a -> a -> BS.ByteString
-encodeStrict (Encoder _name toEncoding) =
+encodeStrict :: FC.Schema Encoder a -> a -> BS.ByteString
+encodeStrict (FC.Schema _name (Encoder toEncoding)) =
   LBS.toStrict . AesonEncoding.encodingToLazyByteString . toEncoding
 
 instance FC.Fleece Encoder where
@@ -56,45 +56,38 @@ instance FC.Fleece Encoder where
   newtype TaggedUnionMembers Encoder _allTags handledTags
     = TaggedUnionMembers (Shrubbery.TaggedBranchBuilder handledTags (T.Text, Aeson.Series))
 
-  schemaName (Encoder name _toEncoding) =
-    name
+  interpretFormat _ =
+    FC.schemaInterpreter
 
-  format _ =
-    id
+  interpretNumber _name =
+    Encoder Aeson.toEncoding
 
-  number =
-    Encoder (FC.unqualifiedName "number") Aeson.toEncoding
+  interpretText _name =
+    Encoder Aeson.toEncoding
 
-  text =
-    Encoder (FC.unqualifiedName "text") Aeson.toEncoding
+  interpretBoolean _name =
+    Encoder Aeson.toEncoding
 
-  boolean =
-    Encoder (FC.unqualifiedName "boolean") Aeson.toEncoding
+  interpretNull _name =
+    Encoder (\FC.Null -> Aeson.toEncoding Aeson.Null)
 
-  null =
-    Encoder
-      (FC.unqualifiedName "null")
-      (\FC.Null -> Aeson.toEncoding Aeson.Null)
+  interpretArray _arrayName (FC.Schema _itemSchemaName (Encoder itemToEncoding)) =
+    Encoder (AesonTypes.listEncoding itemToEncoding . V.toList)
 
-  array (Encoder name itemToEncoding) =
-    Encoder
-      (FC.annotateName name "array")
-      (AesonTypes.listEncoding itemToEncoding . V.toList)
-
-  nullable (Encoder name toEncoding) =
-    Encoder (FC.annotateName name "nullable") $ \mbValue ->
+  interpretNullable _nullableName (FC.Schema _schemaName (Encoder toEncoding)) =
+    Encoder $ \mbValue ->
       case mbValue of
         Left FC.Null -> Aeson.toEncoding Aeson.Null
         Right value -> toEncoding value
 
-  required name accessor (Encoder _name toEncoding) =
+  required name accessor (FC.Schema _schemaName (Encoder toEncoding)) =
     let
       key = AesonKey.fromString name
     in
       Field $ \object ->
         AesonEncoding.pair key (toEncoding (accessor object))
 
-  optional name accessor (Encoder _name toEncoding) =
+  optional name accessor (FC.Schema _schemaName (Encoder toEncoding)) =
     let
       key = AesonKey.fromString name
     in
@@ -105,7 +98,7 @@ instance FC.Fleece Encoder where
           Nothing ->
             mempty
 
-  additionalFields accessor (Encoder _name toEncoding) =
+  additionalFields accessor (FC.Schema _schemaName (Encoder toEncoding)) =
     AdditionalFields $ \object ->
       Map.foldMapWithKey
         (\key value -> AesonEncoding.pair (AesonKey.fromText key) (toEncoding value))
@@ -125,39 +118,39 @@ instance FC.Fleece Encoder where
     Object $ \object ->
       mkStart object <> mkRest object
 
-  objectNamed name (Object toSeries) =
-    Encoder name (Aeson.pairs . toSeries)
+  interpretObjectNamed _name (Object toSeries) =
+    Encoder (Aeson.pairs . toSeries)
 
-  boundedEnumNamed name toText =
-    Encoder name (Aeson.toEncoding . toText)
+  interpretBoundedEnumNamed _name toText =
+    Encoder (Aeson.toEncoding . toText)
 
-  validateNamed name uncheck _check (Encoder _unvalidatedName toEncoding) =
-    Encoder name (toEncoding . uncheck)
+  interpretValidateNamed _name uncheck _check (FC.Schema _unvalidatedName (Encoder toEncoding)) =
+    Encoder (toEncoding . uncheck)
 
-  validateAnonymous uncheck _check (Encoder unvalidatedName toEncoding) =
-    Encoder unvalidatedName (toEncoding . uncheck)
+  interpretValidateAnonymous uncheck _check (FC.Schema _unvalidatedName (Encoder toEncoding)) =
+    Encoder (toEncoding . uncheck)
 
-  unionNamed name (UnionMembers builder) =
+  interpretUnionNamed _name (UnionMembers builder) =
     let
       branches =
         Shrubbery.branchBuild builder
     in
-      Encoder name (Shrubbery.dissectUnion branches)
+      Encoder (Shrubbery.dissectUnion branches)
 
-  unionMemberWithIndex _index encoder =
+  unionMemberWithIndex _index (FC.Schema _schemaName encoder) =
     UnionMembers $
       let
         -- It's important that this let is _inside_ the 'UnionMembers'
         -- constructor so that it lazy enough to allow the recursive reference
         -- of 'anyJSON' to itself within arrays.
-        Encoder _name toEncoding = encoder
+        Encoder toEncoding = encoder
       in
         Shrubbery.singleBranch toEncoding
 
   unionCombine (UnionMembers left) (UnionMembers right) =
     UnionMembers (Shrubbery.appendBranches left right)
 
-  taggedUnionNamed name tagProperty (TaggedUnionMembers builder) =
+  interpretTaggedUnionNamed _name tagProperty (TaggedUnionMembers builder) =
     let
       branches =
         Shrubbery.taggedBranchBuild builder
@@ -170,7 +163,7 @@ instance FC.Fleece Encoder where
           AesonEncoding.pair (AesonKey.fromText tagPropText) (Aeson.toEncoding tagValue)
             <> aesonSeries
     in
-      Encoder name (addTag . Shrubbery.dissectTaggedUnion branches)
+      Encoder (addTag . Shrubbery.dissectTaggedUnion branches)
 
   taggedUnionMemberWithTag ::
     forall tag allTags a proxy.
@@ -194,9 +187,8 @@ instance FC.Fleece Encoder where
   taggedUnionCombine (TaggedUnionMembers left) (TaggedUnionMembers right) =
     TaggedUnionMembers (Shrubbery.appendTaggedBranches left right)
 
-  jsonString (Encoder name toEncoding) =
+  interpretJsonString (FC.Schema _name (Encoder toEncoding)) =
     Encoder
-      name
       ( Aeson.toEncoding
           . LEnc.decodeUtf8
           . AesonEncoding.encodingToLazyByteString

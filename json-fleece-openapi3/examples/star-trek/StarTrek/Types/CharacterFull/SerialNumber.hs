@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype SerialNumber = SerialNumber T.Text
   deriving (Show, Eq)
 
-serialNumberSchema :: FC.Fleece schema => schema SerialNumber
+serialNumberSchema :: FC.Fleece t => FC.Schema t SerialNumber
 serialNumberSchema =
   FC.coerceSchema FC.text

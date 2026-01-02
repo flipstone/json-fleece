@@ -14,6 +14,6 @@ import qualified TestCases.Types.AStringType as AStringType
 newtype JustAdditionalPropertiesSchemaRef = JustAdditionalPropertiesSchemaRef (Map.Map T.Text AStringType.AStringType)
   deriving (Show, Eq)
 
-justAdditionalPropertiesSchemaRefSchema :: FC.Fleece schema => schema JustAdditionalPropertiesSchemaRef
+justAdditionalPropertiesSchemaRefSchema :: FC.Fleece t => FC.Schema t JustAdditionalPropertiesSchemaRef
 justAdditionalPropertiesSchemaRefSchema =
   FC.coerceSchema (FC.map AStringType.aStringTypeSchema)

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Class = Class T.Text
   deriving (Show, Eq)
 
-classSchema :: FC.Fleece schema => schema Class
+classSchema :: FC.Fleece t => FC.Schema t Class
 classSchema =
   FC.coerceSchema FC.text

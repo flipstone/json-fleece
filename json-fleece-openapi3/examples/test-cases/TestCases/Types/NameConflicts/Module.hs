@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Module = Module T.Text
   deriving (Show, Eq)
 
-moduleSchema :: FC.Fleece schema => schema Module
+moduleSchema :: FC.Fleece t => FC.Schema t Module
 moduleSchema =
   FC.coerceSchema FC.text

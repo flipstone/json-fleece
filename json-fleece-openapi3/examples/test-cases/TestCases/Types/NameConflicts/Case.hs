@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Case = Case T.Text
   deriving (Show, Eq)
 
-caseSchema :: FC.Fleece schema => schema Case
+caseSchema :: FC.Fleece t => FC.Schema t Case
 caseSchema =
   FC.coerceSchema FC.text

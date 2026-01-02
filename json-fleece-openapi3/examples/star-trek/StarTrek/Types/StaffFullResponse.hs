@@ -15,7 +15,7 @@ data StaffFullResponse = StaffFullResponse
   }
   deriving (Eq, Show)
 
-staffFullResponseSchema :: FC.Fleece schema => schema StaffFullResponse
+staffFullResponseSchema :: FC.Fleece t => FC.Schema t StaffFullResponse
 staffFullResponseSchema =
   FC.object $
     FC.constructor StaffFullResponse

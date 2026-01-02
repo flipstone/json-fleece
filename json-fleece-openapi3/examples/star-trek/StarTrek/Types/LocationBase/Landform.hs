@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Landform = Landform Bool
   deriving (Show, Eq)
 
-landformSchema :: FC.Fleece schema => schema Landform
+landformSchema :: FC.Fleece t => FC.Schema t Landform
 landformSchema =
   FC.coerceSchema FC.boolean

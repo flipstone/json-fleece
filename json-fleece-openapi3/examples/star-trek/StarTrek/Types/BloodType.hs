@@ -24,6 +24,6 @@ bloodTypeToText v =
       ONEGATIVE -> "O_NEGATIVE"
       TNEGATIVE -> "T_NEGATIVE"
 
-bloodTypeSchema :: FC.Fleece schema => schema BloodType
+bloodTypeSchema :: FC.Fleece t => FC.Schema t BloodType
 bloodTypeSchema =
   FC.boundedEnum bloodTypeToText

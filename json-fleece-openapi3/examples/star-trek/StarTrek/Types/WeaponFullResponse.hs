@@ -15,7 +15,7 @@ data WeaponFullResponse = WeaponFullResponse
   }
   deriving (Eq, Show)
 
-weaponFullResponseSchema :: FC.Fleece schema => schema WeaponFullResponse
+weaponFullResponseSchema :: FC.Fleece t => FC.Schema t WeaponFullResponse
 weaponFullResponseSchema =
   FC.object $
     FC.constructor WeaponFullResponse

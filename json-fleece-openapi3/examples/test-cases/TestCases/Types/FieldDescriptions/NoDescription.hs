@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype NoDescription = NoDescription T.Text
   deriving (Show, Eq)
 
-noDescriptionSchema :: FC.Fleece schema => schema NoDescription
+noDescriptionSchema :: FC.Fleece t => FC.Schema t NoDescription
 noDescriptionSchema =
   FC.coerceSchema FC.text

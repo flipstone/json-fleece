@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype TransporterTechnology = TransporterTechnology Bool
   deriving (Show, Eq)
 
-transporterTechnologySchema :: FC.Fleece schema => schema TransporterTechnology
+transporterTechnologySchema :: FC.Fleece t => FC.Schema t TransporterTechnology
 transporterTechnologySchema =
   FC.coerceSchema FC.boolean

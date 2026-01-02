@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype NumberOfDecks = NumberOfDecks Integer
   deriving (Show, Eq)
 
-numberOfDecksSchema :: FC.Fleece schema => schema NumberOfDecks
+numberOfDecksSchema :: FC.Fleece t => FC.Schema t NumberOfDecks
 numberOfDecksSchema =
   FC.coerceSchema FC.integer

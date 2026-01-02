@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype HypersonicSeries = HypersonicSeries Bool
   deriving (Show, Eq)
 
-hypersonicSeriesSchema :: FC.Fleece schema => schema HypersonicSeries
+hypersonicSeriesSchema :: FC.Fleece t => FC.Schema t HypersonicSeries
 hypersonicSeriesSchema =
   FC.coerceSchema FC.boolean

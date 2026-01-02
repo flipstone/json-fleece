@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype SomeArrayItem = SomeArrayItem Bool
   deriving (Show, Eq)
 
-someArrayItemSchema :: FC.Fleece schema => schema SomeArrayItem
+someArrayItemSchema :: FC.Fleece t => FC.Schema t SomeArrayItem
 someArrayItemSchema =
   FC.coerceSchema FC.boolean

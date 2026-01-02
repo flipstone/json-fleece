@@ -19,7 +19,7 @@ data FieldI = FieldI
   }
   deriving (Eq, Show)
 
-fieldISchema :: FC.Fleece schema => schema FieldI
+fieldISchema :: FC.Fleece t => FC.Schema t FieldI
 fieldISchema =
   FC.object $
     FC.constructor FieldI

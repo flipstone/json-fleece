@@ -15,7 +15,7 @@ data MedicalConditionFullResponse = MedicalConditionFullResponse
   }
   deriving (Eq, Show)
 
-medicalConditionFullResponseSchema :: FC.Fleece schema => schema MedicalConditionFullResponse
+medicalConditionFullResponseSchema :: FC.Fleece t => FC.Schema t MedicalConditionFullResponse
 medicalConditionFullResponseSchema =
   FC.object $
     FC.constructor MedicalConditionFullResponse

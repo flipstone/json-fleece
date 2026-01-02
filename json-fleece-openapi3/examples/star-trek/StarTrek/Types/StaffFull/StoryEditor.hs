@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype StoryEditor = StoryEditor Bool
   deriving (Show, Eq)
 
-storyEditorSchema :: FC.Fleece schema => schema StoryEditor
+storyEditorSchema :: FC.Fleece t => FC.Schema t StoryEditor
 storyEditorSchema =
   FC.coerceSchema FC.boolean

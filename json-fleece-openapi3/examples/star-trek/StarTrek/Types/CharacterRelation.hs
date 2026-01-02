@@ -18,7 +18,7 @@ data CharacterRelation = CharacterRelation
   }
   deriving (Eq, Show)
 
-characterRelationSchema :: FC.Fleece schema => schema CharacterRelation
+characterRelationSchema :: FC.Fleece t => FC.Schema t CharacterRelation
 characterRelationSchema =
   FC.object $
     FC.constructor CharacterRelation

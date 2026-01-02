@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype OptionalArrayFieldItem = OptionalArrayFieldItem T.Text
   deriving (Show, Eq)
 
-optionalArrayFieldItemSchema :: FC.Fleece schema => schema OptionalArrayFieldItem
+optionalArrayFieldItemSchema :: FC.Fleece t => FC.Schema t OptionalArrayFieldItem
 optionalArrayFieldItemSchema =
   FC.coerceSchema FC.text

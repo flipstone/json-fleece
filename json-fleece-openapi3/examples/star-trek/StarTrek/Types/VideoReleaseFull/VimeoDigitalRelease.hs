@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype VimeoDigitalRelease = VimeoDigitalRelease Bool
   deriving (Show, Eq)
 
-vimeoDigitalReleaseSchema :: FC.Fleece schema => schema VimeoDigitalRelease
+vimeoDigitalReleaseSchema :: FC.Fleece t => FC.Schema t VimeoDigitalRelease
 vimeoDigitalReleaseSchema =
   FC.coerceSchema FC.boolean

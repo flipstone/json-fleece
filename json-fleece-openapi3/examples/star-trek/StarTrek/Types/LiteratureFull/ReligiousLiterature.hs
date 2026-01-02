@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype ReligiousLiterature = ReligiousLiterature Bool
   deriving (Show, Eq)
 
-religiousLiteratureSchema :: FC.Fleece schema => schema ReligiousLiterature
+religiousLiteratureSchema :: FC.Fleece t => FC.Schema t ReligiousLiterature
 religiousLiteratureSchema =
   FC.coerceSchema FC.boolean

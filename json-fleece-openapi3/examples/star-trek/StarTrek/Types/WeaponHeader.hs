@@ -17,7 +17,7 @@ data WeaponHeader = WeaponHeader
   }
   deriving (Eq, Show)
 
-weaponHeaderSchema :: FC.Fleece schema => schema WeaponHeader
+weaponHeaderSchema :: FC.Fleece t => FC.Schema t WeaponHeader
 weaponHeaderSchema =
   FC.object $
     FC.constructor WeaponHeader

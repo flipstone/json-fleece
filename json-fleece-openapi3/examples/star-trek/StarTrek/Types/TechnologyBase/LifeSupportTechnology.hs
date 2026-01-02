@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype LifeSupportTechnology = LifeSupportTechnology Bool
   deriving (Show, Eq)
 
-lifeSupportTechnologySchema :: FC.Fleece schema => schema LifeSupportTechnology
+lifeSupportTechnologySchema :: FC.Fleece t => FC.Schema t LifeSupportTechnology
 lifeSupportTechnologySchema =
   FC.coerceSchema FC.boolean

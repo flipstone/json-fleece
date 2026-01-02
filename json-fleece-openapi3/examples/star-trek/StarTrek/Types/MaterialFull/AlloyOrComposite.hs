@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype AlloyOrComposite = AlloyOrComposite Bool
   deriving (Show, Eq)
 
-alloyOrCompositeSchema :: FC.Fleece schema => schema AlloyOrComposite
+alloyOrCompositeSchema :: FC.Fleece t => FC.Schema t AlloyOrComposite
 alloyOrCompositeSchema =
   FC.coerceSchema FC.boolean

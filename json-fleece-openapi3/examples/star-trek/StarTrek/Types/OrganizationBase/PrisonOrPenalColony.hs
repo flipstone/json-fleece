@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype PrisonOrPenalColony = PrisonOrPenalColony Bool
   deriving (Show, Eq)
 
-prisonOrPenalColonySchema :: FC.Fleece schema => schema PrisonOrPenalColony
+prisonOrPenalColonySchema :: FC.Fleece t => FC.Schema t PrisonOrPenalColony
 prisonOrPenalColonySchema =
   FC.coerceSchema FC.boolean

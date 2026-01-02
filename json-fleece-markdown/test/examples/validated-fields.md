@@ -3,8 +3,8 @@
 |Field|Key Required|Null Allowed|Type|
 |---|---|---|---|
 |validateNamedField|yes|no|SomeString|
-|validateAnonymousField|yes|no|string|
+|validateAnonymousField|yes|no|text|
 
 # SomeString
 
-string
+text

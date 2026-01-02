@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype LocalTimeField = LocalTimeField Time.LocalTime
   deriving (Show, Eq)
 
-localTimeFieldSchema :: FC.Fleece schema => schema LocalTimeField
+localTimeFieldSchema :: FC.Fleece t => FC.Schema t LocalTimeField
 localTimeFieldSchema =
   FC.coerceSchema FC.localTime

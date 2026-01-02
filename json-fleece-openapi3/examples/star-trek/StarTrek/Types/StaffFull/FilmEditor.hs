@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype FilmEditor = FilmEditor Bool
   deriving (Show, Eq)
 
-filmEditorSchema :: FC.Fleece schema => schema FilmEditor
+filmEditorSchema :: FC.Fleece t => FC.Schema t FilmEditor
 filmEditorSchema =
   FC.coerceSchema FC.boolean

@@ -29,7 +29,7 @@ data VideoGameBase = VideoGameBase
   }
   deriving (Eq, Show)
 
-videoGameBaseSchema :: FC.Fleece schema => schema VideoGameBase
+videoGameBaseSchema :: FC.Fleece t => FC.Schema t VideoGameBase
 videoGameBaseSchema =
   FC.object $
     FC.constructor VideoGameBase

@@ -7,7 +7,7 @@
 {-# LANGUAGE TypeOperators #-}
 
 module Fleece.Aeson.ToValue
-  ( ToValue
+  ( ToValue (ToValue)
   , toValue
   , toLazyText
   , toStrictText
@@ -29,15 +29,14 @@ import qualified Shrubbery
 
 import qualified Fleece.Core as FC
 
-toLazyText :: ToValue a -> a -> TL.Text
+toLazyText :: FC.Schema ToValue a -> a -> TL.Text
 toLazyText encoder = encodeToLazyText . toValue encoder
 
-toStrictText :: ToValue a -> a -> T.Text
+toStrictText :: FC.Schema ToValue a -> a -> T.Text
 toStrictText encoder = TL.toStrict . toLazyText encoder
 
-toValue :: ToValue a -> a -> Aeson.Value
-toValue (ToValue _name f) =
-  f
+toValue :: FC.Schema ToValue a -> a -> Aeson.Value
+toValue (FC.Schema _name (ToValue f)) = f
 
 -- This needs to be a separate `Fleece` instance because using `Value` for
 -- encoding results in a different encoded result than using `Encoding`. The
@@ -45,8 +44,7 @@ toValue (ToValue _name f) =
 -- the same and will be decoded the same as `toJSON (toValue a)`, it will not
 -- be exactly the same bytestring produced by the two.
 --
-data ToValue a
-  = ToValue FC.Name (a -> Aeson.Value)
+newtype ToValue a = ToValue (a -> Aeson.Value)
 
 instance FC.Fleece ToValue where
   newtype Object ToValue object _constructor
@@ -64,45 +62,38 @@ instance FC.Fleece ToValue where
   newtype TaggedUnionMembers ToValue _allTypes handledTypes
     = TaggedUnionMembers (Shrubbery.TaggedBranchBuilder handledTypes (T.Text, [AesonTypes.Pair]))
 
-  schemaName (ToValue name _toJSON) =
-    name
+  interpretFormat _ =
+    FC.schemaInterpreter
 
-  format _ =
-    id
+  interpretNumber _name =
+    ToValue Aeson.toJSON
 
-  number =
-    ToValue (FC.unqualifiedName "number") Aeson.toJSON
+  interpretText _name =
+    ToValue Aeson.toJSON
 
-  text =
-    ToValue (FC.unqualifiedName "text") Aeson.toJSON
+  interpretBoolean _name =
+    ToValue Aeson.toJSON
 
-  boolean =
-    ToValue (FC.unqualifiedName "boolean") Aeson.toJSON
+  interpretNull _name =
+    ToValue (\FC.Null -> Aeson.Null)
 
-  null =
-    ToValue
-      (FC.unqualifiedName "null")
-      (\FC.Null -> Aeson.Null)
+  interpretArray _arrayName (FC.Schema _itemSchemaName (ToValue itemToJSON)) =
+    ToValue (Aeson.Array . fmap itemToJSON)
 
-  array (ToValue name itemToJSON) =
-    ToValue
-      (FC.annotateName name "array")
-      (Aeson.Array . fmap itemToJSON)
-
-  nullable (ToValue name toJSON) =
-    ToValue (FC.annotateName name "nullable") $ \mbValue ->
+  interpretNullable _nullableName (FC.Schema _schemaName (ToValue toJSON)) =
+    ToValue $ \mbValue ->
       case mbValue of
         Left FC.Null -> Aeson.Null
         Right value -> toJSON value
 
-  required name accessor (ToValue _name toJSON) =
+  required name accessor (FC.Schema _name (ToValue toJSON)) =
     let
       key = AesonKey.fromString name
     in
       Field $ \object ->
         [(key, toJSON (accessor object))]
 
-  optional name accessor (ToValue _name toJSON) =
+  optional name accessor (FC.Schema _name (ToValue toJSON)) =
     let
       key = AesonKey.fromString name
     in
@@ -113,7 +104,7 @@ instance FC.Fleece ToValue where
           Nothing ->
             []
 
-  additionalFields accessor (ToValue _name toJSON) =
+  additionalFields accessor (FC.Schema _name (ToValue toJSON)) =
     AdditionalFields $ \object ->
       map (\(key, value) -> (AesonKey.fromText key, toJSON value))
         . Map.toList
@@ -134,39 +125,39 @@ instance FC.Fleece ToValue where
     Object $ \object ->
       mkStart object <> mkRest object
 
-  objectNamed name (Object toObject) =
-    ToValue name (Aeson.object . toObject)
+  interpretObjectNamed _name (Object toObject) =
+    ToValue (Aeson.object . toObject)
 
-  boundedEnumNamed name toText =
-    ToValue name (Aeson.toJSON . toText)
+  interpretBoundedEnumNamed _name toText =
+    ToValue (Aeson.toJSON . toText)
 
-  validateNamed name uncheck _check (ToValue _unvalidatedName toJSON) =
-    ToValue name (toJSON . uncheck)
+  interpretValidateNamed _name uncheck _check (FC.Schema _unvalidatedName (ToValue toJSON)) =
+    ToValue (toJSON . uncheck)
 
-  validateAnonymous uncheck _check (ToValue unvalidatedName toJSON) =
-    ToValue unvalidatedName (toJSON . uncheck)
+  interpretValidateAnonymous uncheck _check (FC.Schema _unvalidatedName (ToValue toJSON)) =
+    ToValue (toJSON . uncheck)
 
-  unionNamed name (UnionMembers builder) =
+  interpretUnionNamed _name (UnionMembers builder) =
     let
       branches =
         Shrubbery.branchBuild builder
     in
-      ToValue name (Shrubbery.dissectUnion branches)
+      ToValue (Shrubbery.dissectUnion branches)
 
-  unionMemberWithIndex _index encoder =
+  unionMemberWithIndex _index (FC.Schema _name encoder) =
     UnionMembers $
       let
         -- It's important that this let is _inside_ the 'UnionMembers'
         -- constructor so that it lazy enough to allow the recursive reference
         -- of 'anyJSON' to itself within arrays.
-        ToValue _name toJSON = encoder
+        ToValue toJSON = encoder
       in
         Shrubbery.singleBranch toJSON
 
   unionCombine (UnionMembers left) (UnionMembers right) =
     UnionMembers (Shrubbery.appendBranches left right)
 
-  taggedUnionNamed name tagProperty (TaggedUnionMembers builder) =
+  interpretTaggedUnionNamed _name tagProperty (TaggedUnionMembers builder) =
     let
       branches =
         Shrubbery.taggedBranchBuild builder
@@ -174,7 +165,7 @@ instance FC.Fleece ToValue where
       tagKey =
         AesonKey.fromString tagProperty
     in
-      ToValue name $ \value ->
+      ToValue $ \value ->
         let
           (tagValue, fields) =
             Shrubbery.dissectTaggedUnion branches value
@@ -197,9 +188,8 @@ instance FC.Fleece ToValue where
   taggedUnionCombine (TaggedUnionMembers left) (TaggedUnionMembers right) =
     TaggedUnionMembers (Shrubbery.appendTaggedBranches left right)
 
-  jsonString (ToValue name toJSON) =
+  interpretJsonString (FC.Schema _name (ToValue toJSON)) =
     ToValue
-      name
       ( Aeson.String
           . Enc.decodeUtf8
           . LBS.toStrict

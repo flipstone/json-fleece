@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype TotalPages = TotalPages I.Int32
   deriving (Show, Eq)
 
-totalPagesSchema :: FC.Fleece schema => schema TotalPages
+totalPagesSchema :: FC.Fleece t => FC.Schema t TotalPages
 totalPagesSchema =
   FC.coerceSchema FC.int32

@@ -19,7 +19,7 @@ data AllOfFieldsEthroughG = AllOfFieldsEthroughG
   }
   deriving (Eq, Show)
 
-allOfFieldsEthroughGSchema :: FC.Fleece schema => schema AllOfFieldsEthroughG
+allOfFieldsEthroughGSchema :: FC.Fleece t => FC.Schema t AllOfFieldsEthroughG
 allOfFieldsEthroughGSchema =
   FC.object $
     FC.constructor AllOfFieldsEthroughG

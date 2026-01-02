@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype HerbOrSpice = HerbOrSpice Bool
   deriving (Show, Eq)
 
-herbOrSpiceSchema :: FC.Fleece schema => schema HerbOrSpice
+herbOrSpiceSchema :: FC.Fleece t => FC.Schema t HerbOrSpice
 herbOrSpiceSchema =
   FC.coerceSchema FC.boolean

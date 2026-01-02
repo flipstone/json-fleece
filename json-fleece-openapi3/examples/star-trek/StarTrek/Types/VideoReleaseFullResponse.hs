@@ -15,7 +15,7 @@ data VideoReleaseFullResponse = VideoReleaseFullResponse
   }
   deriving (Eq, Show)
 
-videoReleaseFullResponseSchema :: FC.Fleece schema => schema VideoReleaseFullResponse
+videoReleaseFullResponseSchema :: FC.Fleece t => FC.Schema t VideoReleaseFullResponse
 videoReleaseFullResponseSchema =
   FC.object $
     FC.constructor VideoReleaseFullResponse

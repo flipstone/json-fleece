@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype PhotonicTechnology = PhotonicTechnology Bool
   deriving (Show, Eq)
 
-photonicTechnologySchema :: FC.Fleece schema => schema PhotonicTechnology
+photonicTechnologySchema :: FC.Fleece t => FC.Schema t PhotonicTechnology
 photonicTechnologySchema =
   FC.coerceSchema FC.boolean

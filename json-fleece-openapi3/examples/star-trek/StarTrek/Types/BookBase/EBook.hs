@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype EBook = EBook Bool
   deriving (Show, Eq)
 
-eBookSchema :: FC.Fleece schema => schema EBook
+eBookSchema :: FC.Fleece t => FC.Schema t EBook
 eBookSchema =
   FC.coerceSchema FC.boolean

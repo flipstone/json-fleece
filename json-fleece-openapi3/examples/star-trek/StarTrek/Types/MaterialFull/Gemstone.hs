@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Gemstone = Gemstone Bool
   deriving (Show, Eq)
 
-gemstoneSchema :: FC.Fleece schema => schema Gemstone
+gemstoneSchema :: FC.Fleece t => FC.Schema t Gemstone
 gemstoneSchema =
   FC.coerceSchema FC.boolean

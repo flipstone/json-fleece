@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype AtomicNumber = AtomicNumber Integer
   deriving (Show, Eq)
 
-atomicNumberSchema :: FC.Fleece schema => schema AtomicNumber
+atomicNumberSchema :: FC.Fleece t => FC.Schema t AtomicNumber
 atomicNumberSchema =
   FC.coerceSchema FC.integer

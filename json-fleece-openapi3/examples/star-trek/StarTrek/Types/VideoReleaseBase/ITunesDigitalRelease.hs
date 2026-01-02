@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype ITunesDigitalRelease = ITunesDigitalRelease Bool
   deriving (Show, Eq)
 
-iTunesDigitalReleaseSchema :: FC.Fleece schema => schema ITunesDigitalRelease
+iTunesDigitalReleaseSchema :: FC.Fleece t => FC.Schema t ITunesDigitalRelease
 iTunesDigitalReleaseSchema =
   FC.coerceSchema FC.boolean

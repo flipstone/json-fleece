@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype MegaSeries = MegaSeries Bool
   deriving (Show, Eq)
 
-megaSeriesSchema :: FC.Fleece schema => schema MegaSeries
+megaSeriesSchema :: FC.Fleece t => FC.Schema t MegaSeries
 megaSeriesSchema =
   FC.coerceSchema FC.boolean

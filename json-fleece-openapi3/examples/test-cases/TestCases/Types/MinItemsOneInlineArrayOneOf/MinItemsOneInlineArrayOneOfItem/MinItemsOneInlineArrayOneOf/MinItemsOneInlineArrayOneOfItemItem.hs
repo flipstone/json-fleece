@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype MinItemsOneInlineArrayOneOfItemItem = MinItemsOneInlineArrayOneOfItemItem Bool
   deriving (Show, Eq)
 
-minItemsOneInlineArrayOneOfItemItemSchema :: FC.Fleece schema => schema MinItemsOneInlineArrayOneOfItemItem
+minItemsOneInlineArrayOneOfItemItemSchema :: FC.Fleece t => FC.Schema t MinItemsOneInlineArrayOneOfItemItem
 minItemsOneInlineArrayOneOfItemItemSchema =
   FC.coerceSchema FC.boolean

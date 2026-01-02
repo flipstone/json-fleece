@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype NumberOfFeatureLengthEpisodes = NumberOfFeatureLengthEpisodes Integer
   deriving (Show, Eq)
 
-numberOfFeatureLengthEpisodesSchema :: FC.Fleece schema => schema NumberOfFeatureLengthEpisodes
+numberOfFeatureLengthEpisodesSchema :: FC.Fleece t => FC.Schema t NumberOfFeatureLengthEpisodes
 numberOfFeatureLengthEpisodesSchema =
   FC.coerceSchema FC.integer

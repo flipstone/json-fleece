@@ -17,7 +17,7 @@ data ComicSeriesHeader = ComicSeriesHeader
   }
   deriving (Eq, Show)
 
-comicSeriesHeaderSchema :: FC.Fleece schema => schema ComicSeriesHeader
+comicSeriesHeaderSchema :: FC.Fleece t => FC.Schema t ComicSeriesHeader
 comicSeriesHeaderSchema =
   FC.object $
     FC.constructor ComicSeriesHeader

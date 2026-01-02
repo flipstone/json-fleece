@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype RequiredNullableField = RequiredNullableField T.Text
   deriving (Show, Eq)
 
-requiredNullableFieldSchema :: FC.Fleece schema => schema RequiredNullableField
+requiredNullableFieldSchema :: FC.Fleece t => FC.Schema t RequiredNullableField
 requiredNullableFieldSchema =
   FC.coerceSchema FC.text

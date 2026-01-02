@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype ComputerProgramming = ComputerProgramming Bool
   deriving (Show, Eq)
 
-computerProgrammingSchema :: FC.Fleece schema => schema ComputerProgramming
+computerProgrammingSchema :: FC.Fleece t => FC.Schema t ComputerProgramming
 computerProgrammingSchema =
   FC.coerceSchema FC.boolean

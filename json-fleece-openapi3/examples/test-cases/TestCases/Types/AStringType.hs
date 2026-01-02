@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype AStringType = AStringType T.Text
   deriving (Show, Eq)
 
-aStringTypeSchema :: FC.Fleece schema => schema AStringType
+aStringTypeSchema :: FC.Fleece t => FC.Schema t AStringType
 aStringTypeSchema =
   FC.coerceSchema FC.text

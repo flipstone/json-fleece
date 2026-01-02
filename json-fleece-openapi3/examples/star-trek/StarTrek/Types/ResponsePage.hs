@@ -27,7 +27,7 @@ data ResponsePage = ResponsePage
   }
   deriving (Eq, Show)
 
-responsePageSchema :: FC.Fleece schema => schema ResponsePage
+responsePageSchema :: FC.Fleece t => FC.Schema t ResponsePage
 responsePageSchema =
   FC.object $
     FC.constructor ResponsePage

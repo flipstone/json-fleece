@@ -43,7 +43,7 @@ data OrganizationFull = OrganizationFull
   }
   deriving (Eq, Show)
 
-organizationFullSchema :: FC.Fleece schema => schema OrganizationFull
+organizationFullSchema :: FC.Fleece t => FC.Schema t OrganizationFull
 organizationFullSchema =
   FC.object $
     FC.constructor OrganizationFull

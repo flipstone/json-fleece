@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype TitleChineseTraditional = TitleChineseTraditional T.Text
   deriving (Show, Eq)
 
-titleChineseTraditionalSchema :: FC.Fleece schema => schema TitleChineseTraditional
+titleChineseTraditionalSchema :: FC.Fleece t => FC.Schema t TitleChineseTraditional
 titleChineseTraditionalSchema =
   FC.coerceSchema FC.text

@@ -15,7 +15,7 @@ data BadRequestError = BadRequestError
   }
   deriving (Eq, Show)
 
-badRequestErrorSchema :: FC.Fleece schema => schema BadRequestError
+badRequestErrorSchema :: FC.Fleece t => FC.Schema t BadRequestError
 badRequestErrorSchema =
   FC.object $
     FC.constructor BadRequestError

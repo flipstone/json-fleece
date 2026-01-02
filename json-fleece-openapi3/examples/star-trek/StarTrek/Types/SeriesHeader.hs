@@ -17,7 +17,7 @@ data SeriesHeader = SeriesHeader
   }
   deriving (Eq, Show)
 
-seriesHeaderSchema :: FC.Fleece schema => schema SeriesHeader
+seriesHeaderSchema :: FC.Fleece t => FC.Schema t SeriesHeader
 seriesHeaderSchema =
   FC.object $
     FC.constructor SeriesHeader

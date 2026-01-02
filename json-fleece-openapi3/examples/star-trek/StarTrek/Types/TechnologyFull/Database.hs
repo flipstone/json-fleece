@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Database = Database Bool
   deriving (Show, Eq)
 
-databaseSchema :: FC.Fleece schema => schema Database
+databaseSchema :: FC.Fleece t => FC.Schema t Database
 databaseSchema =
   FC.coerceSchema FC.boolean

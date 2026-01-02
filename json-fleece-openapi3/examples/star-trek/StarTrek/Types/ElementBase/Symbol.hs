@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Symbol = Symbol T.Text
   deriving (Show, Eq)
 
-symbolSchema :: FC.Fleece schema => schema Symbol
+symbolSchema :: FC.Fleece t => FC.Schema t Symbol
 symbolSchema =
   FC.coerceSchema FC.text

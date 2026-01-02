@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype KlingonWar = KlingonWar Bool
   deriving (Show, Eq)
 
-klingonWarSchema :: FC.Fleece schema => schema KlingonWar
+klingonWarSchema :: FC.Fleece t => FC.Schema t KlingonWar
 klingonWarSchema =
   FC.coerceSchema FC.boolean

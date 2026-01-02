@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Transuranium = Transuranium Bool
   deriving (Show, Eq)
 
-transuraniumSchema :: FC.Fleece schema => schema Transuranium
+transuraniumSchema :: FC.Fleece t => FC.Schema t Transuranium
 transuraniumSchema =
   FC.coerceSchema FC.boolean

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Writer = Writer Bool
   deriving (Show, Eq)
 
-writerSchema :: FC.Fleece schema => schema Writer
+writerSchema :: FC.Fleece t => FC.Schema t Writer
 writerSchema =
   FC.coerceSchema FC.boolean

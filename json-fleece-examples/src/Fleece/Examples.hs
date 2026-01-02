@@ -45,6 +45,7 @@ import Fleece.Core
   , NothingEncoding (EmitNull, OmitKey)
   , Null
   , Object
+  , Schema
   , additionalFields
   , boolean
   , boundedEnum
@@ -77,7 +78,7 @@ data FooBar = FooBar
   }
   deriving (Eq, Show)
 
-fooBarSchema :: Fleece schema => schema FooBar
+fooBarSchema :: Fleece t => Schema t FooBar
 fooBarSchema =
   object $
     constructor FooBar
@@ -89,7 +90,7 @@ data NullableField = NullableField
   }
   deriving (Eq, Show)
 
-nullableFieldSchema :: Fleece schema => schema NullableField
+nullableFieldSchema :: Fleece t => Schema t NullableField
 nullableFieldSchema =
   object $
     constructor NullableField
@@ -98,7 +99,7 @@ nullableFieldSchema =
 newtype Validation = Validation T.Text
   deriving (Eq, Show)
 
-validationSchema :: Fleece schema => schema Validation
+validationSchema :: Fleece t => Schema t Validation
 validationSchema =
   validate
     (\(Validation t) -> t)
@@ -110,7 +111,7 @@ data OptionalField = OptionalField
   }
   deriving (Eq, Show)
 
-optionalFieldSchema :: Fleece schema => schema OptionalField
+optionalFieldSchema :: Fleece t => Schema t OptionalField
 optionalFieldSchema =
   object $
     constructor OptionalField
@@ -122,8 +123,8 @@ data OptionalNullableFieldEmitNull = OptionalNullableFieldEmitNull
   deriving (Eq, Show)
 
 optionalNullableFieldEmitNullSchema ::
-  Fleece schema =>
-  schema OptionalNullableFieldEmitNull
+  Fleece t =>
+  Schema t OptionalNullableFieldEmitNull
 optionalNullableFieldEmitNullSchema =
   object $
     constructor OptionalNullableFieldEmitNull
@@ -135,8 +136,8 @@ data OptionalNullableFieldOmitKey = OptionalNullableFieldOmitKey
   deriving (Eq, Show)
 
 optionalNullableFieldOmitKeySchema ::
-  Fleece schema =>
-  schema OptionalNullableFieldOmitKey
+  Fleece t =>
+  Schema t OptionalNullableFieldOmitKey
 optionalNullableFieldOmitKeySchema =
   object $
     constructor OptionalNullableFieldOmitKey
@@ -148,7 +149,7 @@ data BoundedEnum
   | Kumquat
   deriving (Eq, Show, Enum, Bounded)
 
-boundedEnumSchema :: Fleece schema => schema BoundedEnum
+boundedEnumSchema :: Fleece t => Schema t BoundedEnum
 boundedEnumSchema =
   boundedEnum boundedEnumToText
 
@@ -166,7 +167,7 @@ data AdditionalFieldsExample = AdditionalFieldsExample
   }
   deriving (Eq, Show)
 
-additionalFieldsExampleSchema :: Fleece schema => schema AdditionalFieldsExample
+additionalFieldsExampleSchema :: Fleece t => Schema t AdditionalFieldsExample
 additionalFieldsExampleSchema =
   object $
     constructor AdditionalFieldsExample
@@ -179,7 +180,7 @@ data AbnormalNumbersExample = AbnormalNumbersExample
   }
   deriving (Eq, Show)
 
-abnormalNumbersExampleSchema :: Fleece schema => schema AbnormalNumbersExample
+abnormalNumbersExampleSchema :: Fleece t => Schema t AbnormalNumbersExample
 abnormalNumbersExampleSchema =
   object $
     constructor AbnormalNumbersExample
@@ -190,7 +191,7 @@ newtype ListFieldExample = ListFieldExample
   }
   deriving (Eq, Show)
 
-listFieldExampleSchema :: Fleece schema => schema ListFieldExample
+listFieldExampleSchema :: Fleece t => Schema t ListFieldExample
 listFieldExampleSchema =
   object $
     constructor ListFieldExample
@@ -199,7 +200,7 @@ listFieldExampleSchema =
 type UnionExample =
   Shrubbery.Union [T.Text, Scientific]
 
-unionExampleSchema :: Fleece schema => schema UnionExample
+unionExampleSchema :: Fleece t => Schema t UnionExample
 unionExampleSchema =
   unionNamed (unqualifiedName "UnionExample") $
     unionMember text
@@ -211,7 +212,7 @@ type TaggedUnionExample =
     , "company" @= Company
     ]
 
-taggedUnionExampleSchema :: Fleece schema => schema TaggedUnionExample
+taggedUnionExampleSchema :: Fleece t => Schema t TaggedUnionExample
 taggedUnionExampleSchema =
   taggedUnionNamed (unqualifiedName "TaggedUnionExample") "type" $
     taggedUnionMember @"person" personObject
@@ -223,7 +224,7 @@ data Person = Person
   }
   deriving (Eq, Show)
 
-personObject :: Fleece schema => Object schema Person Person
+personObject :: Fleece t => Object t Person Person
 personObject =
   constructor Person
     #+ required "name" personName text
@@ -235,7 +236,7 @@ data Company = Company
   }
   deriving (Eq, Show)
 
-companyObject :: Fleece schema => Object schema Company Company
+companyObject :: Fleece t => Object t Company Company
 companyObject =
   constructor Company
     #+ required "name" companyName text

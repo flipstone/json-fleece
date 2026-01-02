@@ -19,7 +19,7 @@ data TradingCardSetBaseResponse = TradingCardSetBaseResponse
   }
   deriving (Eq, Show)
 
-tradingCardSetBaseResponseSchema :: FC.Fleece schema => schema TradingCardSetBaseResponse
+tradingCardSetBaseResponseSchema :: FC.Fleece t => FC.Schema t TradingCardSetBaseResponse
 tradingCardSetBaseResponseSchema =
   FC.object $
     FC.constructor TradingCardSetBaseResponse

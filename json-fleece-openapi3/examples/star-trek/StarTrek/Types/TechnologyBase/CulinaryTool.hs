@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype CulinaryTool = CulinaryTool Bool
   deriving (Show, Eq)
 
-culinaryToolSchema :: FC.Fleece schema => schema CulinaryTool
+culinaryToolSchema :: FC.Fleece t => FC.Schema t CulinaryTool
 culinaryToolSchema =
   FC.coerceSchema FC.boolean

@@ -17,7 +17,7 @@ data TradingCardSetHeader = TradingCardSetHeader
   }
   deriving (Eq, Show)
 
-tradingCardSetHeaderSchema :: FC.Fleece schema => schema TradingCardSetHeader
+tradingCardSetHeaderSchema :: FC.Fleece t => FC.Schema t TradingCardSetHeader
 tradingCardSetHeaderSchema =
   FC.object $
     FC.constructor TradingCardSetHeader

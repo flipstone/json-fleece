@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Structure = Structure Bool
   deriving (Show, Eq)
 
-structureSchema :: FC.Fleece schema => schema Structure
+structureSchema :: FC.Fleece t => FC.Schema t Structure
 structureSchema =
   FC.coerceSchema FC.boolean

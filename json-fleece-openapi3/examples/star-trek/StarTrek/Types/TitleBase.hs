@@ -27,7 +27,7 @@ data TitleBase = TitleBase
   }
   deriving (Eq, Show)
 
-titleBaseSchema :: FC.Fleece schema => schema TitleBase
+titleBaseSchema :: FC.Fleece t => FC.Schema t TitleBase
 titleBaseSchema =
   FC.object $
     FC.constructor TitleBase

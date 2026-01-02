@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype SingletonNullableOneOfRef = SingletonNullableOneOfRef T.Text
   deriving (Show, Eq)
 
-singletonNullableOneOfRefSchema :: FC.Fleece schema => schema SingletonNullableOneOfRef
+singletonNullableOneOfRefSchema :: FC.Fleece t => FC.Schema t SingletonNullableOneOfRef
 singletonNullableOneOfRefSchema =
   FC.coerceSchema FC.text

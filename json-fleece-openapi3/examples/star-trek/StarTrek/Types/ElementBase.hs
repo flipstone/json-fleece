@@ -37,7 +37,7 @@ data ElementBase = ElementBase
   }
   deriving (Eq, Show)
 
-elementBaseSchema :: FC.Fleece schema => schema ElementBase
+elementBaseSchema :: FC.Fleece t => FC.Schema t ElementBase
 elementBaseSchema =
   FC.object $
     FC.constructor ElementBase

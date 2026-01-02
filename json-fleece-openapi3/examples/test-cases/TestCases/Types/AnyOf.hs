@@ -23,7 +23,7 @@ newtype AnyOf = AnyOf (Shrubbery.Union
    ])
   deriving (Show, Eq)
 
-anyOfSchema :: FC.Fleece schema => schema AnyOf
+anyOfSchema :: FC.Fleece t => FC.Schema t AnyOf
 anyOfSchema =
   FC.coerceSchema $
     FC.unionNamed (FC.qualifiedName "TestCases.Types.AnyOf" "AnyOf") $

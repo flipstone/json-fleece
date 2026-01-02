@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Picture = Picture T.Text
   deriving (Show, Eq)
 
-pictureSchema :: FC.Fleece schema => schema Picture
+pictureSchema :: FC.Fleece t => FC.Schema t Picture
 pictureSchema =
   FC.coerceSchema FC.text

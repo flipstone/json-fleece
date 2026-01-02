@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype EnergyTechnology = EnergyTechnology Bool
   deriving (Show, Eq)
 
-energyTechnologySchema :: FC.Fleece schema => schema EnergyTechnology
+energyTechnologySchema :: FC.Fleece t => FC.Schema t EnergyTechnology
 energyTechnologySchema =
   FC.coerceSchema FC.boolean

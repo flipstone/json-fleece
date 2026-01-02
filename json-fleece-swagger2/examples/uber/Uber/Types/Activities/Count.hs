@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Count = Count I.Int32
   deriving (Show, Eq)
 
-countSchema :: FC.Fleece schema => schema Count
+countSchema :: FC.Fleece t => FC.Schema t Count
 countSchema =
   FC.coerceSchema FC.int32

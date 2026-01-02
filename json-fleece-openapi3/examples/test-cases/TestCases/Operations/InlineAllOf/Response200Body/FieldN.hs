@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype FieldN = FieldN T.Text
   deriving (Show, Eq)
 
-fieldNSchema :: FC.Fleece schema => schema FieldN
+fieldNSchema :: FC.Fleece t => FC.Schema t FieldN
 fieldNSchema =
   FC.coerceSchema FC.text

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Estimate = Estimate T.Text
   deriving (Show, Eq)
 
-estimateSchema :: FC.Fleece schema => schema Estimate
+estimateSchema :: FC.Fleece t => FC.Schema t Estimate
 estimateSchema =
   FC.coerceSchema FC.text

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype PhaserTechnology = PhaserTechnology Bool
   deriving (Show, Eq)
 
-phaserTechnologySchema :: FC.Fleece schema => schema PhaserTechnology
+phaserTechnologySchema :: FC.Fleece t => FC.Schema t PhaserTechnology
 phaserTechnologySchema =
   FC.coerceSchema FC.boolean

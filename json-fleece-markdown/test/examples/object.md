@@ -2,5 +2,5 @@
 
 |Field|Key Required|Null Allowed|Type|
 |---|---|---|---|
-|foo|yes|no|string|
+|foo|yes|no|text|
 |bar|yes|no|number|

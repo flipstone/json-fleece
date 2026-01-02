@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype YearFrom = YearFrom Integer
   deriving (Show, Eq)
 
-yearFromSchema :: FC.Fleece schema => schema YearFrom
+yearFromSchema :: FC.Fleece t => FC.Schema t YearFrom
 yearFromSchema =
   FC.coerceSchema FC.integer

@@ -17,7 +17,7 @@ data TitleHeader = TitleHeader
   }
   deriving (Eq, Show)
 
-titleHeaderSchema :: FC.Fleece schema => schema TitleHeader
+titleHeaderSchema :: FC.Fleece t => FC.Schema t TitleHeader
 titleHeaderSchema =
   FC.object $
     FC.constructor TitleHeader

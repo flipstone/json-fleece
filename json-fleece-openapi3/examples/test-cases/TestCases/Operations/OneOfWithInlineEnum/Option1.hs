@@ -24,6 +24,6 @@ option1ToText v =
       Two -> "two"
       Three -> "three"
 
-option1Schema :: FC.Fleece schema => schema Option1
+option1Schema :: FC.Fleece t => FC.Schema t Option1
 option1Schema =
   FC.boundedEnum option1ToText

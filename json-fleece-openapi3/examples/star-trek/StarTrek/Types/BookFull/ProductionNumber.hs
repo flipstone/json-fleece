@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype ProductionNumber = ProductionNumber T.Text
   deriving (Show, Eq)
 
-productionNumberSchema :: FC.Fleece schema => schema ProductionNumber
+productionNumberSchema :: FC.Fleece t => FC.Schema t ProductionNumber
 productionNumberSchema =
   FC.coerceSchema FC.text

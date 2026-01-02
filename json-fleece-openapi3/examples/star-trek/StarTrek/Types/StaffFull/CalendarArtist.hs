@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype CalendarArtist = CalendarArtist Bool
   deriving (Show, Eq)
 
-calendarArtistSchema :: FC.Fleece schema => schema CalendarArtist
+calendarArtistSchema :: FC.Fleece t => FC.Schema t CalendarArtist
 calendarArtistSchema =
   FC.coerceSchema FC.boolean

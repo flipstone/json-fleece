@@ -17,7 +17,7 @@ data VideoReleaseHeader = VideoReleaseHeader
   }
   deriving (Eq, Show)
 
-videoReleaseHeaderSchema :: FC.Fleece schema => schema VideoReleaseHeader
+videoReleaseHeaderSchema :: FC.Fleece t => FC.Schema t VideoReleaseHeader
 videoReleaseHeaderSchema =
   FC.object $
     FC.constructor VideoReleaseHeader

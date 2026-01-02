@@ -17,7 +17,7 @@ data PerformerHeader = PerformerHeader
   }
   deriving (Eq, Show)
 
-performerHeaderSchema :: FC.Fleece schema => schema PerformerHeader
+performerHeaderSchema :: FC.Fleece t => FC.Schema t PerformerHeader
 performerHeaderSchema =
   FC.object $
     FC.constructor PerformerHeader

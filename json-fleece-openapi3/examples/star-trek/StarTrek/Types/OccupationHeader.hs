@@ -17,7 +17,7 @@ data OccupationHeader = OccupationHeader
   }
   deriving (Eq, Show)
 
-occupationHeaderSchema :: FC.Fleece schema => schema OccupationHeader
+occupationHeaderSchema :: FC.Fleece t => FC.Schema t OccupationHeader
 occupationHeaderSchema =
   FC.object $
     FC.constructor OccupationHeader

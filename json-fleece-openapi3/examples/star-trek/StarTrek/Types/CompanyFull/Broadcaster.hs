@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Broadcaster = Broadcaster Bool
   deriving (Show, Eq)
 
-broadcasterSchema :: FC.Fleece schema => schema Broadcaster
+broadcasterSchema :: FC.Fleece t => FC.Schema t Broadcaster
 broadcasterSchema =
   FC.coerceSchema FC.boolean

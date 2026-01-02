@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype PublishedDayTo = PublishedDayTo Integer
   deriving (Show, Eq)
 
-publishedDayToSchema :: FC.Fleece schema => schema PublishedDayTo
+publishedDayToSchema :: FC.Fleece t => FC.Schema t PublishedDayTo
 publishedDayToSchema =
   FC.coerceSchema FC.integer

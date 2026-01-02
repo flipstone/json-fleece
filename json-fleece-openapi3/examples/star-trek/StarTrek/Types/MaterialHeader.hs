@@ -17,7 +17,7 @@ data MaterialHeader = MaterialHeader
   }
   deriving (Eq, Show)
 
-materialHeaderSchema :: FC.Fleece schema => schema MaterialHeader
+materialHeaderSchema :: FC.Fleece t => FC.Schema t MaterialHeader
 materialHeaderSchema =
   FC.object $
     FC.constructor MaterialHeader

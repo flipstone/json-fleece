@@ -19,7 +19,7 @@ data Country = Country
   }
   deriving (Eq, Show)
 
-countrySchema :: FC.Fleece schema => schema Country
+countrySchema :: FC.Fleece t => FC.Schema t Country
 countrySchema =
   FC.object $
     FC.constructor Country

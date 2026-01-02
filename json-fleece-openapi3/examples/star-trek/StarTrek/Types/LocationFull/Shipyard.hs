@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Shipyard = Shipyard Bool
   deriving (Show, Eq)
 
-shipyardSchema :: FC.Fleece schema => schema Shipyard
+shipyardSchema :: FC.Fleece t => FC.Schema t Shipyard
 shipyardSchema =
   FC.coerceSchema FC.boolean

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Message = Message T.Text
   deriving (Show, Eq)
 
-messageSchema :: FC.Fleece schema => schema Message
+messageSchema :: FC.Fleece t => FC.Schema t Message
 messageSchema =
   FC.coerceSchema FC.text

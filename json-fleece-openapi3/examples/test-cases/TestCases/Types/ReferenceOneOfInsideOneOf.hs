@@ -20,7 +20,7 @@ newtype ReferenceOneOfInsideOneOf = ReferenceOneOfInsideOneOf (Shrubbery.Union
    ])
   deriving (Show, Eq)
 
-referenceOneOfInsideOneOfSchema :: FC.Fleece schema => schema ReferenceOneOfInsideOneOf
+referenceOneOfInsideOneOfSchema :: FC.Fleece t => FC.Schema t ReferenceOneOfInsideOneOf
 referenceOneOfInsideOneOfSchema =
   FC.coerceSchema $
     FC.unionNamed (FC.qualifiedName "TestCases.Types.ReferenceOneOfInsideOneOf" "ReferenceOneOfInsideOneOf") $

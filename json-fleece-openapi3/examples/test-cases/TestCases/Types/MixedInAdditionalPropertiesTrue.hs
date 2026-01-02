@@ -20,7 +20,7 @@ data MixedInAdditionalPropertiesTrue = MixedInAdditionalPropertiesTrue
   }
   deriving (Eq, Show)
 
-mixedInAdditionalPropertiesTrueSchema :: FC.Fleece schema => schema MixedInAdditionalPropertiesTrue
+mixedInAdditionalPropertiesTrueSchema :: FC.Fleece t => FC.Schema t MixedInAdditionalPropertiesTrue
 mixedInAdditionalPropertiesTrueSchema =
   FC.object $
     FC.constructor MixedInAdditionalPropertiesTrue

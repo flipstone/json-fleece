@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype YouTubeDigitalRelease = YouTubeDigitalRelease Bool
   deriving (Show, Eq)
 
-youTubeDigitalReleaseSchema :: FC.Fleece schema => schema YouTubeDigitalRelease
+youTubeDigitalReleaseSchema :: FC.Fleece t => FC.Schema t YouTubeDigitalRelease
 youTubeDigitalReleaseSchema =
   FC.coerceSchema FC.boolean

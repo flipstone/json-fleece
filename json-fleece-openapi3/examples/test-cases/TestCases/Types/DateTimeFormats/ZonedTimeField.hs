@@ -12,6 +12,6 @@ import Prelude (Show)
 newtype ZonedTimeField = ZonedTimeField Time.ZonedTime
   deriving (Show)
 
-zonedTimeFieldSchema :: FC.Fleece schema => schema ZonedTimeField
+zonedTimeFieldSchema :: FC.Fleece t => FC.Schema t ZonedTimeField
 zonedTimeFieldSchema =
   FC.coerceSchema FC.zonedTime

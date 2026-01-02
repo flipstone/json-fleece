@@ -22,6 +22,6 @@ fieldEToText v =
       Enum1 -> "enum1"
       Enum3 -> "enum3"
 
-fieldESchema :: FC.Fleece schema => schema FieldE
+fieldESchema :: FC.Fleece t => FC.Schema t FieldE
 fieldESchema =
   FC.boundedEnum fieldEToText

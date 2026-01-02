@@ -15,7 +15,7 @@ data BookFullResponse = BookFullResponse
   }
   deriving (Eq, Show)
 
-bookFullResponseSchema :: FC.Fleece schema => schema BookFullResponse
+bookFullResponseSchema :: FC.Fleece t => FC.Schema t BookFullResponse
 bookFullResponseSchema =
   FC.object $
     FC.constructor BookFullResponse

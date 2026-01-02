@@ -24,6 +24,6 @@ enumIntParamToText v =
       EnumIntParam20 -> "20"
       EnumIntParam30 -> "30"
 
-enumIntParamSchema :: FC.Fleece schema => schema EnumIntParam
+enumIntParamSchema :: FC.Fleece t => FC.Schema t EnumIntParam
 enumIntParamSchema =
   FC.boundedEnum enumIntParamToText

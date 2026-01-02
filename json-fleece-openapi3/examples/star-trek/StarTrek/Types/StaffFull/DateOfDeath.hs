@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype DateOfDeath = DateOfDeath Time.Day
   deriving (Show, Eq)
 
-dateOfDeathSchema :: FC.Fleece schema => schema DateOfDeath
+dateOfDeathSchema :: FC.Fleece t => FC.Schema t DateOfDeath
 dateOfDeathSchema =
   FC.coerceSchema FC.day

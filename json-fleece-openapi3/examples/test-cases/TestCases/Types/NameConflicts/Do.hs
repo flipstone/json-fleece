@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Do = Do T.Text
   deriving (Show, Eq)
 
-doSchema :: FC.Fleece schema => schema Do
+doSchema :: FC.Fleece t => FC.Schema t Do
 doSchema =
   FC.coerceSchema FC.text

@@ -19,7 +19,7 @@ data AstronomicalObjectBaseResponse = AstronomicalObjectBaseResponse
   }
   deriving (Eq, Show)
 
-astronomicalObjectBaseResponseSchema :: FC.Fleece schema => schema AstronomicalObjectBaseResponse
+astronomicalObjectBaseResponseSchema :: FC.Fleece t => FC.Schema t AstronomicalObjectBaseResponse
 astronomicalObjectBaseResponseSchema =
   FC.object $
     FC.constructor AstronomicalObjectBaseResponse

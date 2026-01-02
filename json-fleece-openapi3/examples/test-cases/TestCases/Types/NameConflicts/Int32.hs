@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Int32 = Int32 I.Int32
   deriving (Show, Eq)
 
-int32Schema :: FC.Fleece schema => schema Int32
+int32Schema :: FC.Fleece t => FC.Schema t Int32
 int32Schema =
   FC.coerceSchema FC.int32

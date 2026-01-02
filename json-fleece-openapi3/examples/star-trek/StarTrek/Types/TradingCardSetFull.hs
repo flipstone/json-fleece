@@ -45,7 +45,7 @@ data TradingCardSetFull = TradingCardSetFull
   }
   deriving (Eq, Show)
 
-tradingCardSetFullSchema :: FC.Fleece schema => schema TradingCardSetFull
+tradingCardSetFullSchema :: FC.Fleece t => FC.Schema t TradingCardSetFull
 tradingCardSetFullSchema =
   FC.object $
     FC.constructor TradingCardSetFull

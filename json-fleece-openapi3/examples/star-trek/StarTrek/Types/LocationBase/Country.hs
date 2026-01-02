@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Country = Country Bool
   deriving (Show, Eq)
 
-countrySchema :: FC.Fleece schema => schema Country
+countrySchema :: FC.Fleece t => FC.Schema t Country
 countrySchema =
   FC.coerceSchema FC.boolean

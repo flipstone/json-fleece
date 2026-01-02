@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype ModelAndMiniatureEffectsCompany = ModelAndMiniatureEffectsCompany Bool
   deriving (Show, Eq)
 
-modelAndMiniatureEffectsCompanySchema :: FC.Fleece schema => schema ModelAndMiniatureEffectsCompany
+modelAndMiniatureEffectsCompanySchema :: FC.Fleece t => FC.Schema t ModelAndMiniatureEffectsCompany
 modelAndMiniatureEffectsCompanySchema =
   FC.coerceSchema FC.boolean

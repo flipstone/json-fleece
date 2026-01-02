@@ -19,7 +19,7 @@ data ComicCollectionBaseResponse = ComicCollectionBaseResponse
   }
   deriving (Eq, Show)
 
-comicCollectionBaseResponseSchema :: FC.Fleece schema => schema ComicCollectionBaseResponse
+comicCollectionBaseResponseSchema :: FC.Fleece t => FC.Schema t ComicCollectionBaseResponse
 comicCollectionBaseResponseSchema =
   FC.object $
     FC.constructor ComicCollectionBaseResponse

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype SportOrganization = SportOrganization Bool
   deriving (Show, Eq)
 
-sportOrganizationSchema :: FC.Fleece schema => schema SportOrganization
+sportOrganizationSchema :: FC.Fleece t => FC.Schema t SportOrganization
 sportOrganizationSchema =
   FC.coerceSchema FC.boolean

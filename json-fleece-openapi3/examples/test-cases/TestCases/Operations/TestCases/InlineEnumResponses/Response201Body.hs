@@ -22,6 +22,6 @@ response201BodyToText v =
       Baz -> "baz"
       Bat -> "bat"
 
-response201BodySchema :: FC.Fleece schema => schema Response201Body
+response201BodySchema :: FC.Fleece t => FC.Schema t Response201Body
 response201BodySchema =
   FC.boundedEnum response201BodyToText

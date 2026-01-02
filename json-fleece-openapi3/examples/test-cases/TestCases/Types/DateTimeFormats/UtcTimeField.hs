@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype UtcTimeField = UtcTimeField Time.UTCTime
   deriving (Show, Eq)
 
-utcTimeFieldSchema :: FC.Fleece schema => schema UtcTimeField
+utcTimeFieldSchema :: FC.Fleece t => FC.Schema t UtcTimeField
 utcTimeFieldSchema =
   FC.coerceSchema FC.utcTime

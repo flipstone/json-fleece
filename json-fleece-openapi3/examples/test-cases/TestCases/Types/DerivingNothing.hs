@@ -11,6 +11,6 @@ import qualified Fleece.Core as FC
 newtype DerivingNothing = DerivingNothing T.Text
   deriving ()
 
-derivingNothingSchema :: FC.Fleece schema => schema DerivingNothing
+derivingNothingSchema :: FC.Fleece t => FC.Schema t DerivingNothing
 derivingNothingSchema =
   FC.coerceSchema FC.text

@@ -63,7 +63,7 @@ data NameConflicts = NameConflicts
   }
   deriving (Eq, Show)
 
-nameConflictsSchema :: FC.Fleece schema => schema NameConflicts
+nameConflictsSchema :: FC.Fleece t => FC.Schema t NameConflicts
 nameConflictsSchema =
   FC.object $
     FC.constructor NameConflicts

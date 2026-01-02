@@ -20,6 +20,6 @@ datetimeTypeToText v =
     case v of
       UtcDatetime -> "utc_datetime"
 
-datetimeTypeSchema :: FC.Fleece schema => schema DatetimeType
+datetimeTypeSchema :: FC.Fleece t => FC.Schema t DatetimeType
 datetimeTypeSchema =
   FC.boundedEnum datetimeTypeToText

@@ -19,7 +19,7 @@ newtype OneOfWithInlineNestedArray = OneOfWithInlineNestedArray (Shrubbery.Union
    ])
   deriving (Show, Eq)
 
-oneOfWithInlineNestedArraySchema :: FC.Fleece schema => schema OneOfWithInlineNestedArray
+oneOfWithInlineNestedArraySchema :: FC.Fleece t => FC.Schema t OneOfWithInlineNestedArray
 oneOfWithInlineNestedArraySchema =
   FC.coerceSchema $
     FC.unionNamed (FC.qualifiedName "TestCases.Types.OneOfWithInlineNestedArray" "OneOfWithInlineNestedArray") $

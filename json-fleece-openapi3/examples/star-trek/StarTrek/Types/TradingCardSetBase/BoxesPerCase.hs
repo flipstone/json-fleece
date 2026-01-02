@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype BoxesPerCase = BoxesPerCase Integer
   deriving (Show, Eq)
 
-boxesPerCaseSchema :: FC.Fleece schema => schema BoxesPerCase
+boxesPerCaseSchema :: FC.Fleece t => FC.Schema t BoxesPerCase
 boxesPerCaseSchema =
   FC.coerceSchema FC.integer

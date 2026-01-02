@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype StandInPerformer = StandInPerformer Bool
   deriving (Show, Eq)
 
-standInPerformerSchema :: FC.Fleece schema => schema StandInPerformer
+standInPerformerSchema :: FC.Fleece t => FC.Schema t StandInPerformer
 standInPerformerSchema =
   FC.coerceSchema FC.boolean

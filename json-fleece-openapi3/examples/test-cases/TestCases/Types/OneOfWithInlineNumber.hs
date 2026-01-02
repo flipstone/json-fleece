@@ -18,7 +18,7 @@ newtype OneOfWithInlineNumber = OneOfWithInlineNumber (Shrubbery.Union
    ])
   deriving (Show, Eq)
 
-oneOfWithInlineNumberSchema :: FC.Fleece schema => schema OneOfWithInlineNumber
+oneOfWithInlineNumberSchema :: FC.Fleece t => FC.Schema t OneOfWithInlineNumber
 oneOfWithInlineNumberSchema =
   FC.coerceSchema $
     FC.unionNamed (FC.qualifiedName "TestCases.Types.OneOfWithInlineNumber" "OneOfWithInlineNumber") $

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype ProductId = ProductId T.Text
   deriving (Show, Eq)
 
-productIdSchema :: FC.Fleece schema => schema ProductId
+productIdSchema :: FC.Fleece t => FC.Schema t ProductId
 productIdSchema =
   FC.coerceSchema FC.text

@@ -29,7 +29,7 @@ data TitleFull = TitleFull
   }
   deriving (Eq, Show)
 
-titleFullSchema :: FC.Fleece schema => schema TitleFull
+titleFullSchema :: FC.Fleece t => FC.Schema t TitleFull
 titleFullSchema =
   FC.object $
     FC.constructor TitleFull

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Explosive = Explosive Bool
   deriving (Show, Eq)
 
-explosiveSchema :: FC.Fleece schema => schema Explosive
+explosiveSchema :: FC.Fleece t => FC.Schema t Explosive
 explosiveSchema =
   FC.coerceSchema FC.boolean

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype AssistantOrSecondUnitDirector = AssistantOrSecondUnitDirector Bool
   deriving (Show, Eq)
 
-assistantOrSecondUnitDirectorSchema :: FC.Fleece schema => schema AssistantOrSecondUnitDirector
+assistantOrSecondUnitDirectorSchema :: FC.Fleece t => FC.Schema t AssistantOrSecondUnitDirector
 assistantOrSecondUnitDirectorSchema =
   FC.coerceSchema FC.boolean

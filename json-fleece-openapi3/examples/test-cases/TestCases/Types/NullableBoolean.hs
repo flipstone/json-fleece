@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype NullableBoolean = NullableBoolean Bool
   deriving (Show, Eq)
 
-nullableBooleanSchema :: FC.Fleece schema => schema NullableBoolean
+nullableBooleanSchema :: FC.Fleece t => FC.Schema t NullableBoolean
 nullableBooleanSchema =
   FC.coerceSchema FC.boolean

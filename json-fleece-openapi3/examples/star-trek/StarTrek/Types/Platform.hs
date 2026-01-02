@@ -17,7 +17,7 @@ data Platform = Platform
   }
   deriving (Eq, Show)
 
-platformSchema :: FC.Fleece schema => schema Platform
+platformSchema :: FC.Fleece t => FC.Schema t Platform
 platformSchema =
   FC.object $
     FC.constructor Platform

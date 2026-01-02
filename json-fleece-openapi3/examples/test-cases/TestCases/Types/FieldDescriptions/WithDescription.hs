@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype WithDescription = WithDescription T.Text
   deriving (Show, Eq)
 
-withDescriptionSchema :: FC.Fleece schema => schema WithDescription
+withDescriptionSchema :: FC.Fleece t => FC.Schema t WithDescription
 withDescriptionSchema =
   FC.coerceSchema FC.text

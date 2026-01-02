@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype ArrayFieldItem = ArrayFieldItem T.Text
   deriving (Show, Eq)
 
-arrayFieldItemSchema :: FC.Fleece schema => schema ArrayFieldItem
+arrayFieldItemSchema :: FC.Fleece t => FC.Schema t ArrayFieldItem
 arrayFieldItemSchema =
   FC.coerceSchema FC.text

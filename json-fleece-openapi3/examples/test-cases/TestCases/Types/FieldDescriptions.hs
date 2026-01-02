@@ -19,7 +19,7 @@ data FieldDescriptions = FieldDescriptions
   }
   deriving (Eq, Show)
 
-fieldDescriptionsSchema :: FC.Fleece schema => schema FieldDescriptions
+fieldDescriptionsSchema :: FC.Fleece t => FC.Schema t FieldDescriptions
 fieldDescriptionsSchema =
   FC.object $
     FC.constructor FieldDescriptions

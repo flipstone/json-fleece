@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Offset = Offset I.Int32
   deriving (Show, Eq)
 
-offsetSchema :: FC.Fleece schema => schema Offset
+offsetSchema :: FC.Fleece t => FC.Schema t Offset
 offsetSchema =
   FC.coerceSchema FC.int32

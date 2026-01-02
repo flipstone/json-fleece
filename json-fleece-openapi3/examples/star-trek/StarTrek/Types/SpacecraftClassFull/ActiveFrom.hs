@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype ActiveFrom = ActiveFrom T.Text
   deriving (Show, Eq)
 
-activeFromSchema :: FC.Fleece schema => schema ActiveFrom
+activeFromSchema :: FC.Fleece t => FC.Schema t ActiveFrom
 activeFromSchema =
   FC.coerceSchema FC.text

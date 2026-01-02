@@ -15,7 +15,7 @@ data SeasonFullResponse = SeasonFullResponse
   }
   deriving (Eq, Show)
 
-seasonFullResponseSchema :: FC.Fleece schema => schema SeasonFullResponse
+seasonFullResponseSchema :: FC.Fleece t => FC.Schema t SeasonFullResponse
 seasonFullResponseSchema =
   FC.object $
     FC.constructor SeasonFullResponse

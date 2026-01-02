@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype PublicationEditor = PublicationEditor Bool
   deriving (Show, Eq)
 
-publicationEditorSchema :: FC.Fleece schema => schema PublicationEditor
+publicationEditorSchema :: FC.Fleece t => FC.Schema t PublicationEditor
 publicationEditorSchema =
   FC.coerceSchema FC.boolean

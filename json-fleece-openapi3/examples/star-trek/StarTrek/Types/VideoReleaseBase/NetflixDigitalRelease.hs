@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype NetflixDigitalRelease = NetflixDigitalRelease Bool
   deriving (Show, Eq)
 
-netflixDigitalReleaseSchema :: FC.Fleece schema => schema NetflixDigitalRelease
+netflixDigitalReleaseSchema :: FC.Fleece t => FC.Schema t NetflixDigitalRelease
 netflixDigitalReleaseSchema =
   FC.coerceSchema FC.boolean

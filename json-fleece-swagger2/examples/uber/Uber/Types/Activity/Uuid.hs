@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Uuid = Uuid T.Text
   deriving (Show, Eq)
 
-uuidSchema :: FC.Fleece schema => schema Uuid
+uuidSchema :: FC.Fleece t => FC.Schema t Uuid
 uuidSchema =
   FC.coerceSchema FC.text

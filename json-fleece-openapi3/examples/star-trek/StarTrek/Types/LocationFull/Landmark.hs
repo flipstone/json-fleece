@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Landmark = Landmark Bool
   deriving (Show, Eq)
 
-landmarkSchema :: FC.Fleece schema => schema Landmark
+landmarkSchema :: FC.Fleece t => FC.Schema t Landmark
 landmarkSchema =
   FC.coerceSchema FC.boolean

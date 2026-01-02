@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype HouseholdTool = HouseholdTool Bool
   deriving (Show, Eq)
 
-householdToolSchema :: FC.Fleece schema => schema HouseholdTool
+householdToolSchema :: FC.Fleece t => FC.Schema t HouseholdTool
 householdToolSchema =
   FC.coerceSchema FC.boolean

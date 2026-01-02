@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype BajoranSettlement = BajoranSettlement Bool
   deriving (Show, Eq)
 
-bajoranSettlementSchema :: FC.Fleece schema => schema BajoranSettlement
+bajoranSettlementSchema :: FC.Fleece t => FC.Schema t BajoranSettlement
 bajoranSettlementSchema =
   FC.coerceSchema FC.boolean

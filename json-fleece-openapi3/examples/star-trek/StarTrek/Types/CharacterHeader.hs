@@ -17,7 +17,7 @@ data CharacterHeader = CharacterHeader
   }
   deriving (Eq, Show)
 
-characterHeaderSchema :: FC.Fleece schema => schema CharacterHeader
+characterHeaderSchema :: FC.Fleece t => FC.Schema t CharacterHeader
 characterHeaderSchema =
   FC.object $
     FC.constructor CharacterHeader

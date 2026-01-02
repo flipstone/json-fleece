@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Dessert = Dessert Bool
   deriving (Show, Eq)
 
-dessertSchema :: FC.Fleece schema => schema Dessert
+dessertSchema :: FC.Fleece t => FC.Schema t Dessert
 dessertSchema =
   FC.coerceSchema FC.boolean

@@ -21,7 +21,7 @@ data AllOfFieldsHthroughK = AllOfFieldsHthroughK
   }
   deriving (Eq, Show)
 
-allOfFieldsHthroughKSchema :: FC.Fleece schema => schema AllOfFieldsHthroughK
+allOfFieldsHthroughKSchema :: FC.Fleece t => FC.Schema t AllOfFieldsHthroughK
 allOfFieldsHthroughKSchema =
   FC.object $
     FC.constructor AllOfFieldsHthroughK

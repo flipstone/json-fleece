@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype IntergovernmentalOrganization = IntergovernmentalOrganization Bool
   deriving (Show, Eq)
 
-intergovernmentalOrganizationSchema :: FC.Fleece schema => schema IntergovernmentalOrganization
+intergovernmentalOrganizationSchema :: FC.Fleece t => FC.Schema t IntergovernmentalOrganization
 intergovernmentalOrganizationSchema =
   FC.coerceSchema FC.boolean

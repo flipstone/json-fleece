@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype NumberOfPages = NumberOfPages Integer
   deriving (Show, Eq)
 
-numberOfPagesSchema :: FC.Fleece schema => schema NumberOfPages
+numberOfPagesSchema :: FC.Fleece t => FC.Schema t NumberOfPages
 numberOfPagesSchema =
   FC.coerceSchema FC.integer

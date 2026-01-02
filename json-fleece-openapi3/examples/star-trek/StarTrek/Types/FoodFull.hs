@@ -37,7 +37,7 @@ data FoodFull = FoodFull
   }
   deriving (Eq, Show)
 
-foodFullSchema :: FC.Fleece schema => schema FoodFull
+foodFullSchema :: FC.Fleece t => FC.Schema t FoodFull
 foodFullSchema =
   FC.object $
     FC.constructor FoodFull

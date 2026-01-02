@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype NumberOfDataCarriers = NumberOfDataCarriers Integer
   deriving (Show, Eq)
 
-numberOfDataCarriersSchema :: FC.Fleece schema => schema NumberOfDataCarriers
+numberOfDataCarriersSchema :: FC.Fleece t => FC.Schema t NumberOfDataCarriers
 numberOfDataCarriersSchema =
   FC.coerceSchema FC.integer

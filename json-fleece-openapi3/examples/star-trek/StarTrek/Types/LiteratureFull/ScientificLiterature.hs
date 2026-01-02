@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype ScientificLiterature = ScientificLiterature Bool
   deriving (Show, Eq)
 
-scientificLiteratureSchema :: FC.Fleece schema => schema ScientificLiterature
+scientificLiteratureSchema :: FC.Fleece t => FC.Schema t ScientificLiterature
 scientificLiteratureSchema =
   FC.coerceSchema FC.boolean

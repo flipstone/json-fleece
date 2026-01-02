@@ -7,13 +7,13 @@
 {-# LANGUAGE TypeOperators #-}
 
 module Fleece.Aeson.Decoder
-  ( Decoder (..)
+  ( Decoder (Decoder)
+  , toParser
   , decode
   , decodeStrict
   , fromLazyText
   , fromStrictText
   , fromValue
-  , toParser
   ) where
 
 import Control.Applicative ((<|>))
@@ -34,32 +34,31 @@ import qualified Shrubbery
 
 import qualified Fleece.Core as FC
 
-data Decoder a
-  = Decoder FC.Name (Aeson.Value -> AesonTypes.Parser a)
+newtype Decoder a
+  = Decoder (Aeson.Value -> AesonTypes.Parser a)
 
-fromLazyText :: Decoder a -> TL.Text -> Either String a
+toParser :: FC.Schema Decoder a -> Aeson.Value -> AesonTypes.Parser a
+toParser (FC.Schema _ (Decoder f)) = f
+
+fromLazyText :: FC.Schema Decoder a -> TL.Text -> Either String a
 fromLazyText decoder =
   fromStrictText decoder . TL.toStrict
 
-fromStrictText :: Decoder a -> T.Text -> Either String a
+fromStrictText :: FC.Schema Decoder a -> T.Text -> Either String a
 fromStrictText decoder =
   -- With aeson-2.2.1.0, there is no need to encode to UTF-8,
   -- this could be 'fromValue decoder <=< eitherDecodeStrictText'
   decodeStrict decoder . Enc.encodeUtf8
 
-fromValue :: Decoder a -> Aeson.Value -> Either String a
+fromValue :: FC.Schema Decoder a -> Aeson.Value -> Either String a
 fromValue =
   AesonTypes.parseEither . toParser
 
-toParser :: Decoder a -> Aeson.Value -> AesonTypes.Parser a
-toParser (Decoder _name f) =
-  f
-
-decode :: Decoder a -> LBS.ByteString -> Either String a
+decode :: FC.Schema Decoder a -> LBS.ByteString -> Either String a
 decode decoder =
   fromValue decoder <=< Aeson.eitherDecode
 
-decodeStrict :: Decoder a -> BS.ByteString -> Either String a
+decodeStrict :: FC.Schema Decoder a -> BS.ByteString -> Either String a
 decodeStrict decoder =
   fromValue decoder <=< Aeson.eitherDecodeStrict
 
@@ -84,52 +83,48 @@ instance FC.Fleece Decoder where
   newtype TaggedUnionMembers Decoder allTags _handledTags
     = TaggedUnionMembers (Map.Map T.Text (Aeson.Object -> AesonTypes.Parser (Shrubbery.TaggedUnion allTags)))
 
-  schemaName (Decoder name _parseValue) =
-    name
+  interpretFormat _ =
+    FC.schemaInterpreter
 
-  format _ =
-    id
+  interpretNumber name =
+    Decoder $ Aeson.withScientific (FC.nameToString name) pure
 
-  number =
-    Decoder (FC.unqualifiedName "number") $ Aeson.withScientific "number" pure
+  interpretText name =
+    Decoder $ Aeson.withText (FC.nameToString name) pure
 
-  text =
-    Decoder (FC.unqualifiedName "text") $ Aeson.withText "text" pure
+  interpretBoolean name =
+    Decoder $ Aeson.withBool (FC.nameToString name) pure
 
-  boolean =
-    Decoder (FC.unqualifiedName "boolean") $ Aeson.withBool "boolean" pure
+  interpretArray arrayName (FC.Schema _itemSchemaName (Decoder itemFromValue)) =
+    Decoder $ Aeson.withArray (FC.nameToString arrayName) (traverse itemFromValue)
 
-  array (Decoder name itemFromValue) =
-    Decoder (FC.annotateName name "array") $
-      Aeson.withArray "array" (traverse itemFromValue)
-
-  null =
-    Decoder (FC.unqualifiedName "null") $ \value ->
+  interpretNull name =
+    Decoder $ \value ->
       case value of
         Aeson.Null -> pure FC.Null
-        _ -> AesonTypes.typeMismatch "Null" value
+        _ -> AesonTypes.typeMismatch (FC.nameToString name) value
 
-  nullable (Decoder name parseValue) =
-    Decoder (FC.annotateName name "nullable") $ \value ->
+  interpretNullable _nullableName (FC.Schema _schemaName (Decoder parseValue)) =
+    Decoder $ \value ->
       case value of
         Aeson.Null -> pure (Left FC.Null)
         _ -> fmap Right (parseValue value)
 
-  required name _accessor (Decoder _name parseValue) =
+  required name _accessor (FC.Schema _name (Decoder parseValue)) =
     let
       key = AesonKey.fromString name
     in
       Field key $ \object ->
         AesonTypes.explicitParseField parseValue object key
 
-  optional name _accessor (Decoder _name parseValue) =
+  optional name _accessor (FC.Schema _name (Decoder parseValue)) =
     let
       key = AesonKey.fromString name
     in
       Field key $ \object ->
         AesonTypes.explicitParseFieldMaybe' parseValue object key
 
-  additionalFields _accessor (Decoder _name parseValue) =
+  additionalFields _accessor (FC.Schema _name (Decoder parseValue)) =
     AdditionalFields $ \definedFields object ->
       let
         additionalKeysMap =
@@ -166,18 +161,18 @@ instance FC.Fleece Decoder where
               <*> additionalFieldsDecoder fields fieldNames object
       }
 
-  objectNamed name (Object _definedFields parseObject) =
-    Decoder name $
+  interpretObjectNamed name (Object _definedFields parseObject) =
+    Decoder $
       Aeson.withObject (FC.nameToString name) parseObject
 
-  boundedEnumNamed name toText =
+  interpretBoundedEnumNamed name toText =
     let
       decodingMap =
         Map.fromList
           . map (\e -> (toText e, e))
           $ [minBound .. maxBound]
     in
-      Decoder name $
+      Decoder $
         Aeson.withText (FC.nameToString name) $ \textValue ->
           case Map.lookup textValue decodingMap of
             Just enumValue -> pure enumValue
@@ -188,16 +183,16 @@ instance FC.Fleece Decoder where
                   <> " enum: "
                   <> show textValue
 
-  validateNamed name _uncheck check (Decoder _unvalidatedName parseValue) =
+  interpretValidateNamed name _uncheck check (FC.Schema _unvalidatedName (Decoder parseValue)) =
     validatingDecoder name parseValue check
 
-  validateAnonymous _uncheck check (Decoder unvalidatedName parseValue) =
+  interpretValidateAnonymous _uncheck check (FC.Schema unvalidatedName (Decoder parseValue)) =
     validatingDecoder unvalidatedName parseValue check
 
-  unionNamed name (UnionMembers parseMembers) =
-    Decoder name (parseMembers name)
+  interpretUnionNamed name (UnionMembers parseMembers) =
+    Decoder (parseMembers name)
 
-  unionMemberWithIndex index (Decoder _name parseMember) =
+  unionMemberWithIndex index (FC.Schema _name (Decoder parseMember)) =
     UnionMembers (\_name -> fmap (Shrubbery.unifyUnion index) . parseMember)
 
   unionCombine (UnionMembers parseLeft) (UnionMembers parseRight) =
@@ -206,7 +201,7 @@ instance FC.Fleece Decoder where
         <|> parseRight name value
         <|> fail ("All union parsing options for " <> FC.nameUnqualified name <> " failed.")
 
-  taggedUnionNamed name tagProperty (TaggedUnionMembers parserMap) =
+  interpretTaggedUnionNamed name tagProperty (TaggedUnionMembers parserMap) =
     let
       tagPropKey =
         AesonKey.fromString tagProperty
@@ -217,7 +212,7 @@ instance FC.Fleece Decoder where
       parseTag =
         Aeson.withText (tagProperty <> " field of " <> nameString) pure
     in
-      Decoder name $
+      Decoder $
         Aeson.withObject nameString $ \object -> do
           tagValue <- AesonTypes.explicitParseField parseTag object tagPropKey
 
@@ -249,8 +244,8 @@ instance FC.Fleece Decoder where
   taggedUnionCombine (TaggedUnionMembers left) (TaggedUnionMembers right) =
     TaggedUnionMembers (Map.union left right)
 
-  jsonString (Decoder name parseValue) =
-    Decoder name $
+  interpretJsonString (FC.Schema name (Decoder parseValue)) =
+    Decoder $
       Aeson.withText (FC.nameUnqualified name) $ \jsonText ->
         case Aeson.eitherDecodeStrict (Enc.encodeUtf8 jsonText) of
           Left err -> fail ("Error decoding nested json string:" <> err)
@@ -262,7 +257,7 @@ validatingDecoder ::
   (a -> Either String b) ->
   Decoder b
 validatingDecoder name parseValue check =
-  Decoder name $ \jsonValue -> do
+  Decoder $ \jsonValue -> do
     uncheckedValue <- parseValue jsonValue
     case check uncheckedValue of
       Right checkedValue -> pure checkedValue

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype CustomLocalTimeField = CustomLocalTimeField Time.LocalTime
   deriving (Show, Eq)
 
-customLocalTimeFieldSchema :: FC.Fleece schema => schema CustomLocalTimeField
+customLocalTimeFieldSchema :: FC.Fleece t => FC.Schema t CustomLocalTimeField
 customLocalTimeFieldSchema =
   FC.coerceSchema (FC.localTimeWithFormat "local")

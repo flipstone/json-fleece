@@ -15,7 +15,7 @@ data ConflictFullResponse = ConflictFullResponse
   }
   deriving (Eq, Show)
 
-conflictFullResponseSchema :: FC.Fleece schema => schema ConflictFullResponse
+conflictFullResponseSchema :: FC.Fleece t => FC.Schema t ConflictFullResponse
 conflictFullResponseSchema =
   FC.object $
     FC.constructor ConflictFullResponse

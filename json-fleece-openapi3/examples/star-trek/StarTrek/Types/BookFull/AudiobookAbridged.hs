@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype AudiobookAbridged = AudiobookAbridged Bool
   deriving (Show, Eq)
 
-audiobookAbridgedSchema :: FC.Fleece schema => schema AudiobookAbridged
+audiobookAbridgedSchema :: FC.Fleece t => FC.Schema t AudiobookAbridged
 audiobookAbridgedSchema =
   FC.coerceSchema FC.boolean

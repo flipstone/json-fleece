@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype SpecialEffectsCompany = SpecialEffectsCompany Bool
   deriving (Show, Eq)
 
-specialEffectsCompanySchema :: FC.Fleece schema => schema SpecialEffectsCompany
+specialEffectsCompanySchema :: FC.Fleece t => FC.Schema t SpecialEffectsCompany
 specialEffectsCompanySchema =
   FC.coerceSchema FC.boolean

@@ -17,7 +17,7 @@ data CompanyHeader = CompanyHeader
   }
   deriving (Eq, Show)
 
-companyHeaderSchema :: FC.Fleece schema => schema CompanyHeader
+companyHeaderSchema :: FC.Fleece t => FC.Schema t CompanyHeader
 companyHeaderSchema =
   FC.object $
     FC.constructor CompanyHeader

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Rating = Rating T.Text
   deriving (Show, Eq)
 
-ratingSchema :: FC.Fleece schema => schema Rating
+ratingSchema :: FC.Fleece t => FC.Schema t Rating
 ratingSchema =
   FC.coerceSchema FC.text

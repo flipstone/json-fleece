@@ -15,7 +15,7 @@ data AstronomicalObjectFullResponse = AstronomicalObjectFullResponse
   }
   deriving (Eq, Show)
 
-astronomicalObjectFullResponseSchema :: FC.Fleece schema => schema AstronomicalObjectFullResponse
+astronomicalObjectFullResponseSchema :: FC.Fleece t => FC.Schema t AstronomicalObjectFullResponse
 astronomicalObjectFullResponseSchema =
   FC.object $
     FC.constructor AstronomicalObjectFullResponse

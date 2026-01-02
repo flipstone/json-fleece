@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype BorgComponent = BorgComponent Bool
   deriving (Show, Eq)
 
-borgComponentSchema :: FC.Fleece schema => schema BorgComponent
+borgComponentSchema :: FC.Fleece t => FC.Schema t BorgComponent
 borgComponentSchema =
   FC.coerceSchema FC.boolean

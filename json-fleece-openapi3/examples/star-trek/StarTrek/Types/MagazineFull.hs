@@ -39,7 +39,7 @@ data MagazineFull = MagazineFull
   }
   deriving (Eq, Show)
 
-magazineFullSchema :: FC.Fleece schema => schema MagazineFull
+magazineFullSchema :: FC.Fleece t => FC.Schema t MagazineFull
 magazineFullSchema =
   FC.object $
     FC.constructor MagazineFull

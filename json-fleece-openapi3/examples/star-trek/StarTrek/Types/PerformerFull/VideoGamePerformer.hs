@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype VideoGamePerformer = VideoGamePerformer Bool
   deriving (Show, Eq)
 
-videoGamePerformerSchema :: FC.Fleece schema => schema VideoGamePerformer
+videoGamePerformerSchema :: FC.Fleece t => FC.Schema t VideoGamePerformer
 videoGamePerformerSchema =
   FC.coerceSchema FC.boolean

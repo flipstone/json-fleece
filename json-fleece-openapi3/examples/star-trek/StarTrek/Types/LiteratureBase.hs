@@ -29,7 +29,7 @@ data LiteratureBase = LiteratureBase
   }
   deriving (Eq, Show)
 
-literatureBaseSchema :: FC.Fleece schema => schema LiteratureBase
+literatureBaseSchema :: FC.Fleece t => FC.Schema t LiteratureBase
 literatureBaseSchema =
   FC.object $
     FC.constructor LiteratureBase

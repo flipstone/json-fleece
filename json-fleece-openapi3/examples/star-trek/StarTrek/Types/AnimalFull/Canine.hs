@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype Canine = Canine Bool
   deriving (Show, Eq)
 
-canineSchema :: FC.Fleece schema => schema Canine
+canineSchema :: FC.Fleece t => FC.Schema t Canine
 canineSchema =
   FC.coerceSchema FC.boolean

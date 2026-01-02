@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Name = Name T.Text
   deriving (Show, Eq)
 
-nameSchema :: FC.Fleece schema => schema Name
+nameSchema :: FC.Fleece t => FC.Schema t Name
 nameSchema =
   FC.coerceSchema FC.text

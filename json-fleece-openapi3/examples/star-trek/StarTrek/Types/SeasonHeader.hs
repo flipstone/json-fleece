@@ -17,7 +17,7 @@ data SeasonHeader = SeasonHeader
   }
   deriving (Eq, Show)
 
-seasonHeaderSchema :: FC.Fleece schema => schema SeasonHeader
+seasonHeaderSchema :: FC.Fleece t => FC.Schema t SeasonHeader
 seasonHeaderSchema =
   FC.object $
     FC.constructor SeasonHeader

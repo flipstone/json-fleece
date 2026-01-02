@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Id = Id Sci.Scientific
   deriving (Show, Eq)
 
-idSchema :: FC.Fleece schema => schema Id
+idSchema :: FC.Fleece t => FC.Schema t Id
 idSchema =
   FC.coerceSchema FC.number

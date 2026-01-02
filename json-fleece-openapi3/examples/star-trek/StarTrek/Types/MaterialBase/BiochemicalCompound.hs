@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype BiochemicalCompound = BiochemicalCompound Bool
   deriving (Show, Eq)
 
-biochemicalCompoundSchema :: FC.Fleece schema => schema BiochemicalCompound
+biochemicalCompoundSchema :: FC.Fleece t => FC.Schema t BiochemicalCompound
 biochemicalCompoundSchema =
   FC.coerceSchema FC.boolean

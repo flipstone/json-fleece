@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype EarthAnimal = EarthAnimal Bool
   deriving (Show, Eq)
 
-earthAnimalSchema :: FC.Fleece schema => schema EarthAnimal
+earthAnimalSchema :: FC.Fleece t => FC.Schema t EarthAnimal
 earthAnimalSchema =
   FC.coerceSchema FC.boolean

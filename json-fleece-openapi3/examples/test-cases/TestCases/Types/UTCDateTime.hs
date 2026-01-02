@@ -17,7 +17,7 @@ data UTCDateTime = UTCDateTime
   }
   deriving (Eq, Show)
 
-uTCDateTimeSchema :: FC.Fleece schema => schema UTCDateTime
+uTCDateTimeSchema :: FC.Fleece t => FC.Schema t UTCDateTime
 uTCDateTimeSchema =
   FC.object $
     FC.constructor UTCDateTime

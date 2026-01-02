@@ -17,7 +17,7 @@ data FoodHeader = FoodHeader
   }
   deriving (Eq, Show)
 
-foodHeaderSchema :: FC.Fleece schema => schema FoodHeader
+foodHeaderSchema :: FC.Fleece t => FC.Schema t FoodHeader
 foodHeaderSchema =
   FC.object $
     FC.constructor FoodHeader

@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype PublishedMonthTo = PublishedMonthTo Integer
   deriving (Show, Eq)
 
-publishedMonthToSchema :: FC.Fleece schema => schema PublishedMonthTo
+publishedMonthToSchema :: FC.Fleece t => FC.Schema t PublishedMonthTo
 publishedMonthToSchema =
   FC.coerceSchema FC.integer

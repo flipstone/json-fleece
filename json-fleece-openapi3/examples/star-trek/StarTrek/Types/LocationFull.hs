@@ -63,7 +63,7 @@ data LocationFull = LocationFull
   }
   deriving (Eq, Show)
 
-locationFullSchema :: FC.Fleece schema => schema LocationFull
+locationFullSchema :: FC.Fleece t => FC.Schema t LocationFull
 locationFullSchema =
   FC.object $
     FC.constructor LocationFull

@@ -17,7 +17,7 @@ data ConflictHeader = ConflictHeader
   }
   deriving (Eq, Show)
 
-conflictHeaderSchema :: FC.Fleece schema => schema ConflictHeader
+conflictHeaderSchema :: FC.Fleece t => FC.Schema t ConflictHeader
 conflictHeaderSchema =
   FC.object $
     FC.constructor ConflictHeader

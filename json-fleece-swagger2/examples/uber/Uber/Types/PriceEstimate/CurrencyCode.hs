@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype CurrencyCode = CurrencyCode T.Text
   deriving (Show, Eq)
 
-currencyCodeSchema :: FC.Fleece schema => schema CurrencyCode
+currencyCodeSchema :: FC.Fleece t => FC.Schema t CurrencyCode
 currencyCodeSchema =
   FC.coerceSchema FC.text

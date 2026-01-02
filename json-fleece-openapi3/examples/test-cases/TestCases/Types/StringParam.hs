@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype StringParam = StringParam T.Text
   deriving (Show, Eq)
 
-stringParamSchema :: FC.Fleece schema => schema StringParam
+stringParamSchema :: FC.Fleece t => FC.Schema t StringParam
 stringParamSchema =
   FC.coerceSchema FC.text

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype UnnamedSpecies = UnnamedSpecies Bool
   deriving (Show, Eq)
 
-unnamedSpeciesSchema :: FC.Fleece schema => schema UnnamedSpecies
+unnamedSpeciesSchema :: FC.Fleece t => FC.Schema t UnnamedSpecies
 unnamedSpeciesSchema =
   FC.coerceSchema FC.boolean

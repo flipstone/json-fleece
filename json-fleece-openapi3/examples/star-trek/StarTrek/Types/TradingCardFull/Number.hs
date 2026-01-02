@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Number = Number T.Text
   deriving (Show, Eq)
 
-numberSchema :: FC.Fleece schema => schema Number
+numberSchema :: FC.Fleece t => FC.Schema t Number
 numberSchema =
   FC.coerceSchema FC.text

@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype AudiobookPublishedMonth = AudiobookPublishedMonth Integer
   deriving (Show, Eq)
 
-audiobookPublishedMonthSchema :: FC.Fleece schema => schema AudiobookPublishedMonth
+audiobookPublishedMonthSchema :: FC.Fleece t => FC.Schema t AudiobookPublishedMonth
 audiobookPublishedMonthSchema =
   FC.coerceSchema FC.integer

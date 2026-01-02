@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype NonCorporealSpecies = NonCorporealSpecies Bool
   deriving (Show, Eq)
 
-nonCorporealSpeciesSchema :: FC.Fleece schema => schema NonCorporealSpecies
+nonCorporealSpeciesSchema :: FC.Fleece t => FC.Schema t NonCorporealSpecies
 nonCorporealSpeciesSchema =
   FC.coerceSchema FC.boolean

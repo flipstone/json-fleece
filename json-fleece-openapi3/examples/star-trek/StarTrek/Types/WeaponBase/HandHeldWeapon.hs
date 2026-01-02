@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype HandHeldWeapon = HandHeldWeapon Bool
   deriving (Show, Eq)
 
-handHeldWeaponSchema :: FC.Fleece schema => schema HandHeldWeapon
+handHeldWeaponSchema :: FC.Fleece t => FC.Schema t HandHeldWeapon
 handHeldWeaponSchema =
   FC.coerceSchema FC.boolean

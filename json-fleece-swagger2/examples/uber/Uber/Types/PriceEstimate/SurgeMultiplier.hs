@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype SurgeMultiplier = SurgeMultiplier Sci.Scientific
   deriving (Show, Eq)
 
-surgeMultiplierSchema :: FC.Fleece schema => schema SurgeMultiplier
+surgeMultiplierSchema :: FC.Fleece t => FC.Schema t SurgeMultiplier
 surgeMultiplierSchema =
   FC.coerceSchema FC.number

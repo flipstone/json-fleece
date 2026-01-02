@@ -24,6 +24,6 @@ statusToText v =
       BAD -> "BAD"
       UGLY -> "UGLY"
 
-statusSchema :: FC.Fleece schema => schema Status
+statusSchema :: FC.Fleece t => FC.Schema t Status
 statusSchema =
   FC.boundedEnum statusToText

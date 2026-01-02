@@ -15,7 +15,7 @@ data Response500Body = Response500Body
   }
   deriving (Eq, Show)
 
-response500BodySchema :: FC.Fleece schema => schema Response500Body
+response500BodySchema :: FC.Fleece t => FC.Schema t Response500Body
 response500BodySchema =
   FC.object $
     FC.constructor Response500Body

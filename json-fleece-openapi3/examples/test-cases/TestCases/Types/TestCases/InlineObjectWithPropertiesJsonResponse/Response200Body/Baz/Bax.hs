@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Bax = Bax T.Text
   deriving (Show, Eq)
 
-baxSchema :: FC.Fleece schema => schema Bax
+baxSchema :: FC.Fleece t => FC.Schema t Bax
 baxSchema =
   FC.coerceSchema FC.text

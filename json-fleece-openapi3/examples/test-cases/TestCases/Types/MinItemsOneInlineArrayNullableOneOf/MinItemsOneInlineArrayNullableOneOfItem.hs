@@ -13,6 +13,6 @@ import qualified TestCases.Types.MinItemsOneInlineArrayNullableOneOf.MinItemsOne
 newtype MinItemsOneInlineArrayNullableOneOfItem = MinItemsOneInlineArrayNullableOneOfItem (NEL.NonEmpty MinItemsOneInlineArrayNullableOneOfItemItem.MinItemsOneInlineArrayNullableOneOfItemItem)
   deriving (Show, Eq)
 
-minItemsOneInlineArrayNullableOneOfItemSchema :: FC.Fleece schema => schema MinItemsOneInlineArrayNullableOneOfItem
+minItemsOneInlineArrayNullableOneOfItemSchema :: FC.Fleece t => FC.Schema t MinItemsOneInlineArrayNullableOneOfItem
 minItemsOneInlineArrayNullableOneOfItemSchema =
   FC.coerceSchema (FC.nonEmpty MinItemsOneInlineArrayNullableOneOfItemItem.minItemsOneInlineArrayNullableOneOfItemItemSchema)

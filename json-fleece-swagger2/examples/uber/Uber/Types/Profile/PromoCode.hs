@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype PromoCode = PromoCode T.Text
   deriving (Show, Eq)
 
-promoCodeSchema :: FC.Fleece schema => schema PromoCode
+promoCodeSchema :: FC.Fleece t => FC.Schema t PromoCode
 promoCodeSchema =
   FC.coerceSchema FC.text

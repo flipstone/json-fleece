@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype MedicalEstablishment = MedicalEstablishment Bool
   deriving (Show, Eq)
 
-medicalEstablishmentSchema :: FC.Fleece schema => schema MedicalEstablishment
+medicalEstablishmentSchema :: FC.Fleece t => FC.Schema t MedicalEstablishment
 medicalEstablishmentSchema =
   FC.coerceSchema FC.boolean

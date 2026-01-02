@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Email = Email T.Text
   deriving (Show, Eq)
 
-emailSchema :: FC.Fleece schema => schema Email
+emailSchema :: FC.Fleece t => FC.Schema t Email
 emailSchema =
   FC.coerceSchema FC.text

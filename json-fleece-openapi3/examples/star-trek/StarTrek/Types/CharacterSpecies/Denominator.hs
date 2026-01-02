@@ -11,6 +11,6 @@ import Prelude (Eq, Integer, Show)
 newtype Denominator = Denominator Integer
   deriving (Show, Eq)
 
-denominatorSchema :: FC.Fleece schema => schema Denominator
+denominatorSchema :: FC.Fleece t => FC.Schema t Denominator
 denominatorSchema =
   FC.coerceSchema FC.integer

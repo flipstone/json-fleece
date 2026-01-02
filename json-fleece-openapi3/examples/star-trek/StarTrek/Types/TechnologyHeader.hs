@@ -17,7 +17,7 @@ data TechnologyHeader = TechnologyHeader
   }
   deriving (Eq, Show)
 
-technologyHeaderSchema :: FC.Fleece schema => schema TechnologyHeader
+technologyHeaderSchema :: FC.Fleece t => FC.Schema t TechnologyHeader
 technologyHeaderSchema =
   FC.object $
     FC.constructor TechnologyHeader

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype TransDimensionalSpecies = TransDimensionalSpecies Bool
   deriving (Show, Eq)
 
-transDimensionalSpeciesSchema :: FC.Fleece schema => schema TransDimensionalSpecies
+transDimensionalSpeciesSchema :: FC.Fleece t => FC.Schema t TransDimensionalSpecies
 transDimensionalSpeciesSchema =
   FC.coerceSchema FC.boolean

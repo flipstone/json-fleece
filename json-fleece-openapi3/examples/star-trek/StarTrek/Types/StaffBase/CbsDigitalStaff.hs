@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype CbsDigitalStaff = CbsDigitalStaff Bool
   deriving (Show, Eq)
 
-cbsDigitalStaffSchema :: FC.Fleece schema => schema CbsDigitalStaff
+cbsDigitalStaffSchema :: FC.Fleece t => FC.Schema t CbsDigitalStaff
 cbsDigitalStaffSchema =
   FC.coerceSchema FC.boolean

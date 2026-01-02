@@ -37,7 +37,7 @@ data AllOfObject = AllOfObject
   }
   deriving (Eq, Show)
 
-allOfObjectSchema :: FC.Fleece schema => schema AllOfObject
+allOfObjectSchema :: FC.Fleece t => FC.Schema t AllOfObject
 allOfObjectSchema =
   FC.object $
     FC.constructor AllOfObject

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype SpaceborneSpecies = SpaceborneSpecies Bool
   deriving (Show, Eq)
 
-spaceborneSpeciesSchema :: FC.Fleece schema => schema SpaceborneSpecies
+spaceborneSpeciesSchema :: FC.Fleece t => FC.Schema t SpaceborneSpecies
 spaceborneSpeciesSchema =
   FC.coerceSchema FC.boolean

@@ -12,6 +12,6 @@ import Prelude (Eq, Show)
 newtype Response200BodyItem = Response200BodyItem T.Text
   deriving (Show, Eq)
 
-response200BodyItemSchema :: FC.Fleece schema => schema Response200BodyItem
+response200BodyItemSchema :: FC.Fleece t => FC.Schema t Response200BodyItem
 response200BodyItemSchema =
   FC.coerceSchema FC.text

@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype FictionalCharacter = FictionalCharacter Bool
   deriving (Show, Eq)
 
-fictionalCharacterSchema :: FC.Fleece schema => schema FictionalCharacter
+fictionalCharacterSchema :: FC.Fleece t => FC.Schema t FictionalCharacter
 fictionalCharacterSchema =
   FC.coerceSchema FC.boolean

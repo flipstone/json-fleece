@@ -11,6 +11,6 @@ import Prelude (Bool, Eq, Show)
 newtype DailymotionDigitalRelease = DailymotionDigitalRelease Bool
   deriving (Show, Eq)
 
-dailymotionDigitalReleaseSchema :: FC.Fleece schema => schema DailymotionDigitalRelease
+dailymotionDigitalReleaseSchema :: FC.Fleece t => FC.Schema t DailymotionDigitalRelease
 dailymotionDigitalReleaseSchema =
   FC.coerceSchema FC.boolean

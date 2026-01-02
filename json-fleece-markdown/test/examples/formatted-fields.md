@@ -2,18 +2,18 @@
 
 |Field|Key Required|Null Allowed|Type|
 |---|---|---|---|
-|formattedField|yes|no|string (format: abc123)|
+|formattedField|yes|no|text (format: abc123)|
 |validatedFormattedField|yes|no|ValidatedFormattedString|
 |formattedValidatedField|yes|no|FormattedValidatedString|
 
 # FormattedValidatedString
 
-string
+text
 
 format: abc123
 
 # ValidatedFormattedString
 
-string
+text
 
 format: abc123
