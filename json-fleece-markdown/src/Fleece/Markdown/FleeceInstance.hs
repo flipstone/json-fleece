@@ -40,8 +40,11 @@ import Fleece.Markdown.SchemaDocumentation
 newtype Markdown a = Markdown SchemaDocumentation
 
 renderMarkdown :: FC.Schema Markdown a -> LT.Text
-renderMarkdown (FC.Schema _ (Markdown schemaDoc)) =
-  schemaDocumentationToMarkdown schemaDoc
+renderMarkdown schema =
+  let
+    Markdown schemaDoc = FC.schemaInterpreter schema
+  in
+    schemaDocumentationToMarkdown schemaDoc
 
 instance FC.Fleece Markdown where
   newtype Object Markdown _object _a
@@ -59,11 +62,14 @@ instance FC.Fleece Markdown where
   newtype TaggedUnionMembers Markdown _allTags _handledTags
     = TaggedUnionMembers (DList.DList TaggedUnionMemberDocumentation)
 
-  interpretFormat formatString (FC.Schema _name (Markdown schemaDoc)) =
+  interpretFormat formatString schema =
     Markdown $
-      schemaDoc
-        { schemaMainEntry = WithFormat formatString (schemaMainEntry schemaDoc)
-        }
+      let
+        Markdown schemaDoc = FC.schemaInterpreter schema
+      in
+        schemaDoc
+          { schemaMainEntry = WithFormat formatString (schemaMainEntry schemaDoc)
+          }
 
   interpretNumber =
     primitiveMarkdown
@@ -74,28 +80,34 @@ instance FC.Fleece Markdown where
   interpretBoolean =
     primitiveMarkdown
 
-  interpretArray arrayName (FC.Schema _itemName (Markdown itemSchemaDoc)) =
+  interpretArray arrayName schema =
     Markdown $
-      SchemaDocumentation
-        { schemaName = arrayName
-        , schemaExcludeFromRender = True
-        , schemaNullability = NotNull
-        , schemaMainEntry = ArrayEntry (schemaMainEntry itemSchemaDoc)
-        , schemaReferences = schemaSelfReference itemSchemaDoc
-        }
+      let
+        Markdown itemSchemaDoc = FC.schemaInterpreter schema
+      in
+        SchemaDocumentation
+          { schemaName = arrayName
+          , schemaExcludeFromRender = True
+          , schemaNullability = NotNull
+          , schemaMainEntry = ArrayEntry (schemaMainEntry itemSchemaDoc)
+          , schemaReferences = schemaSelfReference itemSchemaDoc
+          }
 
   interpretNull =
     primitiveMarkdown
 
-  interpretNullable nullableName (FC.Schema _name (Markdown schemaDoc)) =
+  interpretNullable nullableName schema =
     Markdown $
-      SchemaDocumentation
-        { schemaName = nullableName
-        , schemaExcludeFromRender = schemaExcludeFromRender schemaDoc
-        , schemaNullability = Nullable schemaDoc
-        , schemaMainEntry = NullableEntry (schemaMainEntry schemaDoc)
-        , schemaReferences = schemaReferences schemaDoc
-        }
+      let
+        Markdown schemaDoc = FC.schemaInterpreter schema
+      in
+        SchemaDocumentation
+          { schemaName = nullableName
+          , schemaExcludeFromRender = schemaExcludeFromRender schemaDoc
+          , schemaNullability = Nullable schemaDoc
+          , schemaMainEntry = NullableEntry (schemaMainEntry schemaDoc)
+          , schemaReferences = schemaReferences schemaDoc
+          }
 
   required name _accessor fieldSchema =
     Field (mkFieldDocs name True fieldSchema)
@@ -128,15 +140,21 @@ instance FC.Fleece Markdown where
         , schemaReferences = foldMap (schemaSelfReference . fieldSchemaDocs) fields
         }
 
-  interpretValidateNamed name _check _unvalidate (FC.Schema _unvalidatedName (Markdown schemaDocs)) =
+  interpretValidateNamed name _check _unvalidate schema =
     Markdown $
-      schemaDocs
-        { schemaName = name
-        , schemaExcludeFromRender = False
-        }
+      let
+        Markdown schemaDocs = FC.schemaInterpreter schema
+      in
+        schemaDocs
+          { schemaName = name
+          , schemaExcludeFromRender = False
+          }
 
-  interpretValidateAnonymous _check _unvalidate (FC.Schema _name (Markdown schemaDocs)) =
-    Markdown schemaDocs
+  interpretValidateAnonymous _check _unvalidate schema =
+    let
+      Markdown schemaDocs = FC.schemaInterpreter schema
+    in
+      Markdown schemaDocs
 
   interpretBoundedEnumNamed name toText =
     let
@@ -169,10 +187,10 @@ instance FC.Fleece Markdown where
                 $ members
           }
 
-  unionMemberWithIndex _index (FC.Schema _name markdown) =
+  unionMemberWithIndex _index schema =
     UnionMembers $
       let
-        Markdown schemaDocs = markdown
+        Markdown schemaDocs = FC.schemaInterpreter schema
       in
         DList.singleton schemaDocs
 
@@ -210,11 +228,15 @@ instance FC.Fleece Markdown where
   taggedUnionCombine (TaggedUnionMembers left) (TaggedUnionMembers right) =
     TaggedUnionMembers (left <> right)
 
-  interpretJsonString (FC.Schema name (Markdown schemaDocs)) =
+  interpretJsonString schema =
     Markdown $
-      schemaDocs
-        { schemaName = FC.annotateName name "(encoded as json string)"
-        }
+      let
+        name = FC.schemaName schema
+        Markdown schemaDocs = FC.schemaInterpreter schema
+      in
+        schemaDocs
+          { schemaName = FC.annotateName name "(encoded as json string)"
+          }
 
 primitiveMarkdown :: FC.Name -> Markdown a
 primitiveMarkdown name =
@@ -232,8 +254,9 @@ mkFieldDocs ::
   Bool ->
   FC.Schema Markdown a ->
   FieldDocumentation
-mkFieldDocs name required (FC.Schema _schemaName (Markdown schemaDocs)) =
+mkFieldDocs name required schema =
   let
+    Markdown schemaDocs = FC.schemaInterpreter schema
     nullAllowed =
       case schemaNullability schemaDocs of
         NotNull -> False
