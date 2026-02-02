@@ -36,7 +36,11 @@ toStrictText :: FC.Schema ToValue a -> a -> T.Text
 toStrictText encoder = TL.toStrict . toLazyText encoder
 
 toValue :: FC.Schema ToValue a -> a -> Aeson.Value
-toValue (FC.Schema _name (ToValue f)) = f
+toValue schema =
+  let
+    ToValue f = FC.schemaInterpreter schema
+  in
+    f
 
 -- This needs to be a separate `Fleece` instance because using `Value` for
 -- encoding results in a different encoded result than using `Encoding`. The
@@ -77,25 +81,33 @@ instance FC.Fleece ToValue where
   interpretNull _name =
     ToValue (\FC.Null -> Aeson.Null)
 
-  interpretArray _arrayName (FC.Schema _itemSchemaName (ToValue itemToJSON)) =
-    ToValue (Aeson.Array . fmap itemToJSON)
+  interpretArray _arrayName schema =
+    let
+      ToValue itemToJSON = FC.schemaInterpreter schema
+    in
+      ToValue (Aeson.Array . fmap itemToJSON)
 
-  interpretNullable _nullableName (FC.Schema _schemaName (ToValue toJSON)) =
+  interpretNullable _nullableName schema =
     ToValue $ \mbValue ->
-      case mbValue of
-        Left FC.Null -> Aeson.Null
-        Right value -> toJSON value
+      let
+        ToValue toJSON = FC.schemaInterpreter schema
+      in
+        case mbValue of
+          Left FC.Null -> Aeson.Null
+          Right value -> toJSON value
 
-  required name accessor (FC.Schema _name (ToValue toJSON)) =
+  required name accessor schema =
     let
       key = AesonKey.fromString name
+      ToValue toJSON = FC.schemaInterpreter schema
     in
       Field $ \object ->
         [(key, toJSON (accessor object))]
 
-  optional name accessor (FC.Schema _name (ToValue toJSON)) =
+  optional name accessor schema =
     let
       key = AesonKey.fromString name
+      ToValue toJSON = FC.schemaInterpreter schema
     in
       Field $ \object ->
         case accessor object of
@@ -104,12 +116,15 @@ instance FC.Fleece ToValue where
           Nothing ->
             []
 
-  additionalFields accessor (FC.Schema _name (ToValue toJSON)) =
+  additionalFields accessor schema =
     AdditionalFields $ \object ->
-      map (\(key, value) -> (AesonKey.fromText key, toJSON value))
-        . Map.toList
-        . accessor
-        $ object
+      let
+        ToValue toJSON = FC.schemaInterpreter schema
+      in
+        map (\(key, value) -> (AesonKey.fromText key, toJSON value))
+          . Map.toList
+          . accessor
+          $ object
 
   mapField _f encoder =
     coerce encoder
@@ -131,11 +146,17 @@ instance FC.Fleece ToValue where
   interpretBoundedEnumNamed _name toText =
     ToValue (Aeson.toJSON . toText)
 
-  interpretValidateNamed _name uncheck _check (FC.Schema _unvalidatedName (ToValue toJSON)) =
-    ToValue (toJSON . uncheck)
+  interpretValidateNamed _name uncheck _check schema =
+    let
+      ToValue toJSON = FC.schemaInterpreter schema
+    in
+      ToValue (toJSON . uncheck)
 
-  interpretValidateAnonymous uncheck _check (FC.Schema _unvalidatedName (ToValue toJSON)) =
-    ToValue (toJSON . uncheck)
+  interpretValidateAnonymous uncheck _check schema =
+    let
+      ToValue toJSON = FC.schemaInterpreter schema
+    in
+      ToValue (toJSON . uncheck)
 
   interpretUnionNamed _name (UnionMembers builder) =
     let
@@ -144,13 +165,13 @@ instance FC.Fleece ToValue where
     in
       ToValue (Shrubbery.dissectUnion branches)
 
-  unionMemberWithIndex _index (FC.Schema _name encoder) =
+  unionMemberWithIndex _index schema =
     UnionMembers $
       let
         -- It's important that this let is _inside_ the 'UnionMembers'
         -- constructor so that it lazy enough to allow the recursive reference
         -- of 'anyJSON' to itself within arrays.
-        ToValue toJSON = encoder
+        ToValue toJSON = FC.schemaInterpreter schema
       in
         Shrubbery.singleBranch toJSON
 
@@ -188,11 +209,14 @@ instance FC.Fleece ToValue where
   taggedUnionCombine (TaggedUnionMembers left) (TaggedUnionMembers right) =
     TaggedUnionMembers (Shrubbery.appendTaggedBranches left right)
 
-  interpretJsonString (FC.Schema _name (ToValue toJSON)) =
-    ToValue
-      ( Aeson.String
-          . Enc.decodeUtf8
-          . LBS.toStrict
-          . Aeson.encode
-          . toJSON
-      )
+  interpretJsonString schema =
+    let
+      ToValue toJSON = FC.schemaInterpreter schema
+    in
+      ToValue
+        ( Aeson.String
+            . Enc.decodeUtf8
+            . LBS.toStrict
+            . Aeson.encode
+            . toJSON
+        )

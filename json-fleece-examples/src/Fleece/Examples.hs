@@ -50,6 +50,7 @@ import Fleece.Core
   , boolean
   , boundedEnum
   , constructor
+  , describeSchema
   , int
   , jsonString
   , list
@@ -101,10 +102,21 @@ newtype Validation = Validation T.Text
 
 validationSchema :: Fleece t => Schema t Validation
 validationSchema =
-  validate
-    (\(Validation t) -> t)
-    (\t -> if T.length t > 12 then Left "At most 12 characters allowed" else Right (Validation t))
-    text
+  let
+    maxLength = 12
+    tooLongMsg = "At most " <> show maxLength <> " characters allowed"
+    description =
+      "Validated to be no more than " <> show maxLength <> " characters long."
+  in
+    describeSchema (T.pack description) $
+      validate
+        (\(Validation t) -> t)
+        ( \t ->
+            if T.length t > maxLength
+              then Left tooLongMsg
+              else Right (Validation t)
+        )
+        text
 
 data OptionalField = OptionalField
   { exampleOptionalField :: Maybe T.Text
@@ -173,7 +185,7 @@ additionalFieldsExampleSchema =
     constructor AdditionalFieldsExample
       #+ required "field1" field1 text
       #+ required "field2" field2 text
-      #* additionalFields otherFields text
+      #* additionalFields otherFields (describeSchema (T.pack "Inline description.") text)
 
 data AbnormalNumbersExample = AbnormalNumbersExample
   { stringyNumber :: Scientific

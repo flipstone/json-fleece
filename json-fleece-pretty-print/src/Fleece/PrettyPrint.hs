@@ -71,8 +71,11 @@ inlineToBuilder inline =
       inlineToBuilder left <> inlineToBuilder right
 
 prettyPrintLazyText :: FC.Schema PrettyPrinter a -> a -> LT.Text
-prettyPrintLazyText (FC.Schema _name (PrettyPrinter toPretty)) =
-  LTB.toLazyText . prettyToBuilder "" . toPretty
+prettyPrintLazyText schema =
+  let
+    PrettyPrinter toPretty = FC.schemaInterpreter schema
+  in
+    LTB.toLazyText . prettyToBuilder "" . toPretty
 
 prettyPrintText :: FC.Schema PrettyPrinter a -> a -> T.Text
 prettyPrintText printer =
@@ -98,8 +101,9 @@ instance FC.Fleece PrettyPrinter where
   newtype TaggedUnionMembers PrettyPrinter _allTags handledTags
     = TaggedUnionMembers (Shrubbery.TaggedBranchBuilder handledTags (T.Text, DList.DList Pretty))
 
-  interpretFormat formatString (FC.Schema _name (PrettyPrinter toPretty)) =
+  interpretFormat formatString schema =
     let
+      PrettyPrinter toPretty = FC.schemaInterpreter schema
       annotation =
         " (" <> formatString <> ")"
 
@@ -120,37 +124,49 @@ instance FC.Fleece PrettyPrinter where
   interpretBoolean _name =
     PrettyPrinter showInline
 
-  interpretArray _arrayName (FC.Schema _itemSchemaName (PrettyPrinter itemToPretty)) =
+  interpretArray _arrayName schema =
     PrettyPrinter $ \array ->
-      case Fold.toList array of
-        [] -> Inline "[]"
-        nonEmptyList ->
-          Block
-            . map (prefixArrayItem . itemToPretty)
-            $ nonEmptyList
+      let
+        PrettyPrinter itemToPretty = FC.schemaInterpreter schema
+      in
+        case Fold.toList array of
+          [] -> Inline "[]"
+          nonEmptyList ->
+            Block
+              . map (prefixArrayItem . itemToPretty)
+              $ nonEmptyList
 
   interpretNull _name =
     PrettyPrinter showInline
 
-  interpretNullable _name (FC.Schema _schemaName (PrettyPrinter renderNotNull)) =
+  interpretNullable _name schema =
     PrettyPrinter $ \mbValue ->
-      renderEither showInline renderNotNull mbValue
+      let
+        PrettyPrinter renderNotNull = FC.schemaInterpreter schema
+      in
+        renderEither showInline renderNotNull mbValue
 
-  required fieldName accessor (FC.Schema _name (PrettyPrinter renderField)) =
+  required fieldName accessor schema =
     Field $ \object ->
-      prettyPrintField fieldName (renderField (accessor object))
+      let
+        PrettyPrinter renderField = FC.schemaInterpreter schema
+      in
+        prettyPrintField fieldName (renderField (accessor object))
 
-  optional fieldName accessor (FC.Schema _name (PrettyPrinter renderField)) =
+  optional fieldName accessor schema =
     Field $ \object ->
-      prettyPrintField fieldName $
-        renderMaybe renderField (accessor object)
+      let
+        PrettyPrinter renderField = FC.schemaInterpreter schema
+      in
+        prettyPrintField fieldName $ renderMaybe renderField (accessor object)
 
   mapField _f (Field renderField) =
     Field renderField
 
-  additionalFields accessor (FC.Schema _name (PrettyPrinter renderField)) =
+  additionalFields accessor schema =
     AdditionalFields $ \object ->
       let
+        PrettyPrinter renderField = FC.schemaInterpreter schema
         printField (key, value) =
           prettyPrintField
             (T.unpack key)
@@ -183,14 +199,20 @@ instance FC.Fleece PrettyPrinter where
         , Indent (Block (map (\f -> f object) (DList.toList fields)))
         ]
 
-  interpretValidateNamed name unvalidate _check (FC.Schema _unvalidatedName (PrettyPrinter toPretty)) =
+  interpretValidateNamed name unvalidate _check schema =
     PrettyPrinter $ \value ->
-      prefixConstructor
-        (renderName name)
-        (toPretty (unvalidate value))
+      let
+        PrettyPrinter toPretty = FC.schemaInterpreter schema
+      in
+        prefixConstructor
+          (renderName name)
+          (toPretty (unvalidate value))
 
-  interpretValidateAnonymous unvalidate _check (FC.Schema _unvalidatedName (PrettyPrinter toPretty)) =
-    PrettyPrinter (toPretty . unvalidate)
+  interpretValidateAnonymous unvalidate _check schema =
+    let
+      PrettyPrinter toPretty = FC.schemaInterpreter schema
+    in
+      PrettyPrinter (toPretty . unvalidate)
 
   interpretBoundedEnumNamed _name toText =
     PrettyPrinter (showInline . toText)
@@ -198,8 +220,12 @@ instance FC.Fleece PrettyPrinter where
   interpretUnionNamed _name (UnionMembers branches) =
     PrettyPrinter (Shrubbery.dissect (Shrubbery.branchBuild branches))
 
-  unionMemberWithIndex _index (FC.Schema _name (PrettyPrinter toPretty)) =
-    UnionMembers (Shrubbery.singleBranch toPretty)
+  unionMemberWithIndex _index schema =
+    UnionMembers $
+      let
+        PrettyPrinter toPretty = FC.schemaInterpreter schema
+      in
+        Shrubbery.singleBranch toPretty
 
   unionCombine (UnionMembers leftBranches) (UnionMembers rightBranches) =
     UnionMembers (Shrubbery.appendBranches leftBranches rightBranches)

@@ -70,9 +70,12 @@ instance FC.Fleece Decoder where
     Decoder H.bool
 
   {-# INLINE interpretArray #-}
-  interpretArray _arrayName (FC.Schema _itemSchemaName (Decoder itemFromValue)) =
+  interpretArray _arrayName schema =
     Decoder $
-      H.vector itemFromValue
+      let
+        Decoder itemFromValue = FC.schemaInterpreter schema
+      in
+        H.vector itemFromValue
 
   {-# INLINE interpretNull #-}
   interpretNull _name =
@@ -83,31 +86,41 @@ instance FC.Fleece Decoder where
         else fail "expected null"
 
   {-# INLINE interpretNullable #-}
-  interpretNullable _nullableName (FC.Schema _schemaName (Decoder parseValue)) =
+  interpretNullable _nullableName schema =
     Decoder $ do
+      let
+        Decoder parseValue = FC.schemaInterpreter schema
+
       isNull <- H.isNull
+
       if isNull
         then pure (Left FC.Null)
         else fmap Right parseValue
 
   {-# INLINE required #-}
-  required name _accessor (FC.Schema _name (Decoder parseValue)) =
+  required name _accessor schema =
     let
       key = T.pack name
+      Decoder parseValue = FC.schemaInterpreter schema
     in
       Field key (H.atKey key parseValue)
 
   {-# INLINE optional #-}
-  optional name _accessor (FC.Schema _name (Decoder parseValue)) =
+  optional name _accessor schema =
     let
       key = T.pack name
+      Decoder parseValue = FC.schemaInterpreter schema
     in
       Field key (H.atKeyOptional key parseValue)
 
   {-# INLINE additionalFields #-}
-  additionalFields _accessor (FC.Schema _name (Decoder parseValue)) =
+  additionalFields _accessor schema =
     AdditionalFields $ \definedFields ->
-      H.liftObjectDecoder $ H.objectAsMapExcluding definedFields pure parseValue
+      let
+        Decoder parseValue = FC.schemaInterpreter schema
+      in
+        H.liftObjectDecoder $
+          H.objectAsMapExcluding definedFields pure parseValue
 
   {-# INLINE mapField #-}
   mapField f (Field name parseField) =
@@ -156,19 +169,30 @@ instance FC.Fleece Decoder where
                   <> " enum: "
                   <> show textValue
 
-  interpretValidateNamed name _uncheck check (FC.Schema _unvalidatedName (Decoder parseValue)) =
-    validatingDecoder name parseValue check
+  interpretValidateNamed name _uncheck check schema =
+    let
+      Decoder parseValue = FC.schemaInterpreter schema
+    in
+      validatingDecoder name parseValue check
 
-  interpretValidateAnonymous _uncheck check (FC.Schema unvalidatedName (Decoder parseValue)) =
-    validatingDecoder unvalidatedName parseValue check
+  interpretValidateAnonymous _uncheck check schema =
+    let
+      unvalidatedName = FC.schemaName schema
+      Decoder parseValue = FC.schemaInterpreter schema
+    in
+      validatingDecoder unvalidatedName parseValue check
 
   {-# INLINE interpretUnionNamed #-}
   interpretUnionNamed name (UnionMembers parseMembers) =
     Decoder (parseMembers name)
 
   {-# INLINE unionMemberWithIndex #-}
-  unionMemberWithIndex index (FC.Schema _name (Decoder parseMember)) =
-    UnionMembers (\_name -> fmap (Shrubbery.unifyUnion index) parseMember)
+  unionMemberWithIndex index schema =
+    UnionMembers $ \_name ->
+      let
+        Decoder parseMember = FC.schemaInterpreter schema
+      in
+        fmap (Shrubbery.unifyUnion index) parseMember
 
   {-# INLINE unionCombine #-}
   unionCombine (UnionMembers parseLeft) (UnionMembers parseRight) =
@@ -220,12 +244,14 @@ instance FC.Fleece Decoder where
   taggedUnionCombine (TaggedUnionMembers left) (TaggedUnionMembers right) =
     TaggedUnionMembers (Map.union left right)
 
-  interpretJsonString (FC.Schema _name (Decoder parseValue)) =
+  interpretJsonString schema =
     Decoder $
       H.withText $ \jsonText -> do
         -- hermes currently cannot decode scalars. So we make a dummy object.
         let
           obj = Enc.encodeUtf8 $ T.pack "{ \"\": " <> jsonText <> T.pack "}"
+          Decoder parseValue = FC.schemaInterpreter schema
+
         case H.decodeEither (H.object $ H.atKey (T.pack "") parseValue) obj of
           Left err -> fail ("Error decoding nested json string: " <> show err)
           Right value -> pure value
