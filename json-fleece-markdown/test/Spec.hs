@@ -113,7 +113,7 @@ test_format =
 test_validate :: Tasty.TestTree
 test_validate =
   mkGoldenTest
-    "Validated type at the root are included in teh markdown"
+    "Validated type at the root are included in the markdown"
     "test/examples/validate.md"
     Examples.validationSchema
 
@@ -177,7 +177,7 @@ test_union =
 test_taggedUnion :: Tasty.TestTree
 test_taggedUnion =
   mkGoldenTest
-    "Tagged Unions are intluded with their members in the rendered Markdown"
+    "Tagged Unions are included with their members in the rendered Markdown"
     "test/examples/tagged-union.md"
     Examples.taggedUnionExampleSchema
 

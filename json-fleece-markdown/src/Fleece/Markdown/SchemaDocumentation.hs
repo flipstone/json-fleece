@@ -2,6 +2,7 @@ module Fleece.Markdown.SchemaDocumentation
   ( SchemaDocumentation
       ( SchemaDocumentation
       , schemaName
+      , schemaDescription
       , schemaExcludeFromRender
       , schemaNullability
       , schemaMainEntry
@@ -28,12 +29,14 @@ module Fleece.Markdown.SchemaDocumentation
 
 import qualified Data.DList as DList
 import qualified Data.Map.Strict as Map
+import qualified Data.NonEmptyText as NET
 import qualified Data.Text as T
 
 import qualified Fleece.Core as FC
 
 data SchemaDocumentation = SchemaDocumentation
   { schemaName :: FC.Name
+  , schemaDescription :: Maybe NET.NonEmptyText
   , schemaExcludeFromRender :: Bool
   , schemaNullability :: SchemaNullability
   , schemaMainEntry :: MainEntry

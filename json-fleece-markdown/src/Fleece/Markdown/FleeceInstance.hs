@@ -5,6 +5,7 @@ module Fleece.Markdown.FleeceInstance
   , renderMarkdown
   ) where
 
+import Control.Applicative ((<|>))
 import Data.Coerce (coerce)
 import qualified Data.DList as DList
 import qualified Data.Map.Strict as Map
@@ -26,6 +27,7 @@ import Fleece.Markdown.SchemaDocumentation
   , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, TaggedUnionEntry, UnionEntry, WithFormat)
   , SchemaDocumentation
     ( SchemaDocumentation
+    , schemaDescription
     , schemaExcludeFromRender
     , schemaMainEntry
     , schemaName
@@ -44,7 +46,7 @@ renderMarkdown schema =
   let
     Markdown schemaDoc = FC.schemaInterpreter schema
   in
-    schemaDocumentationToMarkdown schemaDoc
+    schemaDocumentationToMarkdown $ attachDescription schema schemaDoc
 
 instance FC.Fleece Markdown where
   newtype Object Markdown _object _a
@@ -87,6 +89,7 @@ instance FC.Fleece Markdown where
       in
         SchemaDocumentation
           { schemaName = arrayName
+          , schemaDescription = Nothing
           , schemaExcludeFromRender = True
           , schemaNullability = NotNull
           , schemaMainEntry = ArrayEntry (schemaMainEntry itemSchemaDoc)
@@ -103,6 +106,7 @@ instance FC.Fleece Markdown where
       in
         SchemaDocumentation
           { schemaName = nullableName
+          , schemaDescription = Nothing
           , schemaExcludeFromRender = schemaExcludeFromRender schemaDoc
           , schemaNullability = Nullable schemaDoc
           , schemaMainEntry = NullableEntry (schemaMainEntry schemaDoc)
@@ -134,6 +138,7 @@ instance FC.Fleece Markdown where
     Markdown $
       SchemaDocumentation
         { schemaName = name
+        , schemaDescription = Nothing
         , schemaExcludeFromRender = False
         , schemaNullability = NotNull
         , schemaMainEntry = Fields fields
@@ -147,6 +152,7 @@ instance FC.Fleece Markdown where
       in
         schemaDocs
           { schemaName = name
+          , schemaDescription = Nothing
           , schemaExcludeFromRender = False
           }
 
@@ -164,6 +170,7 @@ instance FC.Fleece Markdown where
       Markdown $
         SchemaDocumentation
           { schemaName = name
+          , schemaDescription = Nothing
           , schemaExcludeFromRender = False
           , schemaNullability = NotNull
           , schemaMainEntry = EnumValues enumValues
@@ -178,6 +185,7 @@ instance FC.Fleece Markdown where
       in
         SchemaDocumentation
           { schemaName = name
+          , schemaDescription = Nothing
           , schemaExcludeFromRender = False
           , schemaNullability = NotNull
           , schemaMainEntry = UnionEntry (map schemaName members)
@@ -192,7 +200,7 @@ instance FC.Fleece Markdown where
       let
         Markdown schemaDocs = FC.schemaInterpreter schema
       in
-        DList.singleton schemaDocs
+        DList.singleton $ attachDescription schema schemaDocs
 
   unionCombine (UnionMembers left) (UnionMembers right) =
     UnionMembers (left <> right)
@@ -208,6 +216,7 @@ instance FC.Fleece Markdown where
       in
         SchemaDocumentation
           { schemaName = name
+          , schemaDescription = Nothing
           , schemaExcludeFromRender = False
           , schemaNullability = NotNull
           , schemaMainEntry = TaggedUnionEntry (T.pack tagProperty) members
@@ -238,11 +247,18 @@ instance FC.Fleece Markdown where
           { schemaName = FC.annotateName name "(encoded as json string)"
           }
 
+attachDescription :: FC.Schema Markdown a -> SchemaDocumentation -> SchemaDocumentation
+attachDescription schema docs =
+  docs
+    { schemaDescription = FC.schemaDescription schema <|> schemaDescription docs
+    }
+
 primitiveMarkdown :: FC.Name -> Markdown a
 primitiveMarkdown name =
   Markdown $
     SchemaDocumentation
       { schemaName = name
+      , schemaDescription = Nothing
       , schemaExcludeFromRender = True
       , schemaNullability = NotNull
       , schemaMainEntry = NameOnly name
@@ -256,7 +272,8 @@ mkFieldDocs ::
   FieldDocumentation
 mkFieldDocs name required schema =
   let
-    Markdown schemaDocs = FC.schemaInterpreter schema
+    Markdown undescribedSchemaDocs = FC.schemaInterpreter schema
+    schemaDocs = attachDescription schema undescribedSchemaDocs
     nullAllowed =
       case schemaNullability schemaDocs of
         NotNull -> False

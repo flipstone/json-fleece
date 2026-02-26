@@ -7,6 +7,7 @@ module Fleece.Markdown.Render
 import Data.Function (on)
 import qualified Data.List as List
 import qualified Data.Map.Strict as Map
+import qualified Data.NonEmptyText as NET
 import qualified Data.Set as Set
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
@@ -22,7 +23,8 @@ import Fleece.Markdown.SchemaDocumentation
       )
   , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, TaggedUnionEntry, UnionEntry, WithFormat)
   , SchemaDocumentation
-    ( schemaExcludeFromRender
+    ( schemaDescription
+    , schemaExcludeFromRender
     , schemaMainEntry
     , schemaName
     , schemaNullability
@@ -94,6 +96,12 @@ nameToText context name =
       then FC.nameToString name
       else FC.nameUnqualified name
 
+renderDescription :: Maybe NET.NonEmptyText -> LTB.Builder
+renderDescription mbDesc =
+  case mbDesc of
+    Just desc -> quote (markdownText (NET.toText desc)) <> newline <> newline
+    Nothing -> mempty
+
 schemaFieldTypeDocs :: NameContext -> SchemaDocumentation -> LTB.Builder
 schemaFieldTypeDocs nameContext schemaDocs =
   let
@@ -118,13 +126,14 @@ schemaMainEntryDocs nameContext schemaDocs =
   h1 (renderName nameContext (schemaName schemaDocs))
     <> newline
     <> newline
+    <> renderDescription (schemaDescription schemaDocs)
     <> mainEntryDocs nameContext (schemaMainEntry schemaDocs)
 
 mainEntryDocs :: NameContext -> MainEntry -> LTB.Builder
 mainEntryDocs nameContext entry =
   case entry of
     NameOnly name ->
-      renderName nameContext $ name
+      renderName nameContext name
     Fields fields ->
       fieldsHeader <> foldMap (fieldRow nameContext) fields
     EnumValues enumValues ->
@@ -241,3 +250,7 @@ h1 builder =
 h2 :: LTB.Builder -> LTB.Builder
 h2 builder =
   markdownText "## " <> builder
+
+quote :: LTB.Builder -> LTB.Builder
+quote builder =
+  markdownText "> " <> builder
