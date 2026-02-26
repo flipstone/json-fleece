@@ -13,7 +13,7 @@ dependencies:
   - base >= 4.7 && < 5
   - text
   - scientific
-  - json-fleece-core >= 0.9 && < 0.10
+  - json-fleece-core >= 0.10 && < 0.11
   - json-fleece-aeson-beeline >= 0.3 && < 0.4
   - beeline-params >= 0.1 && < 0.2
   - beeline-routing >= 0.3 && < 0.4

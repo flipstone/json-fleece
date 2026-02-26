@@ -328,7 +328,7 @@ library
     , beeline-routing ==0.3.*
     , containers
     , json-fleece-aeson-beeline ==0.3.*
-    , json-fleece-core ==0.9.*
+    , json-fleece-core ==0.10.*
     , scientific
     , shrubbery ==0.2.*
     , text

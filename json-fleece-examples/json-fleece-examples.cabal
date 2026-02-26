@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-examples
-version:        0.4.0.0
+version:        0.5.0.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-examples#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -38,7 +38,7 @@ library
   build-depends:
       base >=4.7 && <5
     , containers >=0.6 && <0.8
-    , json-fleece-core ==0.9.*
+    , json-fleece-core ==0.10.*
     , scientific >=0.3.7 && <0.4
     , shrubbery ==0.2.*
     , text >=1.2 && <2.2
