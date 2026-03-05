@@ -15,5 +15,7 @@ fi
 stack \
   build \
   --test \
+  --bench \
+  --no-run-benchmarks \
   $STACK_OPTIONS \
   "$@"

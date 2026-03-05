@@ -17,6 +17,7 @@ import qualified Fleece.Aeson as FA
 import Fleece.Core
   ( Fleece
   , NothingEncoding (EmitNull)
+  , Schema
   , boolean
   , constructor
   , double
@@ -78,7 +79,7 @@ instance NFData Person
 instance Aeson.FromJSON Person where
   parseJSON = FA.toParser personSchema
 
-personSchema :: Fleece schema => schema Person
+personSchema :: Fleece t => Schema t Person
 personSchema =
   object $
     constructor Person
@@ -105,7 +106,7 @@ personSchema =
       #+ optionalNullable EmitNull "greeting" greeting text
       #+ required "favoriteFruit" favoriteFruit text
 
-friendSchema :: Fleece schema => schema Friend
+friendSchema :: Fleece t => Schema t Friend
 friendSchema =
   object $
     constructor Friend
