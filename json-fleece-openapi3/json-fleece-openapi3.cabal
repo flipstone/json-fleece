@@ -2016,7 +2016,9 @@ extra-source-files:
     examples/test-cases/TestCases/Types/AllOfObject/FieldK.hs
     examples/test-cases/TestCases/Types/AllOfObject/FieldL.hs
     examples/test-cases/TestCases/Types/AnyOf.hs
+    examples/test-cases/TestCases/Types/ArrayWithNullableSingletonOneOf.hs
     examples/test-cases/TestCases/Types/ArrayWithNullableStrings.hs
+    examples/test-cases/TestCases/Types/ArrayWithSingletonOneOf.hs
     examples/test-cases/TestCases/Types/AStringType.hs
     examples/test-cases/TestCases/Types/BadRequestError.hs
     examples/test-cases/TestCases/Types/BadRequestError/Error.hs
@@ -2135,6 +2137,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/Num2SchemaStartingWithNumber.hs
     examples/test-cases/TestCases/Types/ObjectWithDiscriminatedUnionRef.hs
     examples/test-cases/TestCases/Types/ObjectWithFieldStartingWithNumber.hs
+    examples/test-cases/TestCases/Types/ObjectWithSingletonOneOfFields.hs
     examples/test-cases/TestCases/Types/OneOfWithDiscriminator.hs
     examples/test-cases/TestCases/Types/OneOfWithDiscriminatorTypeObject.hs
     examples/test-cases/TestCases/Types/OneOfWithInlineEnum.hs

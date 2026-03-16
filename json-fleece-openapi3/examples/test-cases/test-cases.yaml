@@ -848,6 +848,30 @@ components:
         barName:
           type: string
 
+    ObjectWithSingletonOneOfFields:
+      type: object
+      properties:
+        nullableOneOf:
+          nullable: true
+          oneOf:
+            - $ref: '#/components/schemas/Foo'
+        oneOf:
+          oneOf:
+            - $ref: '#/components/schemas/Foo'
+
+    ArrayWithNullableSingletonOneOf:
+      type: array
+      items:
+        nullable: true
+        oneOf:
+          - $ref: '#/components/schemas/Foo'
+
+    ArrayWithSingletonOneOf:
+      type: array
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/Foo'
+
     Baz:
       type: object
       properties:

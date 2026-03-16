@@ -1487,15 +1487,16 @@ schemaRefToFieldType section parentKey fieldName schemaRef =
     OA.Ref ref ->
       pure (Map.empty, CGU.TypeReference . OA.getReference $ ref)
     OA.Inline inlineSchema -> do
+      let
+        nullable =
+          OA._schemaNullable inlineSchema == Just True
+        applyNull =
+          if nullable
+            then CGU.CodeGenRefNullable
+            else id
       case OA._schemaType inlineSchema of
         Just OA.OpenApiArray ->
           let
-            nullable =
-              OA._schemaNullable inlineSchema == Just True
-            applyNull =
-              if nullable
-                then CGU.CodeGenRefNullable
-                else id
             minItems =
               OA._schemaMinItems inlineSchema
           in
@@ -1505,16 +1506,28 @@ schemaRefToFieldType section parentKey fieldName schemaRef =
                 parentKey
                 inlineSchema
                 fieldName
-        _ -> do
-          let
-            key =
-              parentKey <> "." <> fieldName
+        _ -> case singletonOneOfOrAnyOfRef inlineSchema of
+          -- We don't want to generate a new type under the parent key for singleton oneOfs or anyOfs.
+          -- Instead we treat it as a plain reference and potentially apply nullability.
+          Just singleton ->
+            (fmap . fmap) applyNull (schemaRefToFieldType section parentKey fieldName singleton)
+          _otherwise -> do
+            let
+              key =
+                parentKey <> "." <> fieldName
 
-            childRef =
-              CGU.TypeReference key
+              childRef =
+                CGU.TypeReference key
 
-          schemaMap <- mkSchemaMap section key inlineSchema
-          pure (schemaMap, childRef)
+            schemaMap <- mkSchemaMap section key inlineSchema
+            pure (schemaMap, childRef)
+
+-- Looks for a singelton @oneOf@ containing an 'OA.Ref' xor a similar singelton @allOf@
+singletonOneOfOrAnyOfRef :: OA.Schema -> Maybe (OA.Referenced OA.Schema)
+singletonOneOfOrAnyOfRef schema = case (OA._schemaOneOf schema, OA._schemaAnyOf schema) of
+  (Just [ref@(OA.Ref _)], Nothing) -> pure ref
+  (Nothing, Just [ref@(OA.Ref _)]) -> pure ref
+  _otherwise -> Nothing
 
 schemaArrayItemsToFieldType ::
   CGU.CodeSection ->

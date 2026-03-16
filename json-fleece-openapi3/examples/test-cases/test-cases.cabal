@@ -166,7 +166,9 @@ library
       TestCases.Types.AllOfObject.FieldK
       TestCases.Types.AllOfObject.FieldL
       TestCases.Types.AnyOf
+      TestCases.Types.ArrayWithNullableSingletonOneOf
       TestCases.Types.ArrayWithNullableStrings
+      TestCases.Types.ArrayWithSingletonOneOf
       TestCases.Types.AStringType
       TestCases.Types.BadRequestError
       TestCases.Types.BadRequestError.Error
@@ -285,6 +287,7 @@ library
       TestCases.Types.Num2SchemaStartingWithNumber
       TestCases.Types.ObjectWithDiscriminatedUnionRef
       TestCases.Types.ObjectWithFieldStartingWithNumber
+      TestCases.Types.ObjectWithSingletonOneOfFields
       TestCases.Types.OneOfWithDiscriminator
       TestCases.Types.OneOfWithDiscriminatorTypeObject
       TestCases.Types.OneOfWithInlineEnum
