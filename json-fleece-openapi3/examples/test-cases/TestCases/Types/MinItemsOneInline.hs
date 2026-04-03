@@ -11,7 +11,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified TestCases.Types.MinItemsOneInline.SomeArrayItem as SomeArrayItem
 
-data MinItemsOneInline = MinItemsOneInline
+newtype MinItemsOneInline = MinItemsOneInline
   { someArray :: Maybe (NEL.NonEmpty SomeArrayItem.SomeArrayItem)
   }
   deriving (Eq, Show)

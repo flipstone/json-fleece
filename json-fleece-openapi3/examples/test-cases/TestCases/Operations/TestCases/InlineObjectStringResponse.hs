@@ -38,7 +38,7 @@ route =
       /- "test-cases"
       /- "inline-object-string-response"
 
-data Responses
+newtype Responses
   = Response200 (Map.Map T.Text T.Text)
   deriving (Eq, Show)
 

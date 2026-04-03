@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
 import qualified TestCases.Types.ScheduledDateTime.DatetimeType as DatetimeType
 
-data ScheduledDateTime = ScheduledDateTime
+newtype ScheduledDateTime = ScheduledDateTime
   { datetimeType :: DatetimeType.DatetimeType -- ^ Type of the datetime
   }
   deriving (Eq, Show)

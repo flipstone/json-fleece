@@ -11,7 +11,7 @@ import qualified Fleece.Core as FC
 import Prelude (Eq, Maybe, Show)
 import qualified TestCases.Types.Bar.BarName as BarName
 
-data Bar = Bar
+newtype Bar = Bar
   { barName :: Maybe BarName.BarName
   }
   deriving (Eq, Show)

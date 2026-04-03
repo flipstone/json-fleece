@@ -37,7 +37,7 @@ route =
       /- "test-cases"
       /- "inline-int32-response"
 
-data Responses
+newtype Responses
   = Response200 I.Int32
   deriving (Eq, Show)
 

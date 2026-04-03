@@ -43,7 +43,7 @@ route =
       /- "test-cases"
       /- "param-ref-array"
 
-data QueryParams = QueryParams
+newtype QueryParams = QueryParams
   { arrayParam :: [StringParam.StringParam]
   }
   deriving (Eq, Show)
@@ -53,7 +53,7 @@ queryParamsSchema =
   P.makeParams QueryParams
     ?+ P.explodedArray arrayParam StringParam.paramDef
 
-data Responses
+newtype Responses
   = Response200 FieldTestCases.FieldTestCases
   deriving (Eq, Show)
 

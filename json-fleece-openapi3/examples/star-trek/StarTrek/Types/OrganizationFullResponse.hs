@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.OrganizationFull as OrganizationFull
 
-data OrganizationFullResponse = OrganizationFullResponse
+newtype OrganizationFullResponse = OrganizationFullResponse
   { organization :: Maybe OrganizationFull.OrganizationFull -- ^ Full organization, returned when queried using UID
   }
   deriving (Eq, Show)

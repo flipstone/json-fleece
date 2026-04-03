@@ -36,7 +36,7 @@ route =
       /- "test-cases"
       /- "inline-nullable-integer-response"
 
-data Responses
+newtype Responses
   = Response200 (Either FC.Null Integer)
   deriving (Eq, Show)
 

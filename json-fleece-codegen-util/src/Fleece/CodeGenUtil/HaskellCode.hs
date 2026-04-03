@@ -408,9 +408,14 @@ record typeName fields mbDeriveClasses =
       if List.null fieldLines
         then []
         else ["}"]
+
+    declarationKeyword =
+      case fields of
+        [_f] -> "newtype "
+        _otherwise -> "data "
   in
     lines
-      ( "data " <> typeNameToCode Nothing typeName <> " = " <> typeNameToCode Nothing typeName
+      ( declarationKeyword <> typeNameToCode Nothing typeName <> " = " <> typeNameToCode Nothing typeName
           : map (indent 2) (fieldLines <> maybeClosingParen <> [derivations])
       )
 
@@ -571,9 +576,14 @@ sumType typeName constructors mbDeriveClasses =
 
     derivations =
       deriving_ (fromMaybe [eqClass, showClass] mbDeriveClasses)
+
+    declarationKeyword =
+      case constructors of
+        [_c] -> "newtype "
+        _otherwise -> "data "
   in
     lines
-      ( "data " <> typeNameToCode Nothing typeName
+      ( declarationKeyword <> typeNameToCode Nothing typeName
           : map (indent 2) (constructorLines <> [derivations])
       )
 

@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified TestCases.Types.Status as Status
 
-data FieldL1 = FieldL1
+newtype FieldL1 = FieldL1
   { status :: Maybe Status.Status
   }
   deriving (Eq, Show)

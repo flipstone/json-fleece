@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.ConflictFull as ConflictFull
 
-data ConflictFullResponse = ConflictFullResponse
+newtype ConflictFullResponse = ConflictFullResponse
   { conflict :: Maybe ConflictFull.ConflictFull -- ^ Base conflict, returned in search results
   }
   deriving (Eq, Show)

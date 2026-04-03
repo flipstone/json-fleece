@@ -61,7 +61,7 @@ headerParamsSchema =
     ?+ P.optional inlineEnumParam InlineEnumParam.paramDef
     ?+ P.required stringParam StringParam.paramDef
 
-data Responses
+newtype Responses
   = Response200 FieldTestCases.FieldTestCases
   deriving (Eq, Show)
 

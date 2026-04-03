@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
 import qualified TestCases.Types.BadRequestError.Error as Error
 
-data BadRequestError = BadRequestError
+newtype BadRequestError = BadRequestError
   { error :: Error.Error
   }
   deriving (Eq, Show)

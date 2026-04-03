@@ -37,7 +37,7 @@ route =
       /- "test-cases"
       /- "inline-string-response"
 
-data Responses
+newtype Responses
   = Response200 T.Text
   deriving (Eq, Show)
 

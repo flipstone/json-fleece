@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.ElementFull as ElementFull
 
-data ElementFullResponse = ElementFullResponse
+newtype ElementFullResponse = ElementFullResponse
   { element :: Maybe ElementFull.ElementFull -- ^ Full element, returned when queried using UID
   }
   deriving (Eq, Show)

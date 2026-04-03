@@ -45,7 +45,7 @@ route =
       /- "test-cases"
       /- "cookies-without-headers"
 
-data HeaderParams = HeaderParams
+newtype HeaderParams = HeaderParams
   { cookies :: CookieParams
   }
   deriving (Eq, Show)
@@ -67,7 +67,7 @@ cookieParamsSchema =
     ?+ P.required cookieParamA CookieParamA.paramDef
     ?+ P.optional cookieParamB CookieParamB.paramDef
 
-data Responses
+newtype Responses
   = Response200 FieldTestCases.FieldTestCases
   deriving (Eq, Show)
 

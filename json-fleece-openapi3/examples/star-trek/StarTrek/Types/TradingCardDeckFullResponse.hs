@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.TradingCardDeckFull as TradingCardDeckFull
 
-data TradingCardDeckFullResponse = TradingCardDeckFullResponse
+newtype TradingCardDeckFullResponse = TradingCardDeckFullResponse
   { tradingCardDeck :: Maybe TradingCardDeckFull.TradingCardDeckFull -- ^ Full trading card deck, returned when queried using UID
   }
   deriving (Eq, Show)

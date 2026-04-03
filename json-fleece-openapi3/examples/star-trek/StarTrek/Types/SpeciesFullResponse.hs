@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.SpeciesFull as SpeciesFull
 
-data SpeciesFullResponse = SpeciesFullResponse
+newtype SpeciesFullResponse = SpeciesFullResponse
   { species :: Maybe SpeciesFull.SpeciesFull -- ^ Full species, returned when queried using UID
   }
   deriving (Eq, Show)

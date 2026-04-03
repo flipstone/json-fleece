@@ -36,7 +36,7 @@ route =
       /- "test-cases"
       /- "inline-object-with-properties-and-additional-json-response"
 
-data Responses
+newtype Responses
   = Response200 Response200Body.Response200Body
   deriving (Eq, Show)
 

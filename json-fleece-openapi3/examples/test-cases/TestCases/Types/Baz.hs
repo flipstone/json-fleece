@@ -11,7 +11,7 @@ import qualified Fleece.Core as FC
 import Prelude (Eq, Maybe, Show)
 import qualified TestCases.Types.Baz.BazName as BazName
 
-data Baz = Baz
+newtype Baz = Baz
   { bazName :: Maybe BazName.BazName
   }
   deriving (Eq, Show)

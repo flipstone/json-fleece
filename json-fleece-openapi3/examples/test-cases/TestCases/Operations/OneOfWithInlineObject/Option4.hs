@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified TestCases.Operations.OneOfWithInlineObject.Option4.Nested as Nested
 
-data Option4 = Option4
+newtype Option4 = Option4
   { nested :: Maybe Nested.Nested
   }
   deriving (Eq, Show)

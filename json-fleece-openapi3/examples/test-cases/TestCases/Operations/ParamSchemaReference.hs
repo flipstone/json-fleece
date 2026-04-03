@@ -41,7 +41,7 @@ operation =
     , H.responseSchemas = responseSchemas
     }
 
-data PathParams = PathParams
+newtype PathParams = PathParams
   { stringParam :: StringParam.StringParam
   }
   deriving (Eq, Show)
@@ -66,7 +66,7 @@ queryParamsSchema =
     ?+ P.optional enumIntParam EnumIntParam.paramDef
     ?+ P.optional enumParam EnumParam.paramDef
 
-data Responses
+newtype Responses
   = Response200 FieldTestCases.FieldTestCases
   deriving (Eq, Show)
 

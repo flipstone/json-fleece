@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.AstronomicalObjectFull as AstronomicalObjectFull
 
-data AstronomicalObjectFullResponse = AstronomicalObjectFullResponse
+newtype AstronomicalObjectFullResponse = AstronomicalObjectFullResponse
   { astronomicalObject :: Maybe AstronomicalObjectFull.AstronomicalObjectFull -- ^ Full astronomical object, returned when queried using UID
   }
   deriving (Eq, Show)

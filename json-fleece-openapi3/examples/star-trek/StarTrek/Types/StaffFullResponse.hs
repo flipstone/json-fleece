@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.StaffFull as StaffFull
 
-data StaffFullResponse = StaffFullResponse
+newtype StaffFullResponse = StaffFullResponse
   { staff :: Maybe StaffFull.StaffFull -- ^ Full staff, returned when queried using UID
   }
   deriving (Eq, Show)

@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified TestCases.Types.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body.Baz.Bax as Bax
 
-data Baz = Baz
+newtype Baz = Baz
   { bax :: Maybe Bax.Bax
   }
   deriving (Eq, Show)

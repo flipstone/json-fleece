@@ -38,7 +38,7 @@ route =
       /- "test-cases"
       /- "inline-enum-array-request-body"
 
-data Responses
+newtype Responses
   = Response201 H.NoResponseBody
   deriving (Eq, Show)
 

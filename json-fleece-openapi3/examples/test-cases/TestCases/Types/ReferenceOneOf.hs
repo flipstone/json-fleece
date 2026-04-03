@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified TestCases.Types.TopLevelOneOfOneOption as TopLevelOneOfOneOption
 
-data ReferenceOneOf = ReferenceOneOf
+newtype ReferenceOneOf = ReferenceOneOf
   { oneOfRef :: Maybe TopLevelOneOfOneOption.TopLevelOneOfOneOption
   }
   deriving (Eq, Show)

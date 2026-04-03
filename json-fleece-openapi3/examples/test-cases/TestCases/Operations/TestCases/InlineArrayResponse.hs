@@ -37,7 +37,7 @@ route =
       /- "test-cases"
       /- "inline-array-response"
 
-data Responses
+newtype Responses
   = Response200 [FieldTestCases.FieldTestCases]
   deriving (Eq, Show)
 

@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.WeaponFull as WeaponFull
 
-data WeaponFullResponse = WeaponFullResponse
+newtype WeaponFullResponse = WeaponFullResponse
   { weapon :: Maybe WeaponFull.WeaponFull -- ^ Full weapon, returned when queried using UID
   }
   deriving (Eq, Show)

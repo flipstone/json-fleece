@@ -36,7 +36,7 @@ route =
       /- "test-cases"
       /- "any-json-response"
 
-data Responses
+newtype Responses
   = Response201 FC.AnyJSON
   deriving (Eq, Show)
 

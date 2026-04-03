@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified TestCases.Types.Baz as Baz
 
-data ObjectWithDiscriminatedUnionRef = ObjectWithDiscriminatedUnionRef
+newtype ObjectWithDiscriminatedUnionRef = ObjectWithDiscriminatedUnionRef
   { bazRef :: Maybe Baz.Baz
   }
   deriving (Eq, Show)

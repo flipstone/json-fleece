@@ -61,7 +61,7 @@ queryParamsSchema =
     ?+ P.optional pageSize PageSize.paramDef
     ?+ P.optional sort Sort.paramDef
 
-data Responses
+newtype Responses
   = Response200 CharacterBaseResponse.CharacterBaseResponse
   deriving (Eq, Show)
 

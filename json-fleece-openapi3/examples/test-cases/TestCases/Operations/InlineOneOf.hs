@@ -36,7 +36,7 @@ route =
       /- "test-cases"
       /- "inline-one-of"
 
-data Responses
+newtype Responses
   = Response200 Response200Body.Response200Body
   deriving (Eq, Show)
 

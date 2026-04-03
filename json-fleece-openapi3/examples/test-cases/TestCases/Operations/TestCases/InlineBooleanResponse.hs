@@ -36,7 +36,7 @@ route =
       /- "test-cases"
       /- "inline-boolean-response"
 
-data Responses
+newtype Responses
   = Response200 Bool
   deriving (Eq, Show)
 

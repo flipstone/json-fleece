@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.SeasonFull as SeasonFull
 
-data SeasonFullResponse = SeasonFullResponse
+newtype SeasonFullResponse = SeasonFullResponse
   { season :: Maybe SeasonFull.SeasonFull -- ^ Full location, returned when queried using UID
   }
   deriving (Eq, Show)

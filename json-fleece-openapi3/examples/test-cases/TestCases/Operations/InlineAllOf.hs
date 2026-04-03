@@ -49,7 +49,7 @@ route =
       /- "test-cases"
       /- "inline-all-of"
 
-data QueryParams = QueryParams
+newtype QueryParams = QueryParams
   { inlineAllofParam :: InlineAllofParam.InlineAllofParam
   }
   deriving (Eq, Show)
@@ -59,7 +59,7 @@ queryParamsSchema =
   P.makeParams QueryParams
     ?+ P.required inlineAllofParam InlineAllofParam.paramDef
 
-data HeaderParams = HeaderParams
+newtype HeaderParams = HeaderParams
   { xSampleAllOfParam :: XSampleAllOfParam.XSampleAllOfParam
   }
   deriving (Eq, Show)

@@ -37,7 +37,7 @@ route =
       /- "test-cases"
       /- "request-body"
 
-data Responses
+newtype Responses
   = Response201 FieldTestCases.FieldTestCases
   deriving (Eq, Show)
 

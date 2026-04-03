@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.MaterialFull as MaterialFull
 
-data MaterialFullResponse = MaterialFullResponse
+newtype MaterialFullResponse = MaterialFullResponse
   { material :: Maybe MaterialFull.MaterialFull -- ^ Full material, returned when queried using UID
   }
   deriving (Eq, Show)

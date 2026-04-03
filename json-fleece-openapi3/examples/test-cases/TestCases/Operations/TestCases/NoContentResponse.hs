@@ -35,7 +35,7 @@ route =
       /- "test-cases"
       /- "no-content-response"
 
-data Responses
+newtype Responses
   = Response201 H.NoResponseBody
   deriving (Eq, Show)
 

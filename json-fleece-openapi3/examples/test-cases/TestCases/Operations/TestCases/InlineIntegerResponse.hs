@@ -36,7 +36,7 @@ route =
       /- "test-cases"
       /- "inline-integer-response"
 
-data Responses
+newtype Responses
   = Response200 Integer
   deriving (Eq, Show)
 

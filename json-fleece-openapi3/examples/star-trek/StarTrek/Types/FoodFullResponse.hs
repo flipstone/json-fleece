@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.FoodFull as FoodFull
 
-data FoodFullResponse = FoodFullResponse
+newtype FoodFullResponse = FoodFullResponse
   { food :: Maybe FoodFull.FoodFull -- ^ Full food, returned when queried using UID
   }
   deriving (Eq, Show)

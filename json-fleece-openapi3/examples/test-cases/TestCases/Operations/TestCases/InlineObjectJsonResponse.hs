@@ -38,7 +38,7 @@ route =
       /- "test-cases"
       /- "inline-object-json-response"
 
-data Responses
+newtype Responses
   = Response200 (Map.Map T.Text FC.AnyJSON)
   deriving (Eq, Show)
 

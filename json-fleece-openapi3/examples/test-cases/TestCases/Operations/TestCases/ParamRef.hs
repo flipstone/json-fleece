@@ -41,7 +41,7 @@ route =
       /- "test-cases"
       /- "param-ref"
 
-data HeaderParams = HeaderParams
+newtype HeaderParams = HeaderParams
   { xSampleHeaderParam :: XSampleHeaderParam.XSampleHeaderParam
   }
   deriving (Eq, Show)
@@ -51,7 +51,7 @@ headerParamsSchema =
   P.makeParams HeaderParams
     ?+ P.required xSampleHeaderParam XSampleHeaderParam.paramDef
 
-data Responses
+newtype Responses
   = Response204 H.NoResponseBody
   deriving (Eq, Show)
 

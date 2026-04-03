@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.MedicalConditionFull as MedicalConditionFull
 
-data MedicalConditionFullResponse = MedicalConditionFullResponse
+newtype MedicalConditionFullResponse = MedicalConditionFullResponse
   { medicalCondition :: Maybe MedicalConditionFull.MedicalConditionFull -- ^ Full medical condition, returned when queried using UID
   }
   deriving (Eq, Show)

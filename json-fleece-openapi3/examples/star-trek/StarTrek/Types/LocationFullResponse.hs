@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.LocationFull as LocationFull
 
-data LocationFullResponse = LocationFullResponse
+newtype LocationFullResponse = LocationFullResponse
   { location :: Maybe LocationFull.LocationFull -- ^ Full location, returned when queried using UID
   }
   deriving (Eq, Show)

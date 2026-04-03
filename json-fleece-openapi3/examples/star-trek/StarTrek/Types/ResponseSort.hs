@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.ResponseSortClause as ResponseSortClause
 
-data ResponseSort = ResponseSort
+newtype ResponseSort = ResponseSort
   { clauses :: Maybe [ResponseSortClause.ResponseSortClause] -- ^ Single response sort clause
   }
   deriving (Eq, Show)

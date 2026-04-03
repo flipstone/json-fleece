@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Show)
 import qualified TestCases.Operations.TestCases.ReferenceResponses.Response500Body.Error as Error
 
-data Response500Body = Response500Body
+newtype Response500Body = Response500Body
   { error :: Error.Error
   }
   deriving (Eq, Show)

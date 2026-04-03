@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.MovieFull as MovieFull
 
-data MovieFullResponse = MovieFullResponse
+newtype MovieFullResponse = MovieFullResponse
   { movie :: Maybe MovieFull.MovieFull -- ^ Full movie, returned when queried using UID
   }
   deriving (Eq, Show)

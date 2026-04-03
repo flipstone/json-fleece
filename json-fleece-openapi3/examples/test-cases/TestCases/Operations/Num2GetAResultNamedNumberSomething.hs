@@ -36,7 +36,7 @@ route =
       /- "test-cases"
       /- "op-with-number-prefixed-type"
 
-data Responses
+newtype Responses
   = Response200 Num2SchemaStartingWithNumber.Num2SchemaStartingWithNumber
   deriving (Eq, Show)
 

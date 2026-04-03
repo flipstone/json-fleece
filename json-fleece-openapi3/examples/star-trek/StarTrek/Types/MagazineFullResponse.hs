@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.MagazineFull as MagazineFull
 
-data MagazineFullResponse = MagazineFullResponse
+newtype MagazineFullResponse = MagazineFullResponse
   { magazine :: Maybe MagazineFull.MagazineFull -- ^ Full magazine, returned when queried using UID
   }
   deriving (Eq, Show)

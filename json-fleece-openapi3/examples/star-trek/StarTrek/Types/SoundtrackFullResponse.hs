@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified StarTrek.Types.SoundtrackFull as SoundtrackFull
 
-data SoundtrackFullResponse = SoundtrackFullResponse
+newtype SoundtrackFullResponse = SoundtrackFullResponse
   { soundtrack :: Maybe SoundtrackFull.SoundtrackFull -- ^ Full soundtrack, returned when queried using UID
   }
   deriving (Eq, Show)

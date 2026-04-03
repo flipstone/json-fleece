@@ -10,7 +10,7 @@ import qualified Fleece.Core as FC
 import Prelude (($), Eq, Maybe, Show)
 import qualified Uber.Types.Activity.Uuid as Uuid
 
-data Activity = Activity
+newtype Activity = Activity
   { uuid :: Maybe Uuid.Uuid -- ^ Unique identifier for the activity
   }
   deriving (Eq, Show)

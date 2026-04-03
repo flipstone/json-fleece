@@ -47,7 +47,7 @@ route =
       /- "multiple-path-params"
       /+ R.Param Param2.paramDef param2
 
-data Responses
+newtype Responses
   = Response200 FieldTestCases.FieldTestCases
   deriving (Eq, Show)
 

@@ -36,7 +36,7 @@ operation =
     , H.responseSchemas = responseSchemas
     }
 
-data PathParams = PathParams
+newtype PathParams = PathParams
   { pathParam :: PathParam.PathParam
   }
   deriving ()
@@ -49,7 +49,7 @@ route =
       /- "operation-type-options"
       /+ R.Param PathParam.paramDef pathParam
 
-data QueryParams = QueryParams
+newtype QueryParams = QueryParams
   { queryParam :: QueryParam.QueryParam
   }
   deriving ()
