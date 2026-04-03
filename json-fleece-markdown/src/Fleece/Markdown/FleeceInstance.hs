@@ -63,7 +63,7 @@ instance FC.Fleece Markdown where
   newtype TaggedUnionMembers Markdown _allTags _handledTags
     = TaggedUnionMembers (DList.DList TaggedUnionMemberDocumentation)
 
-  interpretDescription net schema =
+  interpretDescribe net schema =
     Markdown $
       let
         Markdown schemaDoc = FC.schemaInterpreter schema

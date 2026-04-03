@@ -12,7 +12,7 @@ module Fleece.Core.Class
       , Object
       , UnionMembers
       , TaggedUnionMembers
-      , interpretDescription
+      , interpretDescribe
       , interpretFormat
       , interpretText
       , interpretNumber
@@ -134,8 +134,8 @@ class Fleece t where
   data UnionMembers t :: [Type] -> [Type] -> Type
   data TaggedUnionMembers t :: [Tag] -> [Tag] -> Type
 
-  interpretDescription :: NET.NonEmptyText -> Schema t a -> t a
-  interpretDescription _net = schemaInterpreter
+  interpretDescribe :: NET.NonEmptyText -> Schema t a -> t a
+  interpretDescribe _net = schemaInterpreter
 
   interpretFormat :: String -> Schema t a -> t a
 
@@ -299,7 +299,7 @@ describe desc schema =
   schema
     { schemaInterpreter =
         case NET.fromText desc of
-          Just net -> interpretDescription net schema
+          Just net -> interpretDescribe net schema
           Nothing -> schemaInterpreter schema
     }
 

@@ -9,7 +9,7 @@ module Fleece.Core
   , format
 
     -- * 'Fleece' class methods used to implement primitives and combinators
-  , interpretDescription
+  , interpretDescribe
   , interpretFormat
   , interpretText
   , interpretNumber
