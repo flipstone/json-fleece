@@ -5,7 +5,6 @@ module Fleece.Markdown.FleeceInstance
   , renderMarkdown
   ) where
 
-import Control.Applicative ((<|>))
 import Data.Coerce (coerce)
 import qualified Data.DList as DList
 import qualified Data.Map.Strict as Map
@@ -46,7 +45,7 @@ renderMarkdown schema =
   let
     Markdown schemaDoc = FC.schemaInterpreter schema
   in
-    schemaDocumentationToMarkdown $ attachDescription schema schemaDoc
+    schemaDocumentationToMarkdown schemaDoc
 
 instance FC.Fleece Markdown where
   newtype Object Markdown _object _a
@@ -63,6 +62,15 @@ instance FC.Fleece Markdown where
 
   newtype TaggedUnionMembers Markdown _allTags _handledTags
     = TaggedUnionMembers (DList.DList TaggedUnionMemberDocumentation)
+
+  interpretDescription net schema =
+    Markdown $
+      let
+        Markdown schemaDoc = FC.schemaInterpreter schema
+      in
+        schemaDoc
+          { schemaDescription = Just net
+          }
 
   interpretFormat formatString schema =
     Markdown $
@@ -200,7 +208,7 @@ instance FC.Fleece Markdown where
       let
         Markdown schemaDocs = FC.schemaInterpreter schema
       in
-        DList.singleton $ attachDescription schema schemaDocs
+        DList.singleton schemaDocs
 
   unionCombine (UnionMembers left) (UnionMembers right) =
     UnionMembers (left <> right)
@@ -247,12 +255,6 @@ instance FC.Fleece Markdown where
           { schemaName = FC.annotateName name "(encoded as json string)"
           }
 
-attachDescription :: FC.Schema Markdown a -> SchemaDocumentation -> SchemaDocumentation
-attachDescription schema docs =
-  docs
-    { schemaDescription = FC.schemaDescription schema <|> schemaDescription docs
-    }
-
 primitiveMarkdown :: FC.Name -> Markdown a
 primitiveMarkdown name =
   Markdown $
@@ -272,8 +274,7 @@ mkFieldDocs ::
   FieldDocumentation
 mkFieldDocs name required schema =
   let
-    Markdown undescribedSchemaDocs = FC.schemaInterpreter schema
-    schemaDocs = attachDescription schema undescribedSchemaDocs
+    Markdown schemaDocs = FC.schemaInterpreter schema
     nullAllowed =
       case schemaNullability schemaDocs of
         NotNull -> False

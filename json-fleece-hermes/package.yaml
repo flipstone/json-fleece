@@ -19,10 +19,10 @@ tested-with:
     GHC == 9.4.8, GHC == 9.6.7, GHC == 9.8.4, GHC == 9.10.2
 
 dependencies:
-- base >= 4.7 && < 5
-- bytestring >= 0.11 && < 0.13
-- json-fleece-core >= 0.10 && < 0.11
-- text >= 2.0 # This could be problematic for anyone using LTS 20 or below
+  - base >= 4.7 && < 5
+  - bytestring >= 0.11 && < 0.13
+  - json-fleece-core >= 0.11 && < 0.12
+  - text >= 2.0 # This could be problematic for anyone using LTS 20 or below
 
 flags:
   strict:
@@ -73,19 +73,19 @@ tests:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
     dependencies:
-    - aeson >= 2.0 && < 2.3
-    - containers >= 0.6 && < 0.8
-    - json-fleece-hermes
-    - json-fleece-examples
-    - hedgehog
-    - scientific >= 0.3.7 && < 0.4
-    - shrubbery >= 0.2 && < 0.3
-    - time >= 1.11 && < 1.15
-    - vector >= 0.12 && < 0.14
+      - aeson >= 2.0 && < 2.3
+      - containers >= 0.6 && < 0.8
+      - json-fleece-hermes
+      - json-fleece-examples
+      - hedgehog
+      - scientific >= 0.3.7 && < 0.4
+      - shrubbery >= 0.2 && < 0.3
+      - time >= 1.11 && < 1.15
+      - vector >= 0.12 && < 0.14
 
 benchmarks:
   json-fleece-hermes-bench:

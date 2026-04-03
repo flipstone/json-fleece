@@ -12,6 +12,7 @@ module Fleece.Core.Class
       , Object
       , UnionMembers
       , TaggedUnionMembers
+      , interpretDescription
       , interpretFormat
       , interpretText
       , interpretNumber
@@ -53,7 +54,6 @@ module Fleece.Core.Class
       )
   , Schema (..)
   , hoistSchema
-  , describeSchema
   , (#+)
   , (#*)
   , (#|)
@@ -71,6 +71,7 @@ module Fleece.Core.Class
   , realFloat
   , realFloatNamed
   , realFloatAnonymous
+  , describe
   , format
   , text
   , number
@@ -118,7 +119,6 @@ import Fleece.Core.Name (Name, annotateName, defaultSchemaName, nameToString, un
 data Schema t a = Schema
   { schemaName :: Name
   , schemaInterpreter :: t a
-  , schemaDescription :: Maybe NET.NonEmptyText
   }
 
 hoistSchema :: (forall x. s x -> t x) -> Schema s a -> Schema t a
@@ -127,18 +127,15 @@ hoistSchema f schema =
     { schemaInterpreter = f (schemaInterpreter schema)
     }
 
-describeSchema :: T.Text -> Schema t a -> Schema t a
-describeSchema desc schema =
-  schema
-    { schemaDescription = NET.fromText desc
-    }
-
 class Fleece t where
   data Object t :: Type -> Type -> Type
   data Field t :: Type -> Type -> Type
   data AdditionalFields t :: Type -> Type -> Type
   data UnionMembers t :: [Type] -> [Type] -> Type
   data TaggedUnionMembers t :: [Tag] -> [Tag] -> Type
+
+  interpretDescription :: NET.NonEmptyText -> Schema t a -> t a
+  interpretDescription _net = schemaInterpreter
 
   interpretFormat :: String -> Schema t a -> t a
 
@@ -297,6 +294,15 @@ class Fleece t where
   interpretFloat :: Name -> t Float
   interpretFloat _ = schemaInterpreter $ format "float" realFloatAnonymous
 
+describe :: Fleece t => T.Text -> Schema t a -> Schema t a
+describe desc schema =
+  schema
+    { schemaInterpreter =
+        case NET.fromText desc of
+          Just net -> interpretDescription net schema
+          Nothing -> schemaInterpreter schema
+    }
+
 format :: Fleece t => String -> Schema t a -> Schema t a
 format fmt schema =
   schema
@@ -312,7 +318,6 @@ number =
   Schema
     { schemaName = numberName
     , schemaInterpreter = interpretNumber numberName
-    , schemaDescription = Nothing
     }
 
 textName :: Name
@@ -324,7 +329,6 @@ text =
   Schema
     { schemaName = textName
     , schemaInterpreter = interpretText textName
-    , schemaDescription = Nothing
     }
 
 booleanName :: Name
@@ -336,7 +340,6 @@ boolean =
   Schema
     { schemaName = booleanName
     , schemaInterpreter = interpretBoolean booleanName
-    , schemaDescription = Nothing
     }
 
 nullName :: Name
@@ -348,7 +351,6 @@ null =
   Schema
     { schemaName = nullName
     , schemaInterpreter = interpretNull nullName
-    , schemaDescription = Nothing
     }
 
 array :: Fleece t => Schema t a -> Schema t (V.Vector a)
@@ -360,7 +362,6 @@ array schema =
     Schema
       { schemaName = arrayName
       , schemaInterpreter = interpretArray arrayName schema
-      , schemaDescription = Nothing
       }
 
 nullable :: Fleece t => Schema t a -> Schema t (Either Null a)
@@ -372,7 +373,6 @@ nullable schema =
     Schema
       { schemaName = nullableName
       , schemaInterpreter = interpretNullable nullableName schema
-      , schemaDescription = Nothing
       }
 
 objectNamed ::
@@ -384,7 +384,6 @@ objectNamed name object =
   Schema
     { schemaName = name
     , schemaInterpreter = interpretObjectNamed name object
-    , schemaDescription = Nothing
     }
 
 validateNamed ::
@@ -398,7 +397,6 @@ validateNamed name check uncheck schema =
   Schema
     { schemaName = name
     , schemaInterpreter = interpretValidateNamed name check uncheck schema
-    , schemaDescription = Nothing
     }
 
 validateAnonymous ::
@@ -411,7 +409,6 @@ validateAnonymous check uncheck schema =
   Schema
     { schemaName = schemaName schema
     , schemaInterpreter = interpretValidateAnonymous check uncheck schema
-    , schemaDescription = Nothing
     }
 
 boundedEnumNamed ::
@@ -423,7 +420,6 @@ boundedEnumNamed name toText =
   Schema
     { schemaName = name
     , schemaInterpreter = interpretBoundedEnumNamed name toText
-    , schemaDescription = Nothing
     }
 
 unionNamed ::
@@ -435,7 +431,6 @@ unionNamed name members =
   Schema
     { schemaName = name
     , schemaInterpreter = interpretUnionNamed name members
-    , schemaDescription = Nothing
     }
 
 taggedUnionNamed ::
@@ -450,7 +445,6 @@ taggedUnionNamed name tagField members =
   Schema
     { schemaName = name
     , schemaInterpreter = interpretTaggedUnionNamed name tagField members
-    , schemaDescription = Nothing
     }
 
 jsonString ::
@@ -461,7 +455,6 @@ jsonString schema =
   Schema
     { schemaName = schemaName schema
     , schemaInterpreter = interpretJsonString schema
-    , schemaDescription = Nothing
     }
 
 intName :: Name
@@ -473,7 +466,6 @@ int =
   Schema
     { schemaName = intName
     , schemaInterpreter = interpretInt intName
-    , schemaDescription = Nothing
     }
 
 int8Name :: Name
@@ -485,7 +477,6 @@ int8 =
   Schema
     { schemaName = int8Name
     , schemaInterpreter = interpretInt8 int8Name
-    , schemaDescription = Nothing
     }
 
 int16Name :: Name
@@ -497,7 +488,6 @@ int16 =
   Schema
     { schemaName = int16Name
     , schemaInterpreter = interpretInt16 int16Name
-    , schemaDescription = Nothing
     }
 
 int32Name :: Name
@@ -509,7 +499,6 @@ int32 =
   Schema
     { schemaName = int32Name
     , schemaInterpreter = interpretInt32 int32Name
-    , schemaDescription = Nothing
     }
 
 int64Name :: Name
@@ -521,7 +510,6 @@ int64 =
   Schema
     { schemaName = int64Name
     , schemaInterpreter = interpretInt64 int64Name
-    , schemaDescription = Nothing
     }
 
 wordName :: Name
@@ -533,7 +521,6 @@ word =
   Schema
     { schemaName = wordName
     , schemaInterpreter = interpretWord wordName
-    , schemaDescription = Nothing
     }
 
 word8Name :: Name
@@ -545,7 +532,6 @@ word8 =
   Schema
     { schemaName = word8Name
     , schemaInterpreter = interpretWord8 word8Name
-    , schemaDescription = Nothing
     }
 
 word16Name :: Name
@@ -557,7 +543,6 @@ word16 =
   Schema
     { schemaName = word16Name
     , schemaInterpreter = interpretWord16 word16Name
-    , schemaDescription = Nothing
     }
 
 word32Name :: Name
@@ -569,7 +554,6 @@ word32 =
   Schema
     { schemaName = word32Name
     , schemaInterpreter = interpretWord32 word32Name
-    , schemaDescription = Nothing
     }
 
 word64Name :: Name
@@ -581,7 +565,6 @@ word64 =
   Schema
     { schemaName = word64Name
     , schemaInterpreter = interpretWord64 word64Name
-    , schemaDescription = Nothing
     }
 
 doubleName :: Name
@@ -593,7 +576,6 @@ double =
   Schema
     { schemaName = doubleName
     , schemaInterpreter = interpretDouble doubleName
-    , schemaDescription = Nothing
     }
 
 floatName :: Name
@@ -605,7 +587,6 @@ float =
   Schema
     { schemaName = floatName
     , schemaInterpreter = interpretFloat floatName
-    , schemaDescription = Nothing
     }
 
 instance Fleece t => Functor (Field t object) where

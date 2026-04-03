@@ -3,12 +3,13 @@
 module Fleece.Core
   ( -- * A class for defining Fleece schemas
     Fleece
-  , Schema (Schema, schemaName, schemaInterpreter, schemaDescription)
+  , Schema (Schema, schemaName, schemaInterpreter)
   , hoistSchema
-  , describeSchema
+  , describe
   , format
 
     -- * 'Fleece' class methods used to implement primitives and combinators
+  , interpretDescription
   , interpretFormat
   , interpretText
   , interpretNumber
