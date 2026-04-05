@@ -104,6 +104,7 @@ data TypeOptions = TypeOptions
   { dateTimeFormat :: DateTimeFormat
   , formatSpecifier :: Maybe T.Text
   , deriveClasses :: Maybe [DerivableClass]
+  , reexportFields :: Bool
   }
 
 deriveClassNames :: TypeOptions -> Maybe [HC.TypeName]
@@ -1373,6 +1374,23 @@ requiredPragmasForFormat format =
       , "{-# LANGUAGE TypeApplications #-}"
       ]
 
+childModuleReferencesInCode :: HC.ModuleName -> HC.HaskellCode -> [HC.ModuleName]
+childModuleReferencesInCode parentModule code =
+  let
+    parentPrefix =
+      HC.moduleNameToText parentModule <> "."
+
+    isChild modName =
+      T.isPrefixOf parentPrefix (HC.moduleNameToText modName)
+
+    allRefs =
+      HC.references code
+  in
+    Set.toList
+      . Set.filter isChild
+      . Set.map HC.externalReferenceModule
+      $ allRefs
+
 generateSchemaCode ::
   CodeGenMap ->
   CodeGenTypeReferencesMap ->
@@ -1401,8 +1419,15 @@ generateSchemaCode typeMap refMap codeGenType = do
     generateCodeGenDataFormat typeMap references typeName format
 
   let
+    reexportModules =
+      case format of
+        CodeGenObject typeOptions _ _
+          | reexportFields typeOptions ->
+              childModuleReferencesInCode moduleName moduleBody
+        _ -> []
+
     header =
-      schemaTypeModuleHeader moduleName typeName extraExports
+      schemaTypeModuleHeader moduleName typeName extraExports reexportModules
 
     pragmas =
       HC.lines
@@ -1410,22 +1435,32 @@ generateSchemaCode typeMap refMap codeGenType = do
             : requiredPragmasForFormat format
         )
 
+    reexportImports =
+      case reexportModules of
+        [] -> mempty
+        _ ->
+          HC.lines (map (\m -> "import " <> HC.toCode m) reexportModules)
+
     code =
-      HC.declarations
+      HC.declarations $
         [ pragmas
         , header
         , importDeclarations moduleName moduleBody
-        , moduleBody
         ]
+          <> (if null reexportModules then [] else [reexportImports])
+          <> [moduleBody]
 
   pure (path, code)
 
 schemaTypeModuleHeader ::
-  HC.ModuleName -> HC.TypeName -> [HC.VarName] -> HC.HaskellCode
-schemaTypeModuleHeader moduleName typeName extraExports =
+  HC.ModuleName -> HC.TypeName -> [HC.VarName] -> [HC.ModuleName] -> HC.HaskellCode
+schemaTypeModuleHeader moduleName typeName extraExports reexportModules =
   let
     schemaName =
       fleeceSchemaNameForType typeName
+
+    moduleReexportLines =
+      map (\m -> "module " <> HC.toCode m) reexportModules
 
     exportLines =
       HC.delimitLines
@@ -1434,6 +1469,7 @@ schemaTypeModuleHeader moduleName typeName extraExports =
         ( (HC.typeNameToCode Nothing typeName <> "(..)")
             : HC.varNameToCode Nothing schemaName
             : map (HC.varNameToCode Nothing) extraExports
+            ++ moduleReexportLines
         )
   in
     HC.lines

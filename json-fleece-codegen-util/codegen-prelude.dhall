@@ -13,11 +13,13 @@ let
         { dateTimeFormat : DateTimeFormat
         , formatSpecifier : Optional Text
         , deriveClasses : DeriveClasses
+        , reexportFields : Bool
         }
     , default =
         { dateTimeFormat = DateTimeFormat.UTCTime
         , formatSpecifier = None Text
         , deriveClasses = DeriveClasses.Default
+        , reexportFields = False
         }
     }
 

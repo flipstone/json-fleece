@@ -48,6 +48,7 @@ typeOptionsDecoder =
       <$> Dhall.field "dateTimeFormat" dateTimeFormatDecoder
       <*> Dhall.field "formatSpecifier" formatSpecifierDecoder
       <*> Dhall.field "deriveClasses" deriveClassesDecoder
+      <*> Dhall.field "reexportFields" Dhall.bool
 
 formatSpecifierDecoder :: Dhall.Decoder (Maybe T.Text)
 formatSpecifierDecoder = Dhall.maybe Dhall.strictText

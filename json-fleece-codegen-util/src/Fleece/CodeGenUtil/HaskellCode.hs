@@ -23,6 +23,7 @@ module Fleece.CodeGenUtil.HaskellCode
   , ToCode (toCode)
   , FromCode (fromCode)
   , ExternalReference (..)
+  , externalReferenceModule
   , ExternalReferences
   , addReferences
   , references
@@ -122,6 +123,12 @@ data ExternalReference
 
 type ExternalReferences =
   Set.Set ExternalReference
+
+externalReferenceModule :: ExternalReference -> ModuleName
+externalReferenceModule ref =
+  case ref of
+    TypeReference modName _ _ -> modName
+    VarReference modName _ _ -> modName
 
 instance ToCode HaskellCode where
   toCode = id

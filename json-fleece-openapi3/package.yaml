@@ -1,5 +1,5 @@
 name:                json-fleece-openapi3
-version:             0.4.8.1
+version:             0.4.8.2
 github:              "flipstone/json-fleece/json-fleece-openapi3"
 license:             MIT
 license-file:        LICENSE
@@ -56,7 +56,7 @@ when:
 
 dependencies:
   - base >= 4.7 && < 5
-  - json-fleece-codegen-util >= 0.14 && < 0.15
+  - json-fleece-codegen-util >= 0.14 && < 0.16
 
 extra-source-files:
   - examples/star-trek/codegen.dhall

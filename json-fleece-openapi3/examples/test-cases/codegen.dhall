@@ -112,5 +112,11 @@ in
                   { deriveClasses = CodeGen.derive CodeGen.noClasses
                   }
             }
+          , { type = "TestCases.Types.ReexportFieldsExample.ReexportFieldsExample"
+            , options =
+                CodeGen.TypeOptions::
+                  { reexportFields = True
+                  }
+            }
           ]
       }
