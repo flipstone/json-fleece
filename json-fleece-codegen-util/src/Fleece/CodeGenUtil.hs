@@ -70,6 +70,7 @@ module Fleece.CodeGenUtil
 
 import Control.Monad.Reader (ReaderT, ask, asks, runReaderT)
 import Control.Monad.Trans (lift)
+import Data.Foldable (fold)
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map.Strict as Map
 import Data.Maybe (catMaybes, mapMaybe)
@@ -1174,7 +1175,10 @@ generateOperationParamCode codeGenOperationParam = do
                     (HC.fromCode (HC.typeNameToCodeDefaultQualification haskellType))
                     (deriveClassNames typeOptions)
               Left enumValues ->
-                Just . snd $ generateEnum typeName enumValues typeOptions
+                let
+                  (_, _, enum) = generateEnum typeName enumValues typeOptions
+                in
+                  Just enum
             else Nothing
 
         defName =
@@ -1314,11 +1318,46 @@ operationParamHeader param =
         ParamTypeHaskell _typeName ->
           Nothing
 
+    typeFromTextExport =
+      case codeGenOperationParamType param of
+        ParamTypeString ->
+          Nothing
+        ParamTypeBoolean ->
+          Nothing
+        ParamTypeEnum _vals ->
+          if moduleMatchesTypeName
+            then
+              Just
+                . HC.varNameToCode Nothing
+                $ fromTextFunctionVarName moduleName Nothing typeName
+            else Nothing
+        ParamTypeInteger ->
+          Nothing
+        ParamTypeInt ->
+          Nothing
+        ParamTypeInt8 ->
+          Nothing
+        ParamTypeInt16 ->
+          Nothing
+        ParamTypeInt32 ->
+          Nothing
+        ParamTypeInt64 ->
+          Nothing
+        ParamTypeScientific ->
+          Nothing
+        ParamTypeDouble ->
+          Nothing
+        ParamTypeFloat ->
+          Nothing
+        ParamTypeHaskell _typeName ->
+          Nothing
+
     exportLines =
       HC.delimitLines "( " ", " $
         catMaybes
           [ typeExport
           , typeToTextExport
+          , typeFromTextExport
           , Just
               . HC.varNameToCode Nothing
               $ codeGenOperationParamDefName param
@@ -1567,7 +1606,7 @@ generateFleeceEnum ::
   ([HC.VarName], HC.HaskellCode)
 generateFleeceEnum typeName enumValues typeOptions =
   let
-    (toTextName, enum) =
+    (toTextName, fromTextName, enum) =
       generateEnum typeName enumValues typeOptions
 
     fleeceSchema =
@@ -1575,7 +1614,7 @@ generateFleeceEnum typeName enumValues typeOptions =
         [ fleeceCoreVar "boundedEnum" <> " " <> HC.varNameToCode Nothing toTextName
         ]
   in
-    ([toTextName], HC.declarations [enum, fleeceSchema])
+    ([toTextName, fromTextName], HC.declarations [enum, fleeceSchema])
 
 generateFleeceUnion ::
   CodeGenMap ->
@@ -2037,7 +2076,7 @@ generateEnum ::
   HC.TypeName ->
   [T.Text] ->
   TypeOptions ->
-  (HC.VarName, HC.HaskellCode)
+  (HC.VarName, HC.VarName, HC.HaskellCode)
 generateEnum typeName enumValues typeOptions =
   let
     mkEnumItem t =
@@ -2073,15 +2112,53 @@ generateEnum typeName enumValues typeOptions =
         )
 
     mkToTextCase (text, constructor) =
-      HC.caseMatch constructor (HC.stringLiteral text)
+      HC.caseMatch (HC.toCode constructor) (HC.stringLiteral text)
+
+    fromTextName =
+      fromTextFunctionVarName moduleName Nothing typeName
+
+    fromTextType =
+      fold
+        [ HC.typeNameToCodeDefaultQualification textType
+        , " -> "
+        , HC.eitherOf
+            (HC.typeNameToCodeDefaultQualification stringType)
+            (HC.typeNameToCode Nothing typeName)
+        ]
+
+    mkFromTextCase (text, constructor) =
+      HC.caseMatch (HC.stringLiteral text) $
+        HC.typeNameToCodeDefaultQualification mkRight
+          <> " "
+          <> HC.toCode constructor
+
+    fromTextErrorCase =
+      HC.caseMatch "v" $
+        HC.typeNameToCodeDefaultQualification mkLeft
+          <> " "
+          <> HC.dollar
+          <> " "
+          <> HC.stringLiteral ("Unknown " <> HC.typeNameText typeName <> ": ")
+          <> " "
+          <> HC.semigroupConcat
+          <> " v"
+
+    fromText =
+      HC.lines
+        ( HC.typeAnnotate fromTextName fromTextType
+            : HC.varNameToCode Nothing fromTextName <> " txt ="
+            : HC.indent 2 "case " <> HC.varNameToCodeDefaultQualification textUnpack <> " txt of"
+            : (map (HC.indent 4 . mkFromTextCase) enumItems) <> [HC.indent 4 fromTextErrorCase]
+        )
 
     body =
       HC.declarations
         [ enumDeclaration
         , toText
+        , fromText
         ]
   in
-    (toTextName, body)
+    (toTextName, fromTextName, body)
 
 data CodeSection
   = Type
@@ -2101,6 +2178,10 @@ generatedModuleName section text = do
       <> sectionModule section
       <> HC.toModuleName text
 
+stringType :: HC.TypeName
+stringType =
+  HC.preludeType "String"
+
 textType :: HC.TypeName
 textType =
   HC.toTypeName "Data.Text" (Just "T") "Text"
@@ -2108,6 +2189,10 @@ textType =
 textPack :: HC.VarName
 textPack =
   HC.toVarName "Data.Text" (Just "T") "pack"
+
+textUnpack :: HC.VarName
+textUnpack =
+  HC.toVarName "Data.Text" (Just "T") "unpack"
 
 floatType :: HC.TypeName
 floatType =
@@ -2148,6 +2233,14 @@ integerType =
 boolType :: HC.TypeName
 boolType =
   HC.preludeType "Bool"
+
+mkLeft :: HC.TypeName
+mkLeft =
+  HC.toTypeName "Data.Either" (Just "Either") "Left"
+
+mkRight :: HC.TypeName
+mkRight =
+  HC.toTypeName "Data.Either" (Just "Either") "Right"
 
 fleeceClass :: HC.TypeName
 fleeceClass =
@@ -2474,3 +2567,10 @@ toTextFunctionVarName moduleName mbQualifier typeName =
     moduleName
     mbQualifier
     (HC.typeNameText typeName <> "ToText")
+
+fromTextFunctionVarName :: HC.ModuleName -> Maybe T.Text -> HC.TypeName -> HC.VarName
+fromTextFunctionVarName moduleName mbQualifier typeName =
+  HC.toVarName
+    moduleName
+    mbQualifier
+    (HC.typeNameText typeName <> "FromText")

@@ -4,11 +4,13 @@ module StarTrek.Types.AstronomicalObjectType
   ( AstronomicalObjectType(..)
   , astronomicalObjectTypeSchema
   , astronomicalObjectTypeToText
+  , astronomicalObjectTypeFromText
   ) where
 
+import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), Bounded, Enum, Eq, Ord, Show)
+import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
 
 data AstronomicalObjectType
   = PLANET
@@ -71,6 +73,38 @@ astronomicalObjectTypeToText v =
       STARSYSTEM -> "STAR_SYSTEM"
       SECTOR -> "SECTOR"
       REGION -> "REGION"
+
+astronomicalObjectTypeFromText :: T.Text -> Either String AstronomicalObjectType
+astronomicalObjectTypeFromText txt =
+  case T.unpack txt of
+    "PLANET" -> Either.Right PLANET
+    "D_CLASS_PLANET" -> Either.Right DCLASSPLANET
+    "H_CLASS_PLANET" -> Either.Right HCLASSPLANET
+    "GAS_GIANT_PLANET" -> Either.Right GASGIANTPLANET
+    "K_CLASS_PLANET" -> Either.Right KCLASSPLANET
+    "L_CLASS_PLANET" -> Either.Right LCLASSPLANET
+    "M_CLASS_PLANET" -> Either.Right MCLASSPLANET
+    "Y_CLASS_PLANET" -> Either.Right YCLASSPLANET
+    "ROGUE_PLANET" -> Either.Right ROGUEPLANET
+    "ARTIFICIAL_PLANET" -> Either.Right ARTIFICIALPLANET
+    "ASTEROID" -> Either.Right ASTEROID
+    "ASTEROIDAL_MOON" -> Either.Right ASTEROIDALMOON
+    "ASTEROID_BELT" -> Either.Right ASTEROIDBELT
+    "CLUSTER" -> Either.Right CLUSTER
+    "COMET" -> Either.Right COMET
+    "CONSTELLATION" -> Either.Right CONSTELLATION
+    "GALAXY" -> Either.Right GALAXY
+    "MOON" -> Either.Right MOON
+    "M_CLASS_MOON" -> Either.Right MCLASSMOON
+    "NEBULA" -> Either.Right NEBULA
+    "PLANETOID" -> Either.Right PLANETOID
+    "D_CLASS_PLANETOID" -> Either.Right DCLASSPLANETOID
+    "QUASAR" -> Either.Right QUASAR
+    "STAR" -> Either.Right STAR
+    "STAR_SYSTEM" -> Either.Right STARSYSTEM
+    "SECTOR" -> Either.Right SECTOR
+    "REGION" -> Either.Right REGION
+    v -> Either.Left $ "Unknown AstronomicalObjectType: " <> v
 
 astronomicalObjectTypeSchema :: FC.Fleece t => FC.Schema t AstronomicalObjectType
 astronomicalObjectTypeSchema =

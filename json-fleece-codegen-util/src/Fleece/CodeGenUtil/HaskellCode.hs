@@ -49,6 +49,7 @@ module Fleece.CodeGenUtil.HaskellCode
   , maybeOf
   , eitherOf
   , dollar
+  , semigroupConcat
   , functorMap
   , record
   , delimitLines
@@ -544,6 +545,10 @@ dollar :: HaskellCode
 dollar =
   addReferences [VarReference "Prelude" Nothing "($)"] "$"
 
+semigroupConcat :: HaskellCode
+semigroupConcat =
+  addReferences [VarReference "Prelude" Nothing "(<>)"] "<>"
+
 functorMap :: HaskellCode
 functorMap =
   addReferences [VarReference "Prelude" Nothing "fmap"] "fmap"
@@ -595,9 +600,9 @@ intLiteral :: Int -> HaskellCode
 intLiteral n =
   String.fromString (show n)
 
-caseMatch :: ConstructorName -> HaskellCode -> HaskellCode
-caseMatch constructor body =
-  toCode constructor <> " -> " <> body
+caseMatch :: HaskellCode -> HaskellCode -> HaskellCode
+caseMatch _case output =
+  _case <> " -> " <> output
 
 eqClass :: TypeName
 eqClass =

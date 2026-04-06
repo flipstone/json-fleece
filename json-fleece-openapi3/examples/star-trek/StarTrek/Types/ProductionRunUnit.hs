@@ -4,11 +4,13 @@ module StarTrek.Types.ProductionRunUnit
   ( ProductionRunUnit(..)
   , productionRunUnitSchema
   , productionRunUnitToText
+  , productionRunUnitFromText
   ) where
 
+import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), Bounded, Enum, Eq, Ord, Show)
+import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
 
 data ProductionRunUnit
   = BOX
@@ -21,6 +23,13 @@ productionRunUnitToText v =
     case v of
       BOX -> "BOX"
       SET -> "SET"
+
+productionRunUnitFromText :: T.Text -> Either String ProductionRunUnit
+productionRunUnitFromText txt =
+  case T.unpack txt of
+    "BOX" -> Either.Right BOX
+    "SET" -> Either.Right SET
+    v -> Either.Left $ "Unknown ProductionRunUnit: " <> v
 
 productionRunUnitSchema :: FC.Fleece t => FC.Schema t ProductionRunUnit
 productionRunUnitSchema =

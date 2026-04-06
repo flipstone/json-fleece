@@ -4,11 +4,13 @@ module TestCases.Types.Status
   ( Status(..)
   , statusSchema
   , statusToText
+  , statusFromText
   ) where
 
+import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), Bounded, Enum, Eq, Ord, Show)
+import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
 
 data Status
   = GOOD
@@ -23,6 +25,14 @@ statusToText v =
       GOOD -> "GOOD"
       BAD -> "BAD"
       UGLY -> "UGLY"
+
+statusFromText :: T.Text -> Either String Status
+statusFromText txt =
+  case T.unpack txt of
+    "GOOD" -> Either.Right GOOD
+    "BAD" -> Either.Right BAD
+    "UGLY" -> Either.Right UGLY
+    v -> Either.Left $ "Unknown Status: " <> v
 
 statusSchema :: FC.Fleece t => FC.Schema t Status
 statusSchema =
