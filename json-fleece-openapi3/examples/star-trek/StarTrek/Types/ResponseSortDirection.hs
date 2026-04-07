@@ -10,7 +10,7 @@ module StarTrek.Types.ResponseSortDirection
 import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data ResponseSortDirection
   = ASC
@@ -24,7 +24,7 @@ responseSortDirectionToText v =
       ASC -> "ASC"
       DESC -> "DESC"
 
-responseSortDirectionFromText :: T.Text -> Either String ResponseSortDirection
+responseSortDirectionFromText :: T.Text -> Either.Either String ResponseSortDirection
 responseSortDirectionFromText txt =
   case T.unpack txt of
     "ASC" -> Either.Right ASC

@@ -12,7 +12,7 @@ import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified Data.Either as Either
 import qualified Data.Text as T
-import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data InlineEnumIntParam
   = InlineEnumIntParam10
@@ -28,7 +28,7 @@ inlineEnumIntParamToText v =
       InlineEnumIntParam20 -> "20"
       InlineEnumIntParam30 -> "30"
 
-inlineEnumIntParamFromText :: T.Text -> Either String InlineEnumIntParam
+inlineEnumIntParamFromText :: T.Text -> Either.Either String InlineEnumIntParam
 inlineEnumIntParamFromText txt =
   case T.unpack txt of
     "10" -> Either.Right InlineEnumIntParam10

@@ -10,7 +10,7 @@ module StarTrek.Types.MaritalStatus
 import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data MaritalStatus
   = SINGLE
@@ -36,7 +36,7 @@ maritalStatusToText v =
       WIDOWED -> "WIDOWED"
       CAPTAINSWOMAN -> "CAPTAINS_WOMAN"
 
-maritalStatusFromText :: T.Text -> Either String MaritalStatus
+maritalStatusFromText :: T.Text -> Either.Either String MaritalStatus
 maritalStatusFromText txt =
   case T.unpack txt of
     "SINGLE" -> Either.Right SINGLE

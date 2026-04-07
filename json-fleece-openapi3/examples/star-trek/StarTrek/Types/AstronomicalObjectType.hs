@@ -10,7 +10,7 @@ module StarTrek.Types.AstronomicalObjectType
 import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data AstronomicalObjectType
   = PLANET
@@ -74,7 +74,7 @@ astronomicalObjectTypeToText v =
       SECTOR -> "SECTOR"
       REGION -> "REGION"
 
-astronomicalObjectTypeFromText :: T.Text -> Either String AstronomicalObjectType
+astronomicalObjectTypeFromText :: T.Text -> Either.Either String AstronomicalObjectType
 astronomicalObjectTypeFromText txt =
   case T.unpack txt of
     "PLANET" -> Either.Right PLANET

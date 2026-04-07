@@ -10,7 +10,7 @@ module StarTrek.Types.VideoReleaseFormat
 import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data VideoReleaseFormat
   = SUPER8
@@ -48,7 +48,7 @@ videoReleaseFormatToText v =
       BLURAY4KUHD -> "BLU_RAY_4K_UHD"
       DIGITALFORMAT -> "DIGITAL_FORMAT"
 
-videoReleaseFormatFromText :: T.Text -> Either String VideoReleaseFormat
+videoReleaseFormatFromText :: T.Text -> Either.Either String VideoReleaseFormat
 videoReleaseFormatFromText txt =
   case T.unpack txt of
     "SUPER_8" -> Either.Right SUPER8

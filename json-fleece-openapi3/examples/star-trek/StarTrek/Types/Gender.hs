@@ -10,7 +10,7 @@ module StarTrek.Types.Gender
 import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data Gender
   = F
@@ -24,7 +24,7 @@ genderToText v =
       F -> "F"
       M -> "M"
 
-genderFromText :: T.Text -> Either String Gender
+genderFromText :: T.Text -> Either.Either String Gender
 genderFromText txt =
   case T.unpack txt of
     "F" -> Either.Right F

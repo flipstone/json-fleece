@@ -10,7 +10,7 @@ module TestCases.Types.UTCDateTime.DatetimeType
 import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data DatetimeType
   = UtcDatetime
@@ -22,7 +22,7 @@ datetimeTypeToText v =
     case v of
       UtcDatetime -> "utc_datetime"
 
-datetimeTypeFromText :: T.Text -> Either String DatetimeType
+datetimeTypeFromText :: T.Text -> Either.Either String DatetimeType
 datetimeTypeFromText txt =
   case T.unpack txt of
     "utc_datetime" -> Either.Right UtcDatetime

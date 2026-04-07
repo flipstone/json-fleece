@@ -10,7 +10,7 @@ module TestCases.Operations.TestCases.InlineEnumResponses.Response200Body
 import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data Response200Body
   = Foo
@@ -24,7 +24,7 @@ response200BodyToText v =
       Foo -> "foo"
       Bar -> "bar"
 
-response200BodyFromText :: T.Text -> Either String Response200Body
+response200BodyFromText :: T.Text -> Either.Either String Response200Body
 response200BodyFromText txt =
   case T.unpack txt of
     "foo" -> Either.Right Foo

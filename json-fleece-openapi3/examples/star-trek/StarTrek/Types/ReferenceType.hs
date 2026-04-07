@@ -10,7 +10,7 @@ module StarTrek.Types.ReferenceType
 import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data ReferenceType
   = ASIN
@@ -24,7 +24,7 @@ referenceTypeToText v =
       ASIN -> "ASIN"
       ISBN -> "ISBN"
 
-referenceTypeFromText :: T.Text -> Either String ReferenceType
+referenceTypeFromText :: T.Text -> Either.Either String ReferenceType
 referenceTypeFromText txt =
   case T.unpack txt of
     "ASIN" -> Either.Right ASIN

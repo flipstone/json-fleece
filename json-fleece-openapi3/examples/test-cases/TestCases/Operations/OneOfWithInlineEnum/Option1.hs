@@ -10,7 +10,7 @@ module TestCases.Operations.OneOfWithInlineEnum.Option1
 import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data Option1
   = One
@@ -26,7 +26,7 @@ option1ToText v =
       Two -> "two"
       Three -> "three"
 
-option1FromText :: T.Text -> Either String Option1
+option1FromText :: T.Text -> Either.Either String Option1
 option1FromText txt =
   case T.unpack txt of
     "one" -> Either.Right One

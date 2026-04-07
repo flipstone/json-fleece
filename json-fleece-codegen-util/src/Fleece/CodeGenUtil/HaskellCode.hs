@@ -48,6 +48,7 @@ module Fleece.CodeGenUtil.HaskellCode
   , mapOf
   , maybeOf
   , eitherOf
+  , eitherOfQualified
   , dollar
   , semigroupConcat
   , functorMap
@@ -68,6 +69,7 @@ module Fleece.CodeGenUtil.HaskellCode
   , enumClass
   , boundedClass
   , preludeType
+  , eitherType
   , shrubberyType
   , nonEmptyType
   , fixDigitPrefixVarName
@@ -515,6 +517,14 @@ eitherOf left right =
     <> fromCode " "
     <> guardParens right
 
+eitherOfQualified :: TypeExpression -> TypeExpression -> TypeExpression
+eitherOfQualified left right =
+  typeNameToCode (Just "Either") (eitherType "Either")
+    <> fromCode " "
+    <> guardParens left
+    <> fromCode " "
+    <> guardParens right
+
 guardParens :: TypeExpression -> TypeExpression
 guardParens name =
   let
@@ -627,6 +637,10 @@ boundedClass =
 preludeType :: T.Text -> TypeName
 preludeType =
   toTypeName "Prelude" Nothing
+
+eitherType :: T.Text -> TypeName
+eitherType =
+  toTypeName "Data.Either" (Just "Either")
 
 shrubberyType :: T.Text -> TypeName
 shrubberyType =

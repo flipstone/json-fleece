@@ -10,7 +10,7 @@ module TestCases.Types.EnumIntParam
 import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data EnumIntParam
   = EnumIntParam10
@@ -26,7 +26,7 @@ enumIntParamToText v =
       EnumIntParam20 -> "20"
       EnumIntParam30 -> "30"
 
-enumIntParamFromText :: T.Text -> Either String EnumIntParam
+enumIntParamFromText :: T.Text -> Either.Either String EnumIntParam
 enumIntParamFromText txt =
   case T.unpack txt of
     "10" -> Either.Right EnumIntParam10

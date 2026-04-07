@@ -12,7 +12,7 @@ import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
 import qualified Data.Either as Either
 import qualified Data.Text as T
-import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data InlineAllofParam
   = InlineAllofParam100
@@ -30,7 +30,7 @@ inlineAllofParamToText v =
       InlineAllofParam300 -> "300"
       Green -> "Green"
 
-inlineAllofParamFromText :: T.Text -> Either String InlineAllofParam
+inlineAllofParamFromText :: T.Text -> Either.Either String InlineAllofParam
 inlineAllofParamFromText txt =
   case T.unpack txt of
     "100" -> Either.Right InlineAllofParam100

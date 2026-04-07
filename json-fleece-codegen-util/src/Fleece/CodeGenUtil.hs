@@ -2121,20 +2121,20 @@ generateEnum typeName enumValues typeOptions =
       fold
         [ HC.typeNameToCodeDefaultQualification textType
         , " -> "
-        , HC.eitherOf
+        , HC.eitherOfQualified
             (HC.typeNameToCodeDefaultQualification stringType)
             (HC.typeNameToCode Nothing typeName)
         ]
 
     mkFromTextCase (text, constructor) =
       HC.caseMatch (HC.stringLiteral text) $
-        HC.typeNameToCodeDefaultQualification mkRight
+        HC.typeNameToCodeDefaultQualification (HC.eitherType "Right")
           <> " "
           <> HC.toCode constructor
 
     fromTextErrorCase =
       HC.caseMatch "v" $
-        HC.typeNameToCodeDefaultQualification mkLeft
+        HC.typeNameToCodeDefaultQualification (HC.eitherType "Left")
           <> " "
           <> HC.dollar
           <> " "
@@ -2233,14 +2233,6 @@ integerType =
 boolType :: HC.TypeName
 boolType =
   HC.preludeType "Bool"
-
-mkLeft :: HC.TypeName
-mkLeft =
-  HC.toTypeName "Data.Either" (Just "Either") "Left"
-
-mkRight :: HC.TypeName
-mkRight =
-  HC.toTypeName "Data.Either" (Just "Either") "Right"
 
 fleeceClass :: HC.TypeName
 fleeceClass =

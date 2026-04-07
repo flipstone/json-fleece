@@ -10,7 +10,7 @@ module TestCases.Types.Status
 import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data Status
   = GOOD
@@ -26,7 +26,7 @@ statusToText v =
       BAD -> "BAD"
       UGLY -> "UGLY"
 
-statusFromText :: T.Text -> Either String Status
+statusFromText :: T.Text -> Either.Either String Status
 statusFromText txt =
   case T.unpack txt of
     "GOOD" -> Either.Right GOOD

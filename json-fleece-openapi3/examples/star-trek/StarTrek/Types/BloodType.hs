@@ -10,7 +10,7 @@ module StarTrek.Types.BloodType
 import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data BloodType
   = BNEGATIVE
@@ -26,7 +26,7 @@ bloodTypeToText v =
       ONEGATIVE -> "O_NEGATIVE"
       TNEGATIVE -> "T_NEGATIVE"
 
-bloodTypeFromText :: T.Text -> Either String BloodType
+bloodTypeFromText :: T.Text -> Either.Either String BloodType
 bloodTypeFromText txt =
   case T.unpack txt of
     "B_NEGATIVE" -> Either.Right BNEGATIVE

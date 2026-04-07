@@ -10,7 +10,7 @@ module StarTrek.Types.ContentRatingSystem
 import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), (<>), Bounded, Either, Enum, Eq, Ord, Show, String)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data ContentRatingSystem
   = BBFC
@@ -72,7 +72,7 @@ contentRatingSystemToText v =
       GSRR -> "GSRR"
       ITUNES -> "ITUNES"
 
-contentRatingSystemFromText :: T.Text -> Either String ContentRatingSystem
+contentRatingSystemFromText :: T.Text -> Either.Either String ContentRatingSystem
 contentRatingSystemFromText txt =
   case T.unpack txt of
     "BBFC" -> Either.Right BBFC
