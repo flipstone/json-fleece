@@ -611,8 +611,8 @@ intLiteral n =
   String.fromString (show n)
 
 caseMatch :: HaskellCode -> HaskellCode -> HaskellCode
-caseMatch _case output =
-  _case <> " -> " <> output
+caseMatch case_ output =
+  case_ <> " -> " <> output
 
 eqClass :: TypeName
 eqClass =
