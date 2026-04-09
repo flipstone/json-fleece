@@ -4,11 +4,13 @@ module TestCases.Operations.OneOfWithInlineEnum.Option2
   ( Option2(..)
   , option2Schema
   , option2ToText
+  , option2FromText
   ) where
 
+import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), Bounded, Enum, Eq, Ord, Show)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data Option2
   = Uno
@@ -23,6 +25,14 @@ option2ToText v =
       Uno -> "uno"
       Dos -> "dos"
       Tres -> "tres"
+
+option2FromText :: T.Text -> Either.Either String Option2
+option2FromText txt =
+  case T.unpack txt of
+    "uno" -> Either.Right Uno
+    "dos" -> Either.Right Dos
+    "tres" -> Either.Right Tres
+    v -> Either.Left $ "Unknown Option2: " <> v
 
 option2Schema :: FC.Fleece t => FC.Schema t Option2
 option2Schema =

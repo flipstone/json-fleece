@@ -4,13 +4,15 @@
 module TestCases.Operations.InlineAllOf.InlineAllofParam
   ( InlineAllofParam(..)
   , inlineAllofParamToText
+  , inlineAllofParamFromText
   , paramDef
   ) where
 
 import qualified Beeline.Params as P
 import qualified Beeline.Routing as R
+import qualified Data.Either as Either
 import qualified Data.Text as T
-import Prelude (($), Bounded, Enum, Eq, Ord, Show)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data InlineAllofParam
   = InlineAllofParam100
@@ -27,6 +29,15 @@ inlineAllofParamToText v =
       InlineAllofParam200 -> "200"
       InlineAllofParam300 -> "300"
       Green -> "Green"
+
+inlineAllofParamFromText :: T.Text -> Either.Either String InlineAllofParam
+inlineAllofParamFromText txt =
+  case T.unpack txt of
+    "100" -> Either.Right InlineAllofParam100
+    "200" -> Either.Right InlineAllofParam200
+    "300" -> Either.Right InlineAllofParam300
+    "Green" -> Either.Right Green
+    v -> Either.Left $ "Unknown InlineAllofParam: " <> v
 
 paramDef :: R.ParameterDefinition InlineAllofParam
 paramDef =

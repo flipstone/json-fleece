@@ -4,11 +4,13 @@ module TestCases.Operations.TestCases.InlineEnumArrayRequestBody.RequestBodyItem
   ( RequestBodyItem(..)
   , requestBodyItemSchema
   , requestBodyItemToText
+  , requestBodyItemFromText
   ) where
 
+import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), Bounded, Enum, Eq, Ord, Show)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data RequestBodyItem
   = Foo
@@ -23,6 +25,14 @@ requestBodyItemToText v =
       Foo -> "foo"
       Bar -> "bar"
       Baz -> "baz"
+
+requestBodyItemFromText :: T.Text -> Either.Either String RequestBodyItem
+requestBodyItemFromText txt =
+  case T.unpack txt of
+    "foo" -> Either.Right Foo
+    "bar" -> Either.Right Bar
+    "baz" -> Either.Right Baz
+    v -> Either.Left $ "Unknown RequestBodyItem: " <> v
 
 requestBodyItemSchema :: FC.Fleece t => FC.Schema t RequestBodyItem
 requestBodyItemSchema =

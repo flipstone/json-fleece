@@ -4,11 +4,13 @@ module StarTrek.Types.ContentRatingSystem
   ( ContentRatingSystem(..)
   , contentRatingSystemSchema
   , contentRatingSystemToText
+  , contentRatingSystemFromText
   ) where
 
+import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), Bounded, Enum, Eq, Ord, Show)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data ContentRatingSystem
   = BBFC
@@ -69,6 +71,37 @@ contentRatingSystemToText v =
       ADESE -> "ADESE"
       GSRR -> "GSRR"
       ITUNES -> "ITUNES"
+
+contentRatingSystemFromText :: T.Text -> Either.Either String ContentRatingSystem
+contentRatingSystemFromText txt =
+  case T.unpack txt of
+    "BBFC" -> Either.Right BBFC
+    "OFLC" -> Either.Right OFLC
+    "OFLCNZ" -> Either.Right OFLCNZ
+    "DJCTQ" -> Either.Right DJCTQ
+    "MDA" -> Either.Right MDA
+    "MPAA" -> Either.Right MPAA
+    "CHVRS" -> Either.Right CHVRS
+    "RCQ" -> Either.Right RCQ
+    "IFCO" -> Either.Right IFCO
+    "FSK" -> Either.Right FSK
+    "NICAM" -> Either.Right NICAM
+    "MCCYP" -> Either.Right MCCYP
+    "EIRIN" -> Either.Right EIRIN
+    "HK" -> Either.Right HK
+    "CBFC" -> Either.Right CBFC
+    "NMHH" -> Either.Right NMHH
+    "VRC" -> Either.Right VRC
+    "RSAC" -> Either.Right RSAC
+    "ESRB" -> Either.Right ESRB
+    "ELSPA" -> Either.Right ELSPA
+    "PEGI" -> Either.Right PEGI
+    "USK" -> Either.Right USK
+    "SELL" -> Either.Right SELL
+    "ADESE" -> Either.Right ADESE
+    "GSRR" -> Either.Right GSRR
+    "ITUNES" -> Either.Right ITUNES
+    v -> Either.Left $ "Unknown ContentRatingSystem: " <> v
 
 contentRatingSystemSchema :: FC.Fleece t => FC.Schema t ContentRatingSystem
 contentRatingSystemSchema =

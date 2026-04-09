@@ -4,11 +4,13 @@ module TestCases.Types.InlineAllOf.RequestBody.FieldI.DatetimeType
   ( DatetimeType(..)
   , datetimeTypeSchema
   , datetimeTypeToText
+  , datetimeTypeFromText
   ) where
 
+import qualified Data.Either as Either
 import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (($), Bounded, Enum, Eq, Ord, Show)
+import Prelude (($), (<>), Bounded, Enum, Eq, Ord, Show, String)
 
 data DatetimeType
   = UtcDatetime
@@ -19,6 +21,12 @@ datetimeTypeToText v =
   T.pack $
     case v of
       UtcDatetime -> "utc_datetime"
+
+datetimeTypeFromText :: T.Text -> Either.Either String DatetimeType
+datetimeTypeFromText txt =
+  case T.unpack txt of
+    "utc_datetime" -> Either.Right UtcDatetime
+    v -> Either.Left $ "Unknown DatetimeType: " <> v
 
 datetimeTypeSchema :: FC.Fleece t => FC.Schema t DatetimeType
 datetimeTypeSchema =
