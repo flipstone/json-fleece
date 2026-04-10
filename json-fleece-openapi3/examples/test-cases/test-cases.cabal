@@ -334,6 +334,7 @@ library
     , beeline-http-client ==0.9.*
     , beeline-params ==0.1.*
     , beeline-routing ==0.3.*
+    , bounded-text
     , containers
     , json-fleece-aeson-beeline ==0.3.*
     , json-fleece-bounded-types ==0.1.*
