@@ -21,9 +21,19 @@ import Fleece.Markdown.SchemaDocumentation
       , fieldName
       , fieldSchemaDocs
       )
-  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, TaggedUnionEntry, UnionEntry, WithFormat)
+  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, TaggedUnionEntry, UnionEntry)
+  , SchemaAnnotations
+    ( annotationFormat
+    , annotationMaxItems
+    , annotationMaxLength
+    , annotationMaximum
+    , annotationMinItems
+    , annotationMinLength
+    , annotationMinimum
+    )
   , SchemaDocumentation
-    ( schemaDescription
+    ( schemaAnnotations
+    , schemaDescription
     , schemaExcludeFromRender
     , schemaMainEntry
     , schemaName
@@ -111,8 +121,8 @@ schemaFieldTypeDocs nameContext schemaDocs =
           Nullable notNullSchemaDocs -> notNullSchemaDocs
           NotNull -> schemaDocs
   in
-    case schemaMainEntry schemaDocs of
-      WithFormat format _entry
+    case annotationFormat (schemaAnnotations schemaDocs) of
+      Just format
         | schemaExcludeFromRender schemaDocs ->
             -- If this schema has a format that has been declared and also is going
             -- to be excluded from the render (so it's main entry will never be seen)
@@ -123,17 +133,27 @@ schemaFieldTypeDocs nameContext schemaDocs =
 
 schemaMainEntryDocs :: NameContext -> SchemaDocumentation -> LTB.Builder
 schemaMainEntryDocs nameContext schemaDocs =
-  h1 (renderName nameContext (schemaName schemaDocs))
-    <> newline
-    <> newline
-    <> renderDescription (schemaDescription schemaDocs)
-    <> mainEntryDocs nameContext (schemaMainEntry schemaDocs)
+  let
+    baseDocs =
+      h1 (renderName nameContext (schemaName schemaDocs))
+        <> newline
+        <> newline
+        <> renderDescription (schemaDescription schemaDocs)
+        <> mainEntryDocs nameContext (schemaMainEntry schemaDocs)
+
+    annotationLines =
+      renderAnnotations (schemaAnnotations schemaDocs)
+  in
+    case annotationLines of
+      [] -> baseDocs
+      _ -> baseDocs <> newline <> foldMap (<> newline) annotationLines
 
 mainEntryDocs :: NameContext -> MainEntry -> LTB.Builder
 mainEntryDocs nameContext entry =
   case entry of
     NameOnly name ->
       renderName nameContext name
+        <> newline
     Fields fields ->
       fieldsHeader <> foldMap (fieldRow nameContext) fields
     EnumValues enumValues ->
@@ -162,14 +182,25 @@ mainEntryDocs nameContext entry =
         <> " field."
         <> newline
         <> newline
-        <> foldMap (taggedUnionMember nameContext tagProperty) memberDocs
-    WithFormat formatString itemEntry ->
-      mainEntryDocs nameContext itemEntry
-        <> newline
-        <> newline
-        <> "format: "
-        <> markdownText (T.pack formatString)
-        <> newline
+        <> mconcat (List.intersperse newline (map (taggedUnionMember nameContext tagProperty) memberDocs))
+
+renderAnnotations :: SchemaAnnotations -> [LTB.Builder]
+renderAnnotations annotations =
+  concat
+    [ renderAnnotation "format: " LTB.fromString (annotationFormat annotations)
+    , renderAnnotation "maxLength: " (LTB.fromString . show) (annotationMaxLength annotations)
+    , renderAnnotation "minLength: " (LTB.fromString . show) (annotationMinLength annotations)
+    , renderAnnotation "maxItems: " (LTB.fromString . show) (annotationMaxItems annotations)
+    , renderAnnotation "minItems: " (LTB.fromString . show) (annotationMinItems annotations)
+    , renderAnnotation "maximum: " (LTB.fromString . show) (annotationMaximum annotations)
+    , renderAnnotation "minimum: " (LTB.fromString . show) (annotationMinimum annotations)
+    ]
+
+renderAnnotation :: LTB.Builder -> (a -> LTB.Builder) -> Maybe a -> [LTB.Builder]
+renderAnnotation label render mbVal =
+  case mbVal of
+    Nothing -> []
+    Just val -> [label <> render val]
 
 fieldsHeader :: LTB.Builder
 fieldsHeader =
@@ -211,7 +242,6 @@ taggedUnionMember nameContext tagProperty memberDocs =
       <> newline
       <> fieldsHeader
       <> foldMap (fieldRow nameContext) (tagFields memberDocs)
-      <> newline
 
 pipe :: LTB.Builder
 pipe =

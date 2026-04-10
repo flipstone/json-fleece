@@ -178,6 +178,7 @@ library
       TestCases.Types.Baz
       TestCases.Types.Baz.BazName
       TestCases.Types.Baz.Type
+      TestCases.Types.BoundedTextType
       TestCases.Types.CustomDateFormat
       TestCases.Types.DateTimeFormats
       TestCases.Types.DateTimeFormats.CustomLocalTimeField
@@ -282,6 +283,7 @@ library
       TestCases.Types.NameConflicts.Then
       TestCases.Types.NameConflicts.Type
       TestCases.Types.NameConflicts.Where
+      TestCases.Types.NonEmptyTextType
       TestCases.Types.NullableBoolean
       TestCases.Types.NullableString
       TestCases.Types.Num2SchemaStartingWithNumber
@@ -334,7 +336,9 @@ library
     , beeline-routing ==0.3.*
     , containers
     , json-fleece-aeson-beeline ==0.3.*
+    , json-fleece-bounded-types ==0.1.*
     , json-fleece-core ==0.11.*
+    , non-empty-text
     , scientific
     , shrubbery ==0.2.*
     , text

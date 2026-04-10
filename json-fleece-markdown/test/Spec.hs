@@ -4,6 +4,7 @@ module Main
   ( main
   ) where
 
+import qualified Data.List.NonEmpty as NEL
 import qualified Data.Text as T
 import qualified Data.Text.Lazy.Encoding as LTE
 import qualified Test.Tasty as Tasty
@@ -45,6 +46,9 @@ testGroup =
     , test_taggedUnion
     , test_nestedObject
     , test_nameDisambiguation
+    , test_nonEmptyList
+    , test_nonEmptyText
+    , test_nonEmptyListField
     ]
 
 test_object :: Tasty.TestTree
@@ -252,6 +256,33 @@ ambiguousNameChild2Schema =
   FC.objectNamed "Child2.AmbiguousName" $
     FC.constructor AmbiguousNameChild2
       #+ FC.required "value" ambiguousNameChild2Value FC.text
+
+test_nonEmptyList :: Tasty.TestTree
+test_nonEmptyList =
+  mkGoldenTest
+    "NonEmpty lists include minItems bound in the rendered Markdown"
+    "test/examples/non-empty-list.md"
+    (FC.nonEmpty FC.text :: FC.Schema FM.Markdown (NEL.NonEmpty T.Text))
+
+test_nonEmptyText :: Tasty.TestTree
+test_nonEmptyText =
+  mkGoldenTest
+    "NonEmptyText includes minLength bound in the rendered Markdown"
+    "test/examples/non-empty-text.md"
+    FC.nonEmptyText
+
+test_nonEmptyListField :: Tasty.TestTree
+test_nonEmptyListField =
+  let
+    testSchema =
+      FC.objectNamed "SomeObject" $
+        FC.constructor (\_ -> ())
+          #+ FC.required "names" (const (pure "")) (FC.nonEmpty FC.text)
+  in
+    mkGoldenTest
+      "NonEmpty fields include minItems bound in the rendered Markdown"
+      "test/examples/non-empty-fields.md"
+      testSchema
 
 mkGoldenTest ::
   Tasty.TestName ->

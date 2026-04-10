@@ -1117,6 +1117,17 @@ components:
       description: An explicit type that is just a string for use in other test cases
       type: string
 
+    NonEmptyTextType:
+      description: A string type that must be non-empty
+      type: string
+      minLength: 1
+
+    BoundedTextType:
+      description: A string type with bounded length
+      type: string
+      minLength: 1
+      maxLength: 100
+
     MinItemsOne:
       type: array
       items:

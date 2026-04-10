@@ -71,6 +71,8 @@ import Fleece.Core.Class
   , boundedEnumNamed
   , constructor
   , format
+  , minItems
+  , minLength
   , nullable
   , number
   , objectNamed
@@ -332,10 +334,11 @@ nonEmpty itemSchema =
         Just nonEmptyItems -> Right nonEmptyItems
         Nothing -> Left "Expected non-empty array for NonEmpty list, but array was empty"
   in
-    validateAnonymous
-      NEL.toList
-      validateNonEmpty
-      (list itemSchema)
+    minItems 1 $
+      validateAnonymous
+        NEL.toList
+        validateNonEmpty
+        (list itemSchema)
 
 data SetDuplicateHandling
   = AllowInputDuplicates
@@ -372,10 +375,11 @@ nonEmptyText =
         Just net -> Right net
         Nothing -> Left "Expected non-empty text for NonEmptyText, but text was empty"
   in
-    validateAnonymous
-      NET.toText
-      validateNonEmptyText
-      text
+    minLength 1 $
+      validateAnonymous
+        NET.toText
+        validateNonEmptyText
+        text
 
 integer :: Fleece t => Schema t Integer
 integer =

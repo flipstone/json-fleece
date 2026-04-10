@@ -55,6 +55,31 @@ packages:
   original:
     url: https://github.com/flipstone/shrubbery/archive/a064ede07e01b753a6eb310fc24d9fd8da1ad826.tar.gz
 - completed:
+    name: bounded-text
+    pantry-tree:
+      sha256: e98540b1877ae4709420472f83e8fd04b987eaeb914df72bb33b0bbe55debac2
+      size: 2162
+    sha256: 29c500737d8e481fe2e3325fe643a9cafc565ffd06b754bf14219f579d927f5d
+    size: 11885
+    url: https://github.com/flipstone/bounded-text/archive/3ef94eeda5402857423284d0c4e021a8c8032498.tar.gz
+    version: 0.1.2.0
+  original:
+    url: https://github.com/flipstone/bounded-text/archive/3ef94eeda5402857423284d0c4e021a8c8032498.tar.gz
+- completed:
+    hackage: template-haskell-lift-0.1.0.0@sha256:f6cd3ee45b0c68480c400bfca9f08f39e8e87a5eb823f206dbe06ab1923a4f1c,1136
+    pantry-tree:
+      sha256: 56ab994094c839bebb643ce5fc58dfae6269517ebe91f380e259adaf1def08bf
+      size: 243
+  original:
+    hackage: template-haskell-lift-0.1.0.0
+- completed:
+    hackage: template-haskell-quasiquoter-0.1.0.0@sha256:71027c432c0fb1a293d0f2b1d46dd5be42b9703b7c4b2233ea8076bfc6f84aae,1181
+    pantry-tree:
+      sha256: f9f5177a522cc273c001dd5bd749e4f7ed841910c6136711b9b9825bc0bc9c56
+      size: 257
+  original:
+    hackage: template-haskell-quasiquoter-0.1.0.0
+- completed:
     hackage: hermes-json-0.7.0.0@sha256:d1fe74cc26fc7c4de12e4eab2bb74cda4eb9b4dc311c297caa23e40bdb1bd3b6,3943
     pantry-tree:
       sha256: 77f7eb467a7a8fdd0b73b2bc1a51c309fd32fbcd063d99a14540cda34f3926c1

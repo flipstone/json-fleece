@@ -41,6 +41,12 @@ module Fleece.CodeGenUtil
   , anyJSONSchemaTypeInfo
   , textFormat
   , textSchemaTypeInfo
+  , textLikeSchemaTypeInfo
+  , textLikeFormat
+  , nonEmptyTextFormat
+  , nonEmptyTextSchemaTypeInfo
+  , boundedTextFormat
+  , boundedTextSchemaTypeInfo
   , boolFormat
   , boolSchemaTypeInfo
   , int32Format
@@ -497,6 +503,48 @@ textSchemaTypeInfo :: SchemaTypeInfo
 textSchemaTypeInfo =
   primitiveSchemaTypeInfo textType (fleeceCoreVar "text")
 
+nonEmptyTextFormat :: TypeOptions -> CodeGenDataFormat
+nonEmptyTextFormat typeOptions =
+  codeGenNewTypeSchemaTypeInfo typeOptions nonEmptyTextSchemaTypeInfo
+
+nonEmptyTextSchemaTypeInfo :: SchemaTypeInfo
+nonEmptyTextSchemaTypeInfo =
+  primitiveSchemaTypeInfo nonEmptyTextType (fleeceCoreVar "nonEmptyText")
+
+boundedTextFormat :: TypeOptions -> Integer -> Integer -> CodeGenDataFormat
+boundedTextFormat typeOptions minLen maxLen =
+  codeGenNewTypeSchemaTypeInfo typeOptions (boundedTextSchemaTypeInfo minLen maxLen)
+
+boundedTextSchemaTypeInfo :: Integer -> Integer -> SchemaTypeInfo
+boundedTextSchemaTypeInfo minLen maxLen =
+  SchemaTypeInfo
+    { schemaTypeExpr =
+        "("
+          <> HC.typeNameToCodeDefaultQualification boundedTextType
+          <> " "
+          <> HC.fromText (T.pack (show minLen))
+          <> " "
+          <> HC.fromText (T.pack (show maxLen))
+          <> ")"
+    , schemaTypeSchema = fleeceBoundedTypesVar "boundedText"
+    , schemaTypeObjSchema = fleeceBoundedTypesVar "boundedText"
+    , schemaTypeRequiredPragmas = ["{-# LANGUAGE DataKinds #-}"]
+    }
+
+textLikeSchemaTypeInfo :: Maybe Integer -> Maybe Integer -> SchemaTypeInfo
+textLikeSchemaTypeInfo mbMinLength mbMaxLength =
+  case (mbMinLength, mbMaxLength) of
+    (Just minLen, Just maxLen) ->
+      boundedTextSchemaTypeInfo minLen maxLen
+    (Just 1, Nothing) ->
+      nonEmptyTextSchemaTypeInfo
+    _ ->
+      textSchemaTypeInfo
+
+textLikeFormat :: TypeOptions -> Maybe Integer -> Maybe Integer -> CodeGenDataFormat
+textLikeFormat typeOptions mbMinLength mbMaxLength =
+  codeGenNewTypeSchemaTypeInfo typeOptions (textLikeSchemaTypeInfo mbMinLength mbMaxLength)
+
 floatFormat :: TypeOptions -> CodeGenDataFormat
 floatFormat typeOptions =
   codeGenNewTypeSchemaTypeInfo typeOptions floatSchemaTypeInfo
@@ -634,6 +682,7 @@ anyJSONSchemaTypeInfo =
     { schemaTypeExpr = HC.typeNameToCodeDefaultQualification (fleeceCoreType "AnyJSON")
     , schemaTypeSchema = fleeceCoreVar "anyJSON"
     , schemaTypeObjSchema = fleeceCoreVar "anyJSON"
+    , schemaTypeRequiredPragmas = []
     }
 
 generateFleeceCode :: CodeGenMap -> CodeGen Modules
@@ -1399,7 +1448,8 @@ requiredPragmasForFormat ::
   [HC.HaskellCode]
 requiredPragmasForFormat format =
   case format of
-    CodeGenNewType _ _ -> []
+    CodeGenNewType _ (Left info) -> schemaTypeRequiredPragmas info
+    CodeGenNewType _ (Right _) -> []
     CodeGenEnum _ _ -> []
     CodeGenObject _ _ _ -> []
     CodeGenArray _ _ _ -> []
@@ -2016,6 +2066,7 @@ data SchemaTypeInfo = SchemaTypeInfo
   { schemaTypeExpr :: HC.TypeExpression
   , schemaTypeSchema :: HC.HaskellCode
   , schemaTypeObjSchema :: HC.HaskellCode
+  , schemaTypeRequiredPragmas :: [HC.HaskellCode]
   }
 
 primitiveSchemaTypeInfo :: HC.TypeName -> HC.HaskellCode -> SchemaTypeInfo
@@ -2024,6 +2075,7 @@ primitiveSchemaTypeInfo typeName schema =
     { schemaTypeExpr = HC.typeNameToCodeDefaultQualification typeName
     , schemaTypeSchema = schema
     , schemaTypeObjSchema = schema
+    , schemaTypeRequiredPragmas = []
     }
 
 inferSchemaInfoForTypeName :: HC.TypeName -> CodeGen SchemaTypeInfo
@@ -2033,6 +2085,7 @@ inferSchemaInfoForTypeName typeName =
       { schemaTypeExpr = HC.typeNameToCodeDefaultQualification typeName
       , schemaTypeSchema = HC.varNameToCodeDefaultQualification $ fleeceSchemaNameForType typeName
       , schemaTypeObjSchema = HC.varNameToCodeDefaultQualification $ fleeceObjSchemaNameForType typeName
+      , schemaTypeRequiredPragmas = []
       }
 
 inferTypeForInputName :: CodeSection -> T.Text -> CodeGen (HC.ModuleName, HC.TypeName)
@@ -2222,6 +2275,14 @@ textType :: HC.TypeName
 textType =
   HC.toTypeName "Data.Text" (Just "T") "Text"
 
+nonEmptyTextType :: HC.TypeName
+nonEmptyTextType =
+  HC.toTypeName "Data.NonEmptyText" (Just "NET") "NonEmptyText"
+
+boundedTextType :: HC.TypeName
+boundedTextType =
+  HC.toTypeName "Data.BoundedText" (Just "BT") "BoundedText"
+
 textPack :: HC.VarName
 textPack =
   HC.toVarName "Data.Text" (Just "T") "pack"
@@ -2297,6 +2358,12 @@ fleeceCoreConstructorVar =
   HC.fromCode
     . HC.varNameToCodeDefaultQualification
     . HC.toConstructorVarName "Fleece.Core" (Just "FC")
+
+fleeceBoundedTypesVar :: HC.FromCode c => T.Text -> c
+fleeceBoundedTypesVar =
+  HC.fromCode
+    . HC.varNameToCodeDefaultQualification
+    . HC.toVarName "Fleece.BoundedTypes" (Just "FBT")
 
 fleeceCoreFunApp :: HC.FromCode c => T.Text -> T.Text -> c
 fleeceCoreFunApp functionName argument =
