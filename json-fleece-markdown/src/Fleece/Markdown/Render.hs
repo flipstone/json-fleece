@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+-- | Renders 'SchemaDocumentation' as Markdown text.
 module Fleece.Markdown.Render
   ( schemaDocumentationToMarkdown
   ) where
@@ -44,6 +45,7 @@ import Fleece.Markdown.SchemaDocumentation
   , schemaReferencesWithDescendants
   )
 
+-- | Renders a 'SchemaDocumentation' value and all its referenced schemas as a Markdown document.
 schemaDocumentationToMarkdown :: SchemaDocumentation -> LT.Text
 schemaDocumentationToMarkdown rootDocs =
   let

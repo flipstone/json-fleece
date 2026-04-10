@@ -1,5 +1,8 @@
 {-# LANGUAGE TypeFamilies #-}
 
+{- | Provides the 'Markdown' Fleece instance that interprets schemas as
+documentation structures, which can be rendered to Markdown.
+-}
 module Fleece.Markdown.FleeceInstance
   ( Markdown
   , renderMarkdown
@@ -41,8 +44,13 @@ import Fleece.Markdown.SchemaDocumentation
   , schemaSelfReference
   )
 
+{- | A Fleece interpreter that produces 'SchemaDocumentation' from schemas.
+Apply 'renderMarkdown' to a schema using this interpreter to generate
+Markdown documentation.
+-}
 newtype Markdown a = Markdown SchemaDocumentation
 
+-- | Renders a Fleece schema as Markdown text using the 'Markdown' interpreter.
 renderMarkdown :: FC.Schema Markdown a -> LT.Text
 renderMarkdown schema =
   let

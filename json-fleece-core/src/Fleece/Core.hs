@@ -1,5 +1,10 @@
 {-# OPTIONS_GHC -Wno-missing-import-lists #-}
 
+{- | The primary module for building JSON schemas with Fleece. Re-exports the
+core types, the 'Fleece' typeclass, and convenience functions for
+constructing schemas. Import this module to define schemas for your Haskell
+types.
+-}
 module Fleece.Core
   ( -- * A class for defining Fleece schemas
     Fleece

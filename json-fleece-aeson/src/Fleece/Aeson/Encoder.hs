@@ -6,6 +6,9 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 
+{- | A Fleece encoder implementation using Aeson. Provides functions to encode
+Haskell types to JSON using Fleece schemas.
+-}
 module Fleece.Aeson.Encoder
   ( Encoder (..)
   , encode
@@ -29,9 +32,11 @@ import qualified Shrubbery
 
 import qualified Fleece.Core as FC
 
+-- | A JSON encoder that interprets Fleece schemas as Aeson encoding functions.
 data Encoder a
   = Encoder (a -> Aeson.Encoding)
 
+-- | Encodes a Haskell value to a lazy 'LBS.ByteString' of JSON using a Fleece schema.
 encode :: FC.Schema Encoder a -> a -> LBS.ByteString
 encode schema =
   let
@@ -39,6 +44,7 @@ encode schema =
   in
     AesonEncoding.encodingToLazyByteString . toEncoding
 
+-- | Encodes a Haskell value to a strict 'BS.ByteString' of JSON using a Fleece schema.
 encodeStrict :: FC.Schema Encoder a -> a -> BS.ByteString
 encodeStrict schema =
   let

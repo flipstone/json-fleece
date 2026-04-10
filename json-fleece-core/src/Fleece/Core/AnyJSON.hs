@@ -1,5 +1,8 @@
 {-# LANGUAGE DataKinds #-}
 
+{- | Defines the 'AnyJSON' type for representing arbitrary JSON values and a
+schema for encoding\/decoding them.
+-}
 module Fleece.Core.AnyJSON
   ( AnyJSON (AnyJSON)
   , mkJSONText
@@ -42,6 +45,9 @@ import Fleece.Core.Class
 import Fleece.Core.Name (unqualifiedName)
 import Fleece.Core.Schemas (list, unionMember)
 
+{- | Represents an arbitrary JSON value as a union of text, bool, number,
+array, object, and null.
+-}
 newtype AnyJSON
   = AnyJSON
       ( Union
@@ -66,9 +72,13 @@ instance Eq AnyJSON where
       (\u -> getJSONNull right == Just u)
       left
 
+-- | Constructs an 'AnyJSON' value from 'T.Text'.
 mkJSONText :: T.Text -> AnyJSON
 mkJSONText = AnyJSON . unify
 
+{- | Extracts a 'T.Text' from an 'AnyJSON' value, returning 'Nothing' if it is
+not a text value.
+-}
 getJSONText :: AnyJSON -> Maybe T.Text
 getJSONText =
   let
@@ -76,9 +86,13 @@ getJSONText =
   in
     handleAnyJSON Just noText noText noText noText noText
 
+-- | Constructs an 'AnyJSON' value from a 'Bool'.
 mkJSONBool :: Bool -> AnyJSON
 mkJSONBool = AnyJSON . unify
 
+{- | Extracts a 'Bool' from an 'AnyJSON' value, returning 'Nothing' if it is
+not a boolean value.
+-}
 getJSONBool :: AnyJSON -> Maybe Bool
 getJSONBool =
   let
@@ -86,9 +100,13 @@ getJSONBool =
   in
     handleAnyJSON noBool Just noBool noBool noBool noBool
 
+-- | Constructs an 'AnyJSON' value from a 'Scientific' number.
 mkJSONNumber :: Scientific -> AnyJSON
 mkJSONNumber = AnyJSON . unify
 
+{- | Extracts a 'Scientific' number from an 'AnyJSON' value, returning
+'Nothing' if it is not a number value.
+-}
 getJSONNumber :: AnyJSON -> Maybe Scientific
 getJSONNumber =
   let
@@ -96,9 +114,13 @@ getJSONNumber =
   in
     handleAnyJSON noNumber noNumber Just noNumber noNumber noNumber
 
+-- | Constructs an 'AnyJSON' value from a list of 'AnyJSON' values.
 mkJSONArray :: [AnyJSON] -> AnyJSON
 mkJSONArray = AnyJSON . unify
 
+{- | Extracts a list of 'AnyJSON' values from an 'AnyJSON' value, returning
+'Nothing' if it is not an array value.
+-}
 getJSONArray :: AnyJSON -> Maybe [AnyJSON]
 getJSONArray =
   let
@@ -106,9 +128,15 @@ getJSONArray =
   in
     handleAnyJSON noArray noArray noArray Just noArray noArray
 
+{- | Constructs an 'AnyJSON' value from a 'Map.Map' of text keys to 'AnyJSON'
+values.
+-}
 mkJSONObject :: Map.Map T.Text AnyJSON -> AnyJSON
 mkJSONObject = AnyJSON . unify
 
+{- | Extracts a 'Map.Map' from an 'AnyJSON' value, returning 'Nothing' if it
+is not an object value.
+-}
 getJSONObject :: AnyJSON -> Maybe (Map.Map T.Text AnyJSON)
 getJSONObject =
   let
@@ -116,9 +144,13 @@ getJSONObject =
   in
     handleAnyJSON noObject noObject noObject noObject Just noObject
 
+-- | Constructs an 'AnyJSON' value representing JSON null.
 mkJSONNull :: AnyJSON
 mkJSONNull = AnyJSON (unify Null)
 
+{- | Extracts a 'Null' from an 'AnyJSON' value, returning 'Nothing' if it is
+not null.
+-}
 getJSONNull :: AnyJSON -> Maybe Null
 getJSONNull =
   let
@@ -126,6 +158,9 @@ getJSONNull =
   in
     handleAnyJSON noNull noNull noNull noNull noNull Just
 
+{- | Eliminates an 'AnyJSON' value by providing handler functions for each
+possible JSON type: text, bool, number, array, object, and null.
+-}
 handleAnyJSON ::
   (T.Text -> a) ->
   (Bool -> a) ->
@@ -150,6 +185,7 @@ handleAnyJSON handleText handleBool handleNumber handleArray handleObject handle
   in
     \(AnyJSON u) -> handler u
 
+-- | A Fleece schema for 'AnyJSON' values.
 anyJSON :: Fleece t => Schema t AnyJSON
 anyJSON =
   transform (\(AnyJSON u) -> u) AnyJSON $

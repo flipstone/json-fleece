@@ -2,6 +2,9 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
 
+{- | Additional Fleece schemas for bounded types from external libraries,
+including non-empty sets and bounded-length text.
+-}
 module Fleece.BoundedTypes
   ( nonEmptySet
   , boundedText
@@ -14,6 +17,10 @@ import GHC.TypeLits (KnownNat)
 
 import qualified Fleece.Core as FC
 
+{- | Creates a schema for a 'NESet.NESet' (non-empty set) from an array schema,
+validating that the resulting set is non-empty. Uses the provided duplicate
+handling strategy.
+-}
 nonEmptySet :: (Ord a, FC.Fleece t) => FC.SetDuplicateHandling -> FC.Schema t a -> FC.Schema t (NESet.NESet a)
 nonEmptySet duplicateHandling itemSchema =
   let
@@ -28,6 +35,10 @@ nonEmptySet duplicateHandling itemSchema =
         validateNonEmpty
         (FC.set duplicateHandling itemSchema)
 
+{- | Creates a schema for 'BT.BoundedText' with type-level minimum and maximum
+length bounds. Validates that input text falls within the specified length
+range.
+-}
 boundedText ::
   forall minLen maxLen t.
   (KnownNat minLen, KnownNat maxLen, FC.Fleece t) =>

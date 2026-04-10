@@ -6,6 +6,9 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 
+{- | A Fleece decoder implementation using Aeson. Provides functions to decode
+JSON into Haskell types using Fleece schemas.
+-}
 module Fleece.Aeson.Decoder
   ( Decoder (Decoder)
   , toParser
@@ -34,9 +37,13 @@ import qualified Shrubbery
 
 import qualified Fleece.Core as FC
 
+{- | A JSON decoder that interprets Fleece schemas as Aeson parsers. The
+constructor wraps a function from 'Aeson.Value' to an Aeson 'AesonTypes.Parser'.
+-}
 newtype Decoder a
   = Decoder (Aeson.Value -> AesonTypes.Parser a)
 
+-- | Extracts the Aeson parser function from a 'Decoder' schema.
 toParser :: FC.Schema Decoder a -> Aeson.Value -> AesonTypes.Parser a
 toParser schema =
   let
@@ -44,24 +51,29 @@ toParser schema =
   in
     f
 
+-- | Decodes a lazy 'TL.Text' containing JSON into a Haskell value using a Fleece schema.
 fromLazyText :: FC.Schema Decoder a -> TL.Text -> Either String a
 fromLazyText decoder =
   fromStrictText decoder . TL.toStrict
 
+-- | Decodes a strict 'T.Text' containing JSON into a Haskell value using a Fleece schema.
 fromStrictText :: FC.Schema Decoder a -> T.Text -> Either String a
 fromStrictText decoder =
   -- With aeson-2.2.1.0, there is no need to encode to UTF-8,
   -- this could be 'fromValue decoder <=< eitherDecodeStrictText'
   decodeStrict decoder . Enc.encodeUtf8
 
+-- | Decodes an Aeson 'Aeson.Value' into a Haskell value using a Fleece schema.
 fromValue :: FC.Schema Decoder a -> Aeson.Value -> Either String a
 fromValue =
   AesonTypes.parseEither . toParser
 
+-- | Decodes a lazy 'LBS.ByteString' of JSON into a Haskell value using a Fleece schema.
 decode :: FC.Schema Decoder a -> LBS.ByteString -> Either String a
 decode decoder =
   fromValue decoder <=< Aeson.eitherDecode
 
+-- | Decodes a strict 'BS.ByteString' of JSON into a Haskell value using a Fleece schema.
 decodeStrict :: FC.Schema Decoder a -> BS.ByteString -> Either String a
 decodeStrict decoder =
   fromValue decoder <=< Aeson.eitherDecodeStrict

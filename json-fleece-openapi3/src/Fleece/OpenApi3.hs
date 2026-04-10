@@ -4,6 +4,7 @@
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
+-- | Generates Fleece-compatible Haskell code from OpenAPI 3 schema specifications.
 module Fleece.OpenApi3
   ( generateOpenApiFleeceCode
   ) where
@@ -38,6 +39,10 @@ import qualified Fleece.OpenApi3.Traversal as OAT
 
 type CGM = ReaderT OA.OpenApi CGU.CodeGen
 
+{- | Generates Haskell source code modules from an OpenAPI 3 specification.
+Processes the OpenAPI schema by inlining @allOf@ references, then generates
+types, operations, and schema definitions as Haskell source files.
+-}
 generateOpenApiFleeceCode ::
   OA.OpenApi ->
   CGU.CodeGen CGU.Modules

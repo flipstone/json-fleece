@@ -6,6 +6,10 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 
+{- | A high-performance Fleece decoder implementation using the hermes-json
+library (which wraps simdjson). Provides fast JSON decoding using Fleece
+schemas.
+-}
 module Fleece.Hermes
   ( Decoder (Decoder, toDecoder)
   , decode
@@ -25,9 +29,18 @@ import qualified Shrubbery
 
 import qualified Fleece.Core as FC
 
+{- | A JSON decoder that interprets Fleece schemas as hermes decoders for
+high-performance parsing.
+-}
 newtype Decoder a
-  = Decoder {toDecoder :: H.Decoder a}
+  = Decoder
+  { toDecoder :: H.Decoder a
+  -- ^ Extracts the hermes 'H.Decoder' from this Fleece 'Decoder'.
+  }
 
+{- | Decodes a strict 'BS.ByteString' of JSON into a Haskell value using a
+Fleece schema and the hermes-json parser.
+-}
 decode :: FC.Schema Decoder a -> BS.ByteString -> Either String a
 decode decoder input =
   first (T.unpack . H.formatException) $

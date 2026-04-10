@@ -1,5 +1,9 @@
 {-# OPTIONS_GHC -Wno-missing-import-lists #-}
 
+{- | Fleece interpreter for generating Markdown documentation from JSON schemas.
+Re-exports the 'Markdown' type, 'renderMarkdown', and the schema
+documentation types.
+-}
 module Fleece.Markdown
   ( module Export
   ) where

@@ -1,5 +1,9 @@
 {-# LANGUAGE TypeFamilies #-}
 
+{- | Integration between Fleece\/Aeson and the Beeline HTTP client library.
+Provides content type instances for encoding and decoding JSON
+request\/response bodies.
+-}
 module Fleece.Aeson.Beeline
   ( JSON (JSON)
   , JSONDecodingError (..)
@@ -15,15 +19,19 @@ import qualified Network.HTTP.Client as HTTP
 import qualified Fleece.Aeson as FA
 import qualified Fleece.Core as FC
 
-{-
-  A content type tag for dealing with JSON text
+{- | A content type tag for JSON. Used with Beeline's content type
+encoding\/decoding infrastructure to handle @application\/json@ request and
+response bodies.
 -}
 data JSON
   = JSON
 
+-- | An error that occurs when decoding a JSON response body fails.
 data JSONDecodingError = JSONDecodingError
   { jsonDecodingErrorBytes :: BS.ByteString
+  -- ^ The raw bytes that failed to decode.
   , jsonDecodingErrorMessage :: String
+  -- ^ The error message describing the decoding failure.
   }
   deriving (Show)
 

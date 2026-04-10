@@ -4,6 +4,9 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 
+{- | Convenience schemas built from the primitives in "Fleece.Core.Class" for
+common Haskell types.
+-}
 module Fleece.Core.Schemas
   ( optionalNullable
   , object
@@ -98,6 +101,9 @@ import Fleece.Core.Name
   , unqualifiedName
   )
 
+{- | Creates a union schema for @'Either' a b@ with a name derived from the
+member schemas.
+-}
 eitherOf ::
   forall t a b.
   ( Fleece t
@@ -118,6 +124,7 @@ eitherOf leftSchema rightSchema =
   in
     eitherOfNamed name leftSchema rightSchema
 
+-- | Like 'eitherOf', but with an explicit 'Name'.
 eitherOfNamed ::
   forall t a b.
   ( Fleece t
@@ -155,6 +162,9 @@ eitherOfNamed name leftSchema rightSchema =
       fromUnion
       unionSchema
 
+{- | Creates an anonymous union schema with a name derived automatically from
+the types.
+-}
 union ::
   (Typeable types, Fleece t, KnownNat (Length types)) =>
   UnionMembers t types types ->
@@ -169,6 +179,7 @@ union members =
   in
     schema
 
+-- | Creates a union member schema, inferring the branch index automatically.
 unionMember ::
   ( Fleece t
   , KnownNat branchIndex
@@ -179,6 +190,9 @@ unionMember ::
 unionMember =
   unionMemberWithIndex firstIndexOfType
 
+{- | Creates a tagged union schema with a name derived automatically from the
+tag types.
+-}
 taggedUnion ::
   forall (tags :: [Tag]) t.
   (Typeable tags, Fleece t, KnownNat (Length (TaggedTypes tags))) =>
@@ -195,6 +209,9 @@ taggedUnion tagProperty members =
   in
     schema
 
+{- | Creates a tagged union member schema, inferring the tag and index
+automatically.
+-}
 taggedUnionMember ::
   forall (tag :: Symbol) (tags :: [Tag]) t a n.
   ( KnownSymbol tag
@@ -213,6 +230,9 @@ taggedUnionMember =
   in
     taggedUnionMemberWithTag tagProxy
 
+{- | Creates a JSON object schema with a name derived automatically from the
+type.
+-}
 object ::
   (Fleece t, Typeable a) =>
   Object t a a ->
@@ -227,6 +247,9 @@ object o =
   in
     schema
 
+{- | Creates a bounded enum schema with a name derived automatically from the
+type.
+-}
 boundedEnum ::
   (Fleece t, Typeable a, Enum a, Bounded a) =>
   (a -> T.Text) ->
@@ -241,6 +264,9 @@ boundedEnum toText =
   in
     schema
 
+{- | Creates a validation schema with a name derived automatically from the
+type.
+-}
 validate ::
   (Fleece t, Typeable a) =>
   (a -> b) ->
@@ -257,6 +283,9 @@ validate uncheck check schemaB =
   in
     schemaA
 
+{- | Creates a schema for a type that is 'Coercible' to\/from another type's
+schema. Name derived automatically.
+-}
 coerceSchema ::
   (Fleece t, Typeable a, Coercible a b) =>
   Schema t b ->
@@ -271,6 +300,7 @@ coerceSchema schemaB =
   in
     schemaA
 
+-- | Like 'coerceSchema', but with an explicit 'Name'.
 coerceSchemaNamed ::
   (Fleece t, Coercible a b) =>
   Name ->
@@ -279,6 +309,7 @@ coerceSchemaNamed ::
 coerceSchemaNamed name schemaB =
   transformNamed name coerce coerce schemaB
 
+-- | Like 'coerceSchema', but inherits the name of the base schema.
 coerceSchemaAnonymous ::
   (Fleece t, Coercible a b) =>
   Schema t b ->
@@ -286,10 +317,16 @@ coerceSchemaAnonymous ::
 coerceSchemaAnonymous schemaB =
   transformAnonymous coerce coerce schemaB
 
+-- | Controls how 'Nothing' values are encoded for optional nullable fields.
 data NothingEncoding
-  = EmitNull
-  | OmitKey
+  = -- | Encode 'Nothing' as a JSON null value in the output.
+    EmitNull
+  | -- | Omit the key entirely from the JSON output when the value is 'Nothing'.
+    OmitKey
 
+{- | Creates a field that is both optional and nullable, collapsing the nested
+'Maybe'\/'Either Null' into a simple 'Maybe'.
+-}
 optionalNullable ::
   Fleece t =>
   NothingEncoding ->
@@ -313,6 +350,9 @@ optionalNullable encoding name accessor schema =
     fmap collapseNull $
       optional name nullableAccessor (nullable schema)
 
+{- | Creates a schema for a list by converting to\/from a 'V.Vector' array
+schema.
+-}
 list :: Fleece t => Schema t a -> Schema t [a]
 list itemSchema =
   transformAnonymous
@@ -320,12 +360,18 @@ list itemSchema =
     V.toList
     (array itemSchema)
 
+{- | Creates a schema for a @'Map.Map' 'T.Text' a@ as a JSON object with
+additional fields.
+-}
 map :: (Fleece t, Typeable a) => Schema t a -> Schema t (Map.Map T.Text a)
 map innerSchema =
   object $
     constructor id
       #* additionalFields id innerSchema
 
+{- | Creates a schema for a 'NEL.NonEmpty' list, validating that the array is
+non-empty.
+-}
 nonEmpty :: Fleece t => Schema t a -> Schema t (NEL.NonEmpty a)
 nonEmpty itemSchema =
   let
@@ -340,10 +386,18 @@ nonEmpty itemSchema =
         validateNonEmpty
         (list itemSchema)
 
+{- | Controls how duplicate values are handled when decoding a set from a JSON
+array.
+-}
 data SetDuplicateHandling
-  = AllowInputDuplicates
-  | RejectInputDuplicates
+  = -- | Silently discard duplicate values when decoding.
+    AllowInputDuplicates
+  | -- | Fail decoding if duplicate values are found in the input.
+    RejectInputDuplicates
 
+{- | Creates a schema for a 'Set.Set' from an array, with configurable
+duplicate handling.
+-}
 set :: (Ord a, Fleece t) => SetDuplicateHandling -> Schema t a -> Schema t (Set.Set a)
 set handling itemSchema =
   case handling of
@@ -367,6 +421,9 @@ set handling itemSchema =
           validateNoDuplicates
           (array itemSchema)
 
+{- | Creates a schema for 'NET.NonEmptyText', validating that the text is
+non-empty.
+-}
 nonEmptyText :: Fleece t => Schema t NET.NonEmptyText
 nonEmptyText =
   let
@@ -381,6 +438,7 @@ nonEmptyText =
         validateNonEmptyText
         text
 
+-- | A schema for 'Integer' values, as unbounded integral JSON numbers.
 integer :: Fleece t => Schema t Integer
 integer =
   unboundedIntegralNumber
@@ -410,9 +468,11 @@ fixedFromScientific sci =
             <> show (floor (logBase 10 (fromInteger fixedResolution) :: Double) :: Integer)
             <> " decimal places."
 
+-- | Creates a schema for 'String' values by converting to\/from 'T.Text'.
 string :: Fleece t => Schema t String
 string = transformAnonymous T.pack T.unpack text
 
+-- | A schema for 'Time.UTCTime' in ISO 8601 date-time format.
 utcTime :: Fleece t => Schema t Time.UTCTime
 utcTime =
   iso8601Formatted $
@@ -422,9 +482,11 @@ utcTime =
       , iso8601FormatParser = AttoTime.utcTime
       }
 
+-- | A schema for 'Time.UTCTime' with a custom time format string.
 utcTimeWithFormat :: Fleece t => String -> Schema t Time.UTCTime
 utcTimeWithFormat = timeWithFormat "UTCTime"
 
+-- | A schema for 'Time.LocalTime' in ISO 8601 local date-time format.
 localTime :: Fleece t => Schema t Time.LocalTime
 localTime =
   iso8601Formatted $
@@ -434,9 +496,11 @@ localTime =
       , iso8601FormatParser = AttoTime.localTime
       }
 
+-- | A schema for 'Time.LocalTime' with a custom time format string.
 localTimeWithFormat :: Fleece t => String -> Schema t Time.LocalTime
 localTimeWithFormat = timeWithFormat "LocalTime"
 
+-- | A schema for 'Time.ZonedTime' in ISO 8601 date-time format.
 zonedTime :: Fleece t => Schema t Time.ZonedTime
 zonedTime =
   iso8601Formatted $
@@ -446,9 +510,11 @@ zonedTime =
       , iso8601FormatParser = AttoTime.zonedTime
       }
 
+-- | A schema for 'Time.ZonedTime' with a custom time format string.
 zonedTimeWithFormat :: Fleece t => String -> Schema t Time.ZonedTime
 zonedTimeWithFormat = timeWithFormat "ZonedTime"
 
+-- | A schema for 'Time.Day' in ISO 8601 date format.
 day :: Fleece t => Schema t Time.Day
 day =
   iso8601Formatted $
@@ -458,9 +524,13 @@ day =
       , iso8601FormatParser = AttoTime.day
       }
 
+-- | A schema for 'Time.Day' with a custom time format string.
 dayWithFormat :: Fleece t => String -> Schema t Time.Day
 dayWithFormat = timeWithFormat "Day"
 
+{- | Creates a time schema with a custom format string using
+'Time.formatTime'\/'Time.parseTimeM'.
+-}
 timeWithFormat :: (Time.FormatTime time, Time.ParseTime time) => Fleece t => String -> String -> Schema t time
 timeWithFormat typeName formatString =
   let

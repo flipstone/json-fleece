@@ -5,6 +5,11 @@
 {-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -Wno-missing-import-lists #-}
 
+{- | Core types and the 'Fleece' typeclass for building JSON schema
+interpreters. The 'Fleece' class defines a set of primitives and combinators
+that can be implemented to provide different interpretations of JSON schemas
+(e.g., encoding, decoding, documentation generation).
+-}
 module Fleece.Core.Class
   ( Fleece
       ( Field
@@ -128,82 +133,139 @@ import Prelude hiding (maximum, minimum, null)
 
 import Fleece.Core.Name (Name, annotateName, defaultSchemaName, nameToString, unqualifiedName)
 
+-- | A named JSON schema that pairs a 'Name' with an interpreter of type @t a@.
 data Schema t a = Schema
   { schemaName :: Name
+  -- ^ The 'Name' associated with this schema.
   , schemaInterpreter :: t a
+  {- ^ The interpreter value that implements this schema for a particular
+  Fleece instance.
+  -}
   }
 
+-- | Transforms the interpreter within a schema using a natural transformation.
 hoistSchema :: (forall x. s x -> t x) -> Schema s a -> Schema t a
 hoistSchema f schema =
   schema
     { schemaInterpreter = f (schemaInterpreter schema)
     }
 
+{- | The core typeclass for defining JSON schema interpreters. Instances of
+this class provide an interpretation for each JSON schema primitive and
+combinator. For example, an Aeson decoder instance interprets schemas as
+parsers, while a pretty printer interprets them as formatting functions.
+-}
 class Fleece t where
+  {- | Represents a JSON object schema under construction, parameterized by
+  the object type and the constructor type being built.
+  -}
   data Object t :: Type -> Type -> Type
+
+  -- | Represents a single field within a JSON object schema.
   data Field t :: Type -> Type -> Type
+
+  {- | Represents a catch-all for additional key\/value pairs in a JSON object
+  beyond the defined fields.
+  -}
   data AdditionalFields t :: Type -> Type -> Type
+
+  {- | Represents the set of member schemas being assembled for an anonymous
+  union.
+  -}
   data UnionMembers t :: [Type] -> [Type] -> Type
+
+  {- | Represents the set of member schemas being assembled for a tagged union,
+  where each member is identified by a tag value.
+  -}
   data TaggedUnionMembers t :: [Tag] -> [Tag] -> Type
 
+  {- | Hook for interpreters to handle schema descriptions. Default
+  implementation ignores the description.
+  -}
   interpretDescribe :: NET.NonEmptyText -> Schema t a -> t a
   interpretDescribe _net = schemaInterpreter
 
+  -- | Hook for interpreters to handle format annotations on a schema.
   interpretFormat :: String -> Schema t a -> t a
 
+  -- | Hook for interpreters to handle the JSON number primitive.
   interpretNumber :: Name -> t Scientific
 
+  -- | Hook for interpreters to handle the JSON text\/string primitive.
   interpretText :: Name -> t T.Text
 
+  -- | Hook for interpreters to handle the JSON boolean primitive.
   interpretBoolean :: Name -> t Bool
 
+  -- | Hook for interpreters to handle JSON array schemas.
   interpretArray :: Name -> Schema t a -> t (V.Vector a)
 
+  -- | Hook for interpreters to handle the JSON null value.
   interpretNull :: Name -> t Null
 
+  {- | Hook for interpreters to handle nullable schemas, which decode to
+  @'Either' 'Null' a@.
+  -}
   interpretNullable :: Name -> Schema t a -> t (Either Null a)
 
+  -- | Defines a required field in a JSON object schema.
   required ::
     String ->
     (object -> a) ->
     Schema t a ->
     Field t object a
 
+  {- | Defines an optional field in a JSON object schema. The field may be
+  absent from the JSON object.
+  -}
   optional ::
     String ->
     (object -> Maybe a) ->
     Schema t a ->
     Field t object (Maybe a)
 
+  -- | Maps a function over the result type of a field.
   mapField ::
     (a -> b) ->
     Field t object a ->
     Field t object b
 
+  {- | Captures all key\/value pairs in a JSON object that are not covered by
+  defined fields.
+  -}
   additionalFields ::
     (object -> Map.Map T.Text a) ->
     Schema t a ->
     AdditionalFields t object (Map.Map T.Text a)
 
+  -- | Hook for interpreters to finalize a JSON object schema with a given name.
   interpretObjectNamed ::
     Name ->
     Object t a a ->
     t a
 
+  {- | Begins constructing a JSON object schema by providing the constructor
+  function.
+  -}
   constructor ::
     constructorType ->
     Object t object constructorType
 
+  -- | Adds a field to a JSON object schema under construction.
   field ::
     Object t object (a -> b) ->
     Field t object a ->
     Object t object b
 
+  {- | Adds additional (catch-all) fields to a JSON object schema under
+  construction.
+  -}
   additional ::
     Object t object (a -> object) ->
     AdditionalFields t object a ->
     Object t object object
 
+  -- | Hook for interpreters to handle named validation schemas.
   interpretValidateNamed ::
     Name ->
     (a -> b) ->
@@ -211,34 +273,42 @@ class Fleece t where
     Schema t b ->
     t a
 
+  -- | Hook for interpreters to handle anonymous validation schemas.
   interpretValidateAnonymous ::
     (a -> b) ->
     (b -> Either String a) ->
     Schema t b ->
     t a
 
+  -- | Hook for interpreters to handle bounded enum schemas.
   interpretBoundedEnumNamed ::
     (Bounded a, Enum a) =>
     Name ->
     (a -> T.Text) ->
     t a
 
+  -- | Hook for interpreters to finalize an anonymous union schema.
   interpretUnionNamed ::
     KnownNat (Length types) =>
     Name ->
     UnionMembers t types types ->
     t (Union types)
 
+  {- | Hook for interpreters to create a single union member schema at a
+  specific type index.
+  -}
   unionMemberWithIndex ::
     BranchIndex a types ->
     Schema t a ->
     UnionMembers t types '[a]
 
+  -- | Hook for interpreters to combine two sets of union member schemas.
   unionCombine ::
     UnionMembers t types left ->
     UnionMembers t types right ->
     UnionMembers t types (Append left right)
 
+  -- | Hook for interpreters to finalize a tagged union schema.
   interpretTaggedUnionNamed ::
     KnownNat (Length (TaggedTypes tags)) =>
     Name ->
@@ -246,6 +316,9 @@ class Fleece t where
     TaggedUnionMembers t tags tags ->
     t (TaggedUnion tags)
 
+  {- | Hook for interpreters to create a tagged union member with a specific
+  tag.
+  -}
   taggedUnionMemberWithTag ::
     ( KnownSymbol tag
     , n ~ TagIndex tag tags
@@ -257,6 +330,7 @@ class Fleece t where
     Object t a a ->
     TaggedUnionMembers t tags '[tag @= a]
 
+  -- | Hook for interpreters to combine two sets of tagged union member schemas.
   taggedUnionCombine ::
     Append (TaggedTypes left) (TaggedTypes right)
       ~ TaggedTypes (Append left right) =>
@@ -264,66 +338,124 @@ class Fleece t where
     TaggedUnionMembers t tags right ->
     TaggedUnionMembers t tags (Append left right)
 
+  {- | Hook for interpreters to handle schemas for values encoded as JSON
+  strings within JSON.
+  -}
   interpretJsonString ::
     Schema t a ->
     t a
 
+  {- | Hook for interpreters to handle minimum text length annotations. Default
+  implementation ignores the annotation.
+  -}
   interpretMinLength :: Integer -> Schema t a -> t a
   interpretMinLength _ = schemaInterpreter
 
+  {- | Hook for interpreters to handle maximum text length annotations. Default
+  implementation ignores the annotation.
+  -}
   interpretMaxLength :: Integer -> Schema t a -> t a
   interpretMaxLength _ = schemaInterpreter
 
+  {- | Hook for interpreters to handle minimum item count annotations. Default
+  implementation ignores the annotation.
+  -}
   interpretMinItems :: Integer -> Schema t a -> t a
   interpretMinItems _ = schemaInterpreter
 
+  {- | Hook for interpreters to handle maximum item count annotations. Default
+  implementation ignores the annotation.
+  -}
   interpretMaxItems :: Integer -> Schema t a -> t a
   interpretMaxItems _ = schemaInterpreter
 
+  {- | Hook for interpreters to handle minimum numeric value annotations.
+  Default implementation ignores the annotation.
+  -}
   interpretMinimum :: Integer -> Schema t a -> t a
   interpretMinimum _ = schemaInterpreter
 
+  {- | Hook for interpreters to handle maximum numeric value annotations.
+  Default implementation ignores the annotation.
+  -}
   interpretMaximum :: Integer -> Schema t a -> t a
   interpretMaximum _ = schemaInterpreter
 
-  -- Members that have default implementations, but can been overridden by
-  -- specific implementations
+  {- | Hook for interpreters to handle 'Int' values. Can be overridden for
+  optimized implementations.
+  -}
   interpretInt :: Name -> t Int
   interpretInt _ = schemaInterpreter boundedIntegralNumberAnonymous
 
+  {- | Hook for interpreters to handle 'I.Int8' values. Can be overridden for
+  optimized implementations.
+  -}
   interpretInt8 :: Name -> t I.Int8
   interpretInt8 _ = schemaInterpreter $ format "int8" boundedIntegralNumberAnonymous
 
+  {- | Hook for interpreters to handle 'I.Int16' values. Can be overridden for
+  optimized implementations.
+  -}
   interpretInt16 :: Name -> t I.Int16
   interpretInt16 _ = schemaInterpreter $ format "int16" boundedIntegralNumberAnonymous
 
+  {- | Hook for interpreters to handle 'I.Int32' values. Can be overridden for
+  optimized implementations.
+  -}
   interpretInt32 :: Name -> t I.Int32
   interpretInt32 _ = schemaInterpreter $ format "int32" boundedIntegralNumberAnonymous
 
+  {- | Hook for interpreters to handle 'I.Int64' values. Can be overridden for
+  optimized implementations.
+  -}
   interpretInt64 :: Name -> t I.Int64
   interpretInt64 _ = schemaInterpreter $ format "int64" boundedIntegralNumberAnonymous
 
+  {- | Hook for interpreters to handle 'Word' values. Can be overridden for
+  optimized implementations.
+  -}
   interpretWord :: Name -> t Word
   interpretWord _ = schemaInterpreter $ format "word" boundedIntegralNumberAnonymous
 
+  {- | Hook for interpreters to handle 'W.Word8' values. Can be overridden for
+  optimized implementations.
+  -}
   interpretWord8 :: Name -> t W.Word8
   interpretWord8 _ = schemaInterpreter $ format "word8" boundedIntegralNumberAnonymous
 
+  {- | Hook for interpreters to handle 'W.Word16' values. Can be overridden for
+  optimized implementations.
+  -}
   interpretWord16 :: Name -> t W.Word16
   interpretWord16 _ = schemaInterpreter $ format "word16" boundedIntegralNumberAnonymous
 
+  {- | Hook for interpreters to handle 'W.Word32' values. Can be overridden for
+  optimized implementations.
+  -}
   interpretWord32 :: Name -> t W.Word32
   interpretWord32 _ = schemaInterpreter $ format "word32" boundedIntegralNumberAnonymous
 
+  {- | Hook for interpreters to handle 'W.Word64' values. Can be overridden for
+  optimized implementations.
+  -}
   interpretWord64 :: Name -> t W.Word64
   interpretWord64 _ = schemaInterpreter $ format "word64" boundedIntegralNumberAnonymous
 
+  {- | Hook for interpreters to handle 'Double' values. Can be overridden for
+  optimized implementations.
+  -}
   interpretDouble :: Name -> t Double
   interpretDouble _ = schemaInterpreter $ format "double" realFloatAnonymous
 
+  {- | Hook for interpreters to handle 'Float' values. Can be overridden for
+  optimized implementations.
+  -}
   interpretFloat :: Name -> t Float
   interpretFloat _ = schemaInterpreter $ format "float" realFloatAnonymous
 
+{- | Attaches a text description to a schema. The description may be used by
+documentation-generating interpreters.
+-}
 describe :: Fleece t => T.Text -> Schema t a -> Schema t a
 describe desc schema =
   schema
@@ -333,6 +465,7 @@ describe desc schema =
           Nothing -> schemaInterpreter schema
     }
 
+-- | Attaches a format annotation to a schema (e.g., @"date-time"@, @"int32"@).
 format :: Fleece t => String -> Schema t a -> Schema t a
 format fmt schema =
   schema
@@ -343,6 +476,7 @@ numberName :: Name
 numberName =
   unqualifiedName "number"
 
+-- | A schema for JSON numbers, represented as 'Scientific'.
 number :: Fleece t => Schema t Scientific
 number =
   Schema
@@ -354,6 +488,7 @@ textName :: Name
 textName =
   unqualifiedName "text"
 
+-- | A schema for JSON text strings, represented as 'T.Text'.
 text :: Fleece t => Schema t T.Text
 text =
   Schema
@@ -365,6 +500,7 @@ booleanName :: Name
 booleanName =
   unqualifiedName "boolean"
 
+-- | A schema for JSON booleans.
 boolean :: Fleece t => Schema t Bool
 boolean =
   Schema
@@ -376,6 +512,7 @@ nullName :: Name
 nullName =
   unqualifiedName "null"
 
+-- | A schema for JSON null values, represented as the 'Null' type.
 null :: Fleece t => Schema t Null
 null =
   Schema
@@ -383,6 +520,9 @@ null =
     , schemaInterpreter = interpretNull nullName
     }
 
+{- | A schema for JSON arrays with a given item schema, represented as a
+'V.Vector'.
+-}
 array :: Fleece t => Schema t a -> Schema t (V.Vector a)
 array schema =
   let
@@ -394,6 +534,7 @@ array schema =
       , schemaInterpreter = interpretArray arrayName schema
       }
 
+-- | Wraps a schema to allow null values, resulting in @'Either' 'Null' a@.
 nullable :: Fleece t => Schema t a -> Schema t (Either Null a)
 nullable schema =
   let
@@ -405,6 +546,7 @@ nullable schema =
       , schemaInterpreter = interpretNullable nullableName schema
       }
 
+-- | Creates a named JSON object schema from an 'Object' definition.
 objectNamed ::
   Fleece t =>
   Name ->
@@ -416,6 +558,9 @@ objectNamed name object =
     , schemaInterpreter = interpretObjectNamed name object
     }
 
+{- | Creates a named schema that validates values of one type as values of
+another.
+-}
 validateNamed ::
   Fleece t =>
   Name ->
@@ -429,6 +574,7 @@ validateNamed name check uncheck schema =
     , schemaInterpreter = interpretValidateNamed name check uncheck schema
     }
 
+-- | Like 'validateNamed', but inherits the name of the base schema.
 validateAnonymous ::
   Fleece t =>
   (a -> b) ->
@@ -441,6 +587,9 @@ validateAnonymous check uncheck schema =
     , schemaInterpreter = interpretValidateAnonymous check uncheck schema
     }
 
+{- | Creates a named schema for a bounded enum type, using a function to
+convert each value to text.
+-}
 boundedEnumNamed ::
   (Fleece t, Bounded a, Enum a) =>
   Name ->
@@ -452,6 +601,7 @@ boundedEnumNamed name toText =
     , schemaInterpreter = interpretBoundedEnumNamed name toText
     }
 
+-- | Creates a named schema for an anonymous union of types.
 unionNamed ::
   (Fleece t, KnownNat (Length types)) =>
   Name ->
@@ -463,6 +613,9 @@ unionNamed name members =
     , schemaInterpreter = interpretUnionNamed name members
     }
 
+{- | Creates a named schema for a tagged union, where the tag is a JSON object
+field.
+-}
 taggedUnionNamed ::
   ( Fleece t
   , KnownNat (Length (TaggedTypes tags))
@@ -477,6 +630,9 @@ taggedUnionNamed name tagField members =
     , schemaInterpreter = interpretTaggedUnionNamed name tagField members
     }
 
+{- | Wraps a schema to handle values that are JSON-encoded within a JSON
+string.
+-}
 jsonString ::
   Fleece t =>
   Schema t a ->
@@ -551,6 +707,7 @@ intName :: Name
 intName =
   unqualifiedName "int"
 
+-- | A schema for 'Int' values.
 int :: Fleece t => Schema t Int
 int =
   Schema
@@ -562,6 +719,7 @@ int8Name :: Name
 int8Name =
   unqualifiedName "int8"
 
+-- | A schema for 'I.Int8' values.
 int8 :: Fleece t => Schema t I.Int8
 int8 =
   Schema
@@ -573,6 +731,7 @@ int16Name :: Name
 int16Name =
   unqualifiedName "int16"
 
+-- | A schema for 'I.Int16' values.
 int16 :: Fleece t => Schema t I.Int16
 int16 =
   Schema
@@ -584,6 +743,7 @@ int32Name :: Name
 int32Name =
   unqualifiedName "int32"
 
+-- | A schema for 'I.Int32' values.
 int32 :: Fleece t => Schema t I.Int32
 int32 =
   Schema
@@ -595,6 +755,7 @@ int64Name :: Name
 int64Name =
   unqualifiedName "int64"
 
+-- | A schema for 'I.Int64' values.
 int64 :: Fleece t => Schema t I.Int64
 int64 =
   Schema
@@ -606,6 +767,7 @@ wordName :: Name
 wordName =
   unqualifiedName "word"
 
+-- | A schema for 'Word' values.
 word :: Fleece t => Schema t Word
 word =
   Schema
@@ -617,6 +779,7 @@ word8Name :: Name
 word8Name =
   unqualifiedName "word8"
 
+-- | A schema for 'W.Word8' values.
 word8 :: Fleece t => Schema t W.Word8
 word8 =
   Schema
@@ -628,6 +791,7 @@ word16Name :: Name
 word16Name =
   unqualifiedName "word16"
 
+-- | A schema for 'W.Word16' values.
 word16 :: Fleece t => Schema t W.Word16
 word16 =
   Schema
@@ -639,6 +803,7 @@ word32Name :: Name
 word32Name =
   unqualifiedName "word32"
 
+-- | A schema for 'W.Word32' values.
 word32 :: Fleece t => Schema t W.Word32
 word32 =
   Schema
@@ -650,6 +815,7 @@ word64Name :: Name
 word64Name =
   unqualifiedName "word64"
 
+-- | A schema for 'W.Word64' values.
 word64 :: Fleece t => Schema t W.Word64
 word64 =
   Schema
@@ -661,6 +827,7 @@ doubleName :: Name
 doubleName =
   unqualifiedName "double"
 
+-- | A schema for 'Double' values.
 double :: Fleece t => Schema t Double
 double =
   Schema
@@ -672,6 +839,7 @@ floatName :: Name
 floatName =
   unqualifiedName "float"
 
+-- | A schema for 'Float' values.
 float :: Fleece t => Schema t Float
 float =
   Schema
@@ -682,6 +850,7 @@ float =
 instance Fleece t => Functor (Field t object) where
   fmap = mapField
 
+-- | Operator for adding a field to an object schema. Equivalent to 'field'.
 (#+) ::
   Fleece t =>
   Object t object (a -> b) ->
@@ -692,6 +861,9 @@ instance Fleece t => Functor (Field t object) where
 
 infixl 9 #+
 
+{- | Operator for adding additional fields to an object schema. Equivalent to
+'additional'.
+-}
 (#*) ::
   Fleece t =>
   Object t object (a -> object) ->
@@ -702,6 +874,7 @@ infixl 9 #+
 
 infixl 9 #*
 
+-- | Operator for combining union member schemas. Equivalent to 'unionCombine'.
 (#|) ::
   Fleece t =>
   UnionMembers t types left ->
@@ -710,6 +883,9 @@ infixl 9 #*
 (#|) =
   unionCombine
 
+{- | Operator for combining tagged union member schemas. Equivalent to
+'taggedUnionCombine'.
+-}
 (#@) ::
   ( Fleece t
   , Append (TaggedTypes left) (TaggedTypes right) ~ TaggedTypes (Append left right)
@@ -722,6 +898,7 @@ infixl 9 #*
 
 infixl 9 #|
 
+-- | A type representing JSON null.
 data Null
   = Null
   deriving (Eq, Show)
@@ -731,6 +908,9 @@ data Null
 -- (or for symmetry with other helpers that are used in default implementations)
 ---
 
+{- | Creates a schema for a new type by providing total conversion functions to
+and from an existing schema's type. The name is derived automatically.
+-}
 transform ::
   (Fleece t, Typeable a) =>
   (a -> b) ->
@@ -747,6 +927,7 @@ transform aToB bToA schemaB =
   in
     schemaA
 
+-- | Like 'transform', but with an explicitly provided 'Name'.
 transformNamed ::
   Fleece t =>
   Name ->
@@ -757,6 +938,7 @@ transformNamed ::
 transformNamed name aToB bToA =
   validateNamed name aToB (Right . bToA)
 
+-- | Like 'transform', but inherits the name from the underlying schema.
 transformAnonymous ::
   Fleece t =>
   (a -> b) ->
@@ -766,6 +948,9 @@ transformAnonymous ::
 transformAnonymous aToB bToA =
   validateAnonymous aToB (Right . bToA)
 
+{- | Creates a named schema for an unbounded integral number type, validating
+that JSON numbers are integral.
+-}
 unboundedIntegralNumberNamed ::
   (Fleece t, Integral n) =>
   Name ->
@@ -792,6 +977,9 @@ unboundedIntegralNumberNamed name =
       validateInteger
       number
 
+{- | Like 'unboundedIntegralNumberNamed', but inherits the name from the number
+schema.
+-}
 unboundedIntegralNumberAnonymous ::
   (Fleece t, Integral n) =>
   Schema t n
@@ -814,6 +1002,7 @@ unboundedIntegralNumberAnonymous =
       validateInteger
       number
 
+-- | Like 'unboundedIntegralNumberNamed', but derives the name automatically.
 unboundedIntegralNumber ::
   (Fleece t, Integral n, Typeable n) =>
   Schema t n
@@ -827,6 +1016,9 @@ unboundedIntegralNumber =
   in
     schema
 
+{- | Creates a named schema for a bounded integral number type, validating that
+JSON numbers are integral and within bounds.
+-}
 boundedIntegralNumberNamed ::
   (Fleece t, Integral n, Bounded n) =>
   Name ->
@@ -849,6 +1041,9 @@ boundedIntegralNumberNamed name =
       validateInteger
       number
 
+{- | Like 'boundedIntegralNumberNamed', but inherits the name from the number
+schema.
+-}
 boundedIntegralNumberAnonymous ::
   (Fleece t, Integral n, Bounded n) =>
   Schema t n
@@ -867,6 +1062,7 @@ boundedIntegralNumberAnonymous =
       validateInteger
       number
 
+-- | Like 'boundedIntegralNumberNamed', but derives the name automatically.
 boundedIntegralNumber ::
   (Fleece t, Integral n, Bounded n, Typeable n) =>
   Schema t n
@@ -880,6 +1076,9 @@ boundedIntegralNumber =
   in
     schema
 
+{- | Creates a schema for a 'RealFloat' type by converting to\/from
+'Scientific'. Name is derived automatically.
+-}
 realFloat ::
   (Fleece t, RealFloat f, Typeable f) =>
   Schema t f
@@ -893,6 +1092,7 @@ realFloat =
   in
     schema
 
+-- | Like 'realFloat', but with an explicitly provided 'Name'.
 realFloatNamed ::
   (Fleece t, RealFloat f) =>
   Name ->
@@ -904,6 +1104,7 @@ realFloatNamed name =
     toRealFloat
     number
 
+-- | Like 'realFloat', but inherits the name from the number schema.
 realFloatAnonymous ::
   (Fleece t, RealFloat f) =>
   Schema t f

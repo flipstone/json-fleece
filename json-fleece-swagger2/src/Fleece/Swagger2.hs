@@ -2,6 +2,9 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE OverloadedStrings #-}
 
+{- | Generates Fleece-compatible Haskell code from Swagger 2 (OpenAPI 2) schema
+specifications by converting to OpenAPI 3 and delegating to "Fleece.OpenApi3".
+-}
 module Fleece.Swagger2
   ( generateSwaggerFleeceCode
   ) where
@@ -17,6 +20,10 @@ import qualified Data.Text as T
 import qualified Fleece.CodeGenUtil as CGU
 import qualified Fleece.OpenApi3 as FOA3
 
+{- | Generates Haskell source code modules from a Swagger 2 specification.
+Converts the Swagger schema to OpenAPI 3 format and then delegates to
+'generateOpenApiFleeceCode'.
+-}
 generateSwaggerFleeceCode ::
   SW.Swagger ->
   CGU.CodeGen CGU.Modules

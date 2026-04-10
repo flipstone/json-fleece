@@ -1,5 +1,8 @@
 {-# OPTIONS_GHC -Wno-missing-import-lists #-}
 
+{- | Aeson-based Fleece implementation. Re-exports the 'Decoder' and 'Encoder'
+types and their associated functions.
+-}
 module Fleece.Aeson
   ( module Export
   ) where

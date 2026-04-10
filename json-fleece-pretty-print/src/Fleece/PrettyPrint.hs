@@ -1,6 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 
+{- | A Fleece interpreter that pretty-prints Haskell values according to their
+Fleece schema structure.
+-}
 module Fleece.PrettyPrint
   ( PrettyPrinter
   , prettyPrintLazyText
@@ -22,6 +25,7 @@ import qualified Shrubbery
 
 import qualified Fleece.Core as FC
 
+-- | A Fleece interpreter that renders Haskell values as human-readable, indented text.
 newtype PrettyPrinter a
   = PrettyPrinter (a -> Pretty)
 
@@ -70,6 +74,7 @@ inlineToBuilder inline =
     Append left right ->
       inlineToBuilder left <> inlineToBuilder right
 
+-- | Pretty-prints a value as lazy 'LT.Text' using a Fleece schema.
 prettyPrintLazyText :: FC.Schema PrettyPrinter a -> a -> LT.Text
 prettyPrintLazyText schema =
   let
@@ -77,10 +82,12 @@ prettyPrintLazyText schema =
   in
     LTB.toLazyText . prettyToBuilder "" . toPretty
 
+-- | Pretty-prints a value as strict 'T.Text' using a Fleece schema.
 prettyPrintText :: FC.Schema PrettyPrinter a -> a -> T.Text
 prettyPrintText printer =
   LT.toStrict . prettyPrintLazyText printer
 
+-- | Pretty-prints a value as a 'String' using a Fleece schema.
 prettyPrintString :: FC.Schema PrettyPrinter a -> a -> String
 prettyPrintString printer =
   T.unpack . prettyPrintText printer
