@@ -83,7 +83,7 @@ import Fleece.Core.Class
   , text
   , transformAnonymous
   , transformNamed
-  , unboundedIntegralNumber
+  , unboundedIntegralNumberAnonymous
   , unionMemberWithIndex
   , unionNamed
   , validateAnonymous
@@ -383,7 +383,7 @@ nonEmptyText =
 
 integer :: Fleece t => Schema t Integer
 integer =
-  unboundedIntegralNumber
+  unboundedIntegralNumberAnonymous
 
 -- | Validates a 'number', failing if the precision is too high for the given resolution.
 fixed ::
