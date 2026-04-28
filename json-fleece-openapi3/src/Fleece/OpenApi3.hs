@@ -878,7 +878,11 @@ schemaTypeToParamInfo schemaMap paramName paramLocation operationKey schema =
     Just OA.OpenApiString ->
       case OA._schemaEnum schema of
         Nothing ->
-          pure (primitiveParamInfo CGU.ParamTypeString)
+          pure . primitiveParamInfo $
+            case (OA._schemaMinLength schema, OA._schemaMaxLength schema) of
+              (Just minLen, Just maxLen) -> CGU.ParamTypeBoundedText minLen maxLen
+              (Just 1, Nothing) -> CGU.ParamTypeNonEmptyText
+              _ -> CGU.ParamTypeString
         Just enumValues -> do
           let
             rejectNull mbText =

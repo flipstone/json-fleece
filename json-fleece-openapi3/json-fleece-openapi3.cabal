@@ -1870,6 +1870,10 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/AnyOf/Option3/Description.hs
     examples/test-cases/TestCases/Operations/AnyOf/Option3/Id.hs
     examples/test-cases/TestCases/Operations/AnyOf/Option3/Name.hs
+    examples/test-cases/TestCases/Operations/BoundedTextPathParam.hs
+    examples/test-cases/TestCases/Operations/BoundedTextPathParam/BoundedParam.hs
+    examples/test-cases/TestCases/Operations/BoundedTextPathParamRef.hs
+    examples/test-cases/TestCases/Operations/BoundedTextPathParamRef/BoundedParam.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param1.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param2.hs
@@ -1907,6 +1911,10 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/InlineAllOf/XSampleAllOfParam.hs
     examples/test-cases/TestCases/Operations/InlineOneOf.hs
     examples/test-cases/TestCases/Operations/InlineOneOf/Response200Body.hs
+    examples/test-cases/TestCases/Operations/NonEmptyTextPathParam.hs
+    examples/test-cases/TestCases/Operations/NonEmptyTextPathParam/NonEmptyParam.hs
+    examples/test-cases/TestCases/Operations/NonEmptyTextPathParamRef.hs
+    examples/test-cases/TestCases/Operations/NonEmptyTextPathParamRef/NonEmptyParam.hs
     examples/test-cases/TestCases/Operations/Num2GetAResultNamedNumberSomething.hs
     examples/test-cases/TestCases/Operations/OneOfWithInlineEnum/Option1.hs
     examples/test-cases/TestCases/Operations/OneOfWithInlineEnum/Option2.hs

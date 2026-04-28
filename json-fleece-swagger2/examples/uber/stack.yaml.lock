@@ -7,42 +7,42 @@ packages:
 - completed:
     name: beeline-params
     pantry-tree:
-      sha256: 3d0f582f02c160404ea013af8cc1ecd3f7ba6687afba3a6c19fc9e27b092d011
-      size: 1069
-    sha256: ed2f434a2fbd42ed7fbdfa0cde8ab6db208cbc13c8ae4e4c9de492732c3a8e3a
-    size: 35186
+      sha256: d0db931040ec4773c3af456cad1ef600ed35438b23d3a1c7d15c2ad57b194558
+      size: 1210
+    sha256: 6394c8c25087dd0ce952622ac0bcc5882dc916da28e5af8434181972d4227b98
+    size: 35878
     subdir: beeline-params
-    url: https://github.com/flipstone/beeline/archive/135da92b069d5c25d58539fd9b1ade538a4fbb67.tar.gz
-    version: 0.1.0.1
+    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
+    version: 0.2.0.0
   original:
     subdir: beeline-params
-    url: https://github.com/flipstone/beeline/archive/135da92b069d5c25d58539fd9b1ade538a4fbb67.tar.gz
+    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
 - completed:
     name: beeline-routing
     pantry-tree:
-      sha256: 2832ddde0518d133fe10496c3e70ee4c91ea2d6c7fafa19f11c9867c9d5bf036
+      sha256: ac9788a17532bdb3b7e77c7324e8f78f4f65ff12fe8828dfee16960aea2ba246
       size: 1119
-    sha256: ed2f434a2fbd42ed7fbdfa0cde8ab6db208cbc13c8ae4e4c9de492732c3a8e3a
-    size: 35186
+    sha256: 6394c8c25087dd0ce952622ac0bcc5882dc916da28e5af8434181972d4227b98
+    size: 35878
     subdir: beeline-routing
-    url: https://github.com/flipstone/beeline/archive/135da92b069d5c25d58539fd9b1ade538a4fbb67.tar.gz
+    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
     version: 0.3.0.2
   original:
     subdir: beeline-routing
-    url: https://github.com/flipstone/beeline/archive/135da92b069d5c25d58539fd9b1ade538a4fbb67.tar.gz
+    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
 - completed:
     name: beeline-http-client
     pantry-tree:
-      sha256: 4bcdc6705d314e3168b3383aec5fe0a083d7129eb03b1f718f20449f757496fe
+      sha256: aaa852ff2f2d464e75e2d09bf7c72b89373952a853b263d1708a87f63a7cf17c
       size: 725
-    sha256: ed2f434a2fbd42ed7fbdfa0cde8ab6db208cbc13c8ae4e4c9de492732c3a8e3a
-    size: 35186
+    sha256: 6394c8c25087dd0ce952622ac0bcc5882dc916da28e5af8434181972d4227b98
+    size: 35878
     subdir: beeline-http-client
-    url: https://github.com/flipstone/beeline/archive/135da92b069d5c25d58539fd9b1ade538a4fbb67.tar.gz
-    version: 0.9.0.2
+    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
+    version: 0.9.0.1
   original:
     subdir: beeline-http-client
-    url: https://github.com/flipstone/beeline/archive/135da92b069d5c25d58539fd9b1ade538a4fbb67.tar.gz
+    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
 - completed:
     name: bounded-text
     pantry-tree:

@@ -1868,7 +1868,7 @@ library
   build-depends:
       base >=4.7 && <5
     , beeline-http-client ==0.9.*
-    , beeline-params ==0.1.*
+    , beeline-params ==0.2.*
     , beeline-routing ==0.3.*
     , json-fleece-aeson-beeline ==0.3.*
     , json-fleece-core ==0.11.*

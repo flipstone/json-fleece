@@ -325,6 +325,8 @@ data OperationParamArity
 
 data OperationParamType
   = ParamTypeString
+  | ParamTypeNonEmptyText
+  | ParamTypeBoundedText Integer Integer
   | ParamTypeBoolean
   | ParamTypeEnum [T.Text]
   | ParamTypeInteger
@@ -1210,19 +1212,20 @@ generateOperationParamCode codeGenOperationParam = do
           codeGenOperationParamTypeOptions codeGenOperationParam
 
         pragmas =
-          HC.lines
+          HC.lines $
             [ "{-# LANGUAGE NoImplicitPrelude #-}"
             , "{-# LANGUAGE OverloadedStrings #-}"
             ]
+              <> paramTypeRequiredPragmas paramType
 
         typeDeclaration =
           if HC.typeNameModule typeName == moduleName
             then case paramTypeToHaskellType paramType of
-              Right haskellType ->
+              Right haskellTypeExpr ->
                 Just $
                   HC.newtype_
                     typeName
-                    (HC.fromCode (HC.typeNameToCodeDefaultQualification haskellType))
+                    haskellTypeExpr
                     (deriveClassNames typeOptions)
               Left enumValues ->
                 let
@@ -1267,22 +1270,38 @@ generateOperationParamCode codeGenOperationParam = do
 
       pure $ Just (filePath, code)
 
-paramTypeToHaskellType :: OperationParamType -> Either [T.Text] HC.TypeName
+paramTypeToHaskellType :: OperationParamType -> Either [T.Text] HC.TypeExpression
 paramTypeToHaskellType paramType =
   case paramType of
-    ParamTypeString -> Right textType
-    ParamTypeBoolean -> Right boolType
+    ParamTypeString -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification textType))
+    ParamTypeNonEmptyText -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification nonEmptyTextType))
+    ParamTypeBoundedText minLen maxLen ->
+      Right $
+        "("
+          <> HC.fromCode (HC.typeNameToCodeDefaultQualification boundedTextType)
+          <> " "
+          <> HC.fromCode (HC.fromText (T.pack (show minLen)))
+          <> " "
+          <> HC.fromCode (HC.fromText (T.pack (show maxLen)))
+          <> ")"
+    ParamTypeBoolean -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification boolType))
     ParamTypeEnum enumValues -> Left enumValues
-    ParamTypeInteger -> Right integerType
-    ParamTypeInt -> Right intType
-    ParamTypeInt8 -> Right int8Type
-    ParamTypeInt16 -> Right int16Type
-    ParamTypeInt32 -> Right int32Type
-    ParamTypeInt64 -> Right int64Type
-    ParamTypeScientific -> Right scientificType
-    ParamTypeDouble -> Right doubleType
-    ParamTypeFloat -> Right floatType
-    ParamTypeHaskell haskellType -> Right haskellType
+    ParamTypeInteger -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification integerType))
+    ParamTypeInt -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification intType))
+    ParamTypeInt8 -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification int8Type))
+    ParamTypeInt16 -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification int16Type))
+    ParamTypeInt32 -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification int32Type))
+    ParamTypeInt64 -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification int64Type))
+    ParamTypeScientific -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification scientificType))
+    ParamTypeDouble -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification doubleType))
+    ParamTypeFloat -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification floatType))
+    ParamTypeHaskell haskellType -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification haskellType))
+
+paramTypeRequiredPragmas :: OperationParamType -> [HC.HaskellCode]
+paramTypeRequiredPragmas paramType =
+  case paramType of
+    ParamTypeBoundedText _ _ -> ["{-# LANGUAGE DataKinds #-}"]
+    _ -> []
 
 paramTypeToBeelineType ::
   (HC.FromCode c, Semigroup c) =>
@@ -1293,6 +1312,8 @@ paramTypeToBeelineType ::
 paramTypeToBeelineType moduleName typeName paramType =
   case paramType of
     ParamTypeString -> Just beelineTextParam
+    ParamTypeNonEmptyText -> Just beelineNonEmptyTextParam
+    ParamTypeBoundedText _minLen _maxLen -> Just beelineBoundedTextParam
     ParamTypeBoolean -> Just beelineBooleanParam
     ParamTypeEnum _ ->
       let
@@ -1338,6 +1359,10 @@ operationParamHeader param =
       case codeGenOperationParamType param of
         ParamTypeString ->
           Nothing
+        ParamTypeNonEmptyText ->
+          Nothing
+        ParamTypeBoundedText _ _ ->
+          Nothing
         ParamTypeBoolean ->
           Nothing
         ParamTypeEnum _vals ->
@@ -1371,6 +1396,10 @@ operationParamHeader param =
     typeFromTextExport =
       case codeGenOperationParamType param of
         ParamTypeString ->
+          Nothing
+        ParamTypeNonEmptyText ->
+          Nothing
+        ParamTypeBoundedText _ _ ->
           Nothing
         ParamTypeBoolean ->
           Nothing
@@ -2427,6 +2456,14 @@ beelineCoerceParam =
 beelineTextParam :: HC.FromCode c => c
 beelineTextParam =
   beelineParamsVar "textParam"
+
+beelineNonEmptyTextParam :: HC.FromCode c => c
+beelineNonEmptyTextParam =
+  beelineParamsVar "nonEmptyTextParam"
+
+beelineBoundedTextParam :: HC.FromCode c => c
+beelineBoundedTextParam =
+  beelineParamsVar "boundedTextParam"
 
 beelineBooleanParam :: HC.FromCode c => c
 beelineBooleanParam =
