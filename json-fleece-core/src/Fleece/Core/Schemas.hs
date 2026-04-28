@@ -1,6 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 
@@ -8,6 +9,8 @@ module Fleece.Core.Schemas
   ( optionalNullable
   , object
   , boundedEnum
+  , boundedText
+  , nonEmptySet
   , validate
   , list
   , Fleece.Core.Schemas.map
@@ -41,6 +44,7 @@ module Fleece.Core.Schemas
 
 import qualified Data.Attoparsec.Text as AttoText
 import qualified Data.Attoparsec.Time as AttoTime
+import qualified Data.BoundedText as BT
 import Data.Coerce (Coercible, coerce)
 import Data.Fixed (Fixed, HasResolution (resolution))
 import qualified Data.List.NonEmpty as NEL
@@ -49,6 +53,7 @@ import qualified Data.NonEmptyText as NET
 import Data.Proxy (Proxy (Proxy))
 import Data.Scientific (Scientific, base10Exponent, normalize)
 import qualified Data.Set as Set
+import qualified Data.Set.NonEmpty as NESet
 import qualified Data.Text as T
 import qualified Data.Time as Time
 import qualified Data.Time.Format.ISO8601 as ISO8601
@@ -71,6 +76,7 @@ import Fleece.Core.Class
   , boundedEnumNamed
   , constructor
   , format
+  , maxLength
   , minItems
   , minLength
   , nullable
@@ -521,3 +527,39 @@ iso8601Formatted iso8601Format =
         text
   in
     format formatLogical baseSchema
+
+nonEmptySet :: (Ord a, Fleece t) => SetDuplicateHandling -> Schema t a -> Schema t (NESet.NESet a)
+nonEmptySet duplicateHandling itemSchema =
+  let
+    validateNonEmpty items =
+      case NESet.nonEmptySet items of
+        Just neSet -> Right neSet
+        Nothing -> Left "Expected non-empty set, but input was empty"
+  in
+    minItems 1 $
+      validateAnonymous
+        NESet.toSet
+        validateNonEmpty
+        (set duplicateHandling itemSchema)
+
+boundedText ::
+  forall minLen maxLen t.
+  (KnownNat minLen, KnownNat maxLen, Fleece t) =>
+  Schema t (BT.BoundedText minLen maxLen)
+boundedText =
+  let
+    minVal = toInteger $ BT.boundedTextMinLength @(BT.BoundedText minLen maxLen)
+    maxVal = toInteger $ BT.boundedTextMaxLength @(BT.BoundedText minLen maxLen)
+
+    validateBounded :: T.Text -> Either String (BT.BoundedText minLen maxLen)
+    validateBounded value =
+      case BT.boundedTextFromText value of
+        Right bt -> Right bt
+        Left err -> Left $ BT.describeBoundedTextError err
+  in
+    minLength minVal $
+      maxLength maxVal $
+        validateAnonymous
+          BT.boundedTextToText
+          validateBounded
+          text

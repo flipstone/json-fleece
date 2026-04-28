@@ -9,7 +9,6 @@ packages:
   - json-fleece-swagger2
   - json-fleece-pretty-print
   - json-fleece-hermes
-  - json-fleece-bounded-types
 
 flags:
   json-fleece-core:
@@ -40,7 +39,4 @@ flags:
     strict: true
 
   json-fleece-hermes:
-    strict: true
-
-  json-fleece-bounded-types:
     strict: true

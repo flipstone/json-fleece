@@ -526,8 +526,8 @@ boundedTextSchemaTypeInfo minLen maxLen =
           <> " "
           <> HC.fromText (T.pack (show maxLen))
           <> ")"
-    , schemaTypeSchema = fleeceBoundedTypesVar "boundedText"
-    , schemaTypeObjSchema = fleeceBoundedTypesVar "boundedText"
+    , schemaTypeSchema = fleeceCoreVar "boundedText"
+    , schemaTypeObjSchema = fleeceCoreVar "boundedText"
     , schemaTypeRequiredPragmas = ["{-# LANGUAGE DataKinds #-}"]
     }
 
@@ -2358,12 +2358,6 @@ fleeceCoreConstructorVar =
   HC.fromCode
     . HC.varNameToCodeDefaultQualification
     . HC.toConstructorVarName "Fleece.Core" (Just "FC")
-
-fleeceBoundedTypesVar :: HC.FromCode c => T.Text -> c
-fleeceBoundedTypesVar =
-  HC.fromCode
-    . HC.varNameToCodeDefaultQualification
-    . HC.toVarName "Fleece.BoundedTypes" (Just "FBT")
 
 fleeceCoreFunApp :: HC.FromCode c => T.Text -> T.Text -> c
 fleeceCoreFunApp functionName argument =

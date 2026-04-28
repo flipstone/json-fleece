@@ -109,6 +109,8 @@ module Fleece.Core
   , fixed
   , SetDuplicateHandling (AllowInputDuplicates, RejectInputDuplicates)
   , set
+  , nonEmptySet
+  , boundedText
   , string
   , utcTime
   , utcTimeWithFormat

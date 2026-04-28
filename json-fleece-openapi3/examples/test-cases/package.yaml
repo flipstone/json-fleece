@@ -18,7 +18,6 @@ dependencies:
   - scientific
   - json-fleece-core >= 0.11 && < 0.12
   - json-fleece-aeson-beeline >= 0.3 && < 0.4
-  - json-fleece-bounded-types >= 0.1 && < 0.2
   - beeline-params >= 0.1 && < 0.2
   - beeline-routing >= 0.3 && < 0.4
   - beeline-http-client >= 0.9 && < 0.10

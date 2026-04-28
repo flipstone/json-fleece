@@ -22,8 +22,10 @@ dependencies:
 - base >= 4.7 && < 5
 - attoparsec >= 0.14 && < 0.15
 - attoparsec-iso8601 >= 1.1 && < 1.2
+- bounded-text >= 0.1.1 && < 0.2
 - containers >= 0.6 &&  < 0.8
 - non-empty-text >= 0.2 && < 0.3
+- nonempty-containers >= 0.3.4 && < 0.4
 - scientific >= 0.3.7 && < 0.4
 - shrubbery >= 0.2 && < 0.3
 - text >= 1.2 && < 2.2

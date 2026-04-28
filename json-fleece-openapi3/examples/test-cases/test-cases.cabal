@@ -337,7 +337,6 @@ library
     , bounded-text
     , containers
     , json-fleece-aeson-beeline ==0.3.*
-    , json-fleece-bounded-types ==0.1.*
     , json-fleece-core ==0.11.*
     , non-empty-text
     , scientific
