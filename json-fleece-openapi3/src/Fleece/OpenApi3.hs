@@ -420,7 +420,9 @@ mkInlineStringSchema ::
   CGM SchemaTypeInfoWithDeps
 mkInlineStringSchema schemaKey schema = do
   case OA._schemaEnum schema of
-    Nothing -> pure . schemaInfoWithoutDependencies $ CGU.textSchemaTypeInfo
+    Nothing ->
+      pure . schemaInfoWithoutDependencies $
+        CGU.textLikeSchemaTypeInfo (OA._schemaMinLength schema) (OA._schemaMaxLength schema)
     Just _values -> do
       (_moduleName, typeName) <- lift $ CGU.inferTypeForInputName CGU.Operation schemaKey
       mbInlinedTypesAndSchemaTypeInfo <-
@@ -876,7 +878,11 @@ schemaTypeToParamInfo schemaMap paramName paramLocation operationKey schema =
     Just OA.OpenApiString ->
       case OA._schemaEnum schema of
         Nothing ->
-          pure (primitiveParamInfo CGU.ParamTypeString)
+          pure . primitiveParamInfo $
+            case (OA._schemaMinLength schema, OA._schemaMaxLength schema) of
+              (Just minLen, Just maxLen) -> CGU.ParamTypeBoundedText minLen maxLen
+              (Just 1, Nothing) -> CGU.ParamTypeNonEmptyText
+              _ -> CGU.ParamTypeString
         Just enumValues -> do
           let
             rejectNull mbText =
@@ -1279,7 +1285,8 @@ mkOpenApiStringFormat typeName schema = do
               CGU.UTCTimeFormat -> CGU.utcTimeFormat typeOptions
               CGU.ZonedTimeFormat -> CGU.zonedTimeFormat typeOptions
               CGU.LocalTimeFormat -> CGU.localTimeFormat typeOptions
-          _ -> CGU.textFormat typeOptions
+          _ ->
+            CGU.textLikeFormat typeOptions (OA._schemaMinLength schema) (OA._schemaMaxLength schema)
 
 enumValueToText :: T.Text -> OA.Schema -> Aeson.Value -> CGM (Maybe T.Text)
 enumValueToText name schema value =

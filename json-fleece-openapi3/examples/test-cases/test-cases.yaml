@@ -193,6 +193,57 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FieldTestCases'
+  /test-cases/non-empty-text-path-param/{non-empty-param}:
+    get:
+      operationId: NonEmptyTextPathParam
+      parameters:
+        - name: non-empty-param
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        '204':
+          description: "Successful Get"
+  /test-cases/bounded-text-path-param/{bounded-param}:
+    get:
+      operationId: BoundedTextPathParam
+      parameters:
+        - name: bounded-param
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 100
+      responses:
+        '204':
+          description: "Successful Get"
+  /test-cases/non-empty-text-path-param-ref/{non-empty-param}:
+    get:
+      operationId: NonEmptyTextPathParamRef
+      parameters:
+        - name: non-empty-param
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/NonEmptyTextType'
+      responses:
+        '204':
+          description: "Successful Get"
+  /test-cases/bounded-text-path-param-ref/{bounded-param}:
+    get:
+      operationId: BoundedTextPathParamRef
+      parameters:
+        - name: bounded-param
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/BoundedTextType'
+      responses:
+        '204':
+          description: "Successful Get"
   /test-cases/param-ref-array:
     get:
       operationId: ParamSchemaReferenceArray
@@ -1116,6 +1167,17 @@ components:
     AStringType:
       description: An explicit type that is just a string for use in other test cases
       type: string
+
+    NonEmptyTextType:
+      description: A string type that must be non-empty
+      type: string
+      minLength: 1
+
+    BoundedTextType:
+      description: A string type with bounded length
+      type: string
+      minLength: 1
+      maxLength: 100
 
     MinItemsOne:
       type: array

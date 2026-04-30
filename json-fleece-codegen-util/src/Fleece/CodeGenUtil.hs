@@ -41,6 +41,12 @@ module Fleece.CodeGenUtil
   , anyJSONSchemaTypeInfo
   , textFormat
   , textSchemaTypeInfo
+  , textLikeSchemaTypeInfo
+  , textLikeFormat
+  , nonEmptyTextFormat
+  , nonEmptyTextSchemaTypeInfo
+  , boundedTextFormat
+  , boundedTextSchemaTypeInfo
   , boolFormat
   , boolSchemaTypeInfo
   , int32Format
@@ -319,6 +325,8 @@ data OperationParamArity
 
 data OperationParamType
   = ParamTypeString
+  | ParamTypeNonEmptyText
+  | ParamTypeBoundedText Integer Integer
   | ParamTypeBoolean
   | ParamTypeEnum [T.Text]
   | ParamTypeInteger
@@ -497,6 +505,48 @@ textSchemaTypeInfo :: SchemaTypeInfo
 textSchemaTypeInfo =
   primitiveSchemaTypeInfo textType (fleeceCoreVar "text")
 
+nonEmptyTextFormat :: TypeOptions -> CodeGenDataFormat
+nonEmptyTextFormat typeOptions =
+  codeGenNewTypeSchemaTypeInfo typeOptions nonEmptyTextSchemaTypeInfo
+
+nonEmptyTextSchemaTypeInfo :: SchemaTypeInfo
+nonEmptyTextSchemaTypeInfo =
+  primitiveSchemaTypeInfo nonEmptyTextType (fleeceCoreVar "nonEmptyText")
+
+boundedTextFormat :: TypeOptions -> Integer -> Integer -> CodeGenDataFormat
+boundedTextFormat typeOptions minLen maxLen =
+  codeGenNewTypeSchemaTypeInfo typeOptions (boundedTextSchemaTypeInfo minLen maxLen)
+
+boundedTextSchemaTypeInfo :: Integer -> Integer -> SchemaTypeInfo
+boundedTextSchemaTypeInfo minLen maxLen =
+  SchemaTypeInfo
+    { schemaTypeExpr =
+        "("
+          <> HC.typeNameToCodeDefaultQualification boundedTextType
+          <> " "
+          <> HC.fromText (T.pack (show minLen))
+          <> " "
+          <> HC.fromText (T.pack (show maxLen))
+          <> ")"
+    , schemaTypeSchema = fleeceCoreVar "boundedText"
+    , schemaTypeObjSchema = fleeceCoreVar "boundedText"
+    , schemaTypeRequiredPragmas = ["{-# LANGUAGE DataKinds #-}"]
+    }
+
+textLikeSchemaTypeInfo :: Maybe Integer -> Maybe Integer -> SchemaTypeInfo
+textLikeSchemaTypeInfo mbMinLength mbMaxLength =
+  case (mbMinLength, mbMaxLength) of
+    (Just minLen, Just maxLen) ->
+      boundedTextSchemaTypeInfo minLen maxLen
+    (Just 1, Nothing) ->
+      nonEmptyTextSchemaTypeInfo
+    _ ->
+      textSchemaTypeInfo
+
+textLikeFormat :: TypeOptions -> Maybe Integer -> Maybe Integer -> CodeGenDataFormat
+textLikeFormat typeOptions mbMinLength mbMaxLength =
+  codeGenNewTypeSchemaTypeInfo typeOptions (textLikeSchemaTypeInfo mbMinLength mbMaxLength)
+
 floatFormat :: TypeOptions -> CodeGenDataFormat
 floatFormat typeOptions =
   codeGenNewTypeSchemaTypeInfo typeOptions floatSchemaTypeInfo
@@ -634,6 +684,7 @@ anyJSONSchemaTypeInfo =
     { schemaTypeExpr = HC.typeNameToCodeDefaultQualification (fleeceCoreType "AnyJSON")
     , schemaTypeSchema = fleeceCoreVar "anyJSON"
     , schemaTypeObjSchema = fleeceCoreVar "anyJSON"
+    , schemaTypeRequiredPragmas = []
     }
 
 generateFleeceCode :: CodeGenMap -> CodeGen Modules
@@ -1161,19 +1212,20 @@ generateOperationParamCode codeGenOperationParam = do
           codeGenOperationParamTypeOptions codeGenOperationParam
 
         pragmas =
-          HC.lines
+          HC.lines $
             [ "{-# LANGUAGE NoImplicitPrelude #-}"
             , "{-# LANGUAGE OverloadedStrings #-}"
             ]
+              <> paramTypeRequiredPragmas paramType
 
         typeDeclaration =
           if HC.typeNameModule typeName == moduleName
             then case paramTypeToHaskellType paramType of
-              Right haskellType ->
+              Right haskellTypeExpr ->
                 Just $
                   HC.newtype_
                     typeName
-                    (HC.fromCode (HC.typeNameToCodeDefaultQualification haskellType))
+                    haskellTypeExpr
                     (deriveClassNames typeOptions)
               Left enumValues ->
                 let
@@ -1218,22 +1270,38 @@ generateOperationParamCode codeGenOperationParam = do
 
       pure $ Just (filePath, code)
 
-paramTypeToHaskellType :: OperationParamType -> Either [T.Text] HC.TypeName
+paramTypeToHaskellType :: OperationParamType -> Either [T.Text] HC.TypeExpression
 paramTypeToHaskellType paramType =
   case paramType of
-    ParamTypeString -> Right textType
-    ParamTypeBoolean -> Right boolType
+    ParamTypeString -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification textType))
+    ParamTypeNonEmptyText -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification nonEmptyTextType))
+    ParamTypeBoundedText minLen maxLen ->
+      Right $
+        "("
+          <> HC.fromCode (HC.typeNameToCodeDefaultQualification boundedTextType)
+          <> " "
+          <> HC.fromCode (HC.fromText (T.pack (show minLen)))
+          <> " "
+          <> HC.fromCode (HC.fromText (T.pack (show maxLen)))
+          <> ")"
+    ParamTypeBoolean -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification boolType))
     ParamTypeEnum enumValues -> Left enumValues
-    ParamTypeInteger -> Right integerType
-    ParamTypeInt -> Right intType
-    ParamTypeInt8 -> Right int8Type
-    ParamTypeInt16 -> Right int16Type
-    ParamTypeInt32 -> Right int32Type
-    ParamTypeInt64 -> Right int64Type
-    ParamTypeScientific -> Right scientificType
-    ParamTypeDouble -> Right doubleType
-    ParamTypeFloat -> Right floatType
-    ParamTypeHaskell haskellType -> Right haskellType
+    ParamTypeInteger -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification integerType))
+    ParamTypeInt -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification intType))
+    ParamTypeInt8 -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification int8Type))
+    ParamTypeInt16 -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification int16Type))
+    ParamTypeInt32 -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification int32Type))
+    ParamTypeInt64 -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification int64Type))
+    ParamTypeScientific -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification scientificType))
+    ParamTypeDouble -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification doubleType))
+    ParamTypeFloat -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification floatType))
+    ParamTypeHaskell haskellType -> Right (HC.fromCode (HC.typeNameToCodeDefaultQualification haskellType))
+
+paramTypeRequiredPragmas :: OperationParamType -> [HC.HaskellCode]
+paramTypeRequiredPragmas paramType =
+  case paramType of
+    ParamTypeBoundedText _ _ -> ["{-# LANGUAGE DataKinds #-}"]
+    _ -> []
 
 paramTypeToBeelineType ::
   (HC.FromCode c, Semigroup c) =>
@@ -1244,6 +1312,8 @@ paramTypeToBeelineType ::
 paramTypeToBeelineType moduleName typeName paramType =
   case paramType of
     ParamTypeString -> Just beelineTextParam
+    ParamTypeNonEmptyText -> Just beelineNonEmptyTextParam
+    ParamTypeBoundedText _minLen _maxLen -> Just beelineBoundedTextParam
     ParamTypeBoolean -> Just beelineBooleanParam
     ParamTypeEnum _ ->
       let
@@ -1289,6 +1359,10 @@ operationParamHeader param =
       case codeGenOperationParamType param of
         ParamTypeString ->
           Nothing
+        ParamTypeNonEmptyText ->
+          Nothing
+        ParamTypeBoundedText _ _ ->
+          Nothing
         ParamTypeBoolean ->
           Nothing
         ParamTypeEnum _vals ->
@@ -1322,6 +1396,10 @@ operationParamHeader param =
     typeFromTextExport =
       case codeGenOperationParamType param of
         ParamTypeString ->
+          Nothing
+        ParamTypeNonEmptyText ->
+          Nothing
+        ParamTypeBoundedText _ _ ->
           Nothing
         ParamTypeBoolean ->
           Nothing
@@ -1399,7 +1477,8 @@ requiredPragmasForFormat ::
   [HC.HaskellCode]
 requiredPragmasForFormat format =
   case format of
-    CodeGenNewType _ _ -> []
+    CodeGenNewType _ (Left info) -> schemaTypeRequiredPragmas info
+    CodeGenNewType _ (Right _) -> []
     CodeGenEnum _ _ -> []
     CodeGenObject _ _ _ -> []
     CodeGenArray _ _ _ -> []
@@ -2016,6 +2095,7 @@ data SchemaTypeInfo = SchemaTypeInfo
   { schemaTypeExpr :: HC.TypeExpression
   , schemaTypeSchema :: HC.HaskellCode
   , schemaTypeObjSchema :: HC.HaskellCode
+  , schemaTypeRequiredPragmas :: [HC.HaskellCode]
   }
 
 primitiveSchemaTypeInfo :: HC.TypeName -> HC.HaskellCode -> SchemaTypeInfo
@@ -2024,6 +2104,7 @@ primitiveSchemaTypeInfo typeName schema =
     { schemaTypeExpr = HC.typeNameToCodeDefaultQualification typeName
     , schemaTypeSchema = schema
     , schemaTypeObjSchema = schema
+    , schemaTypeRequiredPragmas = []
     }
 
 inferSchemaInfoForTypeName :: HC.TypeName -> CodeGen SchemaTypeInfo
@@ -2033,6 +2114,7 @@ inferSchemaInfoForTypeName typeName =
       { schemaTypeExpr = HC.typeNameToCodeDefaultQualification typeName
       , schemaTypeSchema = HC.varNameToCodeDefaultQualification $ fleeceSchemaNameForType typeName
       , schemaTypeObjSchema = HC.varNameToCodeDefaultQualification $ fleeceObjSchemaNameForType typeName
+      , schemaTypeRequiredPragmas = []
       }
 
 inferTypeForInputName :: CodeSection -> T.Text -> CodeGen (HC.ModuleName, HC.TypeName)
@@ -2222,6 +2304,14 @@ textType :: HC.TypeName
 textType =
   HC.toTypeName "Data.Text" (Just "T") "Text"
 
+nonEmptyTextType :: HC.TypeName
+nonEmptyTextType =
+  HC.toTypeName "Data.NonEmptyText" (Just "NET") "NonEmptyText"
+
+boundedTextType :: HC.TypeName
+boundedTextType =
+  HC.toTypeName "Data.BoundedText" (Just "BT") "BoundedText"
+
 textPack :: HC.VarName
 textPack =
   HC.toVarName "Data.Text" (Just "T") "pack"
@@ -2366,6 +2456,14 @@ beelineCoerceParam =
 beelineTextParam :: HC.FromCode c => c
 beelineTextParam =
   beelineParamsVar "textParam"
+
+beelineNonEmptyTextParam :: HC.FromCode c => c
+beelineNonEmptyTextParam =
+  beelineParamsVar "nonEmptyTextParam"
+
+beelineBoundedTextParam :: HC.FromCode c => c
+beelineBoundedTextParam =
+  beelineParamsVar "boundedTextParam"
 
 beelineBooleanParam :: HC.FromCode c => c
 beelineBooleanParam =

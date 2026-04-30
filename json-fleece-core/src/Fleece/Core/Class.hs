@@ -38,6 +38,12 @@ module Fleece.Core.Class
       , taggedUnionMemberWithTag
       , taggedUnionCombine
       , interpretJsonString
+      , interpretMinLength
+      , interpretMaxLength
+      , interpretMinItems
+      , interpretMaxItems
+      , interpretMinimum
+      , interpretMaximum
       , -- \* Helpers with default implementations
         interpretInt
       , interpretInt8
@@ -86,6 +92,12 @@ module Fleece.Core.Class
   , unionNamed
   , taggedUnionNamed
   , jsonString
+  , minLength
+  , maxLength
+  , minItems
+  , maxItems
+  , Fleece.Core.Class.minimum
+  , Fleece.Core.Class.maximum
   , int
   , int8
   , int16
@@ -112,7 +124,7 @@ import qualified Data.Word as W
 import GHC.TypeLits (KnownNat, KnownSymbol)
 import Shrubbery (BranchIndex, Tag, TagIndex, TagType, TaggedTypes, TaggedUnion, TypeAtIndex, Union, type (@=))
 import Shrubbery.TypeList (Append, Length)
-import Prelude hiding (null)
+import Prelude hiding (maximum, minimum, null)
 
 import Fleece.Core.Name (Name, annotateName, defaultSchemaName, nameToString, unqualifiedName)
 
@@ -255,6 +267,24 @@ class Fleece t where
   interpretJsonString ::
     Schema t a ->
     t a
+
+  interpretMinLength :: Integer -> Schema t a -> t a
+  interpretMinLength _ = schemaInterpreter
+
+  interpretMaxLength :: Integer -> Schema t a -> t a
+  interpretMaxLength _ = schemaInterpreter
+
+  interpretMinItems :: Integer -> Schema t a -> t a
+  interpretMinItems _ = schemaInterpreter
+
+  interpretMaxItems :: Integer -> Schema t a -> t a
+  interpretMaxItems _ = schemaInterpreter
+
+  interpretMinimum :: Integer -> Schema t a -> t a
+  interpretMinimum _ = schemaInterpreter
+
+  interpretMaximum :: Integer -> Schema t a -> t a
+  interpretMaximum _ = schemaInterpreter
 
   -- Members that have default implementations, but can been overridden by
   -- specific implementations
@@ -455,6 +485,66 @@ jsonString schema =
   Schema
     { schemaName = schemaName schema
     , schemaInterpreter = interpretJsonString schema
+    }
+
+{- | Declares that the schema already validates a minimum text length. This
+does not perform any validation itself — it informs Fleece of validation you
+are already performing so that it can be reflected in schema descriptions.
+-}
+minLength :: Fleece t => Integer -> Schema t a -> Schema t a
+minLength len schema =
+  schema
+    { schemaInterpreter = interpretMinLength len schema
+    }
+
+{- | Declares that the schema already validates a maximum text length. This
+does not perform any validation itself — it informs Fleece of validation you
+are already performing so that it can be reflected in schema descriptions.
+-}
+maxLength :: Fleece t => Integer -> Schema t a -> Schema t a
+maxLength len schema =
+  schema
+    { schemaInterpreter = interpretMaxLength len schema
+    }
+
+{- | Declares that the schema already validates a minimum number of items. This
+does not perform any validation itself — it informs Fleece of validation you
+are already performing so that it can be reflected in schema descriptions.
+-}
+minItems :: Fleece t => Integer -> Schema t a -> Schema t a
+minItems len schema =
+  schema
+    { schemaInterpreter = interpretMinItems len schema
+    }
+
+{- | Declares that the schema already validates a maximum number of items. This
+does not perform any validation itself — it informs Fleece of validation you
+are already performing so that it can be reflected in schema descriptions.
+-}
+maxItems :: Fleece t => Integer -> Schema t a -> Schema t a
+maxItems len schema =
+  schema
+    { schemaInterpreter = interpretMaxItems len schema
+    }
+
+{- | Declares that the schema already validates a minimum numeric value. This
+does not perform any validation itself — it informs Fleece of validation you
+are already performing so that it can be reflected in schema descriptions.
+-}
+minimum :: Fleece t => Integer -> Schema t a -> Schema t a
+minimum len schema =
+  schema
+    { schemaInterpreter = interpretMinimum len schema
+    }
+
+{- | Declares that the schema already validates a maximum numeric value. This
+does not perform any validation itself — it informs Fleece of validation you
+are already performing so that it can be reflected in schema descriptions.
+-}
+maximum :: Fleece t => Integer -> Schema t a -> Schema t a
+maximum len schema =
+  schema
+    { schemaInterpreter = interpretMaximum len schema
     }
 
 intName :: Name

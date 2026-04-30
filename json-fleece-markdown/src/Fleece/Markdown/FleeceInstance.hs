@@ -24,9 +24,11 @@ import Fleece.Markdown.SchemaDocumentation
       , fieldSchemaDocs
       )
   , FieldList
-  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, TaggedUnionEntry, UnionEntry, WithFormat)
+  , MainEntry (ArrayEntry, EnumValues, Fields, NameOnly, NullableEntry, TaggedUnionEntry, UnionEntry)
+  , SchemaAnnotations (annotationFormat, annotationMaxItems, annotationMaxLength, annotationMaximum, annotationMinItems, annotationMinLength, annotationMinimum)
   , SchemaDocumentation
     ( SchemaDocumentation
+    , schemaAnnotations
     , schemaDescription
     , schemaExcludeFromRender
     , schemaMainEntry
@@ -36,6 +38,7 @@ import Fleece.Markdown.SchemaDocumentation
     )
   , SchemaNullability (NotNull, Nullable)
   , TaggedUnionMemberDocumentation (TaggedUnionMemberDocumentation, tagFields, tagValue)
+  , emptyAnnotations
   , schemaSelfReference
   )
 
@@ -81,9 +84,10 @@ instance FC.Fleece Markdown where
     Markdown $
       let
         Markdown schemaDoc = FC.schemaInterpreter schema
+        annotations = schemaAnnotations schemaDoc
       in
         schemaDoc
-          { schemaMainEntry = WithFormat formatString (schemaMainEntry schemaDoc)
+          { schemaAnnotations = annotations {annotationFormat = Just formatString}
           }
 
   interpretNumber =
@@ -105,6 +109,7 @@ instance FC.Fleece Markdown where
           , schemaDescription = Nothing
           , schemaExcludeFromRender = True
           , schemaNullability = NotNull
+          , schemaAnnotations = emptyAnnotations
           , schemaMainEntry = ArrayEntry (schemaMainEntry itemSchemaDoc)
           , schemaReferences = schemaSelfReference itemSchemaDoc
           }
@@ -122,6 +127,7 @@ instance FC.Fleece Markdown where
           , schemaDescription = Nothing
           , schemaExcludeFromRender = schemaExcludeFromRender schemaDoc
           , schemaNullability = Nullable schemaDoc
+          , schemaAnnotations = emptyAnnotations
           , schemaMainEntry = NullableEntry (schemaMainEntry schemaDoc)
           , schemaReferences = schemaReferences schemaDoc
           }
@@ -154,6 +160,7 @@ instance FC.Fleece Markdown where
         , schemaDescription = Nothing
         , schemaExcludeFromRender = False
         , schemaNullability = NotNull
+        , schemaAnnotations = emptyAnnotations
         , schemaMainEntry = Fields fields
         , schemaReferences = foldMap (schemaSelfReference . fieldSchemaDocs) fields
         }
@@ -186,6 +193,7 @@ instance FC.Fleece Markdown where
           , schemaDescription = Nothing
           , schemaExcludeFromRender = False
           , schemaNullability = NotNull
+          , schemaAnnotations = emptyAnnotations
           , schemaMainEntry = EnumValues enumValues
           , schemaReferences = Map.empty
           }
@@ -201,6 +209,7 @@ instance FC.Fleece Markdown where
           , schemaDescription = Nothing
           , schemaExcludeFromRender = False
           , schemaNullability = NotNull
+          , schemaAnnotations = emptyAnnotations
           , schemaMainEntry = UnionEntry (map schemaName members)
           , schemaReferences =
               Map.fromList
@@ -232,6 +241,7 @@ instance FC.Fleece Markdown where
           , schemaDescription = Nothing
           , schemaExcludeFromRender = False
           , schemaNullability = NotNull
+          , schemaAnnotations = emptyAnnotations
           , schemaMainEntry = TaggedUnionEntry (T.pack tagProperty) members
           , schemaReferences = foldMap memberSchemaReferences members
           }
@@ -260,6 +270,66 @@ instance FC.Fleece Markdown where
           { schemaName = FC.annotateName name "(encoded as json string)"
           }
 
+  interpretMinLength len schema =
+    Markdown $
+      let
+        Markdown schemaDocs = FC.schemaInterpreter schema
+        annotations = schemaAnnotations schemaDocs
+      in
+        schemaDocs
+          { schemaAnnotations = annotations {annotationMinLength = Just len}
+          }
+
+  interpretMaxLength len schema =
+    Markdown $
+      let
+        Markdown schemaDocs = FC.schemaInterpreter schema
+        annotations = schemaAnnotations schemaDocs
+      in
+        schemaDocs
+          { schemaAnnotations = annotations {annotationMaxLength = Just len}
+          }
+
+  interpretMinItems len schema =
+    Markdown $
+      let
+        Markdown schemaDocs = FC.schemaInterpreter schema
+        annotations = schemaAnnotations schemaDocs
+      in
+        schemaDocs
+          { schemaAnnotations = annotations {annotationMinItems = Just len}
+          }
+
+  interpretMaxItems len schema =
+    Markdown $
+      let
+        Markdown schemaDocs = FC.schemaInterpreter schema
+        annotations = schemaAnnotations schemaDocs
+      in
+        schemaDocs
+          { schemaAnnotations = annotations {annotationMaxItems = Just len}
+          }
+
+  interpretMinimum val schema =
+    Markdown $
+      let
+        Markdown schemaDocs = FC.schemaInterpreter schema
+        annotations = schemaAnnotations schemaDocs
+      in
+        schemaDocs
+          { schemaAnnotations = annotations {annotationMinimum = Just val}
+          }
+
+  interpretMaximum val schema =
+    Markdown $
+      let
+        Markdown schemaDocs = FC.schemaInterpreter schema
+        annotations = schemaAnnotations schemaDocs
+      in
+        schemaDocs
+          { schemaAnnotations = annotations {annotationMaximum = Just val}
+          }
+
 primitiveMarkdown :: FC.Name -> Markdown a
 primitiveMarkdown name =
   Markdown $
@@ -268,6 +338,7 @@ primitiveMarkdown name =
       , schemaDescription = Nothing
       , schemaExcludeFromRender = True
       , schemaNullability = NotNull
+      , schemaAnnotations = emptyAnnotations
       , schemaMainEntry = NameOnly name
       , schemaReferences = Map.empty
       }

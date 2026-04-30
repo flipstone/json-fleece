@@ -7,42 +7,42 @@ packages:
 - completed:
     name: beeline-params
     pantry-tree:
-      sha256: 45904abe4737db4c3a8600bb6a2a0900085f58165c03f8e5e1249cbdd04d2bef
-      size: 1069
-    sha256: 24eb20b509eeb14ca9a64d9e9c00cf13b805c178b3a938304f82159cd9d4a6ff
-    size: 34812
+      sha256: d0db931040ec4773c3af456cad1ef600ed35438b23d3a1c7d15c2ad57b194558
+      size: 1210
+    sha256: 6394c8c25087dd0ce952622ac0bcc5882dc916da28e5af8434181972d4227b98
+    size: 35878
     subdir: beeline-params
-    url: https://github.com/flipstone/beeline/archive/ad51a5197ba71b44f27fd760c6c241ac67f0a52f.tar.gz
-    version: 0.1.0.1
+    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
+    version: 0.2.0.0
   original:
     subdir: beeline-params
-    url: https://github.com/flipstone/beeline/archive/ad51a5197ba71b44f27fd760c6c241ac67f0a52f.tar.gz
+    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
 - completed:
     name: beeline-routing
     pantry-tree:
-      sha256: 447f2eaffee4cc4d8763c89d1f1c80e4b90e73c6556c644c9949d04508ff3cd2
+      sha256: ac9788a17532bdb3b7e77c7324e8f78f4f65ff12fe8828dfee16960aea2ba246
       size: 1119
-    sha256: 24eb20b509eeb14ca9a64d9e9c00cf13b805c178b3a938304f82159cd9d4a6ff
-    size: 34812
+    sha256: 6394c8c25087dd0ce952622ac0bcc5882dc916da28e5af8434181972d4227b98
+    size: 35878
     subdir: beeline-routing
-    url: https://github.com/flipstone/beeline/archive/ad51a5197ba71b44f27fd760c6c241ac67f0a52f.tar.gz
-    version: 0.3.0.1
+    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
+    version: 0.3.0.2
   original:
     subdir: beeline-routing
-    url: https://github.com/flipstone/beeline/archive/ad51a5197ba71b44f27fd760c6c241ac67f0a52f.tar.gz
+    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
 - completed:
     name: beeline-http-client
     pantry-tree:
-      sha256: bf286adfffe7795c07a058a162f112d1fd48f42c4aa72c74e80ac9f8ddd2ed21
+      sha256: aaa852ff2f2d464e75e2d09bf7c72b89373952a853b263d1708a87f63a7cf17c
       size: 725
-    sha256: 24eb20b509eeb14ca9a64d9e9c00cf13b805c178b3a938304f82159cd9d4a6ff
-    size: 34812
+    sha256: 6394c8c25087dd0ce952622ac0bcc5882dc916da28e5af8434181972d4227b98
+    size: 35878
     subdir: beeline-http-client
-    url: https://github.com/flipstone/beeline/archive/ad51a5197ba71b44f27fd760c6c241ac67f0a52f.tar.gz
+    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
     version: 0.9.0.1
   original:
     subdir: beeline-http-client
-    url: https://github.com/flipstone/beeline/archive/ad51a5197ba71b44f27fd760c6c241ac67f0a52f.tar.gz
+    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
 - completed:
     name: shrubbery
     pantry-tree:
@@ -54,6 +54,31 @@ packages:
     version: 0.2.3.1
   original:
     url: https://github.com/flipstone/shrubbery/archive/a064ede07e01b753a6eb310fc24d9fd8da1ad826.tar.gz
+- completed:
+    name: bounded-text
+    pantry-tree:
+      sha256: e98540b1877ae4709420472f83e8fd04b987eaeb914df72bb33b0bbe55debac2
+      size: 2162
+    sha256: 29c500737d8e481fe2e3325fe643a9cafc565ffd06b754bf14219f579d927f5d
+    size: 11885
+    url: https://github.com/flipstone/bounded-text/archive/3ef94eeda5402857423284d0c4e021a8c8032498.tar.gz
+    version: 0.1.2.0
+  original:
+    url: https://github.com/flipstone/bounded-text/archive/3ef94eeda5402857423284d0c4e021a8c8032498.tar.gz
+- completed:
+    hackage: template-haskell-lift-0.1.0.0@sha256:f6cd3ee45b0c68480c400bfca9f08f39e8e87a5eb823f206dbe06ab1923a4f1c,1136
+    pantry-tree:
+      sha256: 56ab994094c839bebb643ce5fc58dfae6269517ebe91f380e259adaf1def08bf
+      size: 243
+  original:
+    hackage: template-haskell-lift-0.1.0.0
+- completed:
+    hackage: template-haskell-quasiquoter-0.1.0.0@sha256:71027c432c0fb1a293d0f2b1d46dd5be42b9703b7c4b2233ea8076bfc6f84aae,1181
+    pantry-tree:
+      sha256: f9f5177a522cc273c001dd5bd749e4f7ed841910c6136711b9b9825bc0bc9c56
+      size: 257
+  original:
+    hackage: template-haskell-quasiquoter-0.1.0.0
 - completed:
     hackage: hermes-json-0.7.0.0@sha256:d1fe74cc26fc7c4de12e4eab2bb74cda4eb9b4dc311c297caa23e40bdb1bd3b6,3943
     pantry-tree:

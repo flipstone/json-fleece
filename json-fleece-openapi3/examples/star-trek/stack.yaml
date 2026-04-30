@@ -7,11 +7,15 @@ extra-deps:
   - ../../../json-fleece-aeson
   - ../../../json-fleece-aeson-beeline
   - github: flipstone/beeline
-    commit: 135da92b069d5c25d58539fd9b1ade538a4fbb67
+    commit: 567eb20702f8a0c6bfec246130dab861a7732110
     subdirs:
       - beeline-params
       - beeline-routing
       - beeline-http-client
+  - github: flipstone/bounded-text
+    commit: 3ef94eeda5402857423284d0c4e021a8c8032498
   - github: flipstone/shrubbery
     commit: a064ede07e01b753a6eb310fc24d9fd8da1ad826
+  - template-haskell-lift-0.1.0.0
+  - template-haskell-quasiquoter-0.1.0.0
   - non-empty-text-0.2.1@sha256:df9629af4ad53af59dc0bfb5995c0500aaa656c884485560e9115152f7495c20,2438

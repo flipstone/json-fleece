@@ -5,13 +5,25 @@ module Fleece.Markdown.SchemaDocumentation
       , schemaDescription
       , schemaExcludeFromRender
       , schemaNullability
+      , schemaAnnotations
       , schemaMainEntry
       , schemaReferences
       )
   , schemaSelfReference
   , schemaReferencesWithDescendants
   , SchemaNullability (NotNull, Nullable)
-  , MainEntry (NameOnly, Fields, EnumValues, ArrayEntry, NullableEntry, UnionEntry, TaggedUnionEntry, WithFormat)
+  , SchemaAnnotations
+    ( SchemaAnnotations
+    , annotationFormat
+    , annotationMinLength
+    , annotationMaxLength
+    , annotationMinItems
+    , annotationMaxItems
+    , annotationMinimum
+    , annotationMaximum
+    )
+  , emptyAnnotations
+  , MainEntry (NameOnly, Fields, EnumValues, ArrayEntry, NullableEntry, UnionEntry, TaggedUnionEntry)
   , FieldDocumentation
     ( FieldDocumentation
     , fieldName
@@ -39,6 +51,7 @@ data SchemaDocumentation = SchemaDocumentation
   , schemaDescription :: Maybe NET.NonEmptyText
   , schemaExcludeFromRender :: Bool
   , schemaNullability :: SchemaNullability
+  , schemaAnnotations :: SchemaAnnotations
   , schemaMainEntry :: MainEntry
   , schemaReferences :: Map.Map FC.Name SchemaDocumentation
   }
@@ -79,7 +92,28 @@ data MainEntry
   | NullableEntry MainEntry
   | UnionEntry [FC.Name]
   | TaggedUnionEntry T.Text [TaggedUnionMemberDocumentation]
-  | WithFormat String MainEntry
+
+data SchemaAnnotations = SchemaAnnotations
+  { annotationFormat :: Maybe String
+  , annotationMinLength :: Maybe Integer
+  , annotationMaxLength :: Maybe Integer
+  , annotationMinItems :: Maybe Integer
+  , annotationMaxItems :: Maybe Integer
+  , annotationMinimum :: Maybe Integer
+  , annotationMaximum :: Maybe Integer
+  }
+
+emptyAnnotations :: SchemaAnnotations
+emptyAnnotations =
+  SchemaAnnotations
+    { annotationFormat = Nothing
+    , annotationMinLength = Nothing
+    , annotationMaxLength = Nothing
+    , annotationMinItems = Nothing
+    , annotationMaxItems = Nothing
+    , annotationMinimum = Nothing
+    , annotationMaximum = Nothing
+    }
 
 data FieldDocumentation = FieldDocumentation
   { fieldName :: T.Text

@@ -24,6 +24,12 @@ module Fleece.Core
   , interpretUnionNamed
   , interpretTaggedUnionNamed
   , interpretJsonString
+  , interpretMinLength
+  , interpretMaxLength
+  , interpretMinItems
+  , interpretMaxItems
+  , interpretMinimum
+  , interpretMaximum
   , interpretInt
   , interpretInt8
   , interpretInt16
@@ -103,6 +109,8 @@ module Fleece.Core
   , fixed
   , SetDuplicateHandling (AllowInputDuplicates, RejectInputDuplicates)
   , set
+  , nonEmptySet
+  , boundedText
   , string
   , utcTime
   , utcTimeWithFormat
@@ -160,6 +168,14 @@ module Fleece.Core
 
     -- * Schema helpers for dealing with JSON strings within json
   , jsonString
+
+    -- * Schema bound modifiers
+  , minLength
+  , maxLength
+  , minItems
+  , maxItems
+  , Fleece.Core.Class.minimum
+  , Fleece.Core.Class.maximum
 
     -- * Schema Names
   , Name (nameQualification, nameUnqualified)

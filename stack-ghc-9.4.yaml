@@ -3,13 +3,17 @@
 resolver: lts-21.25
 extra-deps:
   - github: flipstone/beeline
-    commit: 135da92b069d5c25d58539fd9b1ade538a4fbb67
+    commit: 567eb20702f8a0c6bfec246130dab861a7732110
     subdirs:
       - beeline-params
       - beeline-routing
       - beeline-http-client
   - github: flipstone/shrubbery
     commit: a064ede07e01b753a6eb310fc24d9fd8da1ad826
+  - github: flipstone/bounded-text
+    commit: 3ef94eeda5402857423284d0c4e021a8c8032498
+  - template-haskell-lift-0.1.0.0
+  - template-haskell-quasiquoter-0.1.0.0
   - hermes-json-0.7.0.0@sha256:d1fe74cc26fc7c4de12e4eab2bb74cda4eb9b4dc311c297caa23e40bdb1bd3b6,3943
   - integer-conversion-0.1.1@sha256:941d4ae16e2124cbff5defe2abedb49efc8e03a594f817035bf231a317e6c1c9,2256
   - non-empty-text-0.2.1@sha256:df9629af4ad53af59dc0bfb5995c0500aaa656c884485560e9115152f7495c20,2438

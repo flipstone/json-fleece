@@ -19,4 +19,3 @@ When the "type" field has the value "company", the object has the following fiel
 |---|---|---|---|
 |name|yes|no|text|
 |tooBigToFail|yes|no|boolean|
-
