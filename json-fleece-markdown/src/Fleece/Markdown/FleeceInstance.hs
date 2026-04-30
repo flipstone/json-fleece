@@ -3,6 +3,7 @@
 module Fleece.Markdown.FleeceInstance
   ( Markdown
   , renderMarkdown
+  , schemaDocumentation
   ) where
 
 import Data.Coerce (coerce)
@@ -38,14 +39,18 @@ import Fleece.Markdown.SchemaDocumentation
   , schemaSelfReference
   )
 
-newtype Markdown a = Markdown SchemaDocumentation
+newtype Markdown a
+  = Markdown
+  { markdownSchemaDocumentation :: SchemaDocumentation
+  }
 
 renderMarkdown :: FC.Schema Markdown a -> LT.Text
-renderMarkdown schema =
-  let
-    Markdown schemaDoc = FC.schemaInterpreter schema
-  in
-    schemaDocumentationToMarkdown schemaDoc
+renderMarkdown =
+  schemaDocumentationToMarkdown . schemaDocumentation
+
+schemaDocumentation :: FC.Schema Markdown a -> SchemaDocumentation
+schemaDocumentation =
+  markdownSchemaDocumentation . FC.schemaInterpreter
 
 instance FC.Fleece Markdown where
   newtype Object Markdown _object _a
