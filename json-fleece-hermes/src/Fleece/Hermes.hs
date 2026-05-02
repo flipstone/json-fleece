@@ -15,6 +15,7 @@ import Control.Applicative ((<|>))
 import Data.Bifunctor (first)
 import qualified Data.ByteString as BS
 import qualified Data.Hermes as H
+import Data.List (intercalate)
 import qualified Data.Map.Strict as Map
 import Data.Text (Text)
 import qualified Data.Text as T
@@ -49,7 +50,7 @@ instance FC.Fleece Decoder where
     }
 
   newtype UnionMembers Decoder allTypes _handledTypes
-    = UnionMembers (FC.Name -> H.Decoder (Shrubbery.Union allTypes))
+    = UnionMembers [(String, H.Decoder (Shrubbery.Union allTypes))]
 
   newtype TaggedUnionMembers Decoder allTags _handledTags
     = TaggedUnionMembers (Map.Map T.Text (H.FieldsDecoder (Shrubbery.TaggedUnion allTags)))
@@ -183,23 +184,33 @@ instance FC.Fleece Decoder where
       validatingDecoder unvalidatedName parseValue check
 
   {-# INLINE interpretUnionNamed #-}
-  interpretUnionNamed name (UnionMembers parseMembers) =
-    Decoder (parseMembers name)
+  interpretUnionNamed name (UnionMembers members) =
+    Decoder $ tryMembers name members []
+   where
+    tryMembers unionName [] triedNames =
+      fail $
+        "All union member parsing options for "
+          <> FC.nameUnqualified unionName
+          <> " failed. Tried members: "
+          <> intercalate ", " (reverse triedNames)
+    tryMembers unionName ((memberName, decoder) : rest) triedNames =
+      decoder <|> tryMembers unionName rest (memberName : triedNames)
 
   {-# INLINE unionMemberWithIndex #-}
   unionMemberWithIndex index schema =
-    UnionMembers $ \_name ->
-      let
-        Decoder parseMember = FC.schemaInterpreter schema
-      in
-        fmap (Shrubbery.unifyUnion index) parseMember
+    UnionMembers
+      [
+        ( FC.nameUnqualified (FC.schemaName schema)
+        , let
+            Decoder parseMember = FC.schemaInterpreter schema
+          in
+            fmap (Shrubbery.unifyUnion index) parseMember
+        )
+      ]
 
   {-# INLINE unionCombine #-}
-  unionCombine (UnionMembers parseLeft) (UnionMembers parseRight) =
-    UnionMembers $ \name ->
-      parseLeft name
-        <|> parseRight name
-        <|> fail ("All union parsing options for " <> FC.nameUnqualified name <> " failed.")
+  unionCombine (UnionMembers left) (UnionMembers right) =
+    UnionMembers (left <> right)
 
   {-# INLINE interpretTaggedUnionNamed #-}
   interpretTaggedUnionNamed name tagProperty (TaggedUnionMembers parserMap) =

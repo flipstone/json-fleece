@@ -69,6 +69,7 @@ tests =
   , ("prop_encode_listField", prop_encode_listField)
   , ("prop_decode_union", prop_decode_union)
   , ("prop_encode_union", prop_encode_union)
+  , ("prop_decode_union_failure", prop_decode_union_failure)
   , ("prop_decode_taggedUnion", prop_decode_taggedUnion)
   , ("prop_encode_taggedUnion", prop_encode_taggedUnion)
   , ("prop_utcTimeAndZonedTime", prop_utcTimeAndZonedTime)
@@ -657,6 +658,25 @@ unionGen =
     [ fmap Shrubbery.unify genText
     , fmap Shrubbery.unify genScientific
     ]
+
+prop_decode_union_failure :: HH.Property
+prop_decode_union_failure =
+  HH.withTests 1 . HH.property $ do
+    let
+      testInput = Aeson.encode (Aeson.Bool True)
+
+      decoded =
+        FA.decode
+          Examples.unionExampleSchema
+          testInput
+
+      expected =
+        Left $
+          "Error in $: All union member parsing options for UnionExample failed:\n"
+            <> "  member 'text': parsing text failed, expected String, but encountered Boolean\n"
+            <> "  member 'number': parsing number failed, expected Number, but encountered Boolean\n"
+
+    decoded === expected
 
 prop_decode_taggedUnion :: HH.Property
 prop_decode_taggedUnion =

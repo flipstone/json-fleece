@@ -16,7 +16,6 @@ module Fleece.Aeson.Decoder
   , fromValue
   ) where
 
-import Control.Applicative ((<|>))
 import Control.Monad ((<=<))
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Key as AesonKey
@@ -82,7 +81,7 @@ instance FC.Fleece Decoder where
     }
 
   newtype UnionMembers Decoder allTypes _handledTypes
-    = UnionMembers (FC.Name -> Aeson.Value -> AesonTypes.Parser (Shrubbery.Union allTypes))
+    = UnionMembers [(String, Aeson.Value -> AesonTypes.Parser (Shrubbery.Union allTypes))]
 
   newtype TaggedUnionMembers Decoder allTags _handledTags
     = TaggedUnionMembers (Map.Map T.Text (Aeson.Object -> AesonTypes.Parser (Shrubbery.TaggedUnion allTags)))
@@ -210,21 +209,47 @@ instance FC.Fleece Decoder where
     in
       validatingDecoder unvalidatedName parseValue check
 
-  interpretUnionNamed name (UnionMembers parseMembers) =
-    Decoder (parseMembers name)
+  interpretUnionNamed name (UnionMembers members) =
+    Decoder $ \value ->
+      let
+        tryMember (memberName, parser) =
+          case AesonTypes.parse parser value of
+            AesonTypes.Success a -> Right a
+            AesonTypes.Error err -> Left (memberName, err)
+
+        results = fmap tryMember members
+
+        firstSuccess [] = Nothing
+        firstSuccess (Right a : _) = Just a
+        firstSuccess (Left _ : rest) = firstSuccess rest
+      in
+        case firstSuccess results of
+          Just a -> pure a
+          Nothing ->
+            let
+              errors = [e | Left e <- results]
+              formatError (memberName, err) =
+                "  member '" <> memberName <> "': " <> err
+            in
+              fail $
+                "All union member parsing options for "
+                  <> FC.nameUnqualified name
+                  <> " failed:\n"
+                  <> unlines (fmap formatError errors)
 
   unionMemberWithIndex index schema =
-    UnionMembers $ \_name ->
-      let
-        Decoder parseMember = FC.schemaInterpreter schema
-      in
-        fmap (Shrubbery.unifyUnion index) . parseMember
+    UnionMembers
+      [
+        ( FC.nameUnqualified (FC.schemaName schema)
+        , let
+            Decoder parseMember = FC.schemaInterpreter schema
+          in
+            fmap (Shrubbery.unifyUnion index) . parseMember
+        )
+      ]
 
-  unionCombine (UnionMembers parseLeft) (UnionMembers parseRight) =
-    UnionMembers $ \name value ->
-      parseLeft name value
-        <|> parseRight name value
-        <|> fail ("All union parsing options for " <> FC.nameUnqualified name <> " failed.")
+  unionCombine (UnionMembers left) (UnionMembers right) =
+    UnionMembers (left <> right)
 
   interpretTaggedUnionNamed name tagProperty (TaggedUnionMembers parserMap) =
     let

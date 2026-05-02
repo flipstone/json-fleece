@@ -53,6 +53,7 @@ tests =
   , ("prop_decode_abnormalNumbers", prop_decode_abnormalNumbers)
   , ("prop_decode_listField", prop_decode_listField)
   , ("prop_decode_union", prop_decode_union)
+  , ("prop_decode_union_failure", prop_decode_union_failure)
   , ("prop_decode_taggedUnion", prop_decode_taggedUnion)
   , ("prop_utcTimeAndZonedTime", prop_utcTimeAndZonedTime)
   ]
@@ -384,6 +385,22 @@ prop_decode_union =
             expected
 
     FH.decode (dummyObj "foo" Examples.unionExampleSchema) jsonValue === Right expected
+
+prop_decode_union_failure :: HH.Property
+prop_decode_union_failure =
+  HH.withTests 1 . HH.property $ do
+    let
+      testInput = encodeTestObject ["foo" .= Aeson.Bool True]
+
+      decoded =
+        FH.decode
+          (dummyObj "foo" Examples.unionExampleSchema)
+          testInput
+
+      expected =
+        Left "Error in /foo: All union member parsing options for UnionExample failed. Tried members: text, number"
+
+    decoded === expected
 
 prop_decode_taggedUnion :: HH.Property
 prop_decode_taggedUnion =
