@@ -118,5 +118,17 @@ in
                   { reexportFields = True
                   }
             }
+          , { type = "TestCases.Types.BoundedTextType.BoundedTextType"
+            , options =
+                CodeGen.TypeOptions::
+                  { textLengthHandling = CodeGen.boundedText
+                  }
+            }
+          , { type = "TestCases.Types.IgnoredTextLengthType.IgnoredTextLengthType"
+            , options =
+                CodeGen.TypeOptions::
+                  { textLengthHandling = CodeGen.ignoreTextLength
+                  }
+            }
           ]
       }

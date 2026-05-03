@@ -206,11 +206,11 @@ paths:
       responses:
         '204':
           description: "Successful Get"
-  /test-cases/bounded-text-path-param/{bounded-param}:
+  /test-cases/non-empty-text-handling-path-param/{non-empty-handling-param}:
     get:
-      operationId: BoundedTextPathParam
+      operationId: NonEmptyTextHandlingPathParam
       parameters:
-        - name: bounded-param
+        - name: non-empty-handling-param
           in: path
           required: true
           schema:
@@ -241,6 +241,30 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/BoundedTextType'
+      responses:
+        '204':
+          description: "Successful Get"
+  /test-cases/bounded-text-handling-path-param/{bounded-handling-param}:
+    get:
+      operationId: BoundedTextHandlingPathParam
+      parameters:
+        - name: bounded-handling-param
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/BoundedTextType'
+      responses:
+        '204':
+          description: "Successful Get"
+  /test-cases/ignored-text-handling-path-param/{ignored-handling-param}:
+    get:
+      operationId: IgnoredTextHandlingPathParam
+      parameters:
+        - name: ignored-handling-param
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/IgnoredTextLengthType'
       responses:
         '204':
           description: "Successful Get"
@@ -1175,6 +1199,12 @@ components:
 
     BoundedTextType:
       description: A string type with bounded length
+      type: string
+      minLength: 1
+      maxLength: 100
+
+    IgnoredTextLengthType:
+      description: A string type with length constraints that are ignored by code generation
       type: string
       minLength: 1
       maxLength: 100

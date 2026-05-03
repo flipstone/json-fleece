@@ -49,6 +49,7 @@ typeOptionsDecoder =
       <*> Dhall.field "formatSpecifier" formatSpecifierDecoder
       <*> Dhall.field "deriveClasses" deriveClassesDecoder
       <*> Dhall.field "reexportFields" Dhall.bool
+      <*> Dhall.field "textLengthHandling" textLengthHandlingDecoder
 
 formatSpecifierDecoder :: Dhall.Decoder (Maybe T.Text)
 formatSpecifierDecoder = Dhall.maybe Dhall.strictText
@@ -76,4 +77,12 @@ derivableClassDecoder =
         <> (fmap (\() -> CGU.Ord) (Dhall.constructor "Ord" Dhall.unit))
         <> (fmap (\() -> CGU.Enum) (Dhall.constructor "Enum" Dhall.unit))
         <> (fmap (\() -> CGU.Bounded) (Dhall.constructor "Bounded" Dhall.unit))
+    )
+
+textLengthHandlingDecoder :: Dhall.Decoder CGU.TextLengthHandling
+textLengthHandlingDecoder =
+  Dhall.union
+    ( (fmap (\() -> CGU.IgnoreTextLength) (Dhall.constructor "Ignore" Dhall.unit))
+        <> (fmap (\() -> CGU.NonEmptyTextOnly) (Dhall.constructor "NonEmptyText" Dhall.unit))
+        <> (fmap (\() -> CGU.BoundedTextHandling) (Dhall.constructor "BoundedText" Dhall.unit))
     )

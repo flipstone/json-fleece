@@ -1,7 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module TestCases.Operations.BoundedTextPathParam
+module TestCases.Operations.NonEmptyTextHandlingPathParam
   ( operation
   , PathParams(..)
   , route
@@ -14,7 +14,7 @@ import Beeline.Routing ((/+), (/-))
 import qualified Beeline.Routing as R
 import qualified Fleece.Aeson.Beeline as FA
 import Prelude (($), Eq, Show, fmap)
-import qualified TestCases.Operations.BoundedTextPathParam.BoundedParam as BoundedParam
+import qualified TestCases.Operations.NonEmptyTextHandlingPathParam.NonEmptyHandlingParam as NonEmptyHandlingParam
 
 operation ::
   H.Operation
@@ -31,7 +31,7 @@ operation =
     }
 
 newtype PathParams = PathParams
-  { boundedParam :: BoundedParam.BoundedParam
+  { nonEmptyHandlingParam :: NonEmptyHandlingParam.NonEmptyHandlingParam
   }
   deriving (Eq, Show)
 
@@ -40,8 +40,8 @@ route =
   R.get $
     R.make PathParams
       /- "test-cases"
-      /- "bounded-text-path-param"
-      /+ R.Param BoundedParam.paramDef boundedParam
+      /- "non-empty-text-handling-path-param"
+      /+ R.Param NonEmptyHandlingParam.paramDef nonEmptyHandlingParam
 
 newtype Responses
   = Response204 H.NoResponseBody

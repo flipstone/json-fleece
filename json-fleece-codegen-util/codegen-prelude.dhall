@@ -8,18 +8,23 @@ let
   DeriveClasses = < Default | These : List DerivableClass >
 
 let
+  TextLengthHandling = < Ignore | NonEmptyText | BoundedText >
+
+let
   TypeOptions =
     { Type =
         { dateTimeFormat : DateTimeFormat
         , formatSpecifier : Optional Text
         , deriveClasses : DeriveClasses
         , reexportFields : Bool
+        , textLengthHandling : TextLengthHandling
         }
     , default =
         { dateTimeFormat = DateTimeFormat.UTCTime
         , formatSpecifier = None Text
         , deriveClasses = DeriveClasses.Default
         , reexportFields = False
+        , textLengthHandling = TextLengthHandling.NonEmptyText
         }
     }
 
@@ -41,6 +46,7 @@ in
   { DateTimeFormat = DateTimeFormat
   , DerivableClass = DerivableClass
   , DeriveClasses = DeriveClasses
+  , TextLengthHandling = TextLengthHandling
   , TypeOptions = TypeOptions
   , SpecificTypeOptions = SpecificTypeOptions
   , baseConfig = baseConfig
@@ -55,4 +61,7 @@ in
   , ord = DerivableClass.Ord
   , enum = DerivableClass.Enum
   , bounded = DerivableClass.Bounded
+  , ignoreTextLength = TextLengthHandling.Ignore
+  , nonEmptyTextOnly = TextLengthHandling.NonEmptyText
+  , boundedText = TextLengthHandling.BoundedText
   }

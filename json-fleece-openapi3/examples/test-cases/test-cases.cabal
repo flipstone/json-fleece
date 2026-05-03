@@ -20,13 +20,15 @@ library
       TestCases.Operations.AnyOf.Option3.Description
       TestCases.Operations.AnyOf.Option3.Id
       TestCases.Operations.AnyOf.Option3.Name
-      TestCases.Operations.BoundedTextPathParam
-      TestCases.Operations.BoundedTextPathParam.BoundedParam
+      TestCases.Operations.BoundedTextHandlingPathParam
+      TestCases.Operations.BoundedTextHandlingPathParam.BoundedHandlingParam
       TestCases.Operations.BoundedTextPathParamRef
       TestCases.Operations.BoundedTextPathParamRef.BoundedParam
       TestCases.Operations.GetMultiplePathsParams
       TestCases.Operations.GetMultiplePathsParams.Param1
       TestCases.Operations.GetMultiplePathsParams.Param2
+      TestCases.Operations.IgnoredTextHandlingPathParam
+      TestCases.Operations.IgnoredTextHandlingPathParam.IgnoredHandlingParam
       TestCases.Operations.InlineAllOf
       TestCases.Operations.InlineAllOf.InlineAllofParam
       TestCases.Operations.InlineAllOf.RequestBody
@@ -61,6 +63,8 @@ library
       TestCases.Operations.InlineAllOf.XSampleAllOfParam
       TestCases.Operations.InlineOneOf
       TestCases.Operations.InlineOneOf.Response200Body
+      TestCases.Operations.NonEmptyTextHandlingPathParam
+      TestCases.Operations.NonEmptyTextHandlingPathParam.NonEmptyHandlingParam
       TestCases.Operations.NonEmptyTextPathParam
       TestCases.Operations.NonEmptyTextPathParam.NonEmptyParam
       TestCases.Operations.NonEmptyTextPathParamRef
@@ -217,6 +221,7 @@ library
       TestCases.Types.FieldTestCases.RequiredNullableField
       TestCases.Types.Foo
       TestCases.Types.Foo.Type
+      TestCases.Types.IgnoredTextLengthType
       TestCases.Types.InlineAllOf.RequestBody.FieldC.FieldC1
       TestCases.Types.InlineAllOf.RequestBody.FieldC.FieldC2
       TestCases.Types.InlineAllOf.RequestBody.FieldI.DatetimeType

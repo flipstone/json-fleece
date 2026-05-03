@@ -1870,13 +1870,15 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/AnyOf/Option3/Description.hs
     examples/test-cases/TestCases/Operations/AnyOf/Option3/Id.hs
     examples/test-cases/TestCases/Operations/AnyOf/Option3/Name.hs
-    examples/test-cases/TestCases/Operations/BoundedTextPathParam.hs
-    examples/test-cases/TestCases/Operations/BoundedTextPathParam/BoundedParam.hs
+    examples/test-cases/TestCases/Operations/BoundedTextHandlingPathParam.hs
+    examples/test-cases/TestCases/Operations/BoundedTextHandlingPathParam/BoundedHandlingParam.hs
     examples/test-cases/TestCases/Operations/BoundedTextPathParamRef.hs
     examples/test-cases/TestCases/Operations/BoundedTextPathParamRef/BoundedParam.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param1.hs
     examples/test-cases/TestCases/Operations/GetMultiplePathsParams/Param2.hs
+    examples/test-cases/TestCases/Operations/IgnoredTextHandlingPathParam.hs
+    examples/test-cases/TestCases/Operations/IgnoredTextHandlingPathParam/IgnoredHandlingParam.hs
     examples/test-cases/TestCases/Operations/InlineAllOf.hs
     examples/test-cases/TestCases/Operations/InlineAllOf/InlineAllofParam.hs
     examples/test-cases/TestCases/Operations/InlineAllOf/RequestBody.hs
@@ -1911,6 +1913,8 @@ extra-source-files:
     examples/test-cases/TestCases/Operations/InlineAllOf/XSampleAllOfParam.hs
     examples/test-cases/TestCases/Operations/InlineOneOf.hs
     examples/test-cases/TestCases/Operations/InlineOneOf/Response200Body.hs
+    examples/test-cases/TestCases/Operations/NonEmptyTextHandlingPathParam.hs
+    examples/test-cases/TestCases/Operations/NonEmptyTextHandlingPathParam/NonEmptyHandlingParam.hs
     examples/test-cases/TestCases/Operations/NonEmptyTextPathParam.hs
     examples/test-cases/TestCases/Operations/NonEmptyTextPathParam/NonEmptyParam.hs
     examples/test-cases/TestCases/Operations/NonEmptyTextPathParamRef.hs
@@ -2067,6 +2071,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/FieldTestCases/RequiredNullableField.hs
     examples/test-cases/TestCases/Types/Foo.hs
     examples/test-cases/TestCases/Types/Foo/Type.hs
+    examples/test-cases/TestCases/Types/IgnoredTextLengthType.hs
     examples/test-cases/TestCases/Types/InlineAllOf/RequestBody/FieldC/FieldC1.hs
     examples/test-cases/TestCases/Types/InlineAllOf/RequestBody/FieldC/FieldC2.hs
     examples/test-cases/TestCases/Types/InlineAllOf/RequestBody/FieldI/DatetimeType.hs

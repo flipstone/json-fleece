@@ -420,9 +420,10 @@ mkInlineStringSchema ::
   CGM SchemaTypeInfoWithDeps
 mkInlineStringSchema schemaKey schema = do
   case OA._schemaEnum schema of
-    Nothing ->
+    Nothing -> do
+      lengthHandling <- lift $ CGU.textLengthHandling <$> asks CGU.defaultTypeOptions
       pure . schemaInfoWithoutDependencies $
-        CGU.textLikeSchemaTypeInfo (OA._schemaMinLength schema) (OA._schemaMaxLength schema)
+        CGU.textLikeSchemaTypeInfo lengthHandling (OA._schemaMinLength schema) (OA._schemaMaxLength schema)
     Just _values -> do
       (_moduleName, typeName) <- lift $ CGU.inferTypeForInputName CGU.Operation schemaKey
       mbInlinedTypesAndSchemaTypeInfo <-
@@ -835,7 +836,9 @@ schemaRefToParamInfo ::
 schemaRefToParamInfo schemaMap paramName paramLocation operationKey schemaRef =
   case schemaRef of
     OA.Inline schema -> do
+      lengthHandling <- lift $ CGU.textLengthHandling <$> asks CGU.defaultTypeOptions
       schemaTypeToParamInfo
+        lengthHandling
         schemaMap
         paramName
         paramLocation
@@ -848,8 +851,11 @@ schemaRefToParamInfo schemaMap paramName paramLocation operationKey schemaRef =
             codeGenType =
               schemaCodeGenType schemaEntry
 
+          lengthHandling <- lift $ CGU.textLengthHandling <$> CGU.lookupTypeOptions (CGU.codeGenTypeName codeGenType)
+
           paramInfo <-
             schemaTypeToParamInfo
+              lengthHandling
               schemaMap
               paramName
               paramLocation
@@ -867,22 +873,31 @@ schemaRefToParamInfo schemaMap paramName paramLocation operationKey schemaRef =
               <> " not found."
 
 schemaTypeToParamInfo ::
+  CGU.TextLengthHandling ->
   SchemaMap ->
   T.Text ->
   OA.ParamLocation ->
   T.Text ->
   OA.Schema ->
   CGM ParamInfo
-schemaTypeToParamInfo schemaMap paramName paramLocation operationKey schema =
+schemaTypeToParamInfo lengthHandling schemaMap paramName paramLocation operationKey schema =
   case OA._schemaType schema of
     Just OA.OpenApiString ->
       case OA._schemaEnum schema of
         Nothing ->
           pure . primitiveParamInfo $
-            case (OA._schemaMinLength schema, OA._schemaMaxLength schema) of
-              (Just minLen, Just maxLen) -> CGU.ParamTypeBoundedText minLen maxLen
-              (Just 1, Nothing) -> CGU.ParamTypeNonEmptyText
-              _ -> CGU.ParamTypeString
+            case lengthHandling of
+              CGU.IgnoreTextLength ->
+                CGU.ParamTypeString
+              CGU.NonEmptyTextOnly ->
+                case OA._schemaMinLength schema of
+                  Just minLen | minLen >= 1 -> CGU.ParamTypeNonEmptyText
+                  _ -> CGU.ParamTypeString
+              CGU.BoundedTextHandling ->
+                case (OA._schemaMinLength schema, OA._schemaMaxLength schema) of
+                  (Just minLen, Just maxLen) -> CGU.ParamTypeBoundedText minLen maxLen
+                  (Just 1, Nothing) -> CGU.ParamTypeNonEmptyText
+                  _ -> CGU.ParamTypeString
         Just enumValues -> do
           let
             rejectNull mbText =

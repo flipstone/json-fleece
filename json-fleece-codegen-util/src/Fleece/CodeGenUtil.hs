@@ -6,6 +6,7 @@ module Fleece.CodeGenUtil
   , CodeGenOptions (..)
   , DateTimeFormat (..)
   , TypeOptions (..)
+  , TextLengthHandling (..)
   , DerivableClass (..)
   , lookupTypeOptions
   , CodeGen
@@ -107,11 +108,18 @@ data CodeGenOptions = CodeGenOptions
   , useOptionalNullable :: Bool
   }
 
+data TextLengthHandling
+  = IgnoreTextLength
+  | NonEmptyTextOnly
+  | BoundedTextHandling
+  deriving (Show, Eq)
+
 data TypeOptions = TypeOptions
   { dateTimeFormat :: DateTimeFormat
   , formatSpecifier :: Maybe T.Text
   , deriveClasses :: Maybe [DerivableClass]
   , reexportFields :: Bool
+  , textLengthHandling :: TextLengthHandling
   }
 
 deriveClassNames :: TypeOptions -> Maybe [HC.TypeName]
@@ -533,19 +541,30 @@ boundedTextSchemaTypeInfo minLen maxLen =
     , schemaTypeRequiredPragmas = ["{-# LANGUAGE DataKinds #-}"]
     }
 
-textLikeSchemaTypeInfo :: Maybe Integer -> Maybe Integer -> SchemaTypeInfo
-textLikeSchemaTypeInfo mbMinLength mbMaxLength =
-  case (mbMinLength, mbMaxLength) of
-    (Just minLen, Just maxLen) ->
-      boundedTextSchemaTypeInfo minLen maxLen
-    (Just 1, Nothing) ->
-      nonEmptyTextSchemaTypeInfo
-    _ ->
+textLikeSchemaTypeInfo :: TextLengthHandling -> Maybe Integer -> Maybe Integer -> SchemaTypeInfo
+textLikeSchemaTypeInfo lengthHandling mbMinLength mbMaxLength =
+  case lengthHandling of
+    IgnoreTextLength ->
       textSchemaTypeInfo
+    NonEmptyTextOnly ->
+      case mbMinLength of
+        Just minLen
+          | minLen >= 1 ->
+              nonEmptyTextSchemaTypeInfo
+        _ ->
+          textSchemaTypeInfo
+    BoundedTextHandling ->
+      case (mbMinLength, mbMaxLength) of
+        (Just minLen, Just maxLen) ->
+          boundedTextSchemaTypeInfo minLen maxLen
+        (Just 1, Nothing) ->
+          nonEmptyTextSchemaTypeInfo
+        _ ->
+          textSchemaTypeInfo
 
 textLikeFormat :: TypeOptions -> Maybe Integer -> Maybe Integer -> CodeGenDataFormat
 textLikeFormat typeOptions mbMinLength mbMaxLength =
-  codeGenNewTypeSchemaTypeInfo typeOptions (textLikeSchemaTypeInfo mbMinLength mbMaxLength)
+  codeGenNewTypeSchemaTypeInfo typeOptions (textLikeSchemaTypeInfo (textLengthHandling typeOptions) mbMinLength mbMaxLength)
 
 floatFormat :: TypeOptions -> CodeGenDataFormat
 floatFormat typeOptions =
