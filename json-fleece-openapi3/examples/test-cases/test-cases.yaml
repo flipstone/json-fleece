@@ -915,6 +915,15 @@ components:
         type:
           type: string
 
+    OneOfWithInlineRefArrayItems:
+      oneOf:
+        - type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/Foo'
+        - type: string
+
     Bar:
       type: object
       properties:

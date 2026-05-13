@@ -312,6 +312,7 @@ library
       TestCases.Types.OneOfWithInlineObject
       TestCases.Types.OneOfWithInlineObject.Option4.Nested.Name
       TestCases.Types.OneOfWithInlineObject.Option4.Nested.Number
+      TestCases.Types.OneOfWithInlineRefArrayItems
       TestCases.Types.OneOfWithNullable
       TestCases.Types.ReexportFieldsExample
       TestCases.Types.ReexportFieldsExample.Age

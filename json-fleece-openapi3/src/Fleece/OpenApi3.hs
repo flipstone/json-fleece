@@ -17,7 +17,7 @@ import Control.Monad (join, when, (<=<))
 import Control.Monad.Reader (ReaderT, asks, runReaderT)
 import Control.Monad.Trans (lift)
 import qualified Data.Aeson as Aeson
-import Data.Bifunctor (bimap, first)
+import Data.Bifunctor (bimap)
 import Data.Containers.ListUtils (nubOrd)
 import qualified Data.Foldable as Foldable
 import Data.Function (on)
@@ -589,27 +589,24 @@ mkInlineArraySchema ::
   CGM SchemaTypeInfoWithDeps
 mkInlineArraySchema raiseError schemaKey schemaMap schema =
   let
-    lookupCodeGenType refKey =
-      case Map.lookup (CGU.SchemaKey refKey) schemaMap of
-        Just schemaEntry ->
-          pure . CGU.codeGenTypeSchemaInfo . schemaCodeGenType $ schemaEntry
-        Nothing ->
-          raiseError $
-            "Unable to resolve schema reference "
-              <> show refKey
-              <> "."
+    minItems =
+      OA._schemaMinItems schema
   in
     case OA._schemaItems schema of
-      Just (OA.OpenApiItemsObject (OA.Ref (OA.Reference itemRefKey))) -> do
-        itemSchemaInfo <- lookupCodeGenType itemRefKey
-        pure . schemaInfoWithoutDependencies . CGU.arrayLikeTypeInfo (OA._schemaMinItems schema) $ itemSchemaInfo
+      Just (OA.OpenApiItemsObject (OA.Ref ref)) ->
+        pure $
+          SchemaTypeInfoWithDeps
+            { schemaTypeInfoDependent =
+                Right . CGU.CodeGenRefArray minItems . CGU.TypeReference $ OA.getReference ref
+            , schemaTypeInfoDependencies = mempty
+            }
       Just (OA.OpenApiItemsObject (OA.Inline innerSchema)) ->
         let
           itemKey =
             schemaKey <> "Item"
         in
           fmap
-            (fmapSchemaInfoAndDeps $ first $ CGU.arrayLikeTypeInfo $ OA._schemaMinItems schema)
+            (fmapSchemaInfoAndDeps (bimap (CGU.arrayLikeTypeInfo minItems) (CGU.CodeGenRefArray minItems)))
             (mkInlineBodySchema raiseError itemKey schemaMap innerSchema)
       otherItemType ->
         raiseError $
