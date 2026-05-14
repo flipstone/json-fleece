@@ -15,7 +15,7 @@ extra-deps:
   - github: flipstone/bounded-text
     commit: 3ef94eeda5402857423284d0c4e021a8c8032498
   - github: flipstone/shrubbery
-    commit: a064ede07e01b753a6eb310fc24d9fd8da1ad826
+    commit: ee8420768a040b4f2b2bc154daac9984f2142b0f
   - template-haskell-lift-0.1.0.0
   - template-haskell-quasiquoter-0.1.0.0
   - non-empty-text-0.2.1@sha256:df9629af4ad53af59dc0bfb5995c0500aaa656c884485560e9115152f7495c20,2438

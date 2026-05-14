@@ -71,6 +71,8 @@ tests =
   , ("prop_encode_union", prop_encode_union)
   , ("prop_decode_taggedUnion", prop_decode_taggedUnion)
   , ("prop_encode_taggedUnion", prop_encode_taggedUnion)
+  , ("prop_decode_taggedUnionADT", prop_decode_taggedUnionADT)
+  , ("prop_encode_taggedUnionADT", prop_encode_taggedUnionADT)
   , ("prop_utcTimeAndZonedTime", prop_utcTimeAndZonedTime)
   ]
 
@@ -731,6 +733,64 @@ taggedUnionGen =
           <*> Gen.bool
     ]
 
+prop_decode_taggedUnionADT :: HH.Property
+prop_decode_taggedUnionADT =
+  HH.property $ do
+    expected <- HH.forAll taggedUnionADTGen
+
+    let
+      jsonValue =
+        case expected of
+          Examples.ADTExamplePerson p ->
+            encodeTestObject
+              [ "type" .= Aeson.String "person"
+              , "name" .= Examples.personName p
+              , "age" .= Examples.personAge p
+              ]
+          Examples.ADTExampleCompany c ->
+            encodeTestObject
+              [ "type" .= Aeson.String "company"
+              , "name" .= Examples.companyName c
+              , "tooBigToFail" .= Examples.companyIsToBigToFail c
+              ]
+
+    FA.decode Examples.taggedUnionADTExampleSchema jsonValue === Right expected
+
+prop_encode_taggedUnionADT :: HH.Property
+prop_encode_taggedUnionADT =
+  HH.property $ do
+    input <- HH.forAll taggedUnionADTGen
+
+    let
+      expected =
+        case input of
+          Examples.ADTExamplePerson p ->
+            encodeTestObject
+              [ "type" .= Aeson.String "person"
+              , "name" .= Examples.personName p
+              , "age" .= Examples.personAge p
+              ]
+          Examples.ADTExampleCompany c ->
+            encodeTestObject
+              [ "type" .= Aeson.String "company"
+              , "name" .= Examples.companyName c
+              , "tooBigToFail" .= Examples.companyIsToBigToFail c
+              ]
+
+    FA.encode Examples.taggedUnionADTExampleSchema input === expected
+
+taggedUnionADTGen :: HH.Gen Examples.TaggedUnionADTExample
+taggedUnionADTGen =
+  Gen.choice
+    [ fmap Examples.ADTExamplePerson $
+        Examples.Person
+          <$> genText
+          <*> Gen.int (Range.linear 0 99)
+    , fmap Examples.ADTExampleCompany $
+        Examples.Company
+          <$> genText
+          <*> Gen.bool
+    ]
 prop_utcTimeAndZonedTime :: HH.Property
 prop_utcTimeAndZonedTime =
   HH.property $ do

@@ -1,5 +1,8 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 
 module Fleece.Examples
@@ -32,13 +35,16 @@ module Fleece.Examples
   , personObject
   , Company (..)
   , companyObject
+  , TaggedUnionADTExample (..)
+  , taggedUnionADTExampleSchema
   ) where
 
 import qualified Data.Map as Map
 import Data.Scientific (Scientific)
 import qualified Data.Text as T
-import Shrubbery (type (@=))
+import Shrubbery (TaggedUnionable, type (@=))
 import qualified Shrubbery
+import Shrubbery.Plugin (ShrubberyMagic)
 
 import Fleece.Core
   ( Fleece
@@ -61,6 +67,7 @@ import Fleece.Core
   , optionalNullable
   , required
   , taggedUnionMember
+  , taggedUnionMemberAs
   , taggedUnionNamed
   , text
   , unionMember
@@ -253,3 +260,19 @@ companyObject =
   constructor Company
     #+ required "name" companyName text
     #+ required "tooBigToFail" companyIsToBigToFail boolean
+
+-- | A plain ADT that uses the generic tagged union interface. This demonstrates
+--   using a normal Haskell data type with fleece's tagged union schemas instead
+--   of requiring a 'Shrubbery.TaggedUnion' wrapper.
+data TaggedUnionADTExample
+  = ADTExamplePerson Person
+  | ADTExampleCompany Company
+  deriving (Eq, Show)
+
+deriving instance ShrubberyMagic => TaggedUnionable TaggedUnionADTExample
+
+taggedUnionADTExampleSchema :: Fleece t => Schema t TaggedUnionADTExample
+taggedUnionADTExampleSchema =
+  taggedUnionNamed (unqualifiedName "TaggedUnionADTExample") "type" $
+    taggedUnionMemberAs @"ADTExamplePerson" "person" personObject
+      #@ taggedUnionMemberAs @"ADTExampleCompany" "company" companyObject

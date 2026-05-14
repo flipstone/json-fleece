@@ -23,7 +23,6 @@ import qualified Data.Map.Strict as Map
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as Enc
 import qualified Data.Text.Lazy as TL
-import GHC.TypeLits (KnownSymbol, symbolVal)
 import Shrubbery (type (@=))
 import qualified Shrubbery
 
@@ -63,7 +62,7 @@ instance FC.Fleece ToValue where
   newtype UnionMembers ToValue _allTypes handledTypes
     = UnionMembers (Shrubbery.BranchBuilder handledTypes Aeson.Value)
 
-  newtype TaggedUnionMembers ToValue _allTypes handledTypes
+  newtype TaggedUnionMembers ToValue _adt _allTypes handledTypes
     = TaggedUnionMembers (Shrubbery.TaggedBranchBuilder handledTypes (T.Text, [AesonTypes.Pair]))
 
   interpretFormat _ =
@@ -189,20 +188,20 @@ instance FC.Fleece ToValue where
       ToValue $ \value ->
         let
           (tagValue, fields) =
-            Shrubbery.dissectTaggedUnion branches value
+            Shrubbery.dissectTagged branches value
         in
           Aeson.object ((tagKey, Aeson.toJSON tagValue) : fields)
 
   taggedUnionMemberWithTag ::
-    forall tag allTags a proxy.
-    KnownSymbol tag =>
+    forall tag allTags a proxy adt.
     proxy tag ->
+    String ->
     FC.Object ToValue a a ->
-    FC.TaggedUnionMembers ToValue allTags '[tag @= a]
-  taggedUnionMemberWithTag tagV (Object mkFields) =
+    FC.TaggedUnionMembers ToValue adt allTags '[tag @= a]
+  taggedUnionMemberWithTag _tagV jsonTagValue (Object mkFields) =
     let
       tagValue =
-        T.pack (symbolVal tagV)
+        T.pack jsonTagValue
     in
       TaggedUnionMembers (Shrubbery.taggedSingleBranch @tag (\a -> (tagValue, mkFields a)))
 

@@ -23,7 +23,6 @@ import qualified Data.Map.Strict as Map
 import qualified Data.Text as T
 import qualified Data.Text.Lazy.Encoding as LEnc
 import qualified Data.Vector as V
-import GHC.TypeLits (KnownSymbol, symbolVal)
 import Shrubbery (type (@=))
 import qualified Shrubbery
 
@@ -59,7 +58,7 @@ instance FC.Fleece Encoder where
   newtype UnionMembers Encoder _allTypes handledTypes
     = UnionMembers (Shrubbery.BranchBuilder handledTypes Aeson.Encoding)
 
-  newtype TaggedUnionMembers Encoder _allTags handledTags
+  newtype TaggedUnionMembers Encoder _adt _allTags handledTags
     = TaggedUnionMembers (Shrubbery.TaggedBranchBuilder handledTags (T.Text, Aeson.Series))
 
   interpretFormat _ =
@@ -186,15 +185,15 @@ instance FC.Fleece Encoder where
           AesonEncoding.pair (AesonKey.fromText tagPropText) (Aeson.toEncoding tagValue)
             <> aesonSeries
     in
-      Encoder (addTag . Shrubbery.dissectTaggedUnion branches)
+      Encoder (addTag . Shrubbery.dissectTagged branches)
 
   taggedUnionMemberWithTag ::
-    forall tag allTags a proxy.
-    KnownSymbol tag =>
+    forall tag allTags a proxy adt.
     proxy tag ->
+    String ->
     FC.Object Encoder a a ->
-    FC.TaggedUnionMembers Encoder allTags '[tag @= a]
-  taggedUnionMemberWithTag tag object =
+    FC.TaggedUnionMembers Encoder adt allTags '[tag @= a]
+  taggedUnionMemberWithTag _tag jsonTagValue object =
     TaggedUnionMembers $
       let
         -- It's important that this let is _inside_ the 'UnionMembers'
@@ -203,7 +202,7 @@ instance FC.Fleece Encoder where
         Object toSeries = object
 
         tagValue =
-          T.pack (symbolVal tag)
+          T.pack jsonTagValue
       in
         Shrubbery.taggedSingleBranch @tag (\a -> (tagValue, toSeries a))
 

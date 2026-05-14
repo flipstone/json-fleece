@@ -20,7 +20,7 @@ tested-with:
 
 dependencies:
   - base >= 4.7 && < 5
-  - json-fleece-core >= 0.11 && < 0.12
+  - json-fleece-core >= 0.12 && < 0.13
   - shrubbery >= 0.2 && < 0.3
   - text >= 1.2 && < 2.2
 

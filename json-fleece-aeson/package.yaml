@@ -23,7 +23,7 @@ dependencies:
   - aeson >= 2.0 && < 2.3
   - bytestring >= 0.11 && < 0.13
   - containers >= 0.6 && < 0.8
-  - json-fleece-core >= 0.11 && < 0.12
+  - json-fleece-core >= 0.12 && < 0.13
   - text >= 1.2 && < 2.2
   - vector >= 0.12 && < 0.14
   - shrubbery >= 0.2 && < 0.3

@@ -5,55 +5,57 @@
 
 packages:
 - completed:
+    name: shrubbery
+    pantry-tree:
+      sha256: d6d5581d261dbdc449a7ce38583ac230c906089aa354b8625582083b62467aae
+      size: 2819
+    sha256: 883b5c267b7da3d2bbda64c36d58efc5ef740c3e5b7a96da826ec3701aff0d24
+    size: 40383
+    subdir: .
+    url: https://github.com/flipstone/shrubbery/archive/941f3c810076e39b200885e92fcc33aa95395a31.tar.gz
+    version: 0.2.3.2
+  original:
+    subdir: .
+    url: https://github.com/flipstone/shrubbery/archive/941f3c810076e39b200885e92fcc33aa95395a31.tar.gz
+- completed:
     name: beeline-params
     pantry-tree:
       sha256: d0db931040ec4773c3af456cad1ef600ed35438b23d3a1c7d15c2ad57b194558
       size: 1210
-    sha256: 6394c8c25087dd0ce952622ac0bcc5882dc916da28e5af8434181972d4227b98
-    size: 35878
+    sha256: 225c76196f47339865086c6485e2e387894fd98e22177ac0c25181794aa0021d
+    size: 36266
     subdir: beeline-params
-    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
+    url: https://github.com/flipstone/beeline/archive/0b2536c63089ca6bd8f4872787261f4cabe0be61.tar.gz
     version: 0.2.0.0
   original:
     subdir: beeline-params
-    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
+    url: https://github.com/flipstone/beeline/archive/0b2536c63089ca6bd8f4872787261f4cabe0be61.tar.gz
 - completed:
     name: beeline-routing
     pantry-tree:
       sha256: ac9788a17532bdb3b7e77c7324e8f78f4f65ff12fe8828dfee16960aea2ba246
       size: 1119
-    sha256: 6394c8c25087dd0ce952622ac0bcc5882dc916da28e5af8434181972d4227b98
-    size: 35878
+    sha256: 225c76196f47339865086c6485e2e387894fd98e22177ac0c25181794aa0021d
+    size: 36266
     subdir: beeline-routing
-    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
+    url: https://github.com/flipstone/beeline/archive/0b2536c63089ca6bd8f4872787261f4cabe0be61.tar.gz
     version: 0.3.0.2
   original:
     subdir: beeline-routing
-    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
+    url: https://github.com/flipstone/beeline/archive/0b2536c63089ca6bd8f4872787261f4cabe0be61.tar.gz
 - completed:
     name: beeline-http-client
     pantry-tree:
-      sha256: aaa852ff2f2d464e75e2d09bf7c72b89373952a853b263d1708a87f63a7cf17c
+      sha256: f15d423a64227d7bf1b2f8cc32f124eafb4e2af3b436350c551998d21178175e
       size: 725
-    sha256: 6394c8c25087dd0ce952622ac0bcc5882dc916da28e5af8434181972d4227b98
-    size: 35878
+    sha256: 225c76196f47339865086c6485e2e387894fd98e22177ac0c25181794aa0021d
+    size: 36266
     subdir: beeline-http-client
-    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
-    version: 0.9.0.1
+    url: https://github.com/flipstone/beeline/archive/0b2536c63089ca6bd8f4872787261f4cabe0be61.tar.gz
+    version: 0.9.0.2
   original:
     subdir: beeline-http-client
-    url: https://github.com/flipstone/beeline/archive/567eb20702f8a0c6bfec246130dab861a7732110.tar.gz
-- completed:
-    name: shrubbery
-    pantry-tree:
-      sha256: d16c6b171d9b360098760d2c2269ded8eaae823ed9aa5c7a36598673e83fb9e3
-      size: 2834
-    sha256: 8bb3b52a8f9cb3f6edc5ee0c4584c81187b05966d59d718a247a6707479e2e33
-    size: 30344
-    url: https://github.com/flipstone/shrubbery/archive/a064ede07e01b753a6eb310fc24d9fd8da1ad826.tar.gz
-    version: 0.2.3.1
-  original:
-    url: https://github.com/flipstone/shrubbery/archive/a064ede07e01b753a6eb310fc24d9fd8da1ad826.tar.gz
+    url: https://github.com/flipstone/beeline/archive/0b2536c63089ca6bd8f4872787261f4cabe0be61.tar.gz
 - completed:
     name: bounded-text
     pantry-tree:

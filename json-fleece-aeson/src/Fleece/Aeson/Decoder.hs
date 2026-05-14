@@ -28,7 +28,7 @@ import qualified Data.Map.Strict as Map
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as Enc
 import qualified Data.Text.Lazy as TL
-import GHC.TypeLits (KnownNat, KnownSymbol, symbolVal)
+import GHC.TypeLits (KnownNat)
 import Shrubbery (type (@=))
 import qualified Shrubbery
 
@@ -84,8 +84,8 @@ instance FC.Fleece Decoder where
   newtype UnionMembers Decoder allTypes _handledTypes
     = UnionMembers (FC.Name -> Aeson.Value -> AesonTypes.Parser (Shrubbery.Union allTypes))
 
-  newtype TaggedUnionMembers Decoder allTags _handledTags
-    = TaggedUnionMembers (Map.Map T.Text (Aeson.Object -> AesonTypes.Parser (Shrubbery.TaggedUnion allTags)))
+  newtype TaggedUnionMembers Decoder adt _allTags _handledTags
+    = TaggedUnionMembers (Map.Map T.Text (Aeson.Object -> AesonTypes.Parser adt))
 
   interpretFormat _ =
     FC.schemaInterpreter
@@ -246,23 +246,25 @@ instance FC.Fleece Decoder where
             Nothing -> fail ("Invalid tag found for tagged union " <> nameString <> ": " <> T.unpack tagValue)
 
   taggedUnionMemberWithTag ::
-    forall tag allTags a proxy n.
-    ( KnownSymbol tag
-    , n ~ Shrubbery.TagIndex tag allTags
+    forall tag allTags a proxy n adt.
+    ( n ~ Shrubbery.TagIndex tag allTags
     , KnownNat n
     , Shrubbery.TagType tag allTags ~ a
     , Shrubbery.TypeAtIndex n (Shrubbery.TaggedTypes allTags) ~ a
+    , Shrubbery.TaggedUnionable adt
+    , Shrubbery.TaggedBranchTypes adt ~ allTags
     ) =>
     proxy tag ->
+    String ->
     FC.Object Decoder a a ->
-    FC.TaggedUnionMembers Decoder allTags '[tag @= a]
-  taggedUnionMemberWithTag tag object =
+    FC.TaggedUnionMembers Decoder adt allTags '[tag @= a]
+  taggedUnionMemberWithTag _tag jsonTagValue object =
     let
       tagValue =
-        T.pack (symbolVal tag)
+        T.pack jsonTagValue
 
       parseUnion =
-        fmap (Shrubbery.unifyTaggedUnion @tag) . objectDecoder object
+        fmap (Shrubbery.unifyTagged @tag) . objectDecoder object
     in
       TaggedUnionMembers (Map.singleton tagValue parseUnion)
 

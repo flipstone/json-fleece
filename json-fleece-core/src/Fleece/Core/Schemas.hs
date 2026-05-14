@@ -37,6 +37,7 @@ module Fleece.Core.Schemas
   , unionMember
   , taggedUnion
   , taggedUnionMember
+  , taggedUnionMemberAs
   , set
   , SetDuplicateHandling (AllowInputDuplicates, RejectInputDuplicates)
   , NothingEncoding (EmitNull, OmitKey)
@@ -59,8 +60,8 @@ import qualified Data.Time as Time
 import qualified Data.Time.Format.ISO8601 as ISO8601
 import Data.Typeable (Typeable)
 import qualified Data.Vector as V
-import GHC.TypeLits (KnownNat, KnownSymbol, Symbol)
-import Shrubbery (Tag, TagIndex, TagType, TaggedTypes, TaggedUnion, TypeAtIndex, Union, branch, branchBuild, branchEnd, dissectUnion, firstIndexOfType, unify, type (@=))
+import GHC.TypeLits (KnownNat, KnownSymbol, Symbol, symbolVal)
+import Shrubbery (Tag, TagIndex, TagType, TaggedBranchTypes, TaggedTypes, TaggedUnionable, TypeAtIndex, Union, branch, branchBuild, branchEnd, dissectUnion, firstIndexOfType, unify, type (@=))
 import Shrubbery.TypeList (FirstIndexOf, Length)
 
 import Fleece.Core.Class
@@ -186,11 +187,16 @@ unionMember =
   unionMemberWithIndex firstIndexOfType
 
 taggedUnion ::
-  forall (tags :: [Tag]) t.
-  (Typeable tags, Fleece t, KnownNat (Length (TaggedTypes tags))) =>
+  forall a (tags :: [Tag]) t.
+  ( Typeable a
+  , Fleece t
+  , KnownNat (Length (TaggedTypes tags))
+  , TaggedBranchTypes a ~ tags
+  , TaggedUnionable a
+  ) =>
   String ->
-  TaggedUnionMembers t tags tags ->
-  Schema t (TaggedUnion tags)
+  TaggedUnionMembers t a tags tags ->
+  Schema t a
 taggedUnion tagProperty members =
   let
     name =
@@ -202,22 +208,45 @@ taggedUnion tagProperty members =
     schema
 
 taggedUnionMember ::
-  forall (tag :: Symbol) (tags :: [Tag]) t a n.
+  forall (tag :: Symbol) (tags :: [Tag]) t a n adt.
   ( KnownSymbol tag
   , n ~ TagIndex tag tags
   , KnownNat n
   , TagType tag tags ~ a
   , TypeAtIndex n (TaggedTypes tags) ~ a
+  , TaggedUnionable adt
+  , TaggedBranchTypes adt ~ tags
   ) =>
   Fleece t =>
   Object t a a ->
-  TaggedUnionMembers t tags '[tag @= a]
+  TaggedUnionMembers t adt tags '[tag @= a]
 taggedUnionMember =
   let
     tagProxy :: Proxy tag
     tagProxy = Proxy
   in
-    taggedUnionMemberWithTag tagProxy
+    taggedUnionMemberWithTag tagProxy (symbolVal tagProxy)
+
+taggedUnionMemberAs ::
+  forall (tag :: Symbol) (tags :: [Tag]) t a n adt.
+  ( KnownSymbol tag
+  , n ~ TagIndex tag tags
+  , KnownNat n
+  , TagType tag tags ~ a
+  , TypeAtIndex n (TaggedTypes tags) ~ a
+  , TaggedUnionable adt
+  , TaggedBranchTypes adt ~ tags
+  ) =>
+  Fleece t =>
+  String ->
+  Object t a a ->
+  TaggedUnionMembers t adt tags '[tag @= a]
+taggedUnionMemberAs jsonTagValue =
+  let
+    tagProxy :: Proxy tag
+    tagProxy = Proxy
+  in
+    taggedUnionMemberWithTag tagProxy jsonTagValue
 
 object ::
   (Fleece t, Typeable a) =>

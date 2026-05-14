@@ -17,7 +17,6 @@ import qualified Data.String as String
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
 import qualified Data.Text.Lazy.Builder as LTB
-import GHC.TypeLits (symbolVal)
 import qualified Shrubbery
 
 import qualified Fleece.Core as FC
@@ -98,7 +97,7 @@ instance FC.Fleece PrettyPrinter where
   newtype UnionMembers PrettyPrinter _allTypes handledTypes
     = UnionMembers (Shrubbery.BranchBuilder handledTypes Pretty)
 
-  newtype TaggedUnionMembers PrettyPrinter _allTags handledTags
+  newtype TaggedUnionMembers PrettyPrinter _adt _allTags handledTags
     = TaggedUnionMembers (Shrubbery.TaggedBranchBuilder handledTags (T.Text, DList.DList Pretty))
 
   interpretFormat formatString schema =
@@ -234,7 +233,7 @@ instance FC.Fleece PrettyPrinter where
     PrettyPrinter $ \value ->
       let
         (tagValue, memberFields) =
-          Shrubbery.dissectTaggedUnion
+          Shrubbery.dissectTagged
             (Shrubbery.taggedBranchBuild branches)
             value
 
@@ -247,10 +246,10 @@ instance FC.Fleece PrettyPrinter where
           , Indent (Block fields)
           ]
 
-  taggedUnionMemberWithTag tag (Object fields) =
+  taggedUnionMemberWithTag _tag jsonTagValue (Object fields) =
     let
       tagValue =
-        T.pack (symbolVal tag)
+        T.pack jsonTagValue
     in
       TaggedUnionMembers (Shrubbery.taggedSingleBranch (\a -> (tagValue, fmap ($ a) fields)))
 

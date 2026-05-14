@@ -35,10 +35,11 @@ library
       Paths_json_fleece_examples
   hs-source-dirs:
       src
+  ghc-options: -fplugin=Shrubbery.Plugin
   build-depends:
       base >=4.7 && <5
     , containers >=0.6 && <0.8
-    , json-fleece-core ==0.11.*
+    , json-fleece-core ==0.12.*
     , scientific >=0.3.7 && <0.4
     , shrubbery ==0.2.*
     , text >=1.2 && <2.2

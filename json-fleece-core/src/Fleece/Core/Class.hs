@@ -122,7 +122,7 @@ import Data.Typeable (Typeable)
 import qualified Data.Vector as V
 import qualified Data.Word as W
 import GHC.TypeLits (KnownNat, KnownSymbol)
-import Shrubbery (BranchIndex, Tag, TagIndex, TagType, TaggedTypes, TaggedUnion, TypeAtIndex, Union, type (@=))
+import Shrubbery (BranchIndex, Tag, TagIndex, TagType, TaggedBranchTypes, TaggedTypes, TaggedUnionable, TypeAtIndex, Union, type (@=))
 import Shrubbery.TypeList (Append, Length)
 import Prelude hiding (maximum, minimum, null)
 
@@ -144,7 +144,7 @@ class Fleece t where
   data Field t :: Type -> Type -> Type
   data AdditionalFields t :: Type -> Type -> Type
   data UnionMembers t :: [Type] -> [Type] -> Type
-  data TaggedUnionMembers t :: [Tag] -> [Tag] -> Type
+  data TaggedUnionMembers t :: Type -> [Tag] -> [Tag] -> Type
 
   interpretDescribe :: NET.NonEmptyText -> Schema t a -> t a
   interpretDescribe _net = schemaInterpreter
@@ -240,29 +240,35 @@ class Fleece t where
     UnionMembers t types (Append left right)
 
   interpretTaggedUnionNamed ::
-    KnownNat (Length (TaggedTypes tags)) =>
+    ( KnownNat (Length (TaggedTypes tags))
+    , TaggedBranchTypes a ~ tags
+    , TaggedUnionable a
+    ) =>
     Name ->
     String ->
-    TaggedUnionMembers t tags tags ->
-    t (TaggedUnion tags)
+    TaggedUnionMembers t a tags tags ->
+    t a
 
   taggedUnionMemberWithTag ::
     ( KnownSymbol tag
-    , n ~ TagIndex tag tags
+    , n ~ TagIndex tag allTags
     , KnownNat n
-    , TagType tag tags ~ a
-    , TypeAtIndex n (TaggedTypes tags) ~ a
+    , TagType tag allTags ~ a
+    , TypeAtIndex n (TaggedTypes allTags) ~ a
+    , TaggedUnionable adt
+    , TaggedBranchTypes adt ~ allTags
     ) =>
     proxy tag ->
+    String ->
     Object t a a ->
-    TaggedUnionMembers t tags '[tag @= a]
+    TaggedUnionMembers t adt allTags '[tag @= a]
 
   taggedUnionCombine ::
     Append (TaggedTypes left) (TaggedTypes right)
       ~ TaggedTypes (Append left right) =>
-    TaggedUnionMembers t tags left ->
-    TaggedUnionMembers t tags right ->
-    TaggedUnionMembers t tags (Append left right)
+    TaggedUnionMembers t adt allTags left ->
+    TaggedUnionMembers t adt allTags right ->
+    TaggedUnionMembers t adt allTags (Append left right)
 
   interpretJsonString ::
     Schema t a ->
@@ -466,11 +472,13 @@ unionNamed name members =
 taggedUnionNamed ::
   ( Fleece t
   , KnownNat (Length (TaggedTypes tags))
+  , TaggedBranchTypes a ~ tags
+  , TaggedUnionable a
   ) =>
   Name ->
   String ->
-  TaggedUnionMembers t tags tags ->
-  Schema t (TaggedUnion tags)
+  TaggedUnionMembers t a tags tags ->
+  Schema t a
 taggedUnionNamed name tagField members =
   Schema
     { schemaName = name
@@ -714,9 +722,9 @@ infixl 9 #*
   ( Fleece t
   , Append (TaggedTypes left) (TaggedTypes right) ~ TaggedTypes (Append left right)
   ) =>
-  TaggedUnionMembers t types left ->
-  TaggedUnionMembers t types right ->
-  TaggedUnionMembers t types (Append left right)
+  TaggedUnionMembers t a types left ->
+  TaggedUnionMembers t a types right ->
+  TaggedUnionMembers t a types (Append left right)
 (#@) =
   taggedUnionCombine
 

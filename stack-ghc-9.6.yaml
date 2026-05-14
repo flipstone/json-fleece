@@ -2,14 +2,16 @@
 
 resolver: lts-22.44
 extra-deps:
+  - github: flipstone/shrubbery
+    commit: 941f3c810076e39b200885e92fcc33aa95395a31
+    subdirs:
+      - .
   - github: flipstone/beeline
     commit: 0b2536c63089ca6bd8f4872787261f4cabe0be61
     subdirs:
       - beeline-params
       - beeline-routing
       - beeline-http-client
-  - github: flipstone/shrubbery
-    commit: a064ede07e01b753a6eb310fc24d9fd8da1ad826
   - github: flipstone/bounded-text
     commit: 3ef94eeda5402857423284d0c4e021a8c8032498
   - template-haskell-lift-0.1.0.0

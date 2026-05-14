@@ -144,7 +144,9 @@ module Fleece.Core
   -- , union
   , taggedUnionNamed
   , TaggedUnionMembers
+  , taggedUnion
   , taggedUnionMember
+  , taggedUnionMemberAs
   , taggedUnionMemberWithTag
   , taggedUnionCombine
   , (#@)

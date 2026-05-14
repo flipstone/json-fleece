@@ -11,7 +11,6 @@ import qualified Data.DList as DList
 import qualified Data.Map.Strict as Map
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
-import GHC.TypeLits (symbolVal)
 
 import qualified Fleece.Core as FC
 import Fleece.Markdown.Render (schemaDocumentationToMarkdown)
@@ -68,7 +67,7 @@ instance FC.Fleece Markdown where
   newtype UnionMembers Markdown _allTypes _handledTypes
     = UnionMembers (DList.DList SchemaDocumentation)
 
-  newtype TaggedUnionMembers Markdown _allTags _handledTags
+  newtype TaggedUnionMembers Markdown _adt _allTags _handledTags
     = TaggedUnionMembers (DList.DList TaggedUnionMemberDocumentation)
 
   interpretDescribe net schema =
@@ -246,14 +245,14 @@ instance FC.Fleece Markdown where
           , schemaReferences = foldMap memberSchemaReferences members
           }
 
-  taggedUnionMemberWithTag tag object =
+  taggedUnionMemberWithTag _tag jsonTagValue object =
     TaggedUnionMembers $
       let
         Object fields = object
       in
         DList.singleton
           TaggedUnionMemberDocumentation
-            { tagValue = T.pack (symbolVal tag)
+            { tagValue = T.pack jsonTagValue
             , tagFields = fields
             }
 
