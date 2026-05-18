@@ -20,7 +20,6 @@ import qualified Data.Aeson as Aeson
 import Data.Bifunctor (bimap)
 import Data.Containers.ListUtils (nubOrd)
 import qualified Data.Foldable as Foldable
-import Data.Function (on)
 import qualified Data.HashMap.Strict.InsOrd as IOHM
 import qualified Data.List as List
 import Data.List.NonEmpty (NonEmpty ((:|)))
@@ -1436,7 +1435,7 @@ mkOpenApiObjectFormat section schemaKey typeName schema = do
         mbAdditionalProperties
 
     sortedFields =
-      List.sortBy (compare `on` CGU.codeGenFieldName) fields
+      List.sortOn CGU.codeGenFieldName fields
 
   pure (dependencies, CGU.CodeGenObject typeOptions sortedFields mbCodeGenAdditionalProps)
 
