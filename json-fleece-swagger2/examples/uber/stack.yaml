@@ -7,7 +7,7 @@ extra-deps:
   - ../../../json-fleece-aeson
   - ../../../json-fleece-aeson-beeline
   - github: flipstone/beeline
-    commit: 0b2536c63089ca6bd8f4872787261f4cabe0be61
+    commit: e31206f52fec7e96c15de9a2bab9ef1876db137b
     subdirs:
       - beeline-params
       - beeline-routing

@@ -346,7 +346,7 @@ library
   build-depends:
       base >=4.7 && <5
     , beeline-http-client ==0.9.*
-    , beeline-params ==0.2.*
+    , beeline-params >=0.2 && <0.4
     , beeline-routing ==0.3.*
     , bounded-text
     , containers
