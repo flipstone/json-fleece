@@ -351,7 +351,7 @@ library
     , bounded-text
     , containers
     , json-fleece-aeson-beeline ==0.3.*
-    , json-fleece-core ==0.11.*
+    , json-fleece-core ==0.12.*
     , non-empty-text
     , scientific
     , shrubbery ==0.2.*

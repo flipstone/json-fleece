@@ -77,6 +77,12 @@ instance FC.Fleece EncoderDecoder where
       , encoderDecoderDecoder = FC.interpretArray name (decoder itemSchema)
       }
 
+  interpretList name itemSchema =
+    EncoderDecoder
+      { encoderDecoderEncoder = FC.interpretList name (encoder itemSchema)
+      , encoderDecoderDecoder = FC.interpretList name (decoder itemSchema)
+      }
+
   interpretNull name =
     EncoderDecoder
       { encoderDecoderEncoder = FC.interpretNull name

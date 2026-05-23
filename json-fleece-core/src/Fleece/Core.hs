@@ -15,6 +15,7 @@ module Fleece.Core
   , interpretNumber
   , interpretBoolean
   , interpretArray
+  , interpretList
   , interpretNull
   , interpretObjectNamed
   , interpretNullable

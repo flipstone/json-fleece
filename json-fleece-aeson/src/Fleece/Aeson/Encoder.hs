@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE RankNTypes #-}
@@ -83,6 +84,12 @@ instance FC.Fleece Encoder where
     in
       Encoder (AesonTypes.listEncoding itemToEncoding . V.toList)
 
+  interpretList _listName schema =
+    let
+      Encoder itemToEncoding = FC.schemaInterpreter schema
+    in
+      Encoder (AesonTypes.listEncoding itemToEncoding)
+
   interpretNullable _nullableName schema =
     Encoder $ \mbValue ->
       let
@@ -97,29 +104,23 @@ instance FC.Fleece Encoder where
       key = AesonKey.fromString name
       Encoder toEncoding = FC.schemaInterpreter schema
     in
-      Field $ \object ->
-        AesonEncoding.pair key (toEncoding (accessor object))
+      Field (AesonEncoding.pair key . toEncoding . accessor)
 
   optional name accessor schema =
     let
       key = AesonKey.fromString name
       Encoder toEncoding = FC.schemaInterpreter schema
     in
-      Field $ \object ->
-        case accessor object of
-          Just value ->
-            AesonEncoding.pair key (toEncoding value)
-          Nothing ->
-            mempty
+      Field (maybe mempty (AesonEncoding.pair key . toEncoding) . accessor)
 
   additionalFields accessor schema =
-    AdditionalFields $ \object ->
+    AdditionalFields $
       let
         Encoder toEncoding = FC.schemaInterpreter schema
       in
         Map.foldMapWithKey
           (\key value -> AesonEncoding.pair (AesonKey.fromText key) (toEncoding value))
-          (accessor object)
+          . accessor
 
   mapField _f encoder =
     coerce encoder
@@ -129,11 +130,25 @@ instance FC.Fleece Encoder where
 
   field (Object mkStart) (Field mkNext) =
     Object $ \object ->
-      mkStart object <> mkNext object
+      -- Evaluate start and next to WHNF so that object does not need to be retained
+      -- while the fields are encoded. This way earlier fields can be released while
+      -- later ones are encoded.
+      let
+        !start = mkStart object
+        !next = mkNext object
+      in
+        start <> next
 
   additional (Object mkStart) (AdditionalFields mkRest) =
     Object $ \object ->
-      mkStart object <> mkRest object
+      -- Evaluate start and rest to WHNF so that object does not need to be retained
+      -- while the fields are encoded. This way earlier fields can be released while
+      -- later ones are encoded.
+      let
+        !start = mkStart object
+        !rest = mkRest object
+      in
+        start <> rest
 
   interpretObjectNamed _name (Object toSeries) =
     Encoder (Aeson.pairs . toSeries)

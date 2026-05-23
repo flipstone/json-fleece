@@ -136,6 +136,18 @@ instance FC.Fleece PrettyPrinter where
               . map (prefixArrayItem . itemToPretty)
               $ nonEmptyList
 
+  interpretList _listName schema =
+    PrettyPrinter $ \items ->
+      let
+        PrettyPrinter itemToPretty = FC.schemaInterpreter schema
+      in
+        case items of
+          [] -> Inline "[]"
+          nonEmptyList ->
+            Block
+              . map (prefixArrayItem . itemToPretty)
+              $ nonEmptyList
+
   interpretNull _name =
     PrettyPrinter showInline
 

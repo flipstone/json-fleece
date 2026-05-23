@@ -18,6 +18,7 @@ module Fleece.Core.Class
       , interpretNumber
       , interpretBoolean
       , interpretArray
+      , interpretList
       , interpretNull
       , required
       , optional
@@ -158,6 +159,14 @@ class Fleece t where
   interpretBoolean :: Name -> t Bool
 
   interpretArray :: Name -> Schema t a -> t (V.Vector a)
+
+  interpretList :: Name -> Schema t a -> t [a]
+  interpretList name schema =
+    interpretValidateAnonymous V.fromList (Right . V.toList) $
+      Schema
+        { schemaName = name
+        , schemaInterpreter = interpretArray name schema
+        }
 
   interpretNull :: Name -> t Null
 

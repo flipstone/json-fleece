@@ -23,6 +23,7 @@ import qualified Data.Map.Strict as Map
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as Enc
 import qualified Data.Text.Lazy as TL
+import qualified Data.Vector as V
 import GHC.TypeLits (KnownSymbol, symbolVal)
 import Shrubbery (type (@=))
 import qualified Shrubbery
@@ -86,6 +87,12 @@ instance FC.Fleece ToValue where
       ToValue itemToJSON = FC.schemaInterpreter schema
     in
       ToValue (Aeson.Array . fmap itemToJSON)
+
+  interpretList _listName schema =
+    let
+      ToValue itemToJSON = FC.schemaInterpreter schema
+    in
+      ToValue (Aeson.Array . V.fromList . map itemToJSON)
 
   interpretNullable _nullableName schema =
     ToValue $ \mbValue ->

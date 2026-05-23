@@ -68,7 +68,7 @@ import Fleece.Core.Class
   , Fleece
   , Null (Null)
   , Object
-  , Schema
+  , Schema (Schema, schemaInterpreter, schemaName)
   , TaggedUnionMembers
   , UnionMembers
   , additionalFields
@@ -76,6 +76,7 @@ import Fleece.Core.Class
   , boundedEnumNamed
   , constructor
   , format
+  , interpretList
   , maxLength
   , minItems
   , minLength
@@ -83,7 +84,6 @@ import Fleece.Core.Class
   , number
   , objectNamed
   , optional
-  , schemaName
   , taggedUnionMemberWithTag
   , taggedUnionNamed
   , text
@@ -99,6 +99,7 @@ import Fleece.Core.Class
   )
 import Fleece.Core.Name
   ( Name
+  , annotateName
   , defaultSchemaName
   , nameToString
   , unqualifiedName
@@ -321,10 +322,14 @@ optionalNullable encoding name accessor schema =
 
 list :: Fleece t => Schema t a -> Schema t [a]
 list itemSchema =
-  transformAnonymous
-    V.fromList
-    V.toList
-    (array itemSchema)
+  let
+    listName =
+      annotateName (schemaName itemSchema) "array"
+  in
+    Schema
+      { schemaName = listName
+      , schemaInterpreter = interpretList listName itemSchema
+      }
 
 map :: (Fleece t, Typeable a) => Schema t a -> Schema t (Map.Map T.Text a)
 map innerSchema =
