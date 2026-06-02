@@ -11,6 +11,12 @@ let
   TextLengthHandling = < Ignore | NonEmptyText | BoundedText >
 
 let
+  Selector = < OperationId : Text | PathMethod : { path : Text, method : Text } | Component : Text >
+
+let
+  SelectedItems = < All | Selected : List Selector >
+
+let
   TypeOptions =
     { Type =
         { dateTimeFormat : DateTimeFormat
@@ -40,6 +46,7 @@ let
     , typeOptions = [] : List SpecificTypeOptions
     , strictAdditionalProperties = True
     , useOptionalNullable = False
+    , selectedItems = SelectedItems.All
     }
 
 in
@@ -47,6 +54,8 @@ in
   , DerivableClass = DerivableClass
   , DeriveClasses = DeriveClasses
   , TextLengthHandling = TextLengthHandling
+  , Selector = Selector
+  , SelectedItems = SelectedItems
   , TypeOptions = TypeOptions
   , SpecificTypeOptions = SpecificTypeOptions
   , baseConfig = baseConfig
@@ -64,4 +73,9 @@ in
   , ignoreTextLength = TextLengthHandling.Ignore
   , nonEmptyTextOnly = TextLengthHandling.NonEmptyText
   , boundedText = TextLengthHandling.BoundedText
+  , allItems = SelectedItems.All
+  , selectedItems = SelectedItems.Selected
+  , operationId = Selector.OperationId
+  , pathMethod = \(path : Text) -> \(method : Text) -> Selector.PathMethod { path = path, method = method }
+  , component = Selector.Component
   }

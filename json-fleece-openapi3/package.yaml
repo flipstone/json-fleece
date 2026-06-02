@@ -65,6 +65,9 @@ extra-source-files:
   - examples/test-cases/codegen.dhall
   - examples/test-cases/test-cases.yaml
   - examples/test-cases/TestCases/**/*.hs
+  - examples/selected-items-example/codegen.dhall
+  - examples/selected-items-example/selected-items-example.yaml
+  - examples/selected-items-example/SelectedItemsExample/**/*.hs
 
 library:
   source-dirs: src

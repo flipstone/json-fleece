@@ -14,4 +14,5 @@ fi
 
 (cd json-fleece-openapi3/examples/test-cases && stack build $STACK_OPTIONS "$@")
 (cd json-fleece-openapi3/examples/star-trek && stack build $STACK_OPTIONS "$@")
+(cd json-fleece-openapi3/examples/selected-items-example && stack build $STACK_OPTIONS "$@")
 (cd json-fleece-swagger2/examples/uber && stack build $STACK_OPTIONS "$@")

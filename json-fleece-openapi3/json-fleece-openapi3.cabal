@@ -2188,6 +2188,27 @@ extra-source-files:
     examples/test-cases/TestCases/Types/UTCDateTime/DatetimeValue.hs
     examples/test-cases/TestCases/Types/UtcTimeType.hs
     examples/test-cases/TestCases/Types/ZonedTimeType.hs
+    examples/selected-items-example/codegen.dhall
+    examples/selected-items-example/selected-items-example.yaml
+    examples/selected-items-example/SelectedItemsExample/Operations/CreatePet.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/GetInventory.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/GetInventory/Response200Body.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/GetInventory/Response200Body/Meta.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/GetInventory/Response200Body/Total.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/Habitat/Option1.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/Habitat/Option1/Land.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/Habitat/Option2.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/Habitat/Option2/Water.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/Health.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/ListPets.hs
+    examples/selected-items-example/SelectedItemsExample/Types/GetInventory/Response200Body/Meta/GeneratedAt.hs
+    examples/selected-items-example/SelectedItemsExample/Types/Habitat.hs
+    examples/selected-items-example/SelectedItemsExample/Types/HealthStatus.hs
+    examples/selected-items-example/SelectedItemsExample/Types/HealthStatus/Status.hs
+    examples/selected-items-example/SelectedItemsExample/Types/NewPet.hs
+    examples/selected-items-example/SelectedItemsExample/Types/Pet.hs
+    examples/selected-items-example/SelectedItemsExample/Types/PetName.hs
+    examples/selected-items-example/SelectedItemsExample/Types/PetTag.hs
 
 source-repository head
   type: git
