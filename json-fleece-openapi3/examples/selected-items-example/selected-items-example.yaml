@@ -37,8 +37,7 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
-            format: int32
+            $ref: '#/components/schemas/PetId'
       responses:
         '200':
           description: "A pet"
@@ -116,6 +115,12 @@ components:
       type: string
     PetTag:
       type: string
+    # PetId is referenced only by the getPet path parameter. Selecting getPet
+    # must retain it -- regression test for operation-parameter schema
+    # references being followed by the operation filter.
+    PetId:
+      type: integer
+      format: int32
     Owner:
       type: object
       required:

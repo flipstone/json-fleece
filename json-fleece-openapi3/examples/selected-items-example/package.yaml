@@ -14,6 +14,7 @@ dependencies:
   - non-empty-text
   - json-fleece-core >= 0.11 && < 0.12
   - json-fleece-aeson-beeline >= 0.3 && < 0.4
+  - beeline-params >= 0.3 && < 0.4
   - beeline-routing >= 0.3 && < 0.4
   - beeline-http-client >= 0.9 && < 0.10
   - shrubbery >= 0.2 && < 0.3

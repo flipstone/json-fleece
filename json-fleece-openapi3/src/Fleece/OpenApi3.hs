@@ -228,7 +228,7 @@ mkOperation paramDefs schemaMap filePath pathItem nameStrategy method operation 
         , CGU.codeGenOperationRequestBody = fmap schemaTypeInfoDependent mbRequestBodySchema
         , CGU.codeGenOperationResponses = fmap (fmap schemaTypeInfoDependent) responses
         , CGU.codeGenOperationSchemaKeys =
-            collectOperationSchemaKeys responseDefs operation
+            collectOperationSchemaKeys paramDefs responseDefs pathItem operation
         }
 
     mkParamEntry (paramName, param) =
@@ -259,10 +259,12 @@ mkOperation paramDefs schemaMap filePath pathItem nameStrategy method operation 
       <> responseBodyModules
 
 collectOperationSchemaKeys ::
+  OA.Definitions OA.Param ->
   OA.Definitions OA.Response ->
+  OA.PathItem ->
   OA.Operation ->
   Set.Set T.Text
-collectOperationSchemaKeys responseDefs operation =
+collectOperationSchemaKeys paramDefs responseDefs pathItem operation =
   let
     requestBodyKeys =
       case OA._operationRequestBody operation of
@@ -282,8 +284,28 @@ collectOperationSchemaKeys responseDefs operation =
           maybe [] (: []) . OA._responsesDefault . OA._operationResponses $ operation
       in
         foldMap (referencedResponseSchemaKeys responseDefs) (statusResponses <> defaultResponse)
+
+    parameterKeys =
+      foldMap
+        (paramSchemaRefKeys paramDefs)
+        (OA._pathItemParameters pathItem <> OA._operationParameters operation)
   in
-    Set.union requestBodyKeys responseKeys
+    Set.unions [requestBodyKeys, responseKeys, parameterKeys]
+
+{- | Schema references reached through an operation parameter. A parameter may
+itself be a @$ref@ into @components.parameters@, and its @schema@ may be a
+@$ref@ to a component schema; either way the referenced schema must be kept
+when the operation is selected.
+-}
+paramSchemaRefKeys :: OA.Definitions OA.Param -> OA.Referenced OA.Param -> Set.Set T.Text
+paramSchemaRefKeys paramDefs paramRef =
+  let
+    mbParam =
+      case paramRef of
+        OA.Ref ref -> IOHM.lookup (OA.getReference ref) paramDefs
+        OA.Inline param -> Just param
+  in
+    maybe Set.empty referencedSchemaRefKeys (mbParam >>= OA._paramSchema)
 
 mediaTypeSchemaKeys :: OA.MediaTypeObject -> Set.Set T.Text
 mediaTypeSchemaKeys mediaTypeObject =

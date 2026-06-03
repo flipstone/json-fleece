@@ -21,6 +21,8 @@ library
       SelectedItemsExample.Operations.GetInventory.Response200Body
       SelectedItemsExample.Operations.GetInventory.Response200Body.Meta
       SelectedItemsExample.Operations.GetInventory.Response200Body.Total
+      SelectedItemsExample.Operations.GetPet
+      SelectedItemsExample.Operations.GetPet.PetId
       SelectedItemsExample.Operations.Habitat.Option1
       SelectedItemsExample.Operations.Habitat.Option1.Land
       SelectedItemsExample.Operations.Habitat.Option2
@@ -33,6 +35,7 @@ library
       SelectedItemsExample.Types.HealthStatus.Status
       SelectedItemsExample.Types.NewPet
       SelectedItemsExample.Types.Pet
+      SelectedItemsExample.Types.PetId
       SelectedItemsExample.Types.PetName
       SelectedItemsExample.Types.PetTag
   other-modules:
@@ -43,6 +46,7 @@ library
   build-depends:
       base >=4.7 && <5
     , beeline-http-client ==0.9.*
+    , beeline-params ==0.3.*
     , beeline-routing ==0.3.*
     , containers
     , json-fleece-aeson-beeline ==0.3.*

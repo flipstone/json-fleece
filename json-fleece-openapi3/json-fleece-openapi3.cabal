@@ -2195,6 +2195,8 @@ extra-source-files:
     examples/selected-items-example/SelectedItemsExample/Operations/GetInventory/Response200Body.hs
     examples/selected-items-example/SelectedItemsExample/Operations/GetInventory/Response200Body/Meta.hs
     examples/selected-items-example/SelectedItemsExample/Operations/GetInventory/Response200Body/Total.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/GetPet.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/GetPet/PetId.hs
     examples/selected-items-example/SelectedItemsExample/Operations/Habitat/Option1.hs
     examples/selected-items-example/SelectedItemsExample/Operations/Habitat/Option1/Land.hs
     examples/selected-items-example/SelectedItemsExample/Operations/Habitat/Option2.hs
@@ -2207,6 +2209,7 @@ extra-source-files:
     examples/selected-items-example/SelectedItemsExample/Types/HealthStatus/Status.hs
     examples/selected-items-example/SelectedItemsExample/Types/NewPet.hs
     examples/selected-items-example/SelectedItemsExample/Types/Pet.hs
+    examples/selected-items-example/SelectedItemsExample/Types/PetId.hs
     examples/selected-items-example/SelectedItemsExample/Types/PetName.hs
     examples/selected-items-example/SelectedItemsExample/Types/PetTag.hs
 
