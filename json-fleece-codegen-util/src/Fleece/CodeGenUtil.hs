@@ -4,6 +4,8 @@
 module Fleece.CodeGenUtil
   ( generateFleeceCode
   , CodeGenOptions (..)
+  , SelectedItems (..)
+  , Selector (..)
   , DateTimeFormat (..)
   , TypeOptions (..)
   , TextLengthHandling (..)
@@ -106,7 +108,17 @@ data CodeGenOptions = CodeGenOptions
   , typeOptionsMap :: Map.Map T.Text TypeOptions
   , strictAdditionalProperties :: Bool
   , useOptionalNullable :: Bool
+  , selectedItems :: SelectedItems
   }
+
+data SelectedItems
+  = AllItems
+  | SomeItems [Selector]
+
+data Selector
+  = OperationId T.Text
+  | PathMethod T.Text T.Text
+  | Component T.Text
 
 data TextLengthHandling
   = IgnoreTextLength
@@ -302,10 +314,12 @@ instance Ord ResponseStatus where
 data CodeGenOperation = CodeGenOperation
   { codeGenOperationOriginalName :: T.Text
   , codeGenOperationMethod :: T.Text
+  , codeGenOperationRawPath :: T.Text
   , codeGenOperationPath :: [OperationPathPiece]
   , codeGenOperationParams :: [CodeGenOperationParam]
   , codeGenOperationRequestBody :: Maybe SchemaTypeInfoOrRef
   , codeGenOperationResponses :: Map.Map ResponseStatus (Maybe SchemaTypeInfoOrRef)
+  , codeGenOperationSchemaKeys :: Set.Set T.Text
   }
 
 data CodeGenOperationParam = CodeGenOperationParam
@@ -707,15 +721,168 @@ anyJSONSchemaTypeInfo =
     }
 
 generateFleeceCode :: CodeGenMap -> CodeGen Modules
-generateFleeceCode typeMap =
+generateFleeceCode fullTypeMap = do
+  typeMap <- applyFilter fullTypeMap
   let
     refMap =
       mkReferencesMap typeMap
+  fmap catMaybes
+    . traverse (generateItem typeMap refMap)
+    . Map.elems
+    $ typeMap
+
+applyFilter :: CodeGenMap -> CodeGen CodeGenMap
+applyFilter typeMap = do
+  selection <- asks selectedItems
+  case selection of
+    AllItems -> pure typeMap
+    SomeItems selectors ->
+      let
+        operationMatches key item =
+          case item of
+            CodeGenItemOperation op ->
+              case key of
+                OperationKey _ -> any (selectorMatchesOperation op) selectors
+                ParamKey _ -> False
+                SchemaKey _ -> False
+            CodeGenItemType _ -> False
+            CodeGenItemOperationParam _ -> False
+
+        matchedOperationKeys =
+          Map.keysSet
+            . Map.filterWithKey operationMatches
+            $ typeMap
+
+        selectedComponentKeys =
+          Set.fromList
+            [ SchemaKey name
+            | Component name <- selectors
+            , Map.member (SchemaKey name) typeMap
+            ]
+
+        seedKeys =
+          Set.union matchedOperationKeys selectedComponentKeys
+
+        keepKeys =
+          reachableKeys typeMap seedKeys
+      in
+        pure $ Map.restrictKeys typeMap keepKeys
+
+codeGenKeyText :: CodeGenKey -> T.Text
+codeGenKeyText key =
+  case key of
+    OperationKey t -> t
+    ParamKey t -> t
+    SchemaKey t -> t
+
+{- | Starting from a set of seed module keys (matched operations and explicitly
+selected components), compute every module key that must be retained for the
+generated code to compile. From each key we follow two kinds of edges:
+
+  * /named references/ — the @$ref@-targeted component schemas that an
+    operation or type mentions (via 'itemSchemaRefs').
+
+  * /owned inline modules/ — the modules generated for inline schemas, which
+    are keyed as dotted descendants of their owner (an operation owns its
+    parameters and request\/response bodies; a schema owns its @oneOf@\/@anyOf@
+    options; bodies own their nested field types, and so on). The owner never
+    references these by name, so they are retained based on this key-prefix
+    relationship — the same convention operation parameters already follow.
+-}
+reachableKeys :: CodeGenMap -> Set.Set CodeGenKey -> Set.Set CodeGenKey
+reachableKeys typeMap seedKeys =
+  let
+    allKeys = Map.keysSet typeMap
+
+    ownedKeys ownerText =
+      Set.filter
+        (\k -> (ownerText <> ".") `T.isPrefixOf` codeGenKeyText k)
+        allKeys
+
+    neighbors key =
+      let
+        owned =
+          ownedKeys (codeGenKeyText key)
+
+        namedRefs =
+          maybe Set.empty (Set.map SchemaKey . itemSchemaRefs) $
+            Map.lookup key typeMap
+      in
+        Set.union owned namedRefs
+
+    go visited frontier
+      | Set.null frontier = visited
+      | otherwise =
+          let
+            newVisited =
+              Set.union visited frontier
+
+            nextFrontier =
+              Set.difference (foldMap neighbors frontier) newVisited
+          in
+            go newVisited nextFrontier
   in
-    fmap catMaybes
-      . traverse (generateItem typeMap refMap)
-      . Map.elems
-      $ typeMap
+    go Set.empty seedKeys
+
+itemSchemaRefs :: CodeGenItem -> Set.Set T.Text
+itemSchemaRefs item =
+  case item of
+    CodeGenItemOperation op -> operationSchemaRefs op
+    CodeGenItemType typ -> typeSchemaRefs typ
+    CodeGenItemOperationParam _ -> Set.empty
+
+operationSchemaRefs :: CodeGenOperation -> Set.Set T.Text
+operationSchemaRefs op =
+  let
+    requestBodyRefs =
+      maybe Set.empty schemaTypeInfoOrRefRefs (codeGenOperationRequestBody op)
+    responseRefs =
+      foldMap (maybe Set.empty schemaTypeInfoOrRefRefs) (codeGenOperationResponses op)
+  in
+    Set.union (codeGenOperationSchemaKeys op)
+      . Set.union requestBodyRefs
+      $ responseRefs
+
+typeSchemaRefs :: CodeGenType -> Set.Set T.Text
+typeSchemaRefs typ =
+  case codeGenTypeDataFormat typ of
+    CodeGenNewType _opts infoOrRef ->
+      schemaTypeInfoOrRefRefs infoOrRef
+    CodeGenEnum _opts _vals -> Set.empty
+    CodeGenObject _opts fields mbAdditional ->
+      foldMap (refTypeRefs . codeGenFieldType) fields
+        <> maybe Set.empty (schemaTypeInfoOrRefRefs . codeGenAdditionalPropertiesSchemaInfoOrRef) mbAdditional
+    CodeGenArray _opts _mbMax ref ->
+      refTypeRefs ref
+    CodeGenUnion _opts members ->
+      foldMap (schemaTypeInfoOrRefRefs . codeGenUnionMemberType) members
+    CodeGenTaggedUnion _prop members ->
+      foldMap (schemaTypeInfoOrRefRefs . codeGenTaggedUnionMemberType) members
+
+schemaTypeInfoOrRefRefs :: SchemaTypeInfoOrRef -> Set.Set T.Text
+schemaTypeInfoOrRefRefs infoOrRef =
+  case infoOrRef of
+    Left _info -> Set.empty
+    Right ref -> refTypeRefs ref
+
+refTypeRefs :: CodeGenRefType -> Set.Set T.Text
+refTypeRefs ref =
+  case ref of
+    TypeReference name -> Set.singleton name
+    CodeGenRefMap child -> refTypeRefs child
+    CodeGenRefArray _mbMin child -> refTypeRefs child
+    CodeGenRefNullable child -> refTypeRefs child
+
+selectorMatchesOperation :: CodeGenOperation -> Selector -> Bool
+selectorMatchesOperation op selector =
+  case selector of
+    OperationId opId ->
+      codeGenOperationOriginalName op == opId
+    PathMethod path method ->
+      codeGenOperationRawPath op == path
+        && T.toUpper (codeGenOperationMethod op) == T.toUpper method
+    Component _ ->
+      False
 
 generateItem ::
   CodeGenMap ->

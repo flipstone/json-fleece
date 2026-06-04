@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.4.10.1
+version:        0.4.11.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -2188,6 +2188,30 @@ extra-source-files:
     examples/test-cases/TestCases/Types/UTCDateTime/DatetimeValue.hs
     examples/test-cases/TestCases/Types/UtcTimeType.hs
     examples/test-cases/TestCases/Types/ZonedTimeType.hs
+    examples/selected-items-example/codegen.dhall
+    examples/selected-items-example/selected-items-example.yaml
+    examples/selected-items-example/SelectedItemsExample/Operations/CreatePet.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/GetInventory.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/GetInventory/Response200Body.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/GetInventory/Response200Body/Meta.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/GetInventory/Response200Body/Total.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/GetPet.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/GetPet/PetId.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/Habitat/Option1.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/Habitat/Option1/Land.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/Habitat/Option2.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/Habitat/Option2/Water.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/Health.hs
+    examples/selected-items-example/SelectedItemsExample/Operations/ListPets.hs
+    examples/selected-items-example/SelectedItemsExample/Types/GetInventory/Response200Body/Meta/GeneratedAt.hs
+    examples/selected-items-example/SelectedItemsExample/Types/Habitat.hs
+    examples/selected-items-example/SelectedItemsExample/Types/HealthStatus.hs
+    examples/selected-items-example/SelectedItemsExample/Types/HealthStatus/Status.hs
+    examples/selected-items-example/SelectedItemsExample/Types/NewPet.hs
+    examples/selected-items-example/SelectedItemsExample/Types/Pet.hs
+    examples/selected-items-example/SelectedItemsExample/Types/PetId.hs
+    examples/selected-items-example/SelectedItemsExample/Types/PetName.hs
+    examples/selected-items-example/SelectedItemsExample/Types/PetTag.hs
 
 source-repository head
   type: git
@@ -2214,7 +2238,7 @@ library
     , containers >=0.6 && <0.8
     , http-media ==0.8.*
     , insert-ordered-containers ==0.2.*
-    , json-fleece-codegen-util ==0.16.*
+    , json-fleece-codegen-util ==0.17.*
     , mtl >=2.2 && <2.4
     , non-empty-text ==0.2.*
     , openapi3 ==3.2.*
@@ -2240,7 +2264,7 @@ executable fleece-openapi3
   ghc-options: -rtsopts -threaded
   build-depends:
       base >=4.7 && <5
-    , json-fleece-codegen-util ==0.16.*
+    , json-fleece-codegen-util ==0.17.*
     , json-fleece-openapi3
   default-language: Haskell2010
   if flag(strict)
@@ -2265,7 +2289,7 @@ test-suite json-fleece-openapi3-test
     , bytestring >=0.11 && <0.13
     , file-embed >=0.0.15 && <0.0.17
     , hedgehog
-    , json-fleece-codegen-util ==0.16.*
+    , json-fleece-codegen-util ==0.17.*
     , json-fleece-openapi3
     , yaml ==0.11.*
   default-language: Haskell2010

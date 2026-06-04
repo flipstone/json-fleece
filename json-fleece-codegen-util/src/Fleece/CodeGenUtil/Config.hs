@@ -28,6 +28,7 @@ decoder =
                 <*> Dhall.field "typeOptions" typeOptionsMapDecoder
                 <*> Dhall.field "strictAdditionalProperties" Dhall.bool
                 <*> Dhall.field "useOptionalNullable" Dhall.bool
+                <*> Dhall.field "selectedItems" selectedItemsDecoder
             )
         <*> Dhall.field "inputFileName" Dhall.string
         <*> Dhall.field "destination" Dhall.string
@@ -85,4 +86,29 @@ textLengthHandlingDecoder =
     ( (fmap (\() -> CGU.IgnoreTextLength) (Dhall.constructor "Ignore" Dhall.unit))
         <> (fmap (\() -> CGU.NonEmptyTextOnly) (Dhall.constructor "NonEmptyText" Dhall.unit))
         <> (fmap (\() -> CGU.BoundedTextHandling) (Dhall.constructor "BoundedText" Dhall.unit))
+    )
+
+selectedItemsDecoder :: Dhall.Decoder CGU.SelectedItems
+selectedItemsDecoder =
+  Dhall.union
+    ( (fmap (\() -> CGU.AllItems) (Dhall.constructor "All" Dhall.unit))
+        <> (fmap CGU.SomeItems (Dhall.constructor "Selected" (Dhall.list selectorDecoder)))
+    )
+
+selectorDecoder :: Dhall.Decoder CGU.Selector
+selectorDecoder =
+  Dhall.union
+    ( (fmap CGU.OperationId (Dhall.constructor "OperationId" Dhall.strictText))
+        <> ( fmap
+               (uncurry CGU.PathMethod)
+               ( Dhall.constructor
+                   "PathMethod"
+                   ( Dhall.record $
+                       (,)
+                         <$> Dhall.field "path" Dhall.strictText
+                         <*> Dhall.field "method" Dhall.strictText
+                   )
+               )
+           )
+        <> (fmap CGU.Component (Dhall.constructor "Component" Dhall.strictText))
     )

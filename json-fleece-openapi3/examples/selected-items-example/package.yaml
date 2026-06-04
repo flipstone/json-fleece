@@ -1,0 +1,34 @@
+name:                selected-items-example
+version:             0.1.0.0
+homepage:            https://github.com/flipstone/json-fleece#readme
+license:             BSD3
+author:              Flipstone Technology Partners
+maintainer:          maintainers@flipstone.com
+copyright:           2025 Flipstone Technology Partners
+category:            Web
+
+dependencies:
+  - base >= 4.7 && < 5
+  - containers
+  - text
+  - non-empty-text
+  - json-fleece-core >= 0.11 && < 0.12
+  - json-fleece-aeson-beeline >= 0.3 && < 0.4
+  - beeline-params >= 0.3 && < 0.4
+  - beeline-routing >= 0.3 && < 0.4
+  - beeline-http-client >= 0.9 && < 0.10
+  - shrubbery >= 0.2 && < 0.3
+
+ghc-options:
+  - -Wall
+  - -Wcompat
+  - -Widentities
+  - -Wincomplete-record-updates
+  - -Wincomplete-uni-patterns
+  - -Wmissing-export-lists
+  - -Wmissing-home-modules
+  - -Wpartial-fields
+  - -Wredundant-constraints
+
+library:
+  source-dirs: .

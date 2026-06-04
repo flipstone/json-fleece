@@ -1,0 +1,154 @@
+openapi: "3.0.1"
+info:
+  title: Operation Filter Test
+  version: "1.0"
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: "A list of pets"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+    post:
+      operationId: createPet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPet'
+      responses:
+        '201':
+          description: "Pet created"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+  /pets/{petId}:
+    get:
+      operationId: getPet
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/PetId'
+      responses:
+        '200':
+          description: "A pet"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+  /owners:
+    get:
+      operationId: listOwners
+      responses:
+        '200':
+          description: "A list of owners"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Owner'
+  /inventory:
+    get:
+      operationId: getInventory
+      responses:
+        '200':
+          description: "Inventory summary"
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - total
+                  - meta
+                properties:
+                  total:
+                    type: integer
+                    format: int32
+                  topItem:
+                    $ref: '#/components/schemas/Pet'
+                  meta:
+                    type: object
+                    required:
+                      - generatedAt
+                    properties:
+                      generatedAt:
+                        type: string
+  /health:
+    get:
+      responses:
+        '200':
+          description: "Health status"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+components:
+  schemas:
+    Pet:
+      type: object
+      required:
+        - name
+        - tag
+      properties:
+        name:
+          $ref: '#/components/schemas/PetName'
+        tag:
+          $ref: '#/components/schemas/PetTag'
+    NewPet:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          $ref: '#/components/schemas/PetName'
+    PetName:
+      type: string
+    PetTag:
+      type: string
+    # PetId is referenced only by the getPet path parameter. Selecting getPet
+    # must retain it -- regression test for operation-parameter schema
+    # references being followed by the operation filter.
+    PetId:
+      type: integer
+      format: int32
+    Owner:
+      type: object
+      required:
+        - ownerName
+      properties:
+        ownerName:
+          type: string
+    HealthStatus:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+    # Habitat is not referenced by any operation; it is retained only via a
+    # `byComponent "Habitat"` selector. Its inline oneOf options exercise
+    # retention of owned inline union-member modules.
+    Habitat:
+      oneOf:
+        - type: object
+          required:
+            - land
+          properties:
+            land:
+              type: string
+        - type: object
+          required:
+            - water
+          properties:
+            water:
+              type: string

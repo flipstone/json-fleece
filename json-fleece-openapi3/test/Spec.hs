@@ -25,6 +25,7 @@ tests :: [(HH.PropertyName, HH.Property)]
 tests =
   [ ("prop_testCasesExample", prop_testCasesExample)
   , ("prop_starTrekExample", prop_starTrekExample)
+  , ("prop_selectedItemsExample", prop_selectedItemsExample)
   ]
 
 testCasesFiles :: [(FilePath, BS8.ByteString)]
@@ -78,3 +79,22 @@ lookupOrFail haystack needle =
           HH.failure
         Just target ->
           pure target
+
+selectedItemsFiles :: [(FilePath, BS8.ByteString)]
+selectedItemsFiles =
+  $(FileEmbed.embedDir "examples/selected-items-example")
+
+prop_selectedItemsExample :: HH.Property
+prop_selectedItemsExample =
+  HH.withTests 1 . HH.property $ do
+    config <- loadTestConfig (lookupOrFail selectedItemsFiles) "codegen.dhall"
+    yaml <- lookupOrFail selectedItemsFiles (Config.inputFileName config)
+    openApi <- YA.decodeThrow yaml
+
+    modules <-
+      HH.evalEither $
+        CGU.runCodeGen
+          (Config.codeGenOptions config)
+          (FOA3.generateOpenApiFleeceCode openApi)
+
+    assertGoldenMatchesGenerated (===) selectedItemsFiles modules

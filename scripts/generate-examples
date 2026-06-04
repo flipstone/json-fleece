@@ -20,6 +20,14 @@ stack exec \
   json-fleece-openapi3/examples/star-trek/codegen.dhall \
   --yes
 
+echo "Generating Selected Items (OpenAPI 3.0.1)"
+rm -rf json-fleece-openapi3/examples/selected-items-example/SelectedItemsExample
+stack exec \
+  fleece-openapi3 \
+  -- \
+  json-fleece-openapi3/examples/selected-items-example/codegen.dhall \
+  --yes
+
 echo "Generating Uber API (Swagger 2.0)"
 rm -rf json-fleece-swagger2/examples/uber/Uber
 stack exec \

@@ -29,6 +29,7 @@ import Data.Maybe (catMaybes, fromMaybe, isJust, mapMaybe)
 import qualified Data.NonEmptyText as NET
 import qualified Data.OpenApi as OA
 import qualified Data.Scientific as Scientific
+import qualified Data.Set as Set
 import qualified Data.Text as T
 
 import qualified Fleece.CodeGenUtil as CGU
@@ -214,15 +215,20 @@ mkOperation paramDefs schemaMap filePath pathItem nameStrategy method operation 
       schemaMap
       (OA._operationResponses operation)
 
+  responseDefs <- asks (OA._componentsResponses . OA._openApiComponents)
+
   let
     codeGenOperation =
       CGU.CodeGenOperation
         { CGU.codeGenOperationOriginalName = operationKey
         , CGU.codeGenOperationMethod = method
+        , CGU.codeGenOperationRawPath = T.pack filePath
         , CGU.codeGenOperationPath = pathPieces
         , CGU.codeGenOperationParams = Map.elems params
         , CGU.codeGenOperationRequestBody = fmap schemaTypeInfoDependent mbRequestBodySchema
         , CGU.codeGenOperationResponses = fmap (fmap schemaTypeInfoDependent) responses
+        , CGU.codeGenOperationSchemaKeys =
+            collectOperationSchemaKeys paramDefs responseDefs pathItem operation
         }
 
     mkParamEntry (paramName, param) =
@@ -251,6 +257,118 @@ mkOperation paramDefs schemaMap filePath pathItem nameStrategy method operation 
       <> paramModules
       <> requestBodyModules
       <> responseBodyModules
+
+collectOperationSchemaKeys ::
+  OA.Definitions OA.Param ->
+  OA.Definitions OA.Response ->
+  OA.PathItem ->
+  OA.Operation ->
+  Set.Set T.Text
+collectOperationSchemaKeys paramDefs responseDefs pathItem operation =
+  let
+    requestBodyKeys =
+      case OA._operationRequestBody operation of
+        Just (OA.Inline body) ->
+          foldMap mediaTypeSchemaKeys
+            . IOHM.elems
+            . OA._requestBodyContent
+            $ body
+        Just (OA.Ref _) -> Set.empty
+        Nothing -> Set.empty
+
+    responseKeys =
+      let
+        statusResponses =
+          map snd . IOHM.toList . OA._responsesResponses . OA._operationResponses $ operation
+        defaultResponse =
+          maybe [] (: []) . OA._responsesDefault . OA._operationResponses $ operation
+      in
+        foldMap (referencedResponseSchemaKeys responseDefs) (statusResponses <> defaultResponse)
+
+    parameterKeys =
+      foldMap
+        (paramSchemaRefKeys paramDefs)
+        (OA._pathItemParameters pathItem <> OA._operationParameters operation)
+  in
+    Set.unions [requestBodyKeys, responseKeys, parameterKeys]
+
+{- | Schema references reached through an operation parameter. A parameter may
+itself be a @$ref@ into @components.parameters@, and its @schema@ may be a
+@$ref@ to a component schema; either way the referenced schema must be kept
+when the operation is selected.
+-}
+paramSchemaRefKeys :: OA.Definitions OA.Param -> OA.Referenced OA.Param -> Set.Set T.Text
+paramSchemaRefKeys paramDefs paramRef =
+  let
+    mbParam =
+      case paramRef of
+        OA.Ref ref -> IOHM.lookup (OA.getReference ref) paramDefs
+        OA.Inline param -> Just param
+  in
+    maybe Set.empty referencedSchemaRefKeys (mbParam >>= OA._paramSchema)
+
+mediaTypeSchemaKeys :: OA.MediaTypeObject -> Set.Set T.Text
+mediaTypeSchemaKeys mediaTypeObject =
+  case OA._mediaTypeObjectSchema mediaTypeObject of
+    Just (OA.Ref (OA.Reference refKey)) -> Set.singleton refKey
+    Just (OA.Inline schema) -> inlineSchemaRefKeys schema
+    Nothing -> Set.empty
+
+inlineSchemaRefKeys :: OA.Schema -> Set.Set T.Text
+inlineSchemaRefKeys schema =
+  let
+    itemKeys =
+      case OA._schemaItems schema of
+        Just (OA.OpenApiItemsObject (OA.Ref ref)) ->
+          Set.singleton (OA.getReference ref)
+        Just (OA.OpenApiItemsObject (OA.Inline innerSchema)) ->
+          inlineSchemaRefKeys innerSchema
+        Just (OA.OpenApiItemsArray refs) ->
+          foldMap referencedSchemaRefKeys refs
+        Nothing -> Set.empty
+
+    propertyKeys =
+      foldMap referencedSchemaRefKeys (IOHM.elems (OA._schemaProperties schema))
+
+    additionalPropertyKeys =
+      case OA._schemaAdditionalProperties schema of
+        Just (OA.AdditionalPropertiesSchema (OA.Ref ref)) ->
+          Set.singleton (OA.getReference ref)
+        Just (OA.AdditionalPropertiesSchema (OA.Inline innerSchema)) ->
+          inlineSchemaRefKeys innerSchema
+        Just (OA.AdditionalPropertiesAllowed _) -> Set.empty
+        Nothing -> Set.empty
+
+    oneOfKeys =
+      maybe
+        Set.empty
+        (foldMap referencedSchemaRefKeys)
+        (OA._schemaOneOf schema <|> OA._schemaAnyOf schema <|> OA._schemaAllOf schema)
+  in
+    Set.unions [itemKeys, propertyKeys, additionalPropertyKeys, oneOfKeys]
+
+referencedSchemaRefKeys :: OA.Referenced OA.Schema -> Set.Set T.Text
+referencedSchemaRefKeys schemaRef =
+  case schemaRef of
+    OA.Ref ref -> Set.singleton (OA.getReference ref)
+    OA.Inline schema -> inlineSchemaRefKeys schema
+
+referencedResponseSchemaKeys :: OA.Definitions OA.Response -> OA.Referenced OA.Response -> Set.Set T.Text
+referencedResponseSchemaKeys responseDefs responseRef =
+  let
+    responseMediaKeys response =
+      foldMap mediaTypeSchemaKeys
+        . IOHM.elems
+        . OA._responseContent
+        $ response
+  in
+    case responseRef of
+      OA.Ref ref ->
+        case IOHM.lookup (OA.getReference ref) responseDefs of
+          Just response -> responseMediaKeys response
+          Nothing -> Set.empty
+      OA.Inline response ->
+        responseMediaKeys response
 
 lookupRequestBody ::
   T.Text ->
