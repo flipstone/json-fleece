@@ -89,7 +89,6 @@ library
       base >=4.7 && <5
     , json-fleece-codegen-util >=0.14 && <0.18
     , json-fleece-openapi3 ==0.4.*
-    , openapi3 ==3.2.*
     , text >=1.2 && <2.2
   default-language: Haskell2010
   if flag(strict)
@@ -103,10 +102,12 @@ library
   if impl (ghc < 9.12)
     build-depends:
         insert-ordered-containers ==0.2.*
+      , openapi3 >=3.2 && <3.2.5
       , swagger2 ==2.8.*
   if impl (ghc >= 9.12)
     build-depends:
         hashable ==1.5.*
+      , openapi3 >=3.2.5 && <3.3
       , swagger2 ==2.9.*
 
 executable fleece-swagger2
