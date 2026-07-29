@@ -285,8 +285,7 @@ unorderedTraverseWithKey ::
   IOHM.InsOrdHashMap T.Text v1 ->
   f (IOHM.InsOrdHashMap T.Text v2)
 #if MIN_VERSION_openapi3(3,2,5)
-unorderedTraverseWithKey f =
-  fmap IOHM.fromList . traverse (\(k, v) -> (,) k <$> f k v) . IOHM.toList
+unorderedTraverseWithKey = IOHM.traverseWithKey
 #else
 unorderedTraverseWithKey = IOHM.unorderedTraverseWithKey
 #endif
