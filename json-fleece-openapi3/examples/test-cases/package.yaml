@@ -20,7 +20,7 @@ dependencies:
   - json-fleece-aeson-beeline >= 0.3 && < 0.4
   - beeline-params >= 0.2 && < 0.4
   - beeline-routing >= 0.3 && < 0.4
-  - beeline-http-client >= 0.9 && < 0.10
+  - beeline-http-client >= 0.9 && < 0.12
   - shrubbery >= 0.2 && < 0.3
   - time
 

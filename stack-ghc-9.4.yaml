@@ -3,7 +3,7 @@
 resolver: lts-21.25
 extra-deps:
   - github: flipstone/beeline
-    commit: e31206f52fec7e96c15de9a2bab9ef1876db137b
+    commit: 5108474e7313535ff35002e14ef78f98f001415c
     subdirs:
       - beeline-params
       - beeline-routing
