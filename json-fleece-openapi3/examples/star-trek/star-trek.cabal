@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.38.1.
+-- This file has been generated from package.yaml by hpack version 0.39.6.
 --
 -- see: https://github.com/sol/hpack
 
@@ -1867,7 +1867,7 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
-    , beeline-http-client ==0.9.*
+    , beeline-http-client >=0.9 && <0.12
     , beeline-params >=0.2 && <0.4
     , beeline-routing ==0.3.*
     , json-fleece-aeson-beeline ==0.3.*
