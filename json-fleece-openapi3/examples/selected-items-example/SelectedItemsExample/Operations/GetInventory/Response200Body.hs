@@ -11,9 +11,11 @@ import Prelude (($), Eq, Maybe, Show)
 import qualified SelectedItemsExample.Operations.GetInventory.Response200Body.Meta as Meta
 import qualified SelectedItemsExample.Operations.GetInventory.Response200Body.Total as Total
 import qualified SelectedItemsExample.Types.Pet as Pet
+import qualified SelectedItemsExample.Types.PetSummaryAlias as PetSummaryAlias
 
 data Response200Body = Response200Body
   { meta :: Meta.Meta
+  , summary :: Maybe PetSummaryAlias.PetSummaryAlias
   , topItem :: Maybe Pet.Pet
   , total :: Total.Total
   }
@@ -24,5 +26,6 @@ response200BodySchema =
   FC.object $
     FC.constructor Response200Body
       #+ FC.required "meta" meta Meta.metaSchema
+      #+ FC.optional "summary" summary PetSummaryAlias.petSummaryAliasSchema
       #+ FC.optional "topItem" topItem Pet.petSchema
       #+ FC.required "total" total Total.totalSchema

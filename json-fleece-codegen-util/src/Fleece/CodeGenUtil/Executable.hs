@@ -5,6 +5,7 @@ module Fleece.CodeGenUtil.Executable
   ) where
 
 import qualified Data.Aeson as Aeson
+import qualified Data.Aeson.Types as AesonTypes
 import qualified Data.Char as Char
 import Data.Foldable (traverse_)
 import qualified Data.Text as T
@@ -17,8 +18,10 @@ import qualified System.Directory as Dir
 import qualified System.Exit as Exit
 import System.FilePath (takeDirectory, takeExtension, (</>))
 
+import qualified Fleece.Aeson as FA
 import qualified Fleece.CodeGenUtil as CGU
 import qualified Fleece.CodeGenUtil.Config as Config
+import qualified Fleece.Core as FC
 
 data Options = Options
   { configFileName :: FilePath
@@ -47,7 +50,10 @@ modeParser =
     Preview
     (Opt.long "preview" <> Opt.short 'p')
 
-codeGenMain :: Aeson.FromJSON a => (a -> CGU.CodeGen CGU.Modules) -> IO ()
+codeGenMain ::
+  Aeson.FromJSON document =>
+  (FC.AnyJSON -> document -> CGU.CodeGen CGU.Modules) ->
+  IO ()
 codeGenMain generateModules = do
   options <- Opt.customExecParser parserPrefs optionsInfo
   mkConfig <- Dhall.inputFile Config.decoder (configFileName options)
@@ -59,10 +65,15 @@ codeGenMain generateModules = do
     config =
       mkConfig (T.pack rootDir)
 
-  source <- loadSourceOrDie (Config.inputFileName config)
+  sourceValue <- loadSourceOrDie (Config.inputFileName config)
+  document <- parseDocumentOrDie sourceValue
 
-  case CGU.runCodeGen (Config.codeGenOptions config) (generateModules source) of
-    Left err -> Exit.die (show err)
+  let
+    rawDocument =
+      FA.valueToAnyJSON sourceValue
+
+  case CGU.runCodeGen (Config.codeGenOptions config) (generateModules rawDocument document) of
+    Left err -> Exit.die (T.unpack (CGU.renderCodeGenError err))
     Right modules ->
       case mode options of
         Preview -> traverse_ (uncurry previewModule) modules
@@ -80,6 +91,14 @@ parserPrefs =
   Opt.prefs $
     Opt.showHelpOnEmpty
       <> Opt.showHelpOnError
+
+parseDocumentOrDie :: Aeson.FromJSON document => Aeson.Value -> IO document
+parseDocumentOrDie sourceValue =
+  case AesonTypes.ifromJSON sourceValue of
+    AesonTypes.ISuccess document ->
+      pure document
+    AesonTypes.IError path message ->
+      Exit.die (AesonTypes.formatError path message)
 
 loadSourceOrDie :: Aeson.FromJSON a => FilePath -> IO a
 loadSourceOrDie path = do

@@ -365,6 +365,9 @@
           "type": "string"
         }
       }
+    },
+    "ProductAlias": {
+      "$ref": "#/definitions/Product"
     }
   }
 }

@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.38.1.
+-- This file has been generated from package.yaml by hpack version 0.39.6.
 --
 -- see: https://github.com/sol/hpack
 
@@ -89,6 +89,8 @@ library
       TestCases.Operations.ParamSchemaReference.StringParam
       TestCases.Operations.ParamSchemaReferenceArray
       TestCases.Operations.ParamSchemaReferenceArray.ArrayParam
+      TestCases.Operations.SchemaRefAliasPathParam
+      TestCases.Operations.SchemaRefAliasPathParam.AliasParam
       TestCases.Operations.TestCases.AnyJsonResponse
       TestCases.Operations.TestCases.CookiesWithoutHeaders
       TestCases.Operations.TestCases.CookiesWithoutHeaders.CookieParamA
@@ -177,6 +179,8 @@ library
       TestCases.Types.AllOfObject.FieldI.Type
       TestCases.Types.AllOfObject.FieldK
       TestCases.Types.AllOfObject.FieldL
+      TestCases.Types.AllOfWithSchemaRefAliasMember
+      TestCases.Types.AllOfWithSchemaRefAliasMember.ExtraField
       TestCases.Types.AnyOf
       TestCases.Types.ArrayWithNullableSingletonOneOf
       TestCases.Types.ArrayWithNullableStrings
@@ -302,6 +306,7 @@ library
       TestCases.Types.Num2SchemaStartingWithNumber
       TestCases.Types.ObjectWithDiscriminatedUnionRef
       TestCases.Types.ObjectWithFieldStartingWithNumber
+      TestCases.Types.ObjectWithSchemaRefAliasField
       TestCases.Types.ObjectWithSingletonOneOfFields
       TestCases.Types.OneOfWithDiscriminator
       TestCases.Types.OneOfWithDiscriminatorTypeObject
@@ -321,9 +326,15 @@ library
       TestCases.Types.ReferenceOneOfInsideOneOf
       TestCases.Types.ScheduledDateTime
       TestCases.Types.ScheduledDateTime.DatetimeType
+      TestCases.Types.SchemaRefAlias
+      TestCases.Types.SchemaRefAliasOfAlias
+      TestCases.Types.SchemaRefAliasOfNullable
+      TestCases.Types.SchemaRefAliasOfObject
+      TestCases.Types.SchemaRefAliasWithSiblings
       TestCases.Types.SingletonNonNullableOneOfRef
       TestCases.Types.SingletonNullableOneOfPrimitive
       TestCases.Types.SingletonNullableOneOfRef
+      TestCases.Types.SingletonOneOfSchemaRefAlias
       TestCases.Types.Status
       TestCases.Types.StringParam
       TestCases.Types.TestCases.InlineObjectWithPropertiesJsonResponse.Response200Body.Baz.Bax

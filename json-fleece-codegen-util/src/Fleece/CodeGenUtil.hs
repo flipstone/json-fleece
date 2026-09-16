@@ -16,6 +16,7 @@ module Fleece.CodeGenUtil
   , codeGenError
   , CodeGenResult
   , CodeGenError
+  , renderCodeGenError
   , CodeGenItem (..)
   , CodeGenType (..)
   , CodeGenOperation (..)
@@ -91,6 +92,10 @@ import qualified Fleece.CodeGenUtil.HaskellCode as HC
 
 newtype CodeGenError = CodeGenError String
   deriving (Show)
+
+renderCodeGenError :: CodeGenError -> T.Text
+renderCodeGenError (CodeGenError message) =
+  T.pack message
 
 type CodeGen = ReaderT CodeGenOptions (Either CodeGenError)
 type CodeGenResult = Either CodeGenError

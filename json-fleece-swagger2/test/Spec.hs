@@ -14,7 +14,7 @@ import qualified Hedgehog.Main as HHM
 
 import qualified Fleece.CodeGenUtil as CGU
 import qualified Fleece.CodeGenUtil.Config as Config
-import Fleece.CodeGenUtil.Test (assertGoldenMatchesGenerated, loadTestConfig)
+import Fleece.CodeGenUtil.Test (assertGoldenMatchesGenerated, loadTestConfig, testSpecSource)
 import qualified Fleece.Swagger2 as FS2
 
 main :: IO ()
@@ -35,13 +35,14 @@ prop_uberExample =
   HH.withTests 1 . HH.property $ do
     config <- loadTestConfig (lookupOrFail uberFiles) "codegen.dhall"
     json <- lookupOrFail uberFiles (Config.inputFileName config)
-    swagger <- HH.evalEither (Aeson.eitherDecodeStrict json)
+    sourceValue <- HH.evalEither (Aeson.eitherDecodeStrict json)
+    (rawDocument, swagger) <- HH.evalEither (testSpecSource sourceValue)
 
     modules <-
       HH.evalEither $
         CGU.runCodeGen
           (Config.codeGenOptions config)
-          (FS2.generateSwaggerFleeceCode swagger)
+          (FS2.generateSwaggerFleeceCode rawDocument swagger)
 
     assertGoldenMatchesGenerated (===) uberFiles modules
 

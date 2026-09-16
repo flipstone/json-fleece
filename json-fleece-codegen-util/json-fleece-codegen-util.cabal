@@ -1,11 +1,11 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.38.1.
+-- This file has been generated from package.yaml by hpack version 0.39.6.
 --
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-codegen-util
-version:        0.17.0.0
+version:        0.18.0.0
 description:    Please see the README on GitHub at <https://github.com/githubuser/json-fleece-codegen-util#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -51,6 +51,8 @@ library
     , file-embed ==0.0.*
     , filepath >=1.4 && <1.6
     , isocline ==1.0.*
+    , json-fleece-aeson ==0.5.*
+    , json-fleece-core ==0.12.*
     , mtl >=2.2 && <2.4
     , non-empty-text ==0.2.*
     , optparse-applicative >=0.17 && <0.20

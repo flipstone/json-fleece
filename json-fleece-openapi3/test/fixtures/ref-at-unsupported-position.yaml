@@ -1,0 +1,16 @@
+openapi: "3.0.1"
+info:
+  title: Guard
+  version: "1.0"
+paths:
+  # Every field of a path item is optional, so this parses to an empty path
+  # item and its operations vanish without complaint.
+  /widgets:
+    $ref: '#/paths/~1things'
+  /things:
+    get:
+      operationId: getThings
+      responses:
+        '204':
+          description: No content
+components: {}

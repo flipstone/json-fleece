@@ -193,6 +193,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FieldTestCases'
+  /test-cases/schema-ref-alias-path-param/{alias-param}:
+    get:
+      operationId: SchemaRefAliasPathParam
+      parameters:
+        - name: alias-param
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/SchemaRefAlias'
+      responses:
+        '200':
+          description: "Successful Get"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObjectWithSchemaRefAliasField'
   /test-cases/non-empty-text-path-param/{non-empty-param}:
     get:
       operationId: NonEmptyTextPathParam
@@ -1292,6 +1308,49 @@ components:
     SingletonNonNullableOneOfRef:
       oneOf:
         - $ref: '#/components/schemas/AStringType'
+
+    SchemaRefAlias:
+      $ref: '#/components/schemas/AStringType'
+
+    # Per the OpenAPI 3.0 spec, keys alongside a $ref are ignored, so neither
+    # the type nor the nullability below reaches the generated code. The
+    # description is kept, which OpenAPI 3.1 makes explicit.
+    SchemaRefAliasWithSiblings:
+      description: Keys alongside a $ref are ignored, but the description is kept
+      type: integer
+      nullable: true
+      $ref: '#/components/schemas/TopLevelOneOf'
+
+    SchemaRefAliasOfAlias:
+      $ref: '#/components/schemas/SchemaRefAlias'
+
+    SchemaRefAliasOfNullable:
+      $ref: '#/components/schemas/NullableString'
+
+    SchemaRefAliasOfObject:
+      $ref: '#/components/schemas/ReferenceOneOf'
+
+    AllOfWithSchemaRefAliasMember:
+      allOf:
+        - $ref: '#/components/schemas/SchemaRefAliasOfObject'
+        - type: object
+          properties:
+            extraField:
+              type: string
+
+    SingletonOneOfSchemaRefAlias:
+      oneOf:
+        - $ref: '#/components/schemas/SchemaRefAlias'
+
+    ObjectWithSchemaRefAliasField:
+      type: object
+      properties:
+        aliased:
+          $ref: '#/components/schemas/SchemaRefAlias'
+        aliasedTwice:
+          $ref: '#/components/schemas/SchemaRefAliasOfAlias'
+        aliasedWithSiblings:
+          $ref: '#/components/schemas/SchemaRefAliasWithSiblings'
 
     InlineNo_AdditionalPropertiesWithOneOf_NullabilityOutside:
       type: object

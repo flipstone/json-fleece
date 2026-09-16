@@ -15,14 +15,16 @@ import qualified Data.Swagger.Internal as SWI
 import qualified Data.Text as T
 
 import qualified Fleece.CodeGenUtil as CGU
+import qualified Fleece.Core as FC
 import qualified Fleece.OpenApi3 as FOA3
 
 generateSwaggerFleeceCode ::
+  FC.AnyJSON ->
   SW.Swagger ->
   CGU.CodeGen CGU.Modules
-generateSwaggerFleeceCode swagger = do
+generateSwaggerFleeceCode rawDocument swagger = do
   openApi <- swaggerToOpenApi swagger
-  FOA3.generateOpenApiFleeceCode openApi
+  FOA3.generateFleeceCodeForDialect FOA3.Swagger2Dialect rawDocument openApi
 
 swaggerToOpenApi :: SW.Swagger -> CGU.CodeGen OA.OpenApi
 swaggerToOpenApi swagger = do

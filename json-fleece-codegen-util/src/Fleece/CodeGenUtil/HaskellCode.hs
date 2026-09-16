@@ -437,7 +437,7 @@ newtype_ wrapperName baseType mbDeriveClasses =
         <> " = "
         <> typeNameToCode Nothing wrapperName
         <> " "
-        <> toCode baseType
+        <> toCode (guardParens baseType)
     , indent 2 (deriving_ (fromMaybe [showClass, eqClass] mbDeriveClasses))
     ]
 

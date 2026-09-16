@@ -4,9 +4,12 @@
 module Fleece.CodeGenUtil.Test
   ( assertGoldenMatchesGenerated
   , loadTestConfig
+  , testSpecSource
   ) where
 
 import qualified Control.Monad.IO.Class as MIO
+import qualified Data.Aeson as Aeson
+import qualified Data.Aeson.Types as AesonTypes
 import qualified Data.ByteString.Char8 as BS8
 import qualified Data.FileEmbed as FileEmbed
 import Data.Foldable (traverse_)
@@ -18,8 +21,10 @@ import qualified Dhall
 import qualified System.Environment as Env
 import System.FilePath (takeDirectory)
 
+import qualified Fleece.Aeson as FA
 import qualified Fleece.CodeGenUtil as CGU
 import qualified Fleece.CodeGenUtil.Config as Config
+import qualified Fleece.Core as FC
 
 loadTestConfig ::
   MIO.MonadIO m =>
@@ -70,3 +75,17 @@ assertGoldenMatchesGenerated assertEquals goldenCodeFiles actualFiles = do
 
   assertEquals actualFileNames expectedFileNames
   traverse_ assertFileMatch actualFiles
+
+{- | The unparsed and parsed halves of a specification document, the pair that
+code generation takes.
+-}
+testSpecSource ::
+  Aeson.FromJSON document =>
+  Aeson.Value ->
+  Either String (FC.AnyJSON, document)
+testSpecSource sourceValue =
+  case AesonTypes.ifromJSON sourceValue of
+    AesonTypes.ISuccess document ->
+      Right (FA.valueToAnyJSON sourceValue, document)
+    AesonTypes.IError path message ->
+      Left (AesonTypes.formatError path message)

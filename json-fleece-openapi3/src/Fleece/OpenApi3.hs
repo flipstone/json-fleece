@@ -6,6 +6,8 @@
 
 module Fleece.OpenApi3
   ( generateOpenApiFleeceCode
+  , SpecDialect (..)
+  , generateFleeceCodeForDialect
   ) where
 
 #if MIN_VERSION_base(4,18,0)
@@ -34,24 +36,96 @@ import qualified Data.Text as T
 
 import qualified Fleece.CodeGenUtil as CGU
 import qualified Fleece.CodeGenUtil.HaskellCode as HC
+import qualified Fleece.Core as FC
+import Fleece.OpenApi3.SpecRefs (SpecDialect (OpenApi3Dialect, Swagger2Dialect))
+import qualified Fleece.OpenApi3.SpecRefs as OAR
 import qualified Fleece.OpenApi3.Traversal as OAT
 
 type CGM = ReaderT OA.OpenApi CGU.CodeGen
 
 generateOpenApiFleeceCode ::
+  FC.AnyJSON ->
   OA.OpenApi ->
   CGU.CodeGen CGU.Modules
-generateOpenApiFleeceCode openApi = do
+generateOpenApiFleeceCode =
+  generateFleeceCodeForDialect OAR.OpenApi3Dialect
+
+generateFleeceCodeForDialect ::
+  OAR.SpecDialect ->
+  FC.AnyJSON ->
+  OA.OpenApi ->
+  CGU.CodeGen CGU.Modules
+generateFleeceCodeForDialect dialect rawDocument openApi = do
+  aliases <-
+    case OAR.specSchemaRefs dialect rawDocument of
+      Left specRefErrors ->
+        CGU.codeGenError
+          . T.unpack
+          . T.intercalate "\n"
+          . fmap OAR.renderSpecRefError
+          . NEL.toList
+          $ specRefErrors
+      Right aliases ->
+        pure aliases
+
+  let
+    -- Every other lookup of a named schema goes through the parsed components, where an alias is an
+    -- empty schema, so fill each alias in with the schema it names before any of them run.
+    resolvedOpenApi =
+      inlineSchemaAliases aliases openApi
+
   inlinedOpenApi <-
     runReaderT
-      -- Preprocess the 'OA.OpenAPI' by recursively inlining schemas in @allOf@s
-      -- before continuing with normal codegen
-      (OAT.traverseOpenApiSchemas inlineAllOfReferenced openApi)
-      openApi
+      -- Preprocess the 'OA.OpenAPI' by recursively inlining schemas in @allOf@s before continuing
+      -- with normal codegen
+      (OAT.traverseOpenApiSchemas inlineAllOfReferenced resolvedOpenApi)
+      resolvedOpenApi
 
-  typeMap <- runReaderT mkCodeGenTypes inlinedOpenApi
+  typeMap <- runReaderT (mkCodeGenTypes aliases) inlinedOpenApi
 
   CGU.generateFleeceCode typeMap
+
+{- | Replaces the empty schema that a @$ref@ alias parses to with the schema it ultimately
+names. Carefully, and crucially, this prefers the alias's own description, if there is one, over the
+target's. The type generated for the alias is still a newtype over the referenced type. This only
+affects the lookups that resolve a @$ref@ to a schema, such as @allOf@ members and singleton @oneOf@
+options.
+-}
+inlineSchemaAliases :: OAR.SchemaAliases -> OA.OpenApi -> OA.OpenApi
+inlineSchemaAliases aliases openApi =
+  let
+    components =
+      OA._openApiComponents openApi
+
+    schemas =
+      OA._componentsSchemas components
+
+    withTargetSchema aliasName schema =
+      let
+        targetSchema = do
+          target <- OAR.finalAliasTarget aliasName aliases
+          IOHM.lookup target schemas
+      in
+        case targetSchema of
+          Nothing ->
+            schema
+          Just resolvedSchema ->
+            resolvedSchema
+              { OA._schemaDescription =
+                  OA._schemaDescription schema
+                    <|> OA._schemaDescription resolvedSchema
+              }
+
+    inlineAlias aliasName =
+      IOHM.adjust (withTargetSchema aliasName) aliasName
+  in
+    openApi
+      { OA._openApiComponents =
+          components
+            { OA._componentsSchemas =
+                foldr inlineAlias schemas (OAR.schemaAliasNames aliases)
+            }
+      }
 
 type SchemaMap =
   Map.Map CGU.CodeGenKey SchemaEntry
@@ -75,30 +149,90 @@ unionsErrorOnConflict maps =
         mempty
         (fmap (fmap pure) maps)
 
-mkCodeGenTypes :: CGM CGU.CodeGenMap
-mkCodeGenTypes = do
+mkCodeGenTypes :: OAR.SchemaAliases -> CGM CGU.CodeGenMap
+mkCodeGenTypes aliases = do
   pathItems <- asks (IOHM.toList . OA._openApiPaths)
   components <- asks OA._openApiComponents
   schemaMaps <-
-    traverse (uncurry (mkSchemaMap CGU.Type))
+    traverse (uncurry (mkComponentSchemaMap aliases))
       . IOHM.toList
       $ OA._componentsSchemas components
 
-  schemaMap <- unionsErrorOnConflict schemaMaps
+  allSchemas <- unionsErrorOnConflict schemaMaps
 
   let
+    targetGeneratesType key _schemaEntry =
+      case key of
+        CGU.OperationKey _ ->
+          True
+        CGU.ParamKey _ ->
+          True
+        CGU.SchemaKey schemaKey ->
+          case OAR.finalAliasTarget schemaKey aliases of
+            Nothing ->
+              True
+            Just target ->
+              Map.member (CGU.SchemaKey target) allSchemas
+
+    schemaMap =
+      Map.filterWithKey targetGeneratesType allSchemas
+
     codeGenMap =
       fmap (CGU.CodeGenItemType . schemaCodeGenType) schemaMap
 
   pathTypes <-
     traverse
-      (uncurry $ mkPathItem (OA._componentsParameters components) schemaMap)
+      (uncurry $ mkPathItem (OA._componentsParameters components) aliases schemaMap)
       pathItems
 
   unionsErrorOnConflict (codeGenMap : pathTypes)
 
-mkPathItem :: OA.Definitions OA.Param -> SchemaMap -> FilePath -> OA.PathItem -> CGM CGU.CodeGenMap
-mkPathItem paramDefs schemaMap filePath pathItem = do
+mkComponentSchemaMap ::
+  OAR.SchemaAliases ->
+  T.Text ->
+  OA.Schema ->
+  CGM SchemaMap
+mkComponentSchemaMap aliases schemaKey schema =
+  case OAR.immediateAliasTarget schemaKey aliases of
+    Nothing ->
+      mkSchemaMap CGU.Type schemaKey schema
+    Just targetKey ->
+      mkSchemaAliasMap schemaKey targetKey schema
+
+mkSchemaAliasMap ::
+  T.Text ->
+  T.Text ->
+  OA.Schema ->
+  CGM SchemaMap
+mkSchemaAliasMap schemaKey targetKey schema = lift $ do
+  let
+    description = do
+      schemaDescription <- OA._schemaDescription schema
+      NET.fromText schemaDescription
+
+    aliasSchemaMap typeName schemaInfo typeOptions =
+      Map.singleton (CGU.SchemaKey schemaKey) $
+        SchemaEntry
+          { schemaOpenApiSchema = schema
+          , schemaCodeGenType =
+              CGU.CodeGenType
+                { CGU.codeGenTypeOriginalName = schemaKey
+                , CGU.codeGenTypeName = typeName
+                , CGU.codeGenTypeSchemaInfo = schemaInfo
+                , CGU.codeGenTypeDescription = description
+                , CGU.codeGenTypeDataFormat =
+                    CGU.CodeGenNewType typeOptions (Right (CGU.TypeReference targetKey))
+                }
+          }
+
+  (_moduleName, typeName) <- CGU.inferTypeForInputName CGU.Type schemaKey
+  liftA2
+    (aliasSchemaMap typeName)
+    (CGU.inferSchemaInfoForTypeName typeName)
+    (CGU.lookupTypeOptions typeName)
+
+mkPathItem :: OA.Definitions OA.Param -> OAR.SchemaAliases -> SchemaMap -> FilePath -> OA.PathItem -> CGM CGU.CodeGenMap
+mkPathItem paramDefs aliases schemaMap filePath pathItem = do
   let
     methodOperations =
       pathItemOperations pathItem
@@ -110,7 +244,7 @@ mkPathItem paramDefs schemaMap filePath pathItem = do
 
   operationCodeGenMaps <-
     traverse
-      (uncurry $ mkOperation paramDefs schemaMap filePath pathItem nameStrategy)
+      (uncurry $ mkOperation paramDefs aliases schemaMap filePath pathItem nameStrategy)
       methodOperations
 
   unionsErrorOnConflict operationCodeGenMaps
@@ -141,6 +275,7 @@ data FallbackOperationNamingStrategy
 
 mkOperation ::
   OA.Definitions OA.Param ->
+  OAR.SchemaAliases ->
   SchemaMap ->
   FilePath ->
   OA.PathItem ->
@@ -148,7 +283,7 @@ mkOperation ::
   T.Text ->
   OA.Operation ->
   CGM CGU.CodeGenMap
-mkOperation paramDefs schemaMap filePath pathItem nameStrategy method operation = do
+mkOperation paramDefs aliases schemaMap filePath pathItem nameStrategy method operation = do
   let
     pathTextParts =
       filter (not . T.null)
@@ -169,7 +304,7 @@ mkOperation paramDefs schemaMap filePath pathItem nameStrategy method operation 
               FallbackOperationNameIncludeMethod -> pathKey <> "." <> method
 
   params <-
-    mkOperationParams paramDefs schemaMap operationKey pathItem operation
+    mkOperationParams paramDefs aliases schemaMap operationKey pathItem operation
 
   let
     lookupParamRef name =
@@ -813,15 +948,16 @@ mkInlineOneOfSchema raiseError mkSchemaKey schemaMap schema idx =
 
 mkOperationParams ::
   OA.Definitions OA.Param ->
+  OAR.SchemaAliases ->
   SchemaMap ->
   T.Text ->
   OA.PathItem ->
   OA.Operation ->
   CGM (Map.Map T.Text CGU.CodeGenOperationParam)
-mkOperationParams paramDefs schemaMap operationKey pathItem operation = do
+mkOperationParams paramDefs aliases schemaMap operationKey pathItem operation = do
   paramList <-
     traverse
-      (mkOperationParam paramDefs schemaMap operationKey)
+      (mkOperationParam paramDefs aliases schemaMap operationKey)
       (OA._pathItemParameters pathItem <> OA._operationParameters operation)
 
   let
@@ -834,11 +970,12 @@ mkOperationParams paramDefs schemaMap operationKey pathItem operation = do
 
 mkOperationParam ::
   OA.Definitions OA.Param ->
+  OAR.SchemaAliases ->
   SchemaMap ->
   T.Text ->
   OA.Referenced OA.Param ->
   CGM CGU.CodeGenOperationParam
-mkOperationParam paramDefs schemaMap operationKey paramRef = do
+mkOperationParam paramDefs aliases schemaMap operationKey paramRef = do
   param <-
     case paramRef of
       OA.Ref name -> do
@@ -865,6 +1002,7 @@ mkOperationParam paramDefs schemaMap operationKey paramRef = do
     Just schemaRef -> do
       paramInfo <-
         schemaRefToParamInfo
+          aliases
           schemaMap
           paramName
           (OA._paramIn param)
@@ -941,60 +1079,73 @@ primitiveParamInfo paramType =
     }
 
 schemaRefToParamInfo ::
+  OAR.SchemaAliases ->
   SchemaMap ->
   T.Text ->
   OA.ParamLocation ->
   T.Text ->
   OA.Referenced OA.Schema ->
   CGM ParamInfo
-schemaRefToParamInfo schemaMap paramName paramLocation operationKey schemaRef =
+schemaRefToParamInfo aliases schemaMap paramName paramLocation operationKey schemaRef =
   case schemaRef of
     OA.Inline schema -> do
       lengthHandling <- lift $ CGU.textLengthHandling <$> asks CGU.defaultTypeOptions
       schemaTypeToParamInfo
         lengthHandling
+        aliases
         schemaMap
         paramName
         paramLocation
         operationKey
         schema
     OA.Ref (OA.Reference refKey) ->
-      case Map.lookup (CGU.SchemaKey refKey) schemaMap of
-        Just schemaEntry -> do
-          let
-            codeGenType =
-              schemaCodeGenType schemaEntry
+      -- A parameter typed by a @$ref@ alias is built from the type the alias names, because
+      -- unwrapping a newtype around another newtype needs every constructor in the chain in scope
+      -- at the use site.
+      let
+        resolvedKey =
+          fromMaybe refKey (OAR.finalAliasTarget refKey aliases)
+      in
+        case Map.lookup (CGU.SchemaKey resolvedKey) schemaMap of
+          Just schemaEntry -> do
+            let
+              codeGenType =
+                schemaCodeGenType schemaEntry
 
-          lengthHandling <- lift $ CGU.textLengthHandling <$> CGU.lookupTypeOptions (CGU.codeGenTypeName codeGenType)
+            lengthHandling <- lift $ CGU.textLengthHandling <$> CGU.lookupTypeOptions (CGU.codeGenTypeName codeGenType)
 
-          paramInfo <-
-            schemaTypeToParamInfo
-              lengthHandling
-              schemaMap
-              paramName
-              paramLocation
-              operationKey
-              (schemaOpenApiSchema schemaEntry)
+            paramInfo <-
+              schemaTypeToParamInfo
+                lengthHandling
+                aliases
+                schemaMap
+                paramName
+                paramLocation
+                operationKey
+                (schemaOpenApiSchema schemaEntry)
 
-          pure $
-            paramInfo
-              { paramInfoTypeName = Just (CGU.codeGenTypeName codeGenType)
-              }
-        Nothing ->
-          paramCodeGenError paramName operationKey $
-            "Schema reference "
-              <> show refKey
-              <> " not found."
+            pure $
+              paramInfo
+                { paramInfoTypeName = Just (CGU.codeGenTypeName codeGenType)
+                }
+          Nothing ->
+            paramCodeGenError paramName operationKey $
+              "Schema reference "
+                <> show refKey
+                <> " resolves to "
+                <> show resolvedKey
+                <> ", which was not found."
 
 schemaTypeToParamInfo ::
   CGU.TextLengthHandling ->
+  OAR.SchemaAliases ->
   SchemaMap ->
   T.Text ->
   OA.ParamLocation ->
   T.Text ->
   OA.Schema ->
   CGM ParamInfo
-schemaTypeToParamInfo lengthHandling schemaMap paramName paramLocation operationKey schema =
+schemaTypeToParamInfo lengthHandling aliases schemaMap paramName paramLocation operationKey schema =
   case OA._schemaType schema of
     Just OA.OpenApiString ->
       case OA._schemaEnum schema of
@@ -1047,6 +1198,7 @@ schemaTypeToParamInfo lengthHandling schemaMap paramName paramLocation operation
             Just (OA.OpenApiItemsObject itemSchemaRef) -> do
               itemInfo <-
                 schemaRefToParamInfo
+                  aliases
                   schemaMap
                   paramName
                   paramLocation

@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.39.1.
+-- This file has been generated from package.yaml by hpack version 0.39.6.
 --
 -- see: https://github.com/sol/hpack
 
@@ -37,6 +37,8 @@ library
       SelectedItemsExample.Types.Pet
       SelectedItemsExample.Types.PetId
       SelectedItemsExample.Types.PetName
+      SelectedItemsExample.Types.PetSummary
+      SelectedItemsExample.Types.PetSummaryAlias
       SelectedItemsExample.Types.PetTag
   other-modules:
       Paths_selected_items_example

@@ -1,0 +1,16 @@
+openapi: "3.0.1"
+info:
+  title: Guard
+  version: "1.0"
+paths:
+  # A $ref that is not a string is still a $ref the parsed document cannot hold,
+  # so it must be reported rather than quietly ignored.
+  /widgets:
+    $ref: 123
+  /things:
+    get:
+      operationId: getThings
+      responses:
+        '204':
+          description: No content
+components: {}

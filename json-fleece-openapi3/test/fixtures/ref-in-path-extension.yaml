@@ -1,0 +1,19 @@
+openapi: "3.0.1"
+info:
+  title: Guard
+  version: "1.0"
+paths:
+  # A specification extension on the Paths Object is legal and carries no
+  # meaning for code generation, so its $ref must not be rejected.
+  x-shared:
+    $ref: '#/components/schemas/Thing'
+  /widgets:
+    get:
+      operationId: getWidgets
+      responses:
+        '204':
+          description: No content
+components:
+  schemas:
+    Thing:
+      type: string

@@ -76,6 +76,8 @@ paths:
                     format: int32
                   topItem:
                     $ref: '#/components/schemas/Pet'
+                  summary:
+                    $ref: '#/components/schemas/PetSummaryAlias'
                   meta:
                     type: object
                     required:
@@ -121,6 +123,13 @@ components:
     PetId:
       type: integer
       format: int32
+    # PetSummaryAlias is a schema defined as nothing but a $ref. PetSummary is
+    # reachable only through it, so selecting getInventory must retain both --
+    # regression test for the operation filter following alias references.
+    PetSummaryAlias:
+      $ref: '#/components/schemas/PetSummary'
+    PetSummary:
+      type: string
     Owner:
       type: object
       required:
