@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           json-fleece-openapi3
-version:        0.4.11.0
+version:        0.4.12.0
 description:    Please see the README on GitHub at <https://github.com/flipstone/json-fleece-openapi3#readme>
 homepage:       https://github.com/flipstone/json-fleece#readme
 bug-reports:    https://github.com/flipstone/json-fleece/issues
@@ -2237,13 +2237,10 @@ library
     , bytestring >=0.11 && <0.13
     , containers >=0.6 && <0.8
     , http-media ==0.8.*
-    , insert-ordered-containers ==0.2.*
     , json-fleece-codegen-util ==0.17.*
     , mtl >=2.2 && <2.4
     , non-empty-text ==0.2.*
-    , openapi3 ==3.2.*
     , scientific ==0.3.*
-    , swagger2 ==2.8.*
     , text >=1.2 && <2.2
   default-language: Haskell2010
   if flag(strict)
@@ -2254,6 +2251,13 @@ library
       ghc-options: -Wno-defaulted-exception-context
   else
     ghc-options: -Wall
+  if impl (ghc < 9.12)
+    build-depends:
+        insert-ordered-containers ==0.2.*
+      , openapi3 >=3.2 && <3.2.5
+  if impl (ghc >= 9.12)
+    build-depends:
+        openapi3 >=3.2.5 && <3.3
 
 executable fleece-openapi3
   main-is: Main.hs

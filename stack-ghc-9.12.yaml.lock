@@ -9,62 +9,62 @@ packages:
     pantry-tree:
       sha256: 44791687ad987b596ff02fd1776386bef293a27e097c7c589a3bb76a9a81f200
       size: 1210
-    sha256: 93fff6138e28d8989741b4fc8622096d2211dad35f1d113a341d89d0d3235d8f
-    size: 36315
+    sha256: a7b2100e53385cca5258727c09c87c070d9ec6bee9869f13b67cef516cd15435
+    size: 36309
     subdir: beeline-params
-    url: https://github.com/flipstone/beeline/archive/e31206f52fec7e96c15de9a2bab9ef1876db137b.tar.gz
+    url: https://github.com/flipstone/beeline/archive/2abc1e519e6090407cde246e889828137e50a86f.tar.gz
     version: 0.3.0.0
   original:
     subdir: beeline-params
-    url: https://github.com/flipstone/beeline/archive/e31206f52fec7e96c15de9a2bab9ef1876db137b.tar.gz
+    url: https://github.com/flipstone/beeline/archive/2abc1e519e6090407cde246e889828137e50a86f.tar.gz
 - completed:
     name: beeline-routing
     pantry-tree:
       sha256: 555ab8a55094ffa801fa8ee8e8fc9b11ec21c08cff29e5dc152ae7f171fa3ccd
       size: 1119
-    sha256: 93fff6138e28d8989741b4fc8622096d2211dad35f1d113a341d89d0d3235d8f
-    size: 36315
+    sha256: a7b2100e53385cca5258727c09c87c070d9ec6bee9869f13b67cef516cd15435
+    size: 36309
     subdir: beeline-routing
-    url: https://github.com/flipstone/beeline/archive/e31206f52fec7e96c15de9a2bab9ef1876db137b.tar.gz
+    url: https://github.com/flipstone/beeline/archive/2abc1e519e6090407cde246e889828137e50a86f.tar.gz
     version: 0.3.0.2
   original:
     subdir: beeline-routing
-    url: https://github.com/flipstone/beeline/archive/e31206f52fec7e96c15de9a2bab9ef1876db137b.tar.gz
+    url: https://github.com/flipstone/beeline/archive/2abc1e519e6090407cde246e889828137e50a86f.tar.gz
 - completed:
     name: beeline-http-client
     pantry-tree:
       sha256: fb7c6a76d68e12173b4a0a5d7f9ad282dea0c092773d26b8e4998756b0de2713
       size: 725
-    sha256: 93fff6138e28d8989741b4fc8622096d2211dad35f1d113a341d89d0d3235d8f
-    size: 36315
+    sha256: a7b2100e53385cca5258727c09c87c070d9ec6bee9869f13b67cef516cd15435
+    size: 36309
     subdir: beeline-http-client
-    url: https://github.com/flipstone/beeline/archive/e31206f52fec7e96c15de9a2bab9ef1876db137b.tar.gz
+    url: https://github.com/flipstone/beeline/archive/2abc1e519e6090407cde246e889828137e50a86f.tar.gz
     version: 0.9.0.2
   original:
     subdir: beeline-http-client
-    url: https://github.com/flipstone/beeline/archive/e31206f52fec7e96c15de9a2bab9ef1876db137b.tar.gz
+    url: https://github.com/flipstone/beeline/archive/2abc1e519e6090407cde246e889828137e50a86f.tar.gz
 - completed:
     name: shrubbery
     pantry-tree:
-      sha256: d16c6b171d9b360098760d2c2269ded8eaae823ed9aa5c7a36598673e83fb9e3
-      size: 2834
-    sha256: 8bb3b52a8f9cb3f6edc5ee0c4584c81187b05966d59d718a247a6707479e2e33
-    size: 30344
-    url: https://github.com/flipstone/shrubbery/archive/a064ede07e01b753a6eb310fc24d9fd8da1ad826.tar.gz
-    version: 0.2.3.1
+      sha256: 3f952a81c5e7d21b840b16cbf5f11a37dd2e6c28601ff642264e0a16d0d56fe3
+      size: 2924
+    sha256: 0889dbd453d50e7e000a9137730d49fe6eed355ce08d3206525fab57b45e1a1b
+    size: 30241
+    url: https://github.com/flipstone/shrubbery/archive/8e9dfb0f84a1e11e2e6fc8e10297e06c71939855.tar.gz
+    version: 0.2.3.2
   original:
-    url: https://github.com/flipstone/shrubbery/archive/a064ede07e01b753a6eb310fc24d9fd8da1ad826.tar.gz
+    url: https://github.com/flipstone/shrubbery/archive/8e9dfb0f84a1e11e2e6fc8e10297e06c71939855.tar.gz
 - completed:
     name: bounded-text
     pantry-tree:
-      sha256: e98540b1877ae4709420472f83e8fd04b987eaeb914df72bb33b0bbe55debac2
+      sha256: f96d276efc5209ff50e737ee3cba2cd5ebb273a701864ef5419144c811ff1455
       size: 2162
-    sha256: 29c500737d8e481fe2e3325fe643a9cafc565ffd06b754bf14219f579d927f5d
-    size: 11885
-    url: https://github.com/flipstone/bounded-text/archive/3ef94eeda5402857423284d0c4e021a8c8032498.tar.gz
+    sha256: bcd338c8386d4a18515c049e61e683673eaada8e1c4855631fb66c3a5ed889dc
+    size: 11893
+    url: https://github.com/flipstone/bounded-text/archive/f31ad5f2e5f1249d9b09c158736e489397a9afcd.tar.gz
     version: 0.1.2.0
   original:
-    url: https://github.com/flipstone/bounded-text/archive/3ef94eeda5402857423284d0c4e021a8c8032498.tar.gz
+    url: https://github.com/flipstone/bounded-text/archive/f31ad5f2e5f1249d9b09c158736e489397a9afcd.tar.gz
 - completed:
     hackage: template-haskell-lift-0.1.0.0@sha256:f6cd3ee45b0c68480c400bfca9f08f39e8e87a5eb823f206dbe06ab1923a4f1c,1136
     pantry-tree:
@@ -80,36 +80,15 @@ packages:
   original:
     hackage: template-haskell-quasiquoter-0.1.0.0
 - completed:
-    hackage: hermes-json-0.7.0.0@sha256:d1fe74cc26fc7c4de12e4eab2bb74cda4eb9b4dc311c297caa23e40bdb1bd3b6,3943
+    hackage: hermes-json-0.8.0.0@sha256:5e688000f0bd4166043564382994b3d2a856d211de82cf4006cfc5646d8327ca,3756
     pantry-tree:
-      sha256: 77f7eb467a7a8fdd0b73b2bc1a51c309fd32fbcd063d99a14540cda34f3926c1
+      sha256: 974b081c935f5b2a85973b0214ac64d490ef96bc5104ccbe8af420d2f3a1999c
       size: 1332
   original:
-    hackage: hermes-json-0.7.0.0@sha256:d1fe74cc26fc7c4de12e4eab2bb74cda4eb9b4dc311c297caa23e40bdb1bd3b6,3943
-- completed:
-    hackage: openapi3-3.2.4@sha256:7309864a9a59b4654b21ef477444fb26bf8d393eba795dd8de089b368ea74c2a,4982
-    pantry-tree:
-      sha256: 1ac8db74ee9753398df1b87f2556c83cce42994c3a2c80faa13169ddba250ab0
-      size: 2263
-  original:
-    hackage: openapi3-3.2.4@sha256:7309864a9a59b4654b21ef477444fb26bf8d393eba795dd8de089b368ea74c2a,4982
-- completed:
-    hackage: swagger2-2.8.10@sha256:e2cd0e2077b3f2571a3bfca2aca0ba03d10086800803d9c0b7bb895f7aad8441,4689
-    pantry-tree:
-      sha256: 1d9fe7cb9fb7c42425a9bc4fe1bb22ebf51d7dd91c04516117c065afd2392626
-      size: 2192
-  original:
-    hackage: swagger2-2.8.10@sha256:e2cd0e2077b3f2571a3bfca2aca0ba03d10086800803d9c0b7bb895f7aad8441,4689
-- completed:
-    hackage: QuickCheck-2.15.0.1@sha256:0cfd337bb9e6fbf09255bd24bb498a156f1d9bcd465396ac8657b25034b9ee31,9046
-    pantry-tree:
-      sha256: 27dddf0b64cc7d7e154326059c89b70da61530c25623af7ef576dd9db0c53821
-      size: 2437
-  original:
-    hackage: QuickCheck-2.15.0.1@sha256:0cfd337bb9e6fbf09255bd24bb498a156f1d9bcd465396ac8657b25034b9ee31,9046
+    hackage: hermes-json-0.8.0.0
 snapshots:
 - completed:
-    sha256: 3fb5b5166a4665e3b23251fab8fefe0683fd69131773d104e136e45029130109
-    size: 696191
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/nightly/2025/10/6.yaml
-  original: nightly-2025-10-06
+    sha256: 6ef23a49b8110fe1d2564dc1d0952d190dbaa8aea4019183df1db3ae0a531790
+    size: 759079
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/nightly/2026/7/21.yaml
+  original: nightly-2026-07-21

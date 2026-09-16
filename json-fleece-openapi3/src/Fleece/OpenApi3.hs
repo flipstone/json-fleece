@@ -1,6 +1,7 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PackageImports #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
@@ -20,7 +21,11 @@ import qualified Data.Aeson as Aeson
 import Data.Bifunctor (bimap)
 import Data.Containers.ListUtils (nubOrd)
 import qualified Data.Foldable as Foldable
-import qualified Data.HashMap.Strict.InsOrd as IOHM
+#if MIN_VERSION_openapi3(3,2,5)
+import qualified "openapi3" Data.HashMap.Strict.InsOrd.Compat as IOHM
+#else
+import qualified "insert-ordered-containers" Data.HashMap.Strict.InsOrd as IOHM
+#endif
 import qualified Data.List as List
 import Data.List.NonEmpty (NonEmpty ((:|)))
 import qualified Data.List.NonEmpty as NEL

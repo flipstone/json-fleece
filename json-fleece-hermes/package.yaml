@@ -1,5 +1,5 @@
 name:                json-fleece-hermes
-version:             0.3.0.0
+version:             0.3.1.0
 github:              "flipstone/json-fleece/json-fleece-hermes"
 license:             MIT
 license-file:        LICENSE
@@ -65,7 +65,7 @@ library:
     - Fleece.Hermes
   dependencies:
     - containers >= 0.6 && < 0.8
-    - hermes-json >= 0.6 && < 0.8
+    - hermes-json >= 0.6 && < 0.9
     - shrubbery >= 0.2 && < 0.3
 
 tests:

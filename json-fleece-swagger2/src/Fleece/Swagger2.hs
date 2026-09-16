@@ -1,14 +1,21 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PackageImports #-}
 
 module Fleece.Swagger2
   ( generateSwaggerFleeceCode
   ) where
 
-import Data.Coerce (coerce)
 import Data.Either (partitionEithers)
-import qualified Data.HashMap.Strict.InsOrd as IOHM
+#if MIN_VERSION_swagger2(2,9,0)
+import Data.Hashable (Hashable)
+import qualified "openapi3" Data.HashMap.Strict.InsOrd.Compat as OpenApiIOHM
+import qualified "swagger2" Data.HashMap.Strict.InsOrd.Compat as IOHM
+#else
+import qualified "insert-ordered-containers" Data.HashMap.Strict.InsOrd as IOHM
+#endif
 import qualified Data.OpenApi as OA
 import qualified Data.Swagger as SW
 import qualified Data.Swagger.Internal as SWI
@@ -33,10 +40,10 @@ swaggerToOpenApi swagger = do
   -- generateOpenApiFleeceCodeUses
   pure $
     OA.OpenApi
-      { OA._openApiPaths = paths
+      { OA._openApiPaths = toOpenApiInsOrd paths
       , OA._openApiComponents =
           OA.Components
-            { OA._componentsSchemas = schemas
+            { OA._componentsSchemas = toOpenApiInsOrd schemas
             , OA._componentsResponses = mempty
             , OA._componentsParameters = mempty
             , OA._componentsExamples = mempty
@@ -114,7 +121,7 @@ swaggerOperationToOpenApi operation = do
       , OA._operationResponses = responses
       , OA._operationCallbacks = mempty
       , OA._operationDeprecated = SW._operationDeprecated operation
-      , OA._operationSecurity = coerce (SW._operationSecurity operation)
+      , OA._operationSecurity = convertSecurity (SW._operationSecurity operation)
       , OA._operationServers = []
       }
 
@@ -125,7 +132,7 @@ swaggerResponsesToOpenApi responses = do
   pure $
     OA.Responses
       { OA._responsesDefault = responsesDefault
-      , OA._responsesResponses = responsesResponses
+      , OA._responsesResponses = toOpenApiInsOrd responsesResponses
       }
 
 swaggerResponseRefToOpenApi :: SW.Referenced SW.Response -> CGU.CodeGen (OA.Referenced OA.Response)
@@ -159,8 +166,8 @@ swaggerResponseToOpenApi response = do
   pure $
     OA.Response
       { OA._responseDescription = SW._responseDescription response
-      , OA._responseContent = content
-      , OA._responseHeaders = headers
+      , OA._responseContent = toOpenApiInsOrd content
+      , OA._responseHeaders = toOpenApiInsOrd headers
       , OA._responseLinks = mempty
       }
 
@@ -273,7 +280,7 @@ swaggerParamToOpenApi param = do
       pure . Left $
         OA.RequestBody
           { OA._requestBodyDescription = SW._paramDescription param
-          , OA._requestBodyContent = content
+          , OA._requestBodyContent = toOpenApiInsOrd content
           , OA._requestBodyRequired = SW._paramRequired param
           }
     SW.ParamOther otherSchema -> do
@@ -390,7 +397,7 @@ swaggerSchemaToOpenApi schema = do
       , OA._schemaOneOf = Nothing
       , OA._schemaNot = Nothing
       , OA._schemaAnyOf = Nothing
-      , OA._schemaProperties = openApiProps
+      , OA._schemaProperties = toOpenApiInsOrd openApiProps
       , OA._schemaAdditionalProperties = openApiAdditionalProps
       , OA._schemaDiscriminator = fmap swaggerDiscriminatorToOpenApi (SW._schemaDiscriminator schema)
       , OA._schemaReadOnly = SW._schemaReadOnly schema
@@ -515,3 +522,22 @@ traverseRef f ref =
   case ref of
     SW.Ref (SW.Reference refKey) -> pure (OA.Ref (OA.Reference refKey))
     SW.Inline item -> fmap OA.Inline (f item)
+
+#if MIN_VERSION_swagger2(2,9,0)
+toOpenApiInsOrd ::
+  Hashable k =>
+  IOHM.InsOrdHashMap k v ->
+  OpenApiIOHM.InsOrdHashMap k v
+toOpenApiInsOrd =
+  OpenApiIOHM.fromList . IOHM.toList
+#else
+toOpenApiInsOrd ::
+  IOHM.InsOrdHashMap k v ->
+  IOHM.InsOrdHashMap k v
+toOpenApiInsOrd =
+  id
+#endif
+
+convertSecurity :: [SW.SecurityRequirement] -> [OA.SecurityRequirement]
+convertSecurity =
+  fmap (OA.SecurityRequirement . toOpenApiInsOrd . SW.getSecurityRequirement)
