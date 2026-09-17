@@ -1,17 +1,18 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module TestCases.Types.SchemaRefAliasOfNullable
-  ( SchemaRefAliasOfNullable(..)
+  ( SchemaRefAliasOfNullable
   , schemaRefAliasOfNullableSchema
   ) where
 
 import qualified Fleece.Core as FC
-import Prelude (Either, Eq, Show)
+import Prelude (Either)
 import qualified TestCases.Types.NullableString as NullableString
 
-newtype SchemaRefAliasOfNullable = SchemaRefAliasOfNullable (Either FC.Null NullableString.NullableString)
-  deriving (Show, Eq)
+type SchemaRefAliasOfNullable = Either FC.Null NullableString.NullableString
 
 schemaRefAliasOfNullableSchema :: FC.Fleece t => FC.Schema t SchemaRefAliasOfNullable
 schemaRefAliasOfNullableSchema =
-  FC.coerceSchema (FC.nullable NullableString.nullableStringSchema)
+  FC.coerceSchemaNamed
+    (FC.qualifiedName "TestCases.Types.SchemaRefAliasOfNullable" "SchemaRefAliasOfNullable")
+    (FC.nullable NullableString.nullableStringSchema)

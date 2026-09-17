@@ -3,6 +3,8 @@
 
 module Fleece.CodeGenUtil
   ( generateFleeceCode
+  , generateFleeceCodeWithDeferredErrors
+  , DeferredErrors (..)
   , CodeGenOptions (..)
   , SelectedItems (..)
   , Selector (..)
@@ -78,8 +80,10 @@ module Fleece.CodeGenUtil
   , Modules
   ) where
 
+import Control.Monad (when)
 import Control.Monad.Reader (ReaderT, ask, asks, runReaderT)
 import Control.Monad.Trans (lift)
+import Data.Containers.ListUtils (nubOrd)
 import Data.Foldable (fold)
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map.Strict as Map
@@ -159,13 +163,22 @@ derivableClassTypeName derivableClass =
     Enum -> HC.enumClass
     Bounded -> HC.boundedClass
 
+hasExplicitTypeOptions :: HC.TypeName -> CodeGen Bool
+hasExplicitTypeOptions typeName = do
+  optionsMap <- asks typeOptionsMap
+  pure (Map.member (typeOptionsKey typeName) optionsMap)
+
+typeOptionsKey :: HC.TypeName -> T.Text
+typeOptionsKey typeName =
+  HC.moduleNameToText (HC.typeNameModule typeName)
+    <> "."
+    <> HC.typeNameText typeName
+
 lookupTypeOptions :: HC.TypeName -> CodeGen TypeOptions
 lookupTypeOptions typeName = do
   let
     key =
-      HC.moduleNameToText (HC.typeNameModule typeName)
-        <> "."
-        <> HC.typeNameText typeName
+      typeOptionsKey typeName
 
   optionsMap <- asks typeOptionsMap
 
@@ -273,6 +286,8 @@ mkReferencesMap =
       case codeGenTypeDataFormat codeGenType of
         CodeGenNewType _options typeInfoOrRef ->
           either mempty (mkSingletonReference NewtypeSource) typeInfoOrRef
+        CodeGenTypeSynonym typeInfoOrRef ->
+          either mempty (mkSingletonReference NewtypeSource) typeInfoOrRef
         CodeGenEnum _options _enumValues -> mempty
         CodeGenObject _options fields mbAdditionalProperties ->
           foldMap mkFieldReferences (fixCodeGenFieldTypeLeadingDigit <$> fields)
@@ -376,6 +391,7 @@ data OperationParamLocation
 
 data CodeGenDataFormat
   = CodeGenNewType TypeOptions SchemaTypeInfoOrRef
+  | CodeGenTypeSynonym SchemaTypeInfoOrRef
   | CodeGenEnum TypeOptions [T.Text]
   | CodeGenObject TypeOptions [CodeGenObjectField] (Maybe CodeGenAdditionalProperties)
   | CodeGenArray TypeOptions (Maybe Integer) CodeGenRefType
@@ -415,6 +431,7 @@ data CodeGenRefType
   | CodeGenRefMap CodeGenRefType
   | CodeGenRefArray (Maybe Integer) CodeGenRefType
   | CodeGenRefNullable CodeGenRefType
+  deriving (Eq, Ord)
 
 resolveRefTypeInfo ::
   CodeGenMap ->
@@ -726,8 +743,60 @@ anyJSONSchemaTypeInfo =
     }
 
 generateFleeceCode :: CodeGenMap -> CodeGen Modules
-generateFleeceCode fullTypeMap = do
+generateFleeceCode =
+  generateFleeceCodeWithDeferredErrors mempty
+
+data DeferredErrors = DeferredErrors
+  { deferredItemErrors :: Map.Map CodeGenKey T.Text
+  , deferredPathErrors :: Map.Map T.Text T.Text
+  }
+
+instance Semigroup DeferredErrors where
+  left <> right =
+    DeferredErrors
+      { deferredItemErrors =
+          Map.union (deferredItemErrors left) (deferredItemErrors right)
+      , deferredPathErrors =
+          Map.union (deferredPathErrors left) (deferredPathErrors right)
+      }
+
+instance Monoid DeferredErrors where
+  mempty =
+    DeferredErrors
+      { deferredItemErrors = Map.empty
+      , deferredPathErrors = Map.empty
+      }
+
+generateFleeceCodeWithDeferredErrors ::
+  DeferredErrors ->
+  CodeGenMap ->
+  CodeGen Modules
+generateFleeceCodeWithDeferredErrors deferredErrors fullTypeMap = do
   typeMap <- applyFilter fullTypeMap
+  selection <- asks selectedItems
+
+  let
+    itemErrors =
+      deferredItemErrors deferredErrors
+
+    pathErrors =
+      deferredPathErrors deferredErrors
+
+    wantedErrors =
+      case selection of
+        AllItems ->
+          Map.elems itemErrors <> Map.elems pathErrors
+        SomeItems selectors ->
+          Map.elems (Map.restrictKeys itemErrors (Map.keysSet typeMap))
+            <> Map.elems
+              (Map.restrictKeys pathErrors (Set.fromList (mapMaybe selectorPath selectors)))
+
+  case nubOrd wantedErrors of
+    [] ->
+      pure ()
+    messages ->
+      codeGenError (T.unpack (T.intercalate "\n" messages))
+
   let
     refMap =
       mkReferencesMap typeMap
@@ -853,6 +922,8 @@ typeSchemaRefs typ =
   case codeGenTypeDataFormat typ of
     CodeGenNewType _opts infoOrRef ->
       schemaTypeInfoOrRefRefs infoOrRef
+    CodeGenTypeSynonym infoOrRef ->
+      schemaTypeInfoOrRefRefs infoOrRef
     CodeGenEnum _opts _vals -> Set.empty
     CodeGenObject _opts fields mbAdditional ->
       foldMap (refTypeRefs . codeGenFieldType) fields
@@ -877,6 +948,13 @@ refTypeRefs ref =
     CodeGenRefMap child -> refTypeRefs child
     CodeGenRefArray _mbMin child -> refTypeRefs child
     CodeGenRefNullable child -> refTypeRefs child
+
+selectorPath :: Selector -> Maybe T.Text
+selectorPath selector =
+  case selector of
+    OperationId _ -> Nothing
+    PathMethod path _method -> Just path
+    Component _ -> Nothing
 
 selectorMatchesOperation :: CodeGenOperation -> Selector -> Bool
 selectorMatchesOperation op selector =
@@ -1652,6 +1730,11 @@ generateCodeGenDataFormat typeMap references typeName format = do
         typeName
         schemaTypeInfoOrRef
         typeOptions
+    CodeGenTypeSynonym schemaTypeInfoOrRef ->
+      generateFleeceTypeSynonym
+        typeMap
+        typeName
+        schemaTypeInfoOrRef
     CodeGenEnum typeOptions values ->
       pure $ generateFleeceEnum typeName values typeOptions
     CodeGenObject typeOptions fields mbAdditionalProperties ->
@@ -1670,6 +1753,8 @@ requiredPragmasForFormat format =
   case format of
     CodeGenNewType _ (Left info) -> schemaTypeRequiredPragmas info
     CodeGenNewType _ (Right _) -> []
+    CodeGenTypeSynonym (Left info) -> schemaTypeRequiredPragmas info
+    CodeGenTypeSynonym (Right _) -> []
     CodeGenEnum _ _ -> []
     CodeGenObject _ _ _ -> []
     CodeGenArray _ _ _ -> []
@@ -1736,7 +1821,12 @@ generateSchemaCode typeMap refMap codeGenType = do
         _ -> []
 
     header =
-      schemaTypeModuleHeader moduleName typeName extraExports reexportModules
+      schemaTypeModuleHeader moduleName typeName exportStyle extraExports reexportModules
+
+    exportStyle =
+      case format of
+        CodeGenTypeSynonym _ -> ExportTypeNameOnly
+        _ -> ExportTypeWithConstructors
 
     pragmas =
       HC.lines
@@ -1761,9 +1851,13 @@ generateSchemaCode typeMap refMap codeGenType = do
 
   pure (path, code)
 
+data TypeExportStyle
+  = ExportTypeWithConstructors
+  | ExportTypeNameOnly
+
 schemaTypeModuleHeader ::
-  HC.ModuleName -> HC.TypeName -> [HC.VarName] -> [HC.ModuleName] -> HC.HaskellCode
-schemaTypeModuleHeader moduleName typeName extraExports reexportModules =
+  HC.ModuleName -> HC.TypeName -> TypeExportStyle -> [HC.VarName] -> [HC.ModuleName] -> HC.HaskellCode
+schemaTypeModuleHeader moduleName typeName exportStyle extraExports reexportModules =
   let
     schemaName =
       fleeceSchemaNameForType typeName
@@ -1775,7 +1869,10 @@ schemaTypeModuleHeader moduleName typeName extraExports reexportModules =
       HC.delimitLines
         "( "
         ", "
-        ( (HC.typeNameToCode Nothing typeName <> "(..)")
+        ( ( case exportStyle of
+              ExportTypeWithConstructors -> HC.typeNameToCode Nothing typeName <> "(..)"
+              ExportTypeNameOnly -> HC.typeNameToCode Nothing typeName
+          )
             : HC.varNameToCode Nothing schemaName
             : map (HC.varNameToCode Nothing) extraExports
             ++ moduleReexportLines
@@ -1873,6 +1970,53 @@ importDeclarations thisModuleName code =
   in
     HC.lines importLines
 
+generateFleeceTypeSynonym ::
+  CodeGenMap ->
+  HC.TypeName ->
+  SchemaTypeInfoOrRef ->
+  CodeGen ([HC.VarName], HC.HaskellCode)
+generateFleeceTypeSynonym typeMap aliasName schemaTypeOrRef = do
+  schemaTypeInfo <- schemaInfoOrRefToSchemaTypeInfo typeMap schemaTypeOrRef
+  typeOptionsConfigured <- hasExplicitTypeOptions aliasName
+
+  let
+    configureInsteadOn targetTypeName =
+      " Configure them on " <> show (typeOptionsKey targetTypeName) <> " instead."
+
+  when typeOptionsConfigured $
+    codeGenError $
+      "Type options are configured for "
+        <> show (typeOptionsKey aliasName)
+        <> ", which is generated as a type synonym. A synonym has no declaration"
+        <> " of its own to apply them to."
+        <> foldMap configureInsteadOn (synonymTargetTypeName typeMap schemaTypeOrRef)
+
+  let
+    synonymDecl =
+      HC.typeSynonym aliasName (schemaTypeExpr schemaTypeInfo)
+
+    aliasSchemaName =
+      fleeceCoreVar "qualifiedName"
+        <> " "
+        <> HC.quote (HC.toCode (HC.typeNameModule aliasName))
+        <> " "
+        <> HC.quote (HC.typeNameToCode Nothing aliasName)
+
+    fleeceSchema =
+      fleeceSchemaForType aliasName $
+        [ fleeceCoreVar "coerceSchemaNamed"
+        , HC.indent 2 ("(" <> aliasSchemaName <> ")")
+        , HC.indent 2 (schemaTypeSchema schemaTypeInfo)
+        ]
+
+    body =
+      HC.declarations
+        [ synonymDecl
+        , fleeceSchema
+        ]
+
+  pure ([], body)
+
 generateFleeceNewtype ::
   CodeGenMap ->
   HC.TypeName ->
@@ -1922,6 +2066,55 @@ generateFleeceEnum typeName enumValues typeOptions =
   in
     ([toTextName, fromTextName], HC.declarations [enum, fleeceSchema])
 
+resolveSynonymsInRefType :: CodeGenMap -> CodeGenRefType -> CodeGenRefType
+resolveSynonymsInRefType typeMap refType =
+  case refType of
+    TypeReference name ->
+      TypeReference (resolveSynonymTarget typeMap Set.empty name)
+    CodeGenRefMap inner ->
+      CodeGenRefMap (resolveSynonymsInRefType typeMap inner)
+    CodeGenRefArray mbMinItems inner ->
+      CodeGenRefArray mbMinItems (resolveSynonymsInRefType typeMap inner)
+    CodeGenRefNullable inner ->
+      CodeGenRefNullable (resolveSynonymsInRefType typeMap inner)
+
+resolveSynonymTarget :: CodeGenMap -> Set.Set T.Text -> T.Text -> T.Text
+resolveSynonymTarget typeMap visited name =
+  if Set.member name visited
+    then name
+    else case Map.lookup (SchemaKey name) typeMap of
+      Just (CodeGenItemType codeGenType) ->
+        case codeGenTypeDataFormat codeGenType of
+          CodeGenTypeSynonym (Right (TypeReference target)) ->
+            resolveSynonymTarget typeMap (Set.insert name visited) target
+          _ ->
+            name
+      _ ->
+        name
+
+synonymTargetTypeName :: CodeGenMap -> SchemaTypeInfoOrRef -> Maybe HC.TypeName
+synonymTargetTypeName typeMap schemaTypeOrRef =
+  case schemaTypeOrRef of
+    Left _info ->
+      Nothing
+    Right refType ->
+      case resolveSynonymsInRefType typeMap refType of
+        TypeReference target ->
+          case Map.lookup (SchemaKey target) typeMap of
+            Just (CodeGenItemType codeGenType) ->
+              Just (codeGenTypeName codeGenType)
+            _ ->
+              Nothing
+        CodeGenRefMap _ -> Nothing
+        CodeGenRefArray _ _ -> Nothing
+        CodeGenRefNullable _ -> Nothing
+
+unionMemberRefKey :: CodeGenMap -> SchemaTypeInfoOrRef -> Maybe CodeGenRefType
+unionMemberRefKey typeMap memberType =
+  case memberType of
+    Left _info -> Nothing
+    Right refType -> Just (resolveSynonymsInRefType typeMap refType)
+
 generateFleeceUnion ::
   CodeGenMap ->
   HC.TypeName ->
@@ -1933,6 +2126,20 @@ generateFleeceUnion typeMap typeName members typeOptions = do
     traverse
       (schemaInfoOrRefToSchemaTypeInfo typeMap . codeGenUnionMemberType)
       members
+
+  let
+    memberKeys =
+      mapMaybe
+        (unionMemberRefKey typeMap . codeGenUnionMemberType)
+        members
+
+  when (length memberKeys /= length (nubOrd memberKeys)) $
+    codeGenError $
+      "The union "
+        <> show (HC.typeNameText typeName)
+        <> " has more than one member of the same type. Only the first"
+        <> " member of a given type can be decoded, so the others would be"
+        <> " unreachable."
 
   let
     moduleName =

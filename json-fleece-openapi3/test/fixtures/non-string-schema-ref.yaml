@@ -1,0 +1,11 @@
+openapi: "3.0.1"
+info:
+  title: Guard
+  version: "1.0"
+paths: {}
+components:
+  schemas:
+    # A $ref that is not a string is reported rather than quietly treated as a
+    # schema with no content.
+    Alias:
+      $ref: 123

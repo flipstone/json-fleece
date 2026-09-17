@@ -1,17 +1,17 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Uber.Types.ProductAlias
-  ( ProductAlias(..)
+  ( ProductAlias
   , productAliasSchema
   ) where
 
 import qualified Fleece.Core as FC
-import Prelude (Eq, Show)
 import qualified Uber.Types.Product as Product
 
-newtype ProductAlias = ProductAlias Product.Product
-  deriving (Show, Eq)
+type ProductAlias = Product.Product
 
 productAliasSchema :: FC.Fleece t => FC.Schema t ProductAlias
 productAliasSchema =
-  FC.coerceSchema Product.productSchema
+  FC.coerceSchemaNamed
+    (FC.qualifiedName "Uber.Types.ProductAlias" "ProductAlias")
+    Product.productSchema

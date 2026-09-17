@@ -1,17 +1,17 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module TestCases.Types.SingletonNonNullableOneOfRef
-  ( SingletonNonNullableOneOfRef(..)
+  ( SingletonNonNullableOneOfRef
   , singletonNonNullableOneOfRefSchema
   ) where
 
-import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (Eq, Show)
+import qualified TestCases.Types.AStringType as AStringType
 
-newtype SingletonNonNullableOneOfRef = SingletonNonNullableOneOfRef T.Text
-  deriving (Show, Eq)
+type SingletonNonNullableOneOfRef = AStringType.AStringType
 
 singletonNonNullableOneOfRefSchema :: FC.Fleece t => FC.Schema t SingletonNonNullableOneOfRef
 singletonNonNullableOneOfRefSchema =
-  FC.coerceSchema FC.text
+  FC.coerceSchemaNamed
+    (FC.qualifiedName "TestCases.Types.SingletonNonNullableOneOfRef" "SingletonNonNullableOneOfRef")
+    AStringType.aStringTypeSchema

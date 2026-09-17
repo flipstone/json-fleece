@@ -56,6 +56,7 @@ module Fleece.CodeGenUtil.HaskellCode
   , record
   , delimitLines
   , newtype_
+  , typeSynonym
   , deriving_
   , enum
   , sumType
@@ -437,9 +438,16 @@ newtype_ wrapperName baseType mbDeriveClasses =
         <> " = "
         <> typeNameToCode Nothing wrapperName
         <> " "
-        <> toCode (guardParens baseType)
+        <> toCode baseType
     , indent 2 (deriving_ (fromMaybe [showClass, eqClass] mbDeriveClasses))
     ]
+
+typeSynonym :: TypeName -> TypeExpression -> HaskellCode
+typeSynonym aliasName targetType =
+  "type "
+    <> typeNameToCode Nothing aliasName
+    <> " = "
+    <> toCode targetType
 
 deriving_ :: [TypeName] -> HaskellCode
 deriving_ classes =

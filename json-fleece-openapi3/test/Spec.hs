@@ -33,8 +33,14 @@ tests =
   , ("prop_refToMissingSchemaFails", prop_refToMissingSchemaFails)
   , ("prop_aliasCycleFails", prop_aliasCycleFails)
   , ("prop_refToOtherDocumentFails", prop_refToOtherDocumentFails)
-  , ("prop_nonStringRefFails", prop_nonStringRefFails)
+  , ("prop_nonStringRefAtPathFails", prop_nonStringRefAtPathFails)
+  , ("prop_nonStringSchemaRefFails", prop_nonStringSchemaRefFails)
+  , ("prop_unionMemberCollapseFails", prop_unionMemberCollapseFails)
+  , ("prop_aliasTypeOptionsFail", prop_aliasTypeOptionsFail)
   , ("prop_refInPathExtensionSucceeds", prop_refInPathExtensionSucceeds)
+  , ("prop_unresolvableRefInFilteredSchemaSucceeds", prop_unresolvableRefInFilteredSchemaSucceeds)
+  , ("prop_refInFilteredPathSucceeds", prop_refInFilteredPathSucceeds)
+  , ("prop_refInSelectedPathFails", prop_refInSelectedPathFails)
   ]
 
 testCasesFiles :: [(FilePath, BS8.ByteString)]
@@ -117,7 +123,9 @@ fixtureFiles =
 
 prop_refAtUnsupportedPositionFails :: HH.Property
 prop_refAtUnsupportedPositionFails =
-  assertCodeGenFails "ref-at-unsupported-position.yaml" "paths./widgets"
+  assertCodeGenFails
+    "ref-at-unsupported-position.yaml"
+    "Found a $ref to \"#/paths/~1things\" at paths./widgets"
 
 prop_refToMissingSchemaFails :: HH.Property
 prop_refToMissingSchemaFails =
@@ -127,9 +135,30 @@ prop_aliasCycleFails :: HH.Property
 prop_aliasCycleFails =
   assertCodeGenFails "alias-cycle.yaml" "form a cycle of $ref aliases"
 
-prop_nonStringRefFails :: HH.Property
-prop_nonStringRefFails =
-  assertCodeGenFails "non-string-ref.yaml" "$ref that is not a string"
+prop_nonStringRefAtPathFails :: HH.Property
+prop_nonStringRefAtPathFails =
+  assertCodeGenFails
+    "non-string-ref.yaml"
+    "Found a $ref that is not a string at paths./widgets"
+
+prop_nonStringSchemaRefFails :: HH.Property
+prop_nonStringSchemaRefFails =
+  assertCodeGenFails
+    "non-string-schema-ref.yaml"
+    "The schema \"Alias\" has a $ref that is not a string"
+
+prop_unionMemberCollapseFails :: HH.Property
+prop_unionMemberCollapseFails =
+  assertCodeGenFails
+    "union-member-collapse.yaml"
+    "has more than one member of the same type"
+
+prop_aliasTypeOptionsFail :: HH.Property
+prop_aliasTypeOptionsFail =
+  assertCodeGenFailsUsing
+    "alias-type-options.dhall"
+    "alias-type-options.yaml"
+    "is generated as a type synonym"
 
 prop_refToOtherDocumentFails :: HH.Property
 prop_refToOtherDocumentFails =
@@ -142,9 +171,48 @@ generation, so a reference in one must not be rejected.
 -}
 prop_refInPathExtensionSucceeds :: HH.Property
 prop_refInPathExtensionSucceeds =
+  assertCodeGenProduces
+    "codegen.dhall"
+    "ref-in-path-extension.yaml"
+    [ "Guard/Operations/GetWidgets.hs"
+    , "Guard/Types/Thing.hs"
+    ]
+
+{- | A reference that cannot resolve is only a problem if the schema holding it
+survives filtering.
+-}
+prop_unresolvableRefInFilteredSchemaSucceeds :: HH.Property
+prop_unresolvableRefInFilteredSchemaSucceeds =
+  assertCodeGenProduces
+    "unresolvable-ref-filtered.dhall"
+    "unresolvable-ref-filtered.yaml"
+    [ "Guard/Operations/GetWidgets.hs"
+    , "Guard/Types/Widget.hs"
+    , "Guard/Types/Widget/Name.hs"
+    ]
+
+{- | A path item written as a reference is only a problem if that path is
+selected.
+-}
+prop_refInFilteredPathSucceeds :: HH.Property
+prop_refInFilteredPathSucceeds =
+  assertCodeGenProduces
+    "path-ref-filtered.dhall"
+    "path-ref-filtered.yaml"
+    ["Guard/Operations/GetThings.hs"]
+
+prop_refInSelectedPathFails :: HH.Property
+prop_refInSelectedPathFails =
+  assertCodeGenFailsUsing
+    "path-ref-selected.dhall"
+    "path-ref-filtered.yaml"
+    "Found a $ref to \"#/paths/~1things\" at paths./widgets"
+
+assertCodeGenProduces :: FilePath -> FilePath -> [FilePath] -> HH.Property
+assertCodeGenProduces configName fixtureName expectedModules =
   HH.withTests 1 . HH.property $ do
-    config <- loadTestConfig (lookupOrFail fixtureFiles) "codegen.dhall"
-    sourceValue <- lookupOrFail fixtureFiles "ref-in-path-extension.yaml" >>= YA.decodeThrow
+    config <- loadTestConfig (lookupOrFail fixtureFiles) configName
+    sourceValue <- lookupOrFail fixtureFiles fixtureName >>= YA.decodeThrow
     (rawDocument, openApi) <- HH.evalEither (testSpecSource sourceValue)
 
     modules <-
@@ -153,15 +221,16 @@ prop_refInPathExtensionSucceeds =
           (Config.codeGenOptions config)
           (FOA3.generateOpenApiFleeceCode rawDocument openApi)
 
-    map fst modules
-      === [ "Guard/Operations/GetWidgets.hs"
-          , "Guard/Types/Thing.hs"
-          ]
+    map fst modules === expectedModules
 
 assertCodeGenFails :: FilePath -> T.Text -> HH.Property
-assertCodeGenFails fixtureName expectedFragment =
+assertCodeGenFails =
+  assertCodeGenFailsUsing "codegen.dhall"
+
+assertCodeGenFailsUsing :: FilePath -> FilePath -> T.Text -> HH.Property
+assertCodeGenFailsUsing configName fixtureName expectedFragment =
   HH.withTests 1 . HH.property $ do
-    config <- loadTestConfig (lookupOrFail fixtureFiles) "codegen.dhall"
+    config <- loadTestConfig (lookupOrFail fixtureFiles) configName
     sourceValue <- lookupOrFail fixtureFiles fixtureName >>= YA.decodeThrow
     (rawDocument, openApi) <- HH.evalEither (testSpecSource sourceValue)
 

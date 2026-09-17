@@ -13,8 +13,8 @@ import qualified TestCases.Types.SchemaRefAliasOfAlias as SchemaRefAliasOfAlias
 import qualified TestCases.Types.SchemaRefAliasWithSiblings as SchemaRefAliasWithSiblings
 
 data ObjectWithSchemaRefAliasField = ObjectWithSchemaRefAliasField
-  { aliased :: Maybe SchemaRefAlias.SchemaRefAlias -- ^ An explicit type that is just a string for use in other test cases
-  , aliasedTwice :: Maybe SchemaRefAliasOfAlias.SchemaRefAliasOfAlias -- ^ An explicit type that is just a string for use in other test cases
+  { aliased :: Maybe SchemaRefAlias.SchemaRefAlias
+  , aliasedTwice :: Maybe SchemaRefAliasOfAlias.SchemaRefAliasOfAlias
   , aliasedWithSiblings :: Maybe SchemaRefAliasWithSiblings.SchemaRefAliasWithSiblings -- ^ Keys alongside a $ref are ignored, but the description is kept
   }
   deriving (Eq, Show)

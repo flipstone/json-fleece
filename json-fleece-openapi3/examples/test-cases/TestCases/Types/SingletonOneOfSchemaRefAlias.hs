@@ -1,17 +1,17 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module TestCases.Types.SingletonOneOfSchemaRefAlias
-  ( SingletonOneOfSchemaRefAlias(..)
+  ( SingletonOneOfSchemaRefAlias
   , singletonOneOfSchemaRefAliasSchema
   ) where
 
-import qualified Data.Text as T
 import qualified Fleece.Core as FC
-import Prelude (Eq, Show)
+import qualified TestCases.Types.SchemaRefAlias as SchemaRefAlias
 
-newtype SingletonOneOfSchemaRefAlias = SingletonOneOfSchemaRefAlias T.Text
-  deriving (Show, Eq)
+type SingletonOneOfSchemaRefAlias = SchemaRefAlias.SchemaRefAlias
 
 singletonOneOfSchemaRefAliasSchema :: FC.Fleece t => FC.Schema t SingletonOneOfSchemaRefAlias
 singletonOneOfSchemaRefAliasSchema =
-  FC.coerceSchema FC.text
+  FC.coerceSchemaNamed
+    (FC.qualifiedName "TestCases.Types.SingletonOneOfSchemaRefAlias" "SingletonOneOfSchemaRefAlias")
+    SchemaRefAlias.schemaRefAliasSchema

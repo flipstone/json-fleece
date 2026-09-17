@@ -76,9 +76,6 @@ assertGoldenMatchesGenerated assertEquals goldenCodeFiles actualFiles = do
   assertEquals actualFileNames expectedFileNames
   traverse_ assertFileMatch actualFiles
 
-{- | The unparsed and parsed halves of a specification document, the pair that
-code generation takes.
--}
 testSpecSource ::
   Aeson.FromJSON document =>
   Aeson.Value ->

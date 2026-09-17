@@ -2,18 +2,16 @@
 
 module Fleece.OpenApi3.SpecRefs
   ( SpecDialect (..)
-  , specDialectName
   , SchemaAliases
   , schemaAliasNames
   , immediateAliasTarget
   , finalAliasTarget
-  , SpecRefError
-  , renderSpecRefError
+  , SpecRefs (..)
   , specSchemaRefs
   ) where
 
 import Data.Either (partitionEithers)
-import qualified Data.Foldable as Foldable
+import qualified Data.Graph as Graph
 import Data.List.NonEmpty (NonEmpty ((:|)))
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Map.Strict as Map
@@ -27,15 +25,6 @@ data SpecDialect
   = OpenApi3Dialect
   | Swagger2Dialect
 
-specDialectName :: SpecDialect -> T.Text
-specDialectName dialect =
-  case dialect of
-    OpenApi3Dialect -> "OpenAPI"
-    Swagger2Dialect -> "Swagger"
-
-{- | The schemas that are defined as only a reference to another schema. When parsing there is nowhere
-to record such a reference, so it is recovered from the unparsed document instead.
--}
 newtype SchemaAliases = SchemaAliases
   { schemaAliasTargets :: Map.Map T.Text T.Text
   }
@@ -99,9 +88,6 @@ immediateAliasTarget :: T.Text -> SchemaAliases -> Maybe T.Text
 immediateAliasTarget name =
   Map.lookup name . schemaAliasTargets
 
-{- | The first schema in an alias chain that is not itself an alias. Terminates because cycles are
-rejected when the aliases are collected.
--}
 finalAliasTarget :: T.Text -> SchemaAliases -> Maybe T.Text
 finalAliasTarget name aliases =
   let
@@ -112,13 +98,16 @@ finalAliasTarget name aliases =
   in
     fmap go (immediateAliasTarget name aliases)
 
-{- | Collects the schema aliases in a document, rejecting references that code generation cannot
-honour. Both checks happen here so that neither can be skipped nor run out of order.
--}
+data SpecRefs = SpecRefs
+  { specRefAliases :: SchemaAliases
+  , specRefDeferredSchemaErrors :: Map.Map T.Text T.Text
+  , specRefDeferredPathErrors :: Map.Map T.Text T.Text
+  }
+
 specSchemaRefs ::
   SpecDialect ->
   FC.AnyJSON ->
-  Either (NonEmpty SpecRefError) SchemaAliases
+  SpecRefs
 specSchemaRefs dialect value =
   let
     definitionsPath =
@@ -135,15 +124,15 @@ specSchemaRefs dialect value =
         NoRef ->
           Nothing
         RefNotText ->
-          Just (Left (NonStringRef name))
+          Just (Left (name, NonStringRef name))
         RefText ref ->
           Just $ case T.stripPrefix refPrefix ref of
             Nothing ->
-              Left (MalformedRef name ref)
+              Left (name, MalformedRef name ref)
             Just target ->
               if Map.member target definitions
                 then Right (name, target)
-                else Left (AliasTargetMissing name target)
+                else Left (name, AliasTargetMissing name target)
 
     (aliasErrors, entries) =
       partitionEithers
@@ -151,57 +140,63 @@ specSchemaRefs dialect value =
         . Map.toList
         $ definitions
 
-    aliasTargets =
+    candidateTargets =
       Map.fromList entries
 
-    unsupportedErrors =
-      foldMap
-        (unsupportedRefsAt value)
-        (dialectUnsupportedPaths dialect)
-  in
-    case unsupportedErrors <> aliasErrors <> cycleErrors aliasTargets of
-      [] -> Right (SchemaAliases aliasTargets)
-      firstError : rest -> Left (firstError :| rest)
+    cycles =
+      aliasCycles candidateTargets
 
-{- | Reports each cycle once, naming only the schemas the cycle runs through. A name that merely leads
-into a cycle is not part of it, and a name already walked is not walked again.
--}
-cycleErrors :: Map.Map T.Text T.Text -> [SpecRefError]
-cycleErrors aliasTargets =
+    errorForEachMember chain =
+      fmap (\name -> (name, AliasCycle chain)) (NEL.toList chain)
+
+    cycleErrorsByName =
+      foldMap errorForEachMember cycles
+
+    aliasTargets =
+      Map.withoutKeys candidateTargets (Set.fromList (foldMap NEL.toList cycles))
+  in
+    SpecRefs
+      { specRefAliases = SchemaAliases aliasTargets
+      , specRefDeferredSchemaErrors =
+          fmap renderSpecRefError (Map.fromList (aliasErrors <> cycleErrorsByName))
+      , specRefDeferredPathErrors =
+          fmap renderSpecRefError (pathItemRefErrors value (dialectPathItemsPath dialect))
+      }
+
+aliasCycles :: Map.Map T.Text T.Text -> [NonEmpty T.Text]
+aliasCycles aliasTargets =
   let
-    walk seen walked name =
-      case Map.lookup name aliasTargets of
-        Nothing ->
-          (Set.union seen (Set.fromList walked), Nothing)
-        Just target ->
-          if target `elem` walked
-            then
-              let
-                cycleNames =
-                  dropWhile (/= target) (reverse walked) <> [target]
-              in
-                ( Set.union seen (Set.fromList walked)
-                , fmap AliasCycle (NEL.nonEmpty cycleNames)
-                )
-            else
-              if Set.member target seen
-                then (Set.union seen (Set.fromList walked), Nothing)
-                else walk seen (target : walked) target
+    toNode (name, target) =
+      (name, name, [target])
 
-    step (seen, errs) start =
-      if Set.member start seen
-        then (seen, errs)
-        else case walk seen [start] start of
-          (nextSeen, Nothing) -> (nextSeen, errs)
-          (nextSeen, Just err) -> (nextSeen, err : errs)
+    cycleChain members =
+      let
+        start =
+          NEL.head members
+
+        follow name =
+          Map.findWithDefault name name aliasTargets
+      in
+        start :| take (NEL.length members) (iterate follow (follow start))
+
+    componentCycle component =
+      case component of
+        Graph.AcyclicSCC _name ->
+          Nothing
+        Graph.CyclicSCC names ->
+          fmap cycleChain (NEL.nonEmpty names)
   in
-    reverse . snd $ Foldable.foldl' step (Set.empty, []) (Map.keys aliasTargets)
+    mapMaybe componentCycle
+      . Graph.stronglyConnComp
+      . fmap toNode
+      . Map.toList
+      $ aliasTargets
 
-unsupportedRefsAt ::
+pathItemRefErrors ::
   FC.AnyJSON ->
   DocumentPath ->
-  [SpecRefError]
-unsupportedRefsAt value path =
+  Map.Map T.Text SpecRefError
+pathItemRefErrors value path =
   let
     segments =
       documentPathSegments path
@@ -216,15 +211,12 @@ unsupportedRefsAt value path =
           NoRef ->
             Nothing
           RefNotText ->
-            Just (NonStringRefAtUnsupportedPosition (position key))
+            Just (key, NonStringRefAtUnsupportedPosition (position key))
           RefText ref ->
-            Just (RefAtUnsupportedPosition (position key) ref)
+            Just (key, RefAtUnsupportedPosition (position key) ref)
   in
-    mapMaybe toError (Map.toList (objectAtPath segments value))
+    Map.fromList (mapMaybe toError (Map.toList (objectAtPath segments value)))
 
-{- | Specification extensions may sit alongside the members of the maps this
-guards, and carry no meaning for code generation.
--}
 isExtensionKey :: T.Text -> Bool
 isExtensionKey =
   T.isPrefixOf "x-"
@@ -261,15 +253,11 @@ dialectDefinitionsPath dialect =
     OpenApi3Dialect -> DocumentPath ("components" :| ["schemas"])
     Swagger2Dialect -> DocumentPath ("definitions" :| [])
 
-{- | Maps that code generation reads but whose parsed representation has
-nowhere to record a reference. A reference under @components@ is left to the
-document parser, which rejects it because those objects have required fields.
--}
-dialectUnsupportedPaths :: SpecDialect -> [DocumentPath]
-dialectUnsupportedPaths dialect =
+dialectPathItemsPath :: SpecDialect -> DocumentPath
+dialectPathItemsPath dialect =
   case dialect of
-    OpenApi3Dialect -> [DocumentPath ("paths" :| [])]
-    Swagger2Dialect -> [DocumentPath ("paths" :| [])]
+    OpenApi3Dialect -> DocumentPath ("paths" :| [])
+    Swagger2Dialect -> DocumentPath ("paths" :| [])
 
 objectAtPath :: [T.Text] -> FC.AnyJSON -> Map.Map T.Text FC.AnyJSON
 objectAtPath path value =

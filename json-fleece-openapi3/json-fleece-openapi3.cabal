@@ -2226,12 +2226,21 @@ extra-source-files:
     examples/selected-items-example/SelectedItemsExample/Types/PetSummaryAlias.hs
     examples/selected-items-example/SelectedItemsExample/Types/PetTag.hs
     test/fixtures/alias-cycle.yaml
+    test/fixtures/alias-type-options.yaml
     test/fixtures/non-string-ref.yaml
+    test/fixtures/non-string-schema-ref.yaml
+    test/fixtures/path-ref-filtered.yaml
     test/fixtures/ref-at-unsupported-position.yaml
     test/fixtures/ref-in-path-extension.yaml
     test/fixtures/ref-to-missing-schema.yaml
     test/fixtures/ref-to-other-document.yaml
+    test/fixtures/union-member-collapse.yaml
+    test/fixtures/unresolvable-ref-filtered.yaml
+    test/fixtures/alias-type-options.dhall
     test/fixtures/codegen.dhall
+    test/fixtures/path-ref-filtered.dhall
+    test/fixtures/path-ref-selected.dhall
+    test/fixtures/unresolvable-ref-filtered.dhall
 
 source-repository head
   type: git

@@ -1,0 +1,26 @@
+openapi: "3.0.1"
+info:
+  title: Guard
+  version: "1.0"
+paths:
+  /widgets:
+    get:
+      operationId: getWidgets
+      responses:
+        '200':
+          description: A widget
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Widget'
+components:
+  schemas:
+    Widget:
+      type: object
+      properties:
+        name:
+          type: string
+    # Selecting only getWidgets excludes this, so its unresolvable reference
+    # never has to resolve.
+    Money:
+      $ref: 'common.yaml#/components/schemas/Money'

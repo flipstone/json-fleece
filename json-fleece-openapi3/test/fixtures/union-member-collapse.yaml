@@ -1,0 +1,17 @@
+openapi: "3.0.1"
+info:
+  title: Guard
+  version: "1.0"
+paths: {}
+components:
+  schemas:
+    Base:
+      type: string
+    # An alias is the same type as what it names, so a union holding both can
+    # only ever decode the first of them.
+    AliasOfBase:
+      $ref: '#/components/schemas/Base'
+    Collapsed:
+      oneOf:
+        - $ref: '#/components/schemas/AliasOfBase'
+        - $ref: '#/components/schemas/Base'

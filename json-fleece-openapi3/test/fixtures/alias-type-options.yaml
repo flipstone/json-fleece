@@ -1,0 +1,11 @@
+openapi: "3.0.1"
+info:
+  title: Guard
+  version: "1.0"
+paths: {}
+components:
+  schemas:
+    Base:
+      type: string
+    AliasOfBase:
+      $ref: '#/components/schemas/Base'

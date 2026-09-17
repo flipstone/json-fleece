@@ -56,41 +56,33 @@ generateFleeceCodeForDialect ::
   OA.OpenApi ->
   CGU.CodeGen CGU.Modules
 generateFleeceCodeForDialect dialect rawDocument openApi = do
-  aliases <-
-    case OAR.specSchemaRefs dialect rawDocument of
-      Left specRefErrors ->
-        CGU.codeGenError
-          . T.unpack
-          . T.intercalate "\n"
-          . fmap OAR.renderSpecRefError
-          . NEL.toList
-          $ specRefErrors
-      Right aliases ->
-        pure aliases
-
   let
-    -- Every other lookup of a named schema goes through the parsed components, where an alias is an
-    -- empty schema, so fill each alias in with the schema it names before any of them run.
+    specRefs =
+      OAR.specSchemaRefs dialect rawDocument
+
+    aliases =
+      OAR.specRefAliases specRefs
+
+    deferredErrors =
+      CGU.DeferredErrors
+        { CGU.deferredItemErrors =
+            Map.mapKeys CGU.SchemaKey (OAR.specRefDeferredSchemaErrors specRefs)
+        , CGU.deferredPathErrors =
+            OAR.specRefDeferredPathErrors specRefs
+        }
+
     resolvedOpenApi =
       inlineSchemaAliases aliases openApi
 
   inlinedOpenApi <-
     runReaderT
-      -- Preprocess the 'OA.OpenAPI' by recursively inlining schemas in @allOf@s before continuing
-      -- with normal codegen
       (OAT.traverseOpenApiSchemas inlineAllOfReferenced resolvedOpenApi)
       resolvedOpenApi
 
   typeMap <- runReaderT (mkCodeGenTypes aliases) inlinedOpenApi
 
-  CGU.generateFleeceCode typeMap
+  CGU.generateFleeceCodeWithDeferredErrors deferredErrors typeMap
 
-{- | Replaces the empty schema that a @$ref@ alias parses to with the schema it ultimately
-names. Carefully, and crucially, this prefers the alias's own description, if there is one, over the
-target's. The type generated for the alias is still a newtype over the referenced type. This only
-affects the lookups that resolve a @$ref@ to a schema, such as @allOf@ members and singleton @oneOf@
-options.
--}
 inlineSchemaAliases :: OAR.SchemaAliases -> OA.OpenApi -> OA.OpenApi
 inlineSchemaAliases aliases openApi =
   let
@@ -111,9 +103,7 @@ inlineSchemaAliases aliases openApi =
             schema
           Just resolvedSchema ->
             resolvedSchema
-              { OA._schemaDescription =
-                  OA._schemaDescription schema
-                    <|> OA._schemaDescription resolvedSchema
+              { OA._schemaDescription = OA._schemaDescription schema
               }
 
     inlineAlias aliasName =
@@ -210,7 +200,7 @@ mkSchemaAliasMap schemaKey targetKey schema = lift $ do
       schemaDescription <- OA._schemaDescription schema
       NET.fromText schemaDescription
 
-    aliasSchemaMap typeName schemaInfo typeOptions =
+    aliasSchemaMap typeName schemaInfo =
       Map.singleton (CGU.SchemaKey schemaKey) $
         SchemaEntry
           { schemaOpenApiSchema = schema
@@ -221,15 +211,13 @@ mkSchemaAliasMap schemaKey targetKey schema = lift $ do
                 , CGU.codeGenTypeSchemaInfo = schemaInfo
                 , CGU.codeGenTypeDescription = description
                 , CGU.codeGenTypeDataFormat =
-                    CGU.CodeGenNewType typeOptions (Right (CGU.TypeReference targetKey))
+                    CGU.CodeGenTypeSynonym (Right (CGU.TypeReference targetKey))
                 }
           }
 
   (_moduleName, typeName) <- CGU.inferTypeForInputName CGU.Type schemaKey
-  liftA2
-    (aliasSchemaMap typeName)
-    (CGU.inferSchemaInfoForTypeName typeName)
-    (CGU.lookupTypeOptions typeName)
+
+  fmap (aliasSchemaMap typeName) (CGU.inferSchemaInfoForTypeName typeName)
 
 mkPathItem :: OA.Definitions OA.Param -> OAR.SchemaAliases -> SchemaMap -> FilePath -> OA.PathItem -> CGM CGU.CodeGenMap
 mkPathItem paramDefs aliases schemaMap filePath pathItem = do
@@ -1099,9 +1087,6 @@ schemaRefToParamInfo aliases schemaMap paramName paramLocation operationKey sche
         operationKey
         schema
     OA.Ref (OA.Reference refKey) ->
-      -- A parameter typed by a @$ref@ alias is built from the type the alias names, because
-      -- unwrapping a newtype around another newtype needs every constructor in the chain in scope
-      -- at the use site.
       let
         resolvedKey =
           fromMaybe refKey (OAR.finalAliasTarget refKey aliases)
@@ -1359,8 +1344,12 @@ mkOneOfOrAnyOfDataFormat schemaType schemaKey typeName schema schemas = do
                   lift . CGU.codeGenError $
                     "While looking up reference: Could not find ref with name: "
                       <> T.unpack (OA.getReference ref)
-                Just foundSchema ->
-                  mkOpenApiDataFormat schemaKey typeName foundSchema
+                Just _foundSchema ->
+                  pure . Just $
+                    ( Map.empty
+                    , CGU.CodeGenTypeSynonym
+                        (Right (CGU.TypeReference (OA.getReference ref)))
+                    )
         Just neSchemas ->
           Just <$> mkOneOfAnyOfUnion schemaKey typeOptions neSchemas
 

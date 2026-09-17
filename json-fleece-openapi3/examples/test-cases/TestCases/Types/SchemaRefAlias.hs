@@ -1,17 +1,17 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module TestCases.Types.SchemaRefAlias
-  ( SchemaRefAlias(..)
+  ( SchemaRefAlias
   , schemaRefAliasSchema
   ) where
 
 import qualified Fleece.Core as FC
-import Prelude (Eq, Show)
 import qualified TestCases.Types.AStringType as AStringType
 
-newtype SchemaRefAlias = SchemaRefAlias AStringType.AStringType
-  deriving (Show, Eq)
+type SchemaRefAlias = AStringType.AStringType
 
 schemaRefAliasSchema :: FC.Fleece t => FC.Schema t SchemaRefAlias
 schemaRefAliasSchema =
-  FC.coerceSchema AStringType.aStringTypeSchema
+  FC.coerceSchemaNamed
+    (FC.qualifiedName "TestCases.Types.SchemaRefAlias" "SchemaRefAlias")
+    AStringType.aStringTypeSchema
