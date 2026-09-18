@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.39.6.
+-- This file has been generated from package.yaml by hpack version 0.38.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -57,7 +57,6 @@ library
       Uber.Types.Product.DisplayName
       Uber.Types.Product.Image
       Uber.Types.Product.ProductId
-      Uber.Types.ProductAlias
       Uber.Types.Profile
       Uber.Types.Profile.Email
       Uber.Types.Profile.FirstName

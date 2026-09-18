@@ -1,0 +1,9 @@
+{
+  "swagger": "2.0",
+  "info": { "title": "Guard", "version": "1.0" },
+  "paths": {},
+  "definitions": {
+    "AString": { "type": "string" },
+    "AStringAlias": { "$ref": "#/definitions/AString" }
+  }
+}

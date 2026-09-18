@@ -62,6 +62,8 @@ extra-source-files:
   - examples/uber/codegen.dhall
   - examples/uber/uber.json
   - examples/uber/Uber/**/*.hs
+  - test/fixtures/*.json
+  - test/fixtures/*.dhall
 
 library:
   source-dirs: src
@@ -99,3 +101,4 @@ tests:
       - aeson >= 2.0 && < 2.3
       - bytestring >= 0.11 && < 0.13
       - file-embed >= 0.0.15 && < 0.0.17
+      - text >= 1.2 && < 2.2

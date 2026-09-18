@@ -61,13 +61,15 @@ extra-source-files:
     examples/uber/Uber/Types/Product/DisplayName.hs
     examples/uber/Uber/Types/Product/Image.hs
     examples/uber/Uber/Types/Product/ProductId.hs
-    examples/uber/Uber/Types/ProductAlias.hs
     examples/uber/Uber/Types/Profile.hs
     examples/uber/Uber/Types/Profile/Email.hs
     examples/uber/Uber/Types/Profile/FirstName.hs
     examples/uber/Uber/Types/Profile/LastName.hs
     examples/uber/Uber/Types/Profile/Picture.hs
     examples/uber/Uber/Types/Profile/PromoCode.hs
+    test/fixtures/definition-ref-alias.json
+    test/fixtures/ref-to-other-document.json
+    test/fixtures/codegen.dhall
 
 source-repository head
   type: git
@@ -142,6 +144,7 @@ test-suite json-fleece-swagger2-test
     , hedgehog
     , json-fleece-codegen-util ==0.18.*
     , json-fleece-swagger2
+    , text >=1.2 && <2.2
   default-language: Haskell2010
   if flag(strict)
     ghc-options: -Weverything -Werror -Wno-missing-local-signatures -Wno-monomorphism-restriction -Wno-missing-kind-signatures -Wno-prepositive-qualified-module -Wno-implicit-prelude -Wno-safe -Wno-unsafe -Wno-missing-safe-haskell-mode -Wno-missing-deriving-strategies -Wno-all-missed-specialisations -Wno-missed-specialisations -Wno-unticked-promoted-constructors
