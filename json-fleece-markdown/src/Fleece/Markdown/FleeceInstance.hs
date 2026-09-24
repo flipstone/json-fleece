@@ -11,9 +11,9 @@ import qualified Data.DList as DList
 import qualified Data.Map.Strict as Map
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
+import qualified Fleece.Core as FC
 import GHC.TypeLits (symbolVal)
 
-import qualified Fleece.Core as FC
 import Fleece.Markdown.Render (schemaDocumentationToMarkdown)
 import Fleece.Markdown.SchemaDocumentation
   ( FieldDocumentation

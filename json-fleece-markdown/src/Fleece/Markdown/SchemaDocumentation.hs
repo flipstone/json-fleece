@@ -43,7 +43,6 @@ import qualified Data.DList as DList
 import qualified Data.Map.Strict as Map
 import qualified Data.NonEmptyText as NET
 import qualified Data.Text as T
-
 import qualified Fleece.Core as FC
 
 data SchemaDocumentation = SchemaDocumentation

@@ -24,11 +24,10 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as Enc
 import qualified Data.Text.Lazy as TL
 import qualified Data.Vector as V
+import qualified Fleece.Core as FC
 import GHC.TypeLits (KnownSymbol, symbolVal)
 import Shrubbery (type (@=))
 import qualified Shrubbery
-
-import qualified Fleece.Core as FC
 
 toLazyText :: FC.Schema ToValue a -> a -> TL.Text
 toLazyText encoder = encodeToLazyText . toValue encoder

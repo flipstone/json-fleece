@@ -37,9 +37,6 @@ module Fleece.Examples
 import qualified Data.Map as Map
 import Data.Scientific (Scientific)
 import qualified Data.Text as T
-import Shrubbery (type (@=))
-import qualified Shrubbery
-
 import Fleece.Core
   ( Fleece
   , NothingEncoding (EmitNull, OmitKey)
@@ -72,6 +69,8 @@ import Fleece.Core
   , (#@)
   , (#|)
   )
+import Shrubbery (type (@=))
+import qualified Shrubbery
 
 data FooBar = FooBar
   { foo :: T.Text
@@ -159,7 +158,7 @@ data BoundedEnum
   = Apple
   | Orange
   | Kumquat
-  deriving (Eq, Show, Enum, Bounded)
+  deriving (Bounded, Enum, Eq, Show)
 
 boundedEnumSchema :: Fleece t => Schema t BoundedEnum
 boundedEnumSchema =

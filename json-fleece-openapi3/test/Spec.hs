@@ -9,13 +9,13 @@ import qualified Data.ByteString.Char8 as BS8
 import qualified Data.FileEmbed as FileEmbed
 import qualified Data.Text as T
 import qualified Data.Yaml.Aeson as YA
+import qualified Fleece.CodeGenUtil as CGU
+import qualified Fleece.CodeGenUtil.Config as Config
+import Fleece.CodeGenUtil.Test (assertGoldenMatchesGenerated, loadTestConfig, testSpecSource)
 import Hedgehog ((===))
 import qualified Hedgehog as HH
 import qualified Hedgehog.Main as HHM
 
-import qualified Fleece.CodeGenUtil as CGU
-import qualified Fleece.CodeGenUtil.Config as Config
-import Fleece.CodeGenUtil.Test (assertGoldenMatchesGenerated, loadTestConfig, testSpecSource)
 import qualified Fleece.OpenApi3 as FOA3
 
 main :: IO ()

@@ -8,11 +8,8 @@ import Control.DeepSeq (NFData, force)
 import qualified Data.Aeson as Aeson
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BSL
-import Data.Text (Text)
-import GHC.Generics (Generic)
-import Test.Tasty.Bench (bench, bgroup, defaultMain, env, nf)
-
 import qualified Data.Hermes as H
+import Data.Text (Text)
 import qualified Fleece.Aeson as FA
 import Fleece.Core
   ( Fleece
@@ -30,6 +27,9 @@ import Fleece.Core
   , (#+)
   )
 import qualified Fleece.Core as FC
+import GHC.Generics (Generic)
+import Test.Tasty.Bench (bench, bgroup, defaultMain, env, nf)
+
 import qualified Fleece.Hermes as FH
 
 main :: IO ()
@@ -72,7 +72,7 @@ data Person = Person
   , greeting :: Maybe Text
   , favoriteFruit :: Text
   }
-  deriving stock (Show, Generic)
+  deriving stock (Generic, Show)
 
 instance NFData Person
 
@@ -117,7 +117,7 @@ data Friend = Friend
   { fId :: Int
   , fName :: Text
   }
-  deriving stock (Show, Generic)
+  deriving stock (Generic, Show)
 
 instance NFData Friend
 

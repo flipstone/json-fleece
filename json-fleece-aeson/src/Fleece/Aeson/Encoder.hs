@@ -24,11 +24,10 @@ import qualified Data.Map.Strict as Map
 import qualified Data.Text as T
 import qualified Data.Text.Lazy.Encoding as LEnc
 import qualified Data.Vector as V
+import qualified Fleece.Core as FC
 import GHC.TypeLits (KnownSymbol, symbolVal)
 import Shrubbery (type (@=))
 import qualified Shrubbery
-
-import qualified Fleece.Core as FC
 
 data Encoder a
   = Encoder (a -> Aeson.Encoding)

@@ -12,8 +12,8 @@ import qualified Data.Set as Set
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
 import qualified Data.Text.Lazy.Builder as LTB
-
 import qualified Fleece.Core as FC
+
 import Fleece.Markdown.SchemaDocumentation
   ( FieldDocumentation
       ( fieldAllowsNull

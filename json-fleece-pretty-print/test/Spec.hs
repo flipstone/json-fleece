@@ -9,15 +9,15 @@ module Main
 import qualified Data.Map.Strict as Map
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
+import Fleece.Core ((#+))
+import qualified Fleece.Core as FC
+import qualified Fleece.Examples as Examples
 import GHC.Stack (withFrozenCallStack)
 import Hedgehog ((===))
 import qualified Hedgehog as HH
 import qualified Hedgehog.Main as HHM
 import qualified Shrubbery
 
-import Fleece.Core ((#+))
-import qualified Fleece.Core as FC
-import qualified Fleece.Examples as Examples
 import qualified Fleece.PrettyPrint as FPP
 
 main :: IO ()

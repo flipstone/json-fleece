@@ -33,10 +33,10 @@ import qualified Data.OpenApi as OA
 import qualified Data.Scientific as Scientific
 import qualified Data.Set as Set
 import qualified Data.Text as T
-
 import qualified Fleece.CodeGenUtil as CGU
 import qualified Fleece.CodeGenUtil.HaskellCode as HC
 import qualified Fleece.Core as FC
+
 import Fleece.OpenApi3.SpecRefs (SpecDialect (OpenApi3Dialect, Swagger2Dialect))
 import qualified Fleece.OpenApi3.SpecRefs as OAR
 import qualified Fleece.OpenApi3.Traversal as OAT

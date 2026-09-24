@@ -133,7 +133,7 @@ data TextLengthHandling
   = IgnoreTextLength
   | NonEmptyTextOnly
   | BoundedTextHandling
-  deriving (Show, Eq)
+  deriving (Eq, Show)
 
 data TypeOptions = TypeOptions
   { dateTimeFormat :: DateTimeFormat
@@ -363,7 +363,7 @@ data OperationParamArity
   | AtLeastZero
   | AtLeastOne
   | Cookies
-  deriving (Show, Eq)
+  deriving (Eq, Show)
 
 data OperationParamType
   = ParamTypeString
@@ -387,7 +387,7 @@ data OperationParamLocation
   | ParamLocationQuery
   | ParamLocationHeader
   | ParamLocationCookie
-  deriving (Show, Eq)
+  deriving (Eq, Show)
 
 data CodeGenDataFormat
   = CodeGenNewType TypeOptions SchemaTypeInfoOrRef

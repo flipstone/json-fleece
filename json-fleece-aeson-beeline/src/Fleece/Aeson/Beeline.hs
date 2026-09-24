@@ -10,10 +10,9 @@ import qualified Control.Exception as Exc
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as BS8
 import qualified Data.ByteString.Lazy as LBS
-import qualified Network.HTTP.Client as HTTP
-
 import qualified Fleece.Aeson as FA
 import qualified Fleece.Core as FC
+import qualified Network.HTTP.Client as HTTP
 
 {-
   A content type tag for dealing with JSON text

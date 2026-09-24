@@ -7,12 +7,12 @@ module Main
 import qualified Data.List.NonEmpty as NEL
 import qualified Data.Text as T
 import qualified Data.Text.Lazy.Encoding as LTE
-import qualified Test.Tasty as Tasty
-import Test.Tasty.Golden (goldenVsStringDiff)
-
 import Fleece.Core ((#+))
 import qualified Fleece.Core as FC
 import qualified Fleece.Examples as Examples
+import qualified Test.Tasty as Tasty
+import Test.Tasty.Golden (goldenVsStringDiff)
+
 import qualified Fleece.Markdown as FM
 
 main :: IO ()

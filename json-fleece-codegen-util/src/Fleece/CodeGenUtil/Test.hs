@@ -18,13 +18,13 @@ import qualified Data.Set as Set
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as Enc
 import qualified Dhall
+import qualified Fleece.Aeson as FA
+import qualified Fleece.Core as FC
 import qualified System.Environment as Env
 import System.FilePath (takeDirectory)
 
-import qualified Fleece.Aeson as FA
 import qualified Fleece.CodeGenUtil as CGU
 import qualified Fleece.CodeGenUtil.Config as Config
-import qualified Fleece.Core as FC
 
 loadTestConfig ::
   MIO.MonadIO m =>

@@ -19,6 +19,8 @@ import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
 import qualified Data.Time as Time
 import qualified Data.Vector as V
+import qualified Fleece.Core as FC
+import qualified Fleece.Examples as Examples
 import Hedgehog ((===))
 import qualified Hedgehog as HH
 import qualified Hedgehog.Gen as Gen
@@ -27,8 +29,6 @@ import qualified Hedgehog.Range as Range
 import qualified Shrubbery
 
 import qualified Fleece.Aeson as FA
-import qualified Fleece.Core as FC
-import qualified Fleece.Examples as Examples
 
 main :: IO ()
 main =

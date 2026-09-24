@@ -17,10 +17,9 @@ import qualified Data.String as String
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
 import qualified Data.Text.Lazy.Builder as LTB
+import qualified Fleece.Core as FC
 import GHC.TypeLits (symbolVal)
 import qualified Shrubbery
-
-import qualified Fleece.Core as FC
 
 newtype PrettyPrinter a
   = PrettyPrinter (a -> Pretty)

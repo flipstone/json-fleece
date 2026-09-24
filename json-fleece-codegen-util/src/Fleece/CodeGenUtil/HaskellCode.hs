@@ -81,12 +81,10 @@ module Fleece.CodeGenUtil.HaskellCode
 
 -- import prelude explicitly since we want to define our own 'lines' function
 
-import Data.Maybe (fromMaybe)
-import Prelude (Eq ((==)), Foldable, Int, Maybe (Just, Nothing), Monoid (mempty), Ord, Semigroup ((<>)), String, any, flip, fmap, id, map, maybe, mconcat, show, zip, ($), (+), (-), (.))
-
 import qualified Data.Char as Char
 import Data.Foldable (toList)
 import qualified Data.List as List
+import Data.Maybe (fromMaybe)
 import qualified Data.NonEmptyText as NET
 import qualified Data.Set as Set
 import qualified Data.String as String
@@ -94,6 +92,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
 import qualified Data.Text.Lazy.Builder as LTB
 import qualified Data.Text.Manipulate as Manip
+import Prelude (Eq ((==)), Foldable, Int, Maybe (Just, Nothing), Monoid (mempty), Ord, Semigroup ((<>)), String, any, flip, fmap, id, map, maybe, mconcat, show, zip, ($), (+), (-), (.))
 
 class ToCode c where
   toCode :: c -> HaskellCode
@@ -191,11 +190,11 @@ typeNameToCodeDefaultQualification typeName =
 
 newtype TypeExpression
   = TypeExpression HaskellCode
-  deriving (ToCode, FromCode, Monoid, Semigroup, String.IsString)
+  deriving (FromCode, Monoid, Semigroup, String.IsString, ToCode)
 
 newtype ModuleName
   = ModuleName T.Text
-  deriving (Eq, Ord, Monoid, String.IsString)
+  deriving (Eq, Monoid, Ord, String.IsString)
 
 instance Semigroup ModuleName where
   ModuleName left <> ModuleName right =
@@ -210,7 +209,7 @@ moduleNameToText (ModuleName text) =
 
 newtype ConstructorName
   = ConstructorName HaskellCode
-  deriving (ToCode, FromCode, Monoid, Semigroup)
+  deriving (FromCode, Monoid, Semigroup, ToCode)
 
 data VarName = VarName
   { varNameText :: T.Text

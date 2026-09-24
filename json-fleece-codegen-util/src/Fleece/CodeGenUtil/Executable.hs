@@ -12,16 +12,16 @@ import qualified Data.Text as T
 import qualified Data.Text.Lazy.IO as LTIO
 import qualified Data.Yaml.Aeson as YA
 import qualified Dhall
+import qualified Fleece.Aeson as FA
+import qualified Fleece.Core as FC
 import qualified Options.Applicative as Opt
 import System.Console.Isocline (readline)
 import qualified System.Directory as Dir
 import qualified System.Exit as Exit
 import System.FilePath (takeDirectory, takeExtension, (</>))
 
-import qualified Fleece.Aeson as FA
 import qualified Fleece.CodeGenUtil as CGU
 import qualified Fleece.CodeGenUtil.Config as Config
-import qualified Fleece.Core as FC
 
 data Options = Options
   { configFileName :: FilePath

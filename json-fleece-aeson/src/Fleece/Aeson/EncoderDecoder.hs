@@ -6,9 +6,10 @@ module Fleece.Aeson.EncoderDecoder
   , decoder
   ) where
 
+import qualified Fleece.Core as FC
+
 import Fleece.Aeson.Decoder (Decoder)
 import Fleece.Aeson.Encoder (Encoder)
-import qualified Fleece.Core as FC
 
 data EncoderDecoder a = EncoderDecoder
   { encoderDecoderEncoder :: Encoder a

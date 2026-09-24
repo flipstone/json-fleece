@@ -13,7 +13,6 @@ import qualified Data.OpenApi as OA
 import qualified Data.Swagger as SW
 import qualified Data.Swagger.Internal as SWI
 import qualified Data.Text as T
-
 import qualified Fleece.CodeGenUtil as CGU
 import qualified Fleece.Core as FC
 import qualified Fleece.OpenApi3 as FOA3

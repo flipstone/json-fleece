@@ -19,11 +19,10 @@ import qualified Data.Map.Strict as Map
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as Enc
+import qualified Fleece.Core as FC
 import GHC.TypeLits (KnownNat, KnownSymbol, symbolVal)
 import Shrubbery (type (@=))
 import qualified Shrubbery
-
-import qualified Fleece.Core as FC
 
 newtype Decoder a
   = Decoder {toDecoder :: H.Decoder a}
