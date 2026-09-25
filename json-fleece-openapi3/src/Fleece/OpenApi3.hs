@@ -1321,15 +1321,15 @@ mkOneOfOrAnyOfDataFormat ::
   CGM (Maybe (SchemaMap, CGU.CodeGenDataFormat))
 mkOneOfOrAnyOfDataFormat schemaType schemaKey typeName schema schemas = do
   components <- asks (OA._componentsSchemas . OA._openApiComponents)
+  typeOptions <- lift $ CGU.lookupTypeOptions typeName
 
   case OA._schemaDiscriminator schema of
     Just discriminator ->
-      Just <$> mkOneOfAnyOfTaggedUnion discriminator schemaKey
+      Just <$> mkOneOfAnyOfTaggedUnion discriminator typeOptions
     Nothing
       | Just discriminator <- memberDiscriminator components schemas ->
-          Just <$> mkOneOfAnyOfTaggedUnion discriminator schemaKey
-    Nothing -> do
-      typeOptions <- lift $ CGU.lookupTypeOptions typeName
+          Just <$> mkOneOfAnyOfTaggedUnion discriminator typeOptions
+    Nothing ->
       case NEL.nonEmpty schemas of
         Nothing ->
           lift . CGU.codeGenError $
@@ -1506,9 +1506,9 @@ mkOneOfAnyOfUnion schemaKey typeOptions refSchemas = do
 
 mkOneOfAnyOfTaggedUnion ::
   OA.Discriminator ->
-  T.Text ->
+  CGU.TypeOptions ->
   CGM (SchemaMap, CGU.CodeGenDataFormat)
-mkOneOfAnyOfTaggedUnion discriminator _schemaKey = do
+mkOneOfAnyOfTaggedUnion discriminator typeOptions = do
   let
     processMappingEntry (tag, ref) =
       case T.stripPrefix "#/components/schemas/" ref of
@@ -1516,11 +1516,11 @@ mkOneOfAnyOfTaggedUnion discriminator _schemaKey = do
           lift . CGU.codeGenError $
             "Discriminator mappings with references to locations other than the schema components are not supported: "
               <> T.unpack ref
-        Just typeName ->
+        Just memberSchemaName ->
           pure $
             CGU.CodeGenTaggedUnionMember
               { CGU.codeGenTaggedUnionMemberTag = tag
-              , CGU.codeGenTaggedUnionMemberType = Right . CGU.TypeReference $ typeName
+              , CGU.codeGenTaggedUnionMemberType = Right . CGU.TypeReference $ memberSchemaName
               }
 
     mapping =
@@ -1539,7 +1539,7 @@ mkOneOfAnyOfTaggedUnion discriminator _schemaKey = do
       . IOHM.toList
       $ mapping
 
-  pure (mempty, CGU.CodeGenTaggedUnion tagProperty codeGenTaggedUnionMembers)
+  pure (mempty, CGU.CodeGenTaggedUnion typeOptions tagProperty codeGenTaggedUnionMembers)
 
 {- | The discriminator all members of a @oneOf@ or @anyOf@ inherit through
 @allOf@, provided its mapping lists exactly those members. The OpenAPI 3.0

@@ -296,7 +296,7 @@ mkReferencesMap =
           mkSingletonReference ArrayItemSource ref
         CodeGenUnion _options members ->
           foldMap mkUnionMemberReferences members
-        CodeGenTaggedUnion discriminatorProperty members ->
+        CodeGenTaggedUnion _options discriminatorProperty members ->
           foldMap
             (mkTaggedUnionMemberReferences discriminatorProperty)
             members
@@ -396,7 +396,7 @@ data CodeGenDataFormat
   | CodeGenObject TypeOptions [CodeGenObjectField] (Maybe CodeGenAdditionalProperties)
   | CodeGenArray TypeOptions (Maybe Integer) CodeGenRefType
   | CodeGenUnion TypeOptions [CodeGenUnionMember]
-  | CodeGenTaggedUnion T.Text [CodeGenTaggedUnionMember]
+  | CodeGenTaggedUnion TypeOptions T.Text [CodeGenTaggedUnionMember]
 
 codeGenNewTypeSchemaTypeInfo :: TypeOptions -> SchemaTypeInfo -> CodeGenDataFormat
 codeGenNewTypeSchemaTypeInfo typeOptions = CodeGenNewType typeOptions . Left
@@ -932,7 +932,7 @@ typeSchemaRefs typ =
       refTypeRefs ref
     CodeGenUnion _opts members ->
       foldMap (schemaTypeInfoOrRefRefs . codeGenUnionMemberType) members
-    CodeGenTaggedUnion _prop members ->
+    CodeGenTaggedUnion _opts _prop members ->
       foldMap (schemaTypeInfoOrRefRefs . codeGenTaggedUnionMemberType) members
 
 schemaTypeInfoOrRefRefs :: SchemaTypeInfoOrRef -> Set.Set T.Text
@@ -1743,8 +1743,8 @@ generateCodeGenDataFormat typeMap references typeName format = do
       generateFleeceArray typeMap typeName mbMinItems itemType typeOptions
     CodeGenUnion typeOptions members ->
       generateFleeceUnion typeMap typeName members typeOptions
-    CodeGenTaggedUnion tagProperty members ->
-      generateFleeceTaggedUnion typeMap typeName tagProperty members
+    CodeGenTaggedUnion typeOptions tagProperty members ->
+      generateFleeceTaggedUnion typeMap typeName tagProperty members typeOptions
 
 requiredPragmasForFormat ::
   CodeGenDataFormat ->
@@ -1761,7 +1761,7 @@ requiredPragmasForFormat format =
     CodeGenUnion _ _ ->
       [ "{-# LANGUAGE DataKinds #-}"
       ]
-    CodeGenTaggedUnion _ _ ->
+    CodeGenTaggedUnion _ _ _ ->
       [ "{-# LANGUAGE DataKinds #-}"
       , "{-# LANGUAGE ExplicitNamespaces #-}"
       , "{-# LANGUAGE TypeOperators #-}"
@@ -2197,8 +2197,9 @@ generateFleeceTaggedUnion ::
   HC.TypeName ->
   T.Text ->
   [CodeGenTaggedUnionMember] ->
+  TypeOptions ->
   CodeGen ([HC.VarName], HC.HaskellCode)
-generateFleeceTaggedUnion typeMap typeName tagProperty members = do
+generateFleeceTaggedUnion typeMap typeName tagProperty members typeOptions = do
   let
     mkTaggedTypeInfo taggedUnionMember = do
       typeInfo <-
@@ -2257,7 +2258,7 @@ generateFleeceTaggedUnion typeMap typeName tagProperty members = do
       HC.newtype_
         typeName
         ("(" <> HC.taggedUnion (fmap (fmap schemaTypeExpr) taggedTypeInfos) <> ")")
-        Nothing
+        (deriveClassNames typeOptions)
 
     extraExports =
       []

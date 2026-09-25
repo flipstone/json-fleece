@@ -2170,6 +2170,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/ObjectWithSchemaRefAliasField.hs
     examples/test-cases/TestCases/Types/ObjectWithSingletonOneOfFields.hs
     examples/test-cases/TestCases/Types/OneOfWithDiscriminator.hs
+    examples/test-cases/TestCases/Types/OneOfWithDiscriminatorDeriveShowOnly.hs
     examples/test-cases/TestCases/Types/OneOfWithDiscriminatorTypeObject.hs
     examples/test-cases/TestCases/Types/OneOfWithInheritedDiscriminator.hs
     examples/test-cases/TestCases/Types/OneOfWithInlineEnum.hs
@@ -2220,6 +2221,8 @@ extra-source-files:
     examples/test-cases/TestCases/Types/UTCDateTime/DatetimeType.hs
     examples/test-cases/TestCases/Types/UTCDateTime/DatetimeValue.hs
     examples/test-cases/TestCases/Types/UtcTimeType.hs
+    examples/test-cases/TestCases/Types/ZonedTimeDiscriminatorMember.hs
+    examples/test-cases/TestCases/Types/ZonedTimeDiscriminatorMember/Type.hs
     examples/test-cases/TestCases/Types/ZonedTimeType.hs
     examples/selected-items-example/codegen.dhall
     examples/selected-items-example/selected-items-example.yaml

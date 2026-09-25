@@ -22,6 +22,18 @@ in
                   { deriveClasses = CodeGen.derive [ CodeGen.show ]
                   }
             }
+          , { type = "TestCases.Types.OneOfWithDiscriminatorDeriveShowOnly.OneOfWithDiscriminatorDeriveShowOnly"
+            , options =
+                CodeGen.TypeOptions::
+                  { deriveClasses = CodeGen.derive [ CodeGen.show ]
+                  }
+            }
+          , { type = "TestCases.Types.ZonedTimeDiscriminatorMember.ZonedTimeDiscriminatorMember"
+            , options =
+                CodeGen.TypeOptions::
+                  { deriveClasses = CodeGen.derive [ CodeGen.show ]
+                  }
+            }
           , { type = "TestCases.Types.DateTimeFormats.UtcTimeField.UtcTimeField"
             , options =
                 CodeGen.TypeOptions::

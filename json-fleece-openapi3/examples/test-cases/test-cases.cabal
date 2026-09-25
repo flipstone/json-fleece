@@ -320,6 +320,7 @@ library
       TestCases.Types.ObjectWithSchemaRefAliasField
       TestCases.Types.ObjectWithSingletonOneOfFields
       TestCases.Types.OneOfWithDiscriminator
+      TestCases.Types.OneOfWithDiscriminatorDeriveShowOnly
       TestCases.Types.OneOfWithDiscriminatorTypeObject
       TestCases.Types.OneOfWithInheritedDiscriminator
       TestCases.Types.OneOfWithInlineEnum
@@ -370,6 +371,8 @@ library
       TestCases.Types.UTCDateTime.DatetimeType
       TestCases.Types.UTCDateTime.DatetimeValue
       TestCases.Types.UtcTimeType
+      TestCases.Types.ZonedTimeDiscriminatorMember
+      TestCases.Types.ZonedTimeDiscriminatorMember.Type
       TestCases.Types.ZonedTimeType
   other-modules:
       Paths_test_cases

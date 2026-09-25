@@ -847,6 +847,25 @@ components:
           bar: "#/components/schemas/Bar"
           baz: "#/components/schemas/Baz"
 
+    OneOfWithDiscriminatorDeriveShowOnly:
+      oneOf:
+        - $ref: "#/components/schemas/Foo"
+        - $ref: "#/components/schemas/ZonedTimeDiscriminatorMember"
+
+      discriminator:
+        propertyName: "type"
+        mapping:
+          foo: "#/components/schemas/Foo"
+          zonedTime: "#/components/schemas/ZonedTimeDiscriminatorMember"
+
+    ZonedTimeDiscriminatorMember:
+      type: object
+      properties:
+        type:
+          type: string
+        time:
+          $ref: "#/components/schemas/ZonedTimeType"
+
     ObjectWithDiscriminatedUnionRef:
       type: object
       properties:
