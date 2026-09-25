@@ -994,6 +994,91 @@ components:
       additionalProperties: false
 
 
+    InheritedDiscriminatorParent:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          childA: '#/components/schemas/InheritedDiscriminatorChildA'
+          childB: '#/components/schemas/InheritedDiscriminatorChildB'
+          childC: '#/components/schemas/InheritedDiscriminatorChildC'
+
+    InheritedDiscriminatorChildA:
+      allOf:
+        - $ref: '#/components/schemas/InheritedDiscriminatorParent'
+        - type: object
+          properties:
+            childAName:
+              type: string
+
+    InheritedDiscriminatorChildB:
+      allOf:
+        - $ref: '#/components/schemas/InheritedDiscriminatorParent'
+        - type: object
+          properties:
+            childBName:
+              type: string
+
+    InheritedDiscriminatorChildC:
+      allOf:
+        - $ref: '#/components/schemas/InheritedDiscriminatorParent'
+        - type: object
+          properties:
+            childCName:
+              type: string
+
+    OneOfWithInheritedDiscriminator:
+      oneOf:
+        - $ref: '#/components/schemas/InheritedDiscriminatorChildA'
+        - $ref: '#/components/schemas/InheritedDiscriminatorChildB'
+        - $ref: '#/components/schemas/InheritedDiscriminatorChildC'
+
+    OneOfWithSomeInheritedDiscriminatorChildren:
+      oneOf:
+        - $ref: '#/components/schemas/InheritedDiscriminatorChildA'
+        - $ref: '#/components/schemas/InheritedDiscriminatorChildB'
+
+    PartiallyInheritedDiscriminatorParent:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          child: '#/components/schemas/PartiallyInheritedDiscriminatorChild'
+          nonChild: '#/components/schemas/PartiallyInheritedDiscriminatorNonChild'
+
+    PartiallyInheritedDiscriminatorChild:
+      allOf:
+        - $ref: '#/components/schemas/PartiallyInheritedDiscriminatorParent'
+        - type: object
+          properties:
+            childName:
+              type: string
+
+    PartiallyInheritedDiscriminatorNonChild:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+        nonChildName:
+          type: string
+
+    OneOfWithPartiallyInheritedDiscriminator:
+      oneOf:
+        - $ref: '#/components/schemas/PartiallyInheritedDiscriminatorChild'
+        - $ref: '#/components/schemas/PartiallyInheritedDiscriminatorNonChild'
+
     TopLevelArray:
       type: array
       description: A schema that defines a top level array

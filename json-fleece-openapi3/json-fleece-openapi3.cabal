@@ -2076,6 +2076,17 @@ extra-source-files:
     examples/test-cases/TestCases/Types/Foo.hs
     examples/test-cases/TestCases/Types/Foo/Type.hs
     examples/test-cases/TestCases/Types/IgnoredTextLengthType.hs
+    examples/test-cases/TestCases/Types/InheritedDiscriminatorChildA.hs
+    examples/test-cases/TestCases/Types/InheritedDiscriminatorChildA/ChildAName.hs
+    examples/test-cases/TestCases/Types/InheritedDiscriminatorChildA/Type.hs
+    examples/test-cases/TestCases/Types/InheritedDiscriminatorChildB.hs
+    examples/test-cases/TestCases/Types/InheritedDiscriminatorChildB/ChildBName.hs
+    examples/test-cases/TestCases/Types/InheritedDiscriminatorChildB/Type.hs
+    examples/test-cases/TestCases/Types/InheritedDiscriminatorChildC.hs
+    examples/test-cases/TestCases/Types/InheritedDiscriminatorChildC/ChildCName.hs
+    examples/test-cases/TestCases/Types/InheritedDiscriminatorChildC/Type.hs
+    examples/test-cases/TestCases/Types/InheritedDiscriminatorParent.hs
+    examples/test-cases/TestCases/Types/InheritedDiscriminatorParent/Type.hs
     examples/test-cases/TestCases/Types/InlineAllOf/RequestBody/FieldC/FieldC1.hs
     examples/test-cases/TestCases/Types/InlineAllOf/RequestBody/FieldC/FieldC2.hs
     examples/test-cases/TestCases/Types/InlineAllOf/RequestBody/FieldI/DatetimeType.hs
@@ -2160,6 +2171,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/ObjectWithSingletonOneOfFields.hs
     examples/test-cases/TestCases/Types/OneOfWithDiscriminator.hs
     examples/test-cases/TestCases/Types/OneOfWithDiscriminatorTypeObject.hs
+    examples/test-cases/TestCases/Types/OneOfWithInheritedDiscriminator.hs
     examples/test-cases/TestCases/Types/OneOfWithInlineEnum.hs
     examples/test-cases/TestCases/Types/OneOfWithInlineNestedArray.hs
     examples/test-cases/TestCases/Types/OneOfWithInlineNull.hs
@@ -2169,6 +2181,16 @@ extra-source-files:
     examples/test-cases/TestCases/Types/OneOfWithInlineObject/Option4/Nested/Number.hs
     examples/test-cases/TestCases/Types/OneOfWithInlineRefArrayItems.hs
     examples/test-cases/TestCases/Types/OneOfWithNullable.hs
+    examples/test-cases/TestCases/Types/OneOfWithPartiallyInheritedDiscriminator.hs
+    examples/test-cases/TestCases/Types/OneOfWithSomeInheritedDiscriminatorChildren.hs
+    examples/test-cases/TestCases/Types/PartiallyInheritedDiscriminatorChild.hs
+    examples/test-cases/TestCases/Types/PartiallyInheritedDiscriminatorChild/ChildName.hs
+    examples/test-cases/TestCases/Types/PartiallyInheritedDiscriminatorChild/Type.hs
+    examples/test-cases/TestCases/Types/PartiallyInheritedDiscriminatorNonChild.hs
+    examples/test-cases/TestCases/Types/PartiallyInheritedDiscriminatorNonChild/NonChildName.hs
+    examples/test-cases/TestCases/Types/PartiallyInheritedDiscriminatorNonChild/Type.hs
+    examples/test-cases/TestCases/Types/PartiallyInheritedDiscriminatorParent.hs
+    examples/test-cases/TestCases/Types/PartiallyInheritedDiscriminatorParent/Type.hs
     examples/test-cases/TestCases/Types/ReexportFieldsExample.hs
     examples/test-cases/TestCases/Types/ReexportFieldsExample/Age.hs
     examples/test-cases/TestCases/Types/ReexportFieldsExample/Name.hs

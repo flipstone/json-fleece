@@ -15,7 +15,7 @@ import Control.Applicative ((<|>))
 #else
 import Control.Applicative (liftA2, (<|>))
 #endif
-import Control.Monad (join, when, (<=<))
+import Control.Monad (guard, join, when, (<=<))
 import Control.Monad.Reader (ReaderT, asks, runReaderT)
 import Control.Monad.Trans (lift)
 import qualified Data.Aeson as Aeson
@@ -1325,6 +1325,9 @@ mkOneOfOrAnyOfDataFormat schemaType schemaKey typeName schema schemas = do
   case OA._schemaDiscriminator schema of
     Just discriminator ->
       Just <$> mkOneOfAnyOfTaggedUnion discriminator schemaKey
+    Nothing
+      | Just discriminator <- memberDiscriminator components schemas ->
+          Just <$> mkOneOfAnyOfTaggedUnion discriminator schemaKey
     Nothing -> do
       typeOptions <- lift $ CGU.lookupTypeOptions typeName
       case NEL.nonEmpty schemas of
@@ -1532,10 +1535,42 @@ mkOneOfAnyOfTaggedUnion discriminator _schemaKey = do
 
   codeGenTaggedUnionMembers <-
     traverse processMappingEntry
+      . List.sortOn fst
       . IOHM.toList
       $ mapping
 
   pure (mempty, CGU.CodeGenTaggedUnion tagProperty codeGenTaggedUnionMembers)
+
+{- | The discriminator all members of a @oneOf@ or @anyOf@ inherit through
+@allOf@, provided its mapping lists exactly those members. The OpenAPI 3.0
+Discriminator Object allows this: "the discriminator MAY be added to a parent
+schema definition, and all schemas comprising the parent schema in an @allOf@
+construct may be used as an alternate schema".
+-}
+memberDiscriminator ::
+  OA.Definitions OA.Schema ->
+  [OA.Referenced OA.Schema] ->
+  Maybe OA.Discriminator
+memberDiscriminator components schemas = do
+  let
+    referenceName referenced =
+      case referenced of
+        OA.Ref ref -> Just (OA.getReference ref)
+        OA.Inline _ -> Nothing
+
+    schemaDiscriminator refName = do
+      memberSchema <- IOHM.lookup refName components
+      OA._schemaDiscriminator memberSchema
+
+  refNames <- traverse referenceName schemas
+  discriminator : otherDiscriminators <- traverse schemaDiscriminator refNames
+  guard (all (== discriminator) otherDiscriminators)
+
+  let
+    targets = Set.fromList (IOHM.elems (OA._discriminatorMapping discriminator))
+
+  guard (targets == Set.fromList (map ("#/components/schemas/" <>) refNames))
+  pure discriminator
 
 mkOpenApiStringFormat :: HC.TypeName -> OA.Schema -> CGM CGU.CodeGenDataFormat
 mkOpenApiStringFormat typeName schema = do

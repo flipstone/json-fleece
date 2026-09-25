@@ -226,6 +226,17 @@ library
       TestCases.Types.Foo
       TestCases.Types.Foo.Type
       TestCases.Types.IgnoredTextLengthType
+      TestCases.Types.InheritedDiscriminatorChildA
+      TestCases.Types.InheritedDiscriminatorChildA.ChildAName
+      TestCases.Types.InheritedDiscriminatorChildA.Type
+      TestCases.Types.InheritedDiscriminatorChildB
+      TestCases.Types.InheritedDiscriminatorChildB.ChildBName
+      TestCases.Types.InheritedDiscriminatorChildB.Type
+      TestCases.Types.InheritedDiscriminatorChildC
+      TestCases.Types.InheritedDiscriminatorChildC.ChildCName
+      TestCases.Types.InheritedDiscriminatorChildC.Type
+      TestCases.Types.InheritedDiscriminatorParent
+      TestCases.Types.InheritedDiscriminatorParent.Type
       TestCases.Types.InlineAllOf.RequestBody.FieldC.FieldC1
       TestCases.Types.InlineAllOf.RequestBody.FieldC.FieldC2
       TestCases.Types.InlineAllOf.RequestBody.FieldI.DatetimeType
@@ -310,6 +321,7 @@ library
       TestCases.Types.ObjectWithSingletonOneOfFields
       TestCases.Types.OneOfWithDiscriminator
       TestCases.Types.OneOfWithDiscriminatorTypeObject
+      TestCases.Types.OneOfWithInheritedDiscriminator
       TestCases.Types.OneOfWithInlineEnum
       TestCases.Types.OneOfWithInlineNestedArray
       TestCases.Types.OneOfWithInlineNull
@@ -319,6 +331,16 @@ library
       TestCases.Types.OneOfWithInlineObject.Option4.Nested.Number
       TestCases.Types.OneOfWithInlineRefArrayItems
       TestCases.Types.OneOfWithNullable
+      TestCases.Types.OneOfWithPartiallyInheritedDiscriminator
+      TestCases.Types.OneOfWithSomeInheritedDiscriminatorChildren
+      TestCases.Types.PartiallyInheritedDiscriminatorChild
+      TestCases.Types.PartiallyInheritedDiscriminatorChild.ChildName
+      TestCases.Types.PartiallyInheritedDiscriminatorChild.Type
+      TestCases.Types.PartiallyInheritedDiscriminatorNonChild
+      TestCases.Types.PartiallyInheritedDiscriminatorNonChild.NonChildName
+      TestCases.Types.PartiallyInheritedDiscriminatorNonChild.Type
+      TestCases.Types.PartiallyInheritedDiscriminatorParent
+      TestCases.Types.PartiallyInheritedDiscriminatorParent.Type
       TestCases.Types.ReexportFieldsExample
       TestCases.Types.ReexportFieldsExample.Age
       TestCases.Types.ReexportFieldsExample.Name
