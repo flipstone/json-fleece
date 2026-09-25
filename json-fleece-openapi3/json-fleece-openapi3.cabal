@@ -2135,6 +2135,19 @@ extra-source-files:
     examples/test-cases/TestCases/Types/MixedInJustAdditionalPropertiesSchemaRef.hs
     examples/test-cases/TestCases/Types/MixedInJustAdditionalPropertiesSchemaRef/Bar.hs
     examples/test-cases/TestCases/Types/MixedInJustAdditionalPropertiesSchemaRef/Foo.hs
+    examples/test-cases/TestCases/Types/MultiLevelDiscriminatorAnimal.hs
+    examples/test-cases/TestCases/Types/MultiLevelDiscriminatorAnimal/Type.hs
+    examples/test-cases/TestCases/Types/MultiLevelDiscriminatorCat.hs
+    examples/test-cases/TestCases/Types/MultiLevelDiscriminatorCat/Type.hs
+    examples/test-cases/TestCases/Types/MultiLevelDiscriminatorCat/Whiskers.hs
+    examples/test-cases/TestCases/Types/MultiLevelDiscriminatorDog.hs
+    examples/test-cases/TestCases/Types/MultiLevelDiscriminatorDog/Type.hs
+    examples/test-cases/TestCases/Types/MultiLevelDiscriminatorFeline.hs
+    examples/test-cases/TestCases/Types/MultiLevelDiscriminatorFeline/Type.hs
+    examples/test-cases/TestCases/Types/MultiLevelDiscriminatorFeline/Whiskers.hs
+    examples/test-cases/TestCases/Types/MultiLevelDiscriminatorLion.hs
+    examples/test-cases/TestCases/Types/MultiLevelDiscriminatorLion/Type.hs
+    examples/test-cases/TestCases/Types/MultiLevelDiscriminatorLion/Whiskers.hs
     examples/test-cases/TestCases/Types/NameConflicts.hs
     examples/test-cases/TestCases/Types/NameConflicts/Case.hs
     examples/test-cases/TestCases/Types/NameConflicts/Class.hs
@@ -2181,9 +2194,11 @@ extra-source-files:
     examples/test-cases/TestCases/Types/OneOfWithInlineObject/Option4/Nested/Name.hs
     examples/test-cases/TestCases/Types/OneOfWithInlineObject/Option4/Nested/Number.hs
     examples/test-cases/TestCases/Types/OneOfWithInlineRefArrayItems.hs
+    examples/test-cases/TestCases/Types/OneOfWithMultiLevelInheritedDiscriminator.hs
     examples/test-cases/TestCases/Types/OneOfWithNullable.hs
     examples/test-cases/TestCases/Types/OneOfWithPartiallyInheritedDiscriminator.hs
-    examples/test-cases/TestCases/Types/OneOfWithSomeInheritedDiscriminatorChildren.hs
+    examples/test-cases/TestCases/Types/OneOfWithSingleInheritedDiscriminatorChild.hs
+    examples/test-cases/TestCases/Types/OneOfWithTaggedUnionMember.hs
     examples/test-cases/TestCases/Types/PartiallyInheritedDiscriminatorChild.hs
     examples/test-cases/TestCases/Types/PartiallyInheritedDiscriminatorChild/ChildName.hs
     examples/test-cases/TestCases/Types/PartiallyInheritedDiscriminatorChild/Type.hs
@@ -2252,6 +2267,9 @@ extra-source-files:
     examples/selected-items-example/SelectedItemsExample/Types/PetTag.hs
     test/fixtures/alias-cycle.yaml
     test/fixtures/alias-type-options.yaml
+    test/fixtures/inherited-discriminator-conflicting-tag.yaml
+    test/fixtures/inherited-discriminator-different.yaml
+    test/fixtures/inherited-discriminator-mapping-mismatch.yaml
     test/fixtures/non-string-ref.yaml
     test/fixtures/non-string-schema-ref.yaml
     test/fixtures/path-ref-filtered.yaml

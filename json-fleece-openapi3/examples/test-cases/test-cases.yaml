@@ -1057,11 +1057,6 @@ components:
         - $ref: '#/components/schemas/InheritedDiscriminatorChildB'
         - $ref: '#/components/schemas/InheritedDiscriminatorChildC'
 
-    OneOfWithSomeInheritedDiscriminatorChildren:
-      oneOf:
-        - $ref: '#/components/schemas/InheritedDiscriminatorChildA'
-        - $ref: '#/components/schemas/InheritedDiscriminatorChildB'
-
     PartiallyInheritedDiscriminatorParent:
       type: object
       required:
@@ -1097,6 +1092,59 @@ components:
       oneOf:
         - $ref: '#/components/schemas/PartiallyInheritedDiscriminatorChild'
         - $ref: '#/components/schemas/PartiallyInheritedDiscriminatorNonChild'
+
+    MultiLevelDiscriminatorAnimal:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          cat: '#/components/schemas/MultiLevelDiscriminatorCat'
+          dog: '#/components/schemas/MultiLevelDiscriminatorDog'
+
+    MultiLevelDiscriminatorFeline:
+      allOf:
+        - $ref: '#/components/schemas/MultiLevelDiscriminatorAnimal'
+        - type: object
+          properties:
+            whiskers:
+              type: integer
+          discriminator:
+            propertyName: type
+            mapping:
+              cat: '#/components/schemas/MultiLevelDiscriminatorCat'
+              lion: '#/components/schemas/MultiLevelDiscriminatorLion'
+
+    MultiLevelDiscriminatorCat:
+      allOf:
+        - $ref: '#/components/schemas/MultiLevelDiscriminatorFeline'
+
+    MultiLevelDiscriminatorLion:
+      allOf:
+        - $ref: '#/components/schemas/MultiLevelDiscriminatorFeline'
+
+    MultiLevelDiscriminatorDog:
+      allOf:
+        - $ref: '#/components/schemas/MultiLevelDiscriminatorAnimal'
+
+    OneOfWithMultiLevelInheritedDiscriminator:
+      oneOf:
+        - $ref: '#/components/schemas/MultiLevelDiscriminatorCat'
+        - $ref: '#/components/schemas/MultiLevelDiscriminatorLion'
+        - $ref: '#/components/schemas/MultiLevelDiscriminatorDog'
+
+    OneOfWithTaggedUnionMember:
+      oneOf:
+        - $ref: '#/components/schemas/OneOfWithDiscriminator'
+        - $ref: '#/components/schemas/InheritedDiscriminatorChildA'
+
+    OneOfWithSingleInheritedDiscriminatorChild:
+      oneOf:
+        - $ref: '#/components/schemas/InheritedDiscriminatorChildA'
 
     TopLevelArray:
       type: array

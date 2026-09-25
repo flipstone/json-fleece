@@ -15,7 +15,7 @@ import Control.Applicative ((<|>))
 #else
 import Control.Applicative (liftA2, (<|>))
 #endif
-import Control.Monad (guard, join, when, (<=<))
+import Control.Monad (join, when, (<=<))
 import Control.Monad.Reader (ReaderT, asks, runReaderT)
 import Control.Monad.Trans (lift)
 import qualified Data.Aeson as Aeson
@@ -1326,35 +1326,38 @@ mkOneOfOrAnyOfDataFormat schemaType schemaKey typeName schema schemas = do
   case OA._schemaDiscriminator schema of
     Just discriminator ->
       Just <$> mkOneOfAnyOfTaggedUnion discriminator typeOptions
-    Nothing
-      | Just discriminator <- memberDiscriminator components schemas ->
+    Nothing -> do
+      inheritedDiscriminator <- memberDiscriminator schemaType typeName components schemas
+
+      case inheritedDiscriminator of
+        Just discriminator ->
           Just <$> mkOneOfAnyOfTaggedUnion discriminator typeOptions
-    Nothing ->
-      case NEL.nonEmpty schemas of
         Nothing ->
-          lift . CGU.codeGenError $
-            "While handling "
-              <> schemaType
-              <> ": The list of types cannot be empty. The typeName is: "
-              <> T.unpack (HC.typeNameText typeName)
-        Just (firstSchema :| []) ->
-          case firstSchema of
-            OA.Inline inlineSchema ->
-              mkOpenApiDataFormat schemaKey typeName inlineSchema
-            OA.Ref ref ->
-              case IOHM.lookup (OA.getReference ref) components of
-                Nothing ->
-                  lift . CGU.codeGenError $
-                    "While looking up reference: Could not find ref with name: "
-                      <> T.unpack (OA.getReference ref)
-                Just _foundSchema ->
-                  pure . Just $
-                    ( Map.empty
-                    , CGU.CodeGenTypeSynonym
-                        (Right (CGU.TypeReference (OA.getReference ref)))
-                    )
-        Just neSchemas ->
-          Just <$> mkOneOfAnyOfUnion schemaKey typeOptions neSchemas
+          case NEL.nonEmpty schemas of
+            Nothing ->
+              lift . CGU.codeGenError $
+                "While handling "
+                  <> schemaType
+                  <> ": The list of types cannot be empty. The typeName is: "
+                  <> T.unpack (HC.typeNameText typeName)
+            Just (firstSchema :| []) ->
+              case firstSchema of
+                OA.Inline inlineSchema ->
+                  mkOpenApiDataFormat schemaKey typeName inlineSchema
+                OA.Ref ref ->
+                  case IOHM.lookup (OA.getReference ref) components of
+                    Nothing ->
+                      lift . CGU.codeGenError $
+                        "While looking up reference: Could not find ref with name: "
+                          <> T.unpack (OA.getReference ref)
+                    Just _foundSchema ->
+                      pure . Just $
+                        ( Map.empty
+                        , CGU.CodeGenTypeSynonym
+                            (Right (CGU.TypeReference (OA.getReference ref)))
+                        )
+            Just neSchemas ->
+              Just <$> mkOneOfAnyOfUnion schemaKey typeOptions neSchemas
 
 inlineAllOfReferenced :: T.Text -> OA.Referenced OA.Schema -> CGM (OA.Referenced OA.Schema)
 inlineAllOfReferenced key schema =
@@ -1542,35 +1545,103 @@ mkOneOfAnyOfTaggedUnion discriminator typeOptions = do
   pure (mempty, CGU.CodeGenTaggedUnion typeOptions tagProperty codeGenTaggedUnionMembers)
 
 {- | The discriminator all members of a @oneOf@ or @anyOf@ inherit through
-@allOf@, provided its mapping lists exactly those members. The OpenAPI 3.0
-Discriminator Object allows this: "the discriminator MAY be added to a parent
-schema definition, and all schemas comprising the parent schema in an @allOf@
-construct may be used as an alternate schema".
+@allOf@. The OpenAPI 3.0 Discriminator Object allows this: "the discriminator
+MAY be added to a parent schema definition, and all schemas comprising the
+parent schema in an @allOf@ construct may be used as an alternate schema".
+A member inherits a discriminator when its discriminator's mapping lists the
+member itself, which a schema that is its own tagged union does not. When
+fewer than two members are given or not every member inherits, there is no
+inherited discriminator. When every member inherits, their property names must
+agree and their combined mappings must list exactly the members.
 -}
 memberDiscriminator ::
+  String ->
+  HC.TypeName ->
   OA.Definitions OA.Schema ->
   [OA.Referenced OA.Schema] ->
-  Maybe OA.Discriminator
-memberDiscriminator components schemas = do
+  CGM (Maybe OA.Discriminator)
+memberDiscriminator schemaType typeName components schemas =
   let
+    schemaTarget refName =
+      "#/components/schemas/" <> refName
+
+    mappingTargets =
+      Set.fromList . IOHM.elems . OA._discriminatorMapping
+
+    inheritedDiscriminator referenced =
+      case referenced of
+        OA.Inline _ ->
+          Nothing
+        OA.Ref ref -> do
+          let
+            refName = OA.getReference ref
+
+          memberSchema <- IOHM.lookup refName components
+          discriminator <- OA._schemaDiscriminator memberSchema
+
+          if Set.member (schemaTarget refName) (mappingTargets discriminator)
+            then Just discriminator
+            else Nothing
+
     referenceName referenced =
       case referenced of
         OA.Ref ref -> Just (OA.getReference ref)
         OA.Inline _ -> Nothing
 
-    schemaDiscriminator refName = do
-      memberSchema <- IOHM.lookup refName components
-      OA._schemaDiscriminator memberSchema
+    memberTargets =
+      Set.fromList (map schemaTarget (mapMaybe referenceName schemas))
 
-  refNames <- traverse referenceName schemas
-  discriminator : otherDiscriminators <- traverse schemaDiscriminator refNames
-  guard (all (== discriminator) otherDiscriminators)
+    discriminatorError message =
+      lift . CGU.codeGenError $
+        "While handling "
+          <> schemaType
+          <> ": The members of "
+          <> T.unpack (HC.typeNameText typeName)
+          <> " "
+          <> message
 
-  let
-    targets = Set.fromList (IOHM.elems (OA._discriminatorMapping discriminator))
+    propertyNames =
+      Set.fromList . map OA._discriminatorPropertyName . NEL.toList
 
-  guard (targets == Set.fromList (map ("#/components/schemas/" <>) refNames))
-  pure discriminator
+    mappingEntries =
+      concatMap (IOHM.toList . OA._discriminatorMapping)
+
+    conflictingTags =
+      Map.keys
+        . Map.filter ((> 1) . Set.size)
+        . Map.fromListWith Set.union
+        . map (fmap Set.singleton)
+        . mappingEntries
+
+    combinedMapping =
+      IOHM.fromList . mappingEntries
+
+    combinedTargets =
+      Set.fromList . map snd . mappingEntries
+
+    renderList =
+      List.intercalate ", " . map T.unpack
+  in
+    case NEL.nonEmpty =<< traverse inheritedDiscriminator schemas of
+      Nothing ->
+        pure Nothing
+      Just (_ :| []) ->
+        pure Nothing
+      Just discriminators@(discriminator :| _)
+        | Set.size (propertyNames discriminators) > 1 ->
+            discriminatorError $
+              "inherit discriminators with different property names through allOf: "
+                <> renderList (Set.toList (propertyNames discriminators))
+        | not (null (conflictingTags discriminators)) ->
+            discriminatorError $
+              "inherit discriminator mappings that map the same tag to different schemas: "
+                <> renderList (conflictingTags discriminators)
+        | combinedTargets discriminators /= memberTargets ->
+            discriminatorError $
+              "inherit a discriminator whose mapping does not list exactly those members. The mapping lists: "
+                <> renderList (Set.toList (combinedTargets discriminators))
+        | otherwise ->
+            pure (Just discriminator {OA._discriminatorMapping = combinedMapping discriminators})
 
 mkOpenApiStringFormat :: HC.TypeName -> OA.Schema -> CGM CGU.CodeGenDataFormat
 mkOpenApiStringFormat typeName schema = do

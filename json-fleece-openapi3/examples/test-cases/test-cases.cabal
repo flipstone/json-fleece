@@ -285,6 +285,19 @@ library
       TestCases.Types.MixedInJustAdditionalPropertiesSchemaRef
       TestCases.Types.MixedInJustAdditionalPropertiesSchemaRef.Bar
       TestCases.Types.MixedInJustAdditionalPropertiesSchemaRef.Foo
+      TestCases.Types.MultiLevelDiscriminatorAnimal
+      TestCases.Types.MultiLevelDiscriminatorAnimal.Type
+      TestCases.Types.MultiLevelDiscriminatorCat
+      TestCases.Types.MultiLevelDiscriminatorCat.Type
+      TestCases.Types.MultiLevelDiscriminatorCat.Whiskers
+      TestCases.Types.MultiLevelDiscriminatorDog
+      TestCases.Types.MultiLevelDiscriminatorDog.Type
+      TestCases.Types.MultiLevelDiscriminatorFeline
+      TestCases.Types.MultiLevelDiscriminatorFeline.Type
+      TestCases.Types.MultiLevelDiscriminatorFeline.Whiskers
+      TestCases.Types.MultiLevelDiscriminatorLion
+      TestCases.Types.MultiLevelDiscriminatorLion.Type
+      TestCases.Types.MultiLevelDiscriminatorLion.Whiskers
       TestCases.Types.NameConflicts
       TestCases.Types.NameConflicts.Case
       TestCases.Types.NameConflicts.Class
@@ -331,9 +344,11 @@ library
       TestCases.Types.OneOfWithInlineObject.Option4.Nested.Name
       TestCases.Types.OneOfWithInlineObject.Option4.Nested.Number
       TestCases.Types.OneOfWithInlineRefArrayItems
+      TestCases.Types.OneOfWithMultiLevelInheritedDiscriminator
       TestCases.Types.OneOfWithNullable
       TestCases.Types.OneOfWithPartiallyInheritedDiscriminator
-      TestCases.Types.OneOfWithSomeInheritedDiscriminatorChildren
+      TestCases.Types.OneOfWithSingleInheritedDiscriminatorChild
+      TestCases.Types.OneOfWithTaggedUnionMember
       TestCases.Types.PartiallyInheritedDiscriminatorChild
       TestCases.Types.PartiallyInheritedDiscriminatorChild.ChildName
       TestCases.Types.PartiallyInheritedDiscriminatorChild.Type

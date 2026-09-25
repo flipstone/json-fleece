@@ -1,0 +1,33 @@
+openapi: "3.0.1"
+info:
+  title: Guard
+  version: "1.0"
+paths: {}
+components:
+  schemas:
+    Parent:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          childA: '#/components/schemas/ChildA'
+          childB: '#/components/schemas/ChildB'
+          childC: '#/components/schemas/ChildC'
+    ChildA:
+      allOf:
+        - $ref: '#/components/schemas/Parent'
+    ChildB:
+      allOf:
+        - $ref: '#/components/schemas/Parent'
+    ChildC:
+      allOf:
+        - $ref: '#/components/schemas/Parent'
+    SomeChildren:
+      oneOf:
+        - $ref: '#/components/schemas/ChildA'
+        - $ref: '#/components/schemas/ChildB'
