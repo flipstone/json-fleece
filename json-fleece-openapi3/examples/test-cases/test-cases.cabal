@@ -226,6 +226,17 @@ library
       TestCases.Types.Foo
       TestCases.Types.Foo.Type
       TestCases.Types.IgnoredTextLengthType
+      TestCases.Types.InheritedDiscriminatorChildA
+      TestCases.Types.InheritedDiscriminatorChildA.ChildAName
+      TestCases.Types.InheritedDiscriminatorChildA.Type
+      TestCases.Types.InheritedDiscriminatorChildB
+      TestCases.Types.InheritedDiscriminatorChildB.ChildBName
+      TestCases.Types.InheritedDiscriminatorChildB.Type
+      TestCases.Types.InheritedDiscriminatorChildC
+      TestCases.Types.InheritedDiscriminatorChildC.ChildCName
+      TestCases.Types.InheritedDiscriminatorChildC.Type
+      TestCases.Types.InheritedDiscriminatorParent
+      TestCases.Types.InheritedDiscriminatorParent.Type
       TestCases.Types.InlineAllOf.RequestBody.FieldC.FieldC1
       TestCases.Types.InlineAllOf.RequestBody.FieldC.FieldC2
       TestCases.Types.InlineAllOf.RequestBody.FieldI.DatetimeType
@@ -274,6 +285,19 @@ library
       TestCases.Types.MixedInJustAdditionalPropertiesSchemaRef
       TestCases.Types.MixedInJustAdditionalPropertiesSchemaRef.Bar
       TestCases.Types.MixedInJustAdditionalPropertiesSchemaRef.Foo
+      TestCases.Types.MultiLevelDiscriminatorAnimal
+      TestCases.Types.MultiLevelDiscriminatorAnimal.Type
+      TestCases.Types.MultiLevelDiscriminatorCat
+      TestCases.Types.MultiLevelDiscriminatorCat.Type
+      TestCases.Types.MultiLevelDiscriminatorCat.Whiskers
+      TestCases.Types.MultiLevelDiscriminatorDog
+      TestCases.Types.MultiLevelDiscriminatorDog.Type
+      TestCases.Types.MultiLevelDiscriminatorFeline
+      TestCases.Types.MultiLevelDiscriminatorFeline.Type
+      TestCases.Types.MultiLevelDiscriminatorFeline.Whiskers
+      TestCases.Types.MultiLevelDiscriminatorLion
+      TestCases.Types.MultiLevelDiscriminatorLion.Type
+      TestCases.Types.MultiLevelDiscriminatorLion.Whiskers
       TestCases.Types.NameConflicts
       TestCases.Types.NameConflicts.Case
       TestCases.Types.NameConflicts.Class
@@ -309,7 +333,9 @@ library
       TestCases.Types.ObjectWithSchemaRefAliasField
       TestCases.Types.ObjectWithSingletonOneOfFields
       TestCases.Types.OneOfWithDiscriminator
+      TestCases.Types.OneOfWithDiscriminatorDeriveShowOnly
       TestCases.Types.OneOfWithDiscriminatorTypeObject
+      TestCases.Types.OneOfWithInheritedDiscriminator
       TestCases.Types.OneOfWithInlineEnum
       TestCases.Types.OneOfWithInlineNestedArray
       TestCases.Types.OneOfWithInlineNull
@@ -318,7 +344,19 @@ library
       TestCases.Types.OneOfWithInlineObject.Option4.Nested.Name
       TestCases.Types.OneOfWithInlineObject.Option4.Nested.Number
       TestCases.Types.OneOfWithInlineRefArrayItems
+      TestCases.Types.OneOfWithMultiLevelInheritedDiscriminator
       TestCases.Types.OneOfWithNullable
+      TestCases.Types.OneOfWithPartiallyInheritedDiscriminator
+      TestCases.Types.OneOfWithSingleInheritedDiscriminatorChild
+      TestCases.Types.OneOfWithTaggedUnionMember
+      TestCases.Types.PartiallyInheritedDiscriminatorChild
+      TestCases.Types.PartiallyInheritedDiscriminatorChild.ChildName
+      TestCases.Types.PartiallyInheritedDiscriminatorChild.Type
+      TestCases.Types.PartiallyInheritedDiscriminatorNonChild
+      TestCases.Types.PartiallyInheritedDiscriminatorNonChild.NonChildName
+      TestCases.Types.PartiallyInheritedDiscriminatorNonChild.Type
+      TestCases.Types.PartiallyInheritedDiscriminatorParent
+      TestCases.Types.PartiallyInheritedDiscriminatorParent.Type
       TestCases.Types.ReexportFieldsExample
       TestCases.Types.ReexportFieldsExample.Age
       TestCases.Types.ReexportFieldsExample.Name
@@ -348,6 +386,8 @@ library
       TestCases.Types.UTCDateTime.DatetimeType
       TestCases.Types.UTCDateTime.DatetimeValue
       TestCases.Types.UtcTimeType
+      TestCases.Types.ZonedTimeDiscriminatorMember
+      TestCases.Types.ZonedTimeDiscriminatorMember.Type
       TestCases.Types.ZonedTimeType
   other-modules:
       Paths_test_cases

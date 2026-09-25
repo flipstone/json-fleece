@@ -847,6 +847,25 @@ components:
           bar: "#/components/schemas/Bar"
           baz: "#/components/schemas/Baz"
 
+    OneOfWithDiscriminatorDeriveShowOnly:
+      oneOf:
+        - $ref: "#/components/schemas/Foo"
+        - $ref: "#/components/schemas/ZonedTimeDiscriminatorMember"
+
+      discriminator:
+        propertyName: "type"
+        mapping:
+          foo: "#/components/schemas/Foo"
+          zonedTime: "#/components/schemas/ZonedTimeDiscriminatorMember"
+
+    ZonedTimeDiscriminatorMember:
+      type: object
+      properties:
+        type:
+          type: string
+        time:
+          $ref: "#/components/schemas/ZonedTimeType"
+
     ObjectWithDiscriminatedUnionRef:
       type: object
       properties:
@@ -993,6 +1012,139 @@ components:
           description: Type of the datetime
       additionalProperties: false
 
+
+    InheritedDiscriminatorParent:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          childA: '#/components/schemas/InheritedDiscriminatorChildA'
+          childB: '#/components/schemas/InheritedDiscriminatorChildB'
+          childC: '#/components/schemas/InheritedDiscriminatorChildC'
+
+    InheritedDiscriminatorChildA:
+      allOf:
+        - $ref: '#/components/schemas/InheritedDiscriminatorParent'
+        - type: object
+          properties:
+            childAName:
+              type: string
+
+    InheritedDiscriminatorChildB:
+      allOf:
+        - $ref: '#/components/schemas/InheritedDiscriminatorParent'
+        - type: object
+          properties:
+            childBName:
+              type: string
+
+    InheritedDiscriminatorChildC:
+      allOf:
+        - $ref: '#/components/schemas/InheritedDiscriminatorParent'
+        - type: object
+          properties:
+            childCName:
+              type: string
+
+    OneOfWithInheritedDiscriminator:
+      oneOf:
+        - $ref: '#/components/schemas/InheritedDiscriminatorChildA'
+        - $ref: '#/components/schemas/InheritedDiscriminatorChildB'
+        - $ref: '#/components/schemas/InheritedDiscriminatorChildC'
+
+    PartiallyInheritedDiscriminatorParent:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          child: '#/components/schemas/PartiallyInheritedDiscriminatorChild'
+          nonChild: '#/components/schemas/PartiallyInheritedDiscriminatorNonChild'
+
+    PartiallyInheritedDiscriminatorChild:
+      allOf:
+        - $ref: '#/components/schemas/PartiallyInheritedDiscriminatorParent'
+        - type: object
+          properties:
+            childName:
+              type: string
+
+    PartiallyInheritedDiscriminatorNonChild:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+        nonChildName:
+          type: string
+
+    OneOfWithPartiallyInheritedDiscriminator:
+      oneOf:
+        - $ref: '#/components/schemas/PartiallyInheritedDiscriminatorChild'
+        - $ref: '#/components/schemas/PartiallyInheritedDiscriminatorNonChild'
+
+    MultiLevelDiscriminatorAnimal:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          cat: '#/components/schemas/MultiLevelDiscriminatorCat'
+          dog: '#/components/schemas/MultiLevelDiscriminatorDog'
+
+    MultiLevelDiscriminatorFeline:
+      allOf:
+        - $ref: '#/components/schemas/MultiLevelDiscriminatorAnimal'
+        - type: object
+          properties:
+            whiskers:
+              type: integer
+          discriminator:
+            propertyName: type
+            mapping:
+              cat: '#/components/schemas/MultiLevelDiscriminatorCat'
+              lion: '#/components/schemas/MultiLevelDiscriminatorLion'
+
+    MultiLevelDiscriminatorCat:
+      allOf:
+        - $ref: '#/components/schemas/MultiLevelDiscriminatorFeline'
+
+    MultiLevelDiscriminatorLion:
+      allOf:
+        - $ref: '#/components/schemas/MultiLevelDiscriminatorFeline'
+
+    MultiLevelDiscriminatorDog:
+      allOf:
+        - $ref: '#/components/schemas/MultiLevelDiscriminatorAnimal'
+
+    OneOfWithMultiLevelInheritedDiscriminator:
+      oneOf:
+        - $ref: '#/components/schemas/MultiLevelDiscriminatorCat'
+        - $ref: '#/components/schemas/MultiLevelDiscriminatorLion'
+        - $ref: '#/components/schemas/MultiLevelDiscriminatorDog'
+
+    OneOfWithTaggedUnionMember:
+      oneOf:
+        - $ref: '#/components/schemas/OneOfWithDiscriminator'
+        - $ref: '#/components/schemas/InheritedDiscriminatorChildA'
+
+    OneOfWithSingleInheritedDiscriminatorChild:
+      oneOf:
+        - $ref: '#/components/schemas/InheritedDiscriminatorChildA'
 
     TopLevelArray:
       type: array

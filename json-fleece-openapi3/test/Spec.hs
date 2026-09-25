@@ -37,6 +37,9 @@ tests =
   , ("prop_nonStringSchemaRefFails", prop_nonStringSchemaRefFails)
   , ("prop_unionMemberCollapseFails", prop_unionMemberCollapseFails)
   , ("prop_aliasTypeOptionsFail", prop_aliasTypeOptionsFail)
+  , ("prop_differentInheritedDiscriminatorsFail", prop_differentInheritedDiscriminatorsFail)
+  , ("prop_conflictingInheritedDiscriminatorTagFails", prop_conflictingInheritedDiscriminatorTagFails)
+  , ("prop_inheritedDiscriminatorMappingMismatchFails", prop_inheritedDiscriminatorMappingMismatchFails)
   , ("prop_refInPathExtensionSucceeds", prop_refInPathExtensionSucceeds)
   , ("prop_unresolvableRefInFilteredSchemaSucceeds", prop_unresolvableRefInFilteredSchemaSucceeds)
   , ("prop_refInFilteredPathSucceeds", prop_refInFilteredPathSucceeds)
@@ -159,6 +162,24 @@ prop_aliasTypeOptionsFail =
     "alias-type-options.dhall"
     "alias-type-options.yaml"
     "is generated as a type synonym"
+
+prop_differentInheritedDiscriminatorsFail :: HH.Property
+prop_differentInheritedDiscriminatorsFail =
+  assertCodeGenFails
+    "inherited-discriminator-different.yaml"
+    "inherit discriminators with different property names through allOf: kind, petType"
+
+prop_conflictingInheritedDiscriminatorTagFails :: HH.Property
+prop_conflictingInheritedDiscriminatorTagFails =
+  assertCodeGenFails
+    "inherited-discriminator-conflicting-tag.yaml"
+    "inherit discriminator mappings that map the same tag to different schemas: shared"
+
+prop_inheritedDiscriminatorMappingMismatchFails :: HH.Property
+prop_inheritedDiscriminatorMappingMismatchFails =
+  assertCodeGenFails
+    "inherited-discriminator-mapping-mismatch.yaml"
+    "inherit a discriminator whose mapping does not list exactly those members"
 
 prop_refToOtherDocumentFails :: HH.Property
 prop_refToOtherDocumentFails =
