@@ -248,6 +248,8 @@ class Fleece t where
     UnionMembers t types right ->
     UnionMembers t types (Append left right)
 
+  infixr 9 `unionCombine`
+
   interpretTaggedUnionNamed ::
     KnownNat (Length (TaggedTypes tags)) =>
     Name ->
@@ -272,6 +274,8 @@ class Fleece t where
     TaggedUnionMembers t tags left ->
     TaggedUnionMembers t tags right ->
     TaggedUnionMembers t tags (Append left right)
+
+  infixr 9 `taggedUnionCombine`
 
   interpretJsonString ::
     Schema t a ->
@@ -719,6 +723,8 @@ infixl 9 #*
 (#|) =
   unionCombine
 
+infixr 9 #|
+
 (#@) ::
   ( Fleece t
   , Append (TaggedTypes left) (TaggedTypes right) ~ TaggedTypes (Append left right)
@@ -729,7 +735,7 @@ infixl 9 #*
 (#@) =
   taggedUnionCombine
 
-infixl 9 #|
+infixr 9 #@
 
 data Null
   = Null
