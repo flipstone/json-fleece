@@ -123,7 +123,7 @@ import Data.Typeable (Typeable)
 import qualified Data.Vector as V
 import qualified Data.Word as W
 import GHC.TypeLits (KnownNat, KnownSymbol)
-import Shrubbery (BranchIndex, Tag, TagIndex, TagType, TaggedTypes, TaggedUnion, TypeAtIndex, Union, type (@=))
+import Shrubbery (BranchIndex, LookupTag, Tag, TaggedTypes, TaggedUnion, Union, type (@=))
 import Shrubbery.TypeList (Append, Length)
 import Prelude hiding (maximum, minimum, null)
 
@@ -248,6 +248,8 @@ class Fleece t where
     UnionMembers t types right ->
     UnionMembers t types (Append left right)
 
+  infixr 9 `unionCombine`
+
   interpretTaggedUnionNamed ::
     KnownNat (Length (TaggedTypes tags)) =>
     Name ->
@@ -257,10 +259,8 @@ class Fleece t where
 
   taggedUnionMemberWithTag ::
     ( KnownSymbol tag
-    , n ~ TagIndex tag tags
     , KnownNat n
-    , TagType tag tags ~ a
-    , TypeAtIndex n (TaggedTypes tags) ~ a
+    , LookupTag tag tags ~ '(n, a)
     ) =>
     proxy tag ->
     Object t a a ->
@@ -272,6 +272,8 @@ class Fleece t where
     TaggedUnionMembers t tags left ->
     TaggedUnionMembers t tags right ->
     TaggedUnionMembers t tags (Append left right)
+
+  infixr 9 `taggedUnionCombine`
 
   interpretJsonString ::
     Schema t a ->
@@ -719,6 +721,8 @@ infixl 9 #*
 (#|) =
   unionCombine
 
+infixr 9 #|
+
 (#@) ::
   ( Fleece t
   , Append (TaggedTypes left) (TaggedTypes right) ~ TaggedTypes (Append left right)
@@ -729,7 +733,7 @@ infixl 9 #*
 (#@) =
   taggedUnionCombine
 
-infixl 9 #|
+infixr 9 #@
 
 data Null
   = Null

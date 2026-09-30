@@ -1,5 +1,5 @@
 name:                json-fleece-core
-version:             0.12.0.0
+version:             0.13.0.0
 github:              "flipstone/json-fleece/json-fleece-core"
 license:             MIT
 license-file:        LICENSE
@@ -27,7 +27,7 @@ dependencies:
 - non-empty-text >= 0.2 && < 0.3
 - nonempty-containers >= 0.3.4 && < 0.4
 - scientific >= 0.3.7 && < 0.4
-- shrubbery >= 0.2 && < 0.3
+- shrubbery >= 0.3 && < 0.4
 - text >= 1.2 && < 2.2
 - time >= 1.11 && < 1.15
 - vector >= 0.12 && < 0.14

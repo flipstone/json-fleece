@@ -1,5 +1,5 @@
 name:                json-fleece-aeson
-version:             0.5.1.0
+version:             0.5.2.0
 github:              "flipstone/json-fleece/json-fleece-aeson"
 license:             MIT
 license-file:        LICENSE
@@ -23,10 +23,10 @@ dependencies:
   - aeson >= 2.0 && < 2.3
   - bytestring >= 0.11 && < 0.13
   - containers >= 0.6 && < 0.8
-  - json-fleece-core >= 0.12 && < 0.13
+  - json-fleece-core >= 0.13 && < 0.14
   - text >= 1.2 && < 2.2
   - vector >= 0.12 && < 0.14
-  - shrubbery >= 0.2 && < 0.3
+  - shrubbery >= 0.3 && < 0.4
 
 flags:
   strict:
