@@ -123,7 +123,7 @@ import Data.Typeable (Typeable)
 import qualified Data.Vector as V
 import qualified Data.Word as W
 import GHC.TypeLits (KnownNat, KnownSymbol)
-import Shrubbery (BranchIndex, Tag, TagIndex, TagType, TaggedTypes, TaggedUnion, TypeAtIndex, Union, type (@=))
+import Shrubbery (BranchIndex, LookupTag, Tag, TaggedTypes, TaggedUnion, Union, type (@=))
 import Shrubbery.TypeList (Append, Length)
 import Prelude hiding (maximum, minimum, null)
 
@@ -259,10 +259,8 @@ class Fleece t where
 
   taggedUnionMemberWithTag ::
     ( KnownSymbol tag
-    , n ~ TagIndex tag tags
     , KnownNat n
-    , TagType tag tags ~ a
-    , TypeAtIndex n (TaggedTypes tags) ~ a
+    , LookupTag tag tags ~ '(n, a)
     ) =>
     proxy tag ->
     Object t a a ->

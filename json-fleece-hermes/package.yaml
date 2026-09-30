@@ -66,7 +66,7 @@ library:
   dependencies:
     - containers >= 0.6 && < 0.8
     - hermes-json >= 0.6 && < 0.8
-    - shrubbery >= 0.2 && < 0.3
+    - shrubbery >= 0.3 && < 0.4
 
 tests:
   json-fleece-hermes-test:
@@ -83,7 +83,7 @@ tests:
       - json-fleece-examples
       - hedgehog
       - scientific >= 0.3.7 && < 0.4
-      - shrubbery >= 0.2 && < 0.3
+      - shrubbery >= 0.3 && < 0.4
       - time >= 1.11 && < 1.15
       - vector >= 0.12 && < 0.14
 

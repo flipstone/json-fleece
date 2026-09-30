@@ -3,13 +3,13 @@
 resolver: lts-21.25
 extra-deps:
   - github: flipstone/beeline
-    commit: 5108474e7313535ff35002e14ef78f98f001415c
+    commit: b68cf19a70fb33d69fe1c239c0782ac54fdac796
     subdirs:
       - beeline-params
       - beeline-routing
       - beeline-http-client
   - github: flipstone/shrubbery
-    commit: a064ede07e01b753a6eb310fc24d9fd8da1ad826
+    commit: ad4f362342e26cbbf2875b32b288ccd63b76633d
   - github: flipstone/bounded-text
     commit: 3ef94eeda5402857423284d0c4e021a8c8032498
   - template-haskell-lift-0.1.0.0

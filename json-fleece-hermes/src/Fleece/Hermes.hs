@@ -219,10 +219,8 @@ instance FC.Fleece Decoder where
   taggedUnionMemberWithTag ::
     forall tag allTags a proxy n.
     ( KnownSymbol tag
-    , n ~ Shrubbery.TagIndex tag allTags
     , KnownNat n
-    , Shrubbery.TagType tag allTags ~ a
-    , Shrubbery.TypeAtIndex n (Shrubbery.TaggedTypes allTags) ~ a
+    , Shrubbery.LookupTag tag allTags ~ '(n, a)
     ) =>
     proxy tag ->
     FC.Object Decoder a a ->

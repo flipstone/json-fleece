@@ -60,7 +60,7 @@ import qualified Data.Time.Format.ISO8601 as ISO8601
 import Data.Typeable (Typeable)
 import qualified Data.Vector as V
 import GHC.TypeLits (KnownNat, KnownSymbol, Symbol)
-import Shrubbery (Tag, TagIndex, TagType, TaggedTypes, TaggedUnion, TypeAtIndex, Union, branch, branchBuild, branchEnd, dissectUnion, firstIndexOfType, unify, type (@=))
+import Shrubbery (LookupTag, Tag, TaggedTypes, TaggedUnion, Union, branch, branchBuild, branchEnd, dissectUnion, firstIndexOfType, unify, type (@=))
 import Shrubbery.TypeList (FirstIndexOf, Length)
 
 import Fleece.Core.Class
@@ -205,10 +205,8 @@ taggedUnion tagProperty members =
 taggedUnionMember ::
   forall (tag :: Symbol) (tags :: [Tag]) t a n.
   ( KnownSymbol tag
-  , n ~ TagIndex tag tags
   , KnownNat n
-  , TagType tag tags ~ a
-  , TypeAtIndex n (TaggedTypes tags) ~ a
+  , LookupTag tag tags ~ '(n, a)
   ) =>
   Fleece t =>
   Object t a a ->
