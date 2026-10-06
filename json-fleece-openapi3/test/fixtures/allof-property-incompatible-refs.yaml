@@ -1,0 +1,29 @@
+openapi: "3.0.1"
+info:
+  title: Guard
+  version: "1.0"
+paths: {}
+components:
+  schemas:
+    Cat:
+      type: object
+      properties:
+        meows:
+          type: boolean
+    Dog:
+      type: object
+      properties:
+        barks:
+          type: boolean
+    CatOwner:
+      type: object
+      properties:
+        pet:
+          $ref: '#/components/schemas/Cat'
+    DogCatOwner:
+      allOf:
+        - $ref: '#/components/schemas/CatOwner'
+        - type: object
+          properties:
+            pet:
+              $ref: '#/components/schemas/Dog'
