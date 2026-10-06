@@ -1,0 +1,23 @@
+openapi: "3.0.1"
+info:
+  title: Guard
+  version: "1.0"
+paths: {}
+components:
+  schemas:
+    Timestamp:
+      type: string
+      format: date-time
+    Base:
+      type: object
+      properties:
+        createdAt:
+          $ref: '#/components/schemas/Timestamp'
+    Derived:
+      allOf:
+        - $ref: '#/components/schemas/Base'
+        - type: object
+          properties:
+            createdAt:
+              type: string
+              description: When the record was created

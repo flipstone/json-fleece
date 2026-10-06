@@ -1,0 +1,48 @@
+openapi: "3.0.1"
+info:
+  title: Guard
+  version: "1.0"
+paths: {}
+components:
+  schemas:
+    Cat:
+      type: object
+      properties:
+        petType:
+          type: string
+        meows:
+          type: boolean
+      required:
+        - petType
+    Dog:
+      type: object
+      properties:
+        petType:
+          type: string
+        barks:
+          type: boolean
+      required:
+        - petType
+    # Tagged union members are generated without the discriminator field, so
+    # narrowing to one would drop the tag from the wire format.
+    Pet:
+      oneOf:
+        - $ref: '#/components/schemas/Cat'
+        - $ref: '#/components/schemas/Dog'
+      discriminator:
+        propertyName: petType
+        mapping:
+          cat: '#/components/schemas/Cat'
+          dog: '#/components/schemas/Dog'
+    Owner:
+      type: object
+      properties:
+        pet:
+          $ref: '#/components/schemas/Pet'
+    CatOwner:
+      allOf:
+        - $ref: '#/components/schemas/Owner'
+        - type: object
+          properties:
+            pet:
+              $ref: '#/components/schemas/Cat'

@@ -40,6 +40,11 @@ tests =
   , ("prop_differentInheritedDiscriminatorsFail", prop_differentInheritedDiscriminatorsFail)
   , ("prop_conflictingInheritedDiscriminatorTagFails", prop_conflictingInheritedDiscriminatorTagFails)
   , ("prop_inheritedDiscriminatorMappingMismatchFails", prop_inheritedDiscriminatorMappingMismatchFails)
+  , ("prop_allOfPropertyIncompatibleRefsFail", prop_allOfPropertyIncompatibleRefsFail)
+  , ("prop_allOfPropertyRecursiveOverrideFails", prop_allOfPropertyRecursiveOverrideFails)
+  , ("prop_allOfPropertyRefAndInlineFail", prop_allOfPropertyRefAndInlineFail)
+  , ("prop_allOfPropertyTaggedUnionMemberFails", prop_allOfPropertyTaggedUnionMemberFails)
+  , ("prop_allOfPropertyInheritedTaggedUnionMemberFails", prop_allOfPropertyInheritedTaggedUnionMemberFails)
   , ("prop_refInPathExtensionSucceeds", prop_refInPathExtensionSucceeds)
   , ("prop_unresolvableRefInFilteredSchemaSucceeds", prop_unresolvableRefInFilteredSchemaSucceeds)
   , ("prop_refInFilteredPathSucceeds", prop_refInFilteredPathSucceeds)
@@ -180,6 +185,36 @@ prop_inheritedDiscriminatorMappingMismatchFails =
   assertCodeGenFails
     "inherited-discriminator-mapping-mismatch.yaml"
     "inherit a discriminator whose mapping does not list exactly those members"
+
+prop_allOfPropertyIncompatibleRefsFail :: HH.Property
+prop_allOfPropertyIncompatibleRefsFail =
+  assertCodeGenFails
+    "allof-property-incompatible-refs.yaml"
+    "DogCatOwner: Cannot merge property 'pet' in allOf where it references both \"Cat\" and \"Dog\""
+
+prop_allOfPropertyRecursiveOverrideFails :: HH.Property
+prop_allOfPropertyRecursiveOverrideFails =
+  assertCodeGenFails
+    "allof-property-recursive-override.yaml"
+    "SpecialCategory: Cannot merge property 'parent' in allOf where it references both \"Category\" and \"SpecialCategory\""
+
+prop_allOfPropertyRefAndInlineFail :: HH.Property
+prop_allOfPropertyRefAndInlineFail =
+  assertCodeGenFails
+    "allof-property-ref-and-inline.yaml"
+    "Derived: Cannot merge property 'createdAt' in allOf one identical property name is referenced, and the other is inline."
+
+prop_allOfPropertyTaggedUnionMemberFails :: HH.Property
+prop_allOfPropertyTaggedUnionMemberFails =
+  assertCodeGenFails
+    "allof-property-tagged-union-member.yaml"
+    "CatOwner: Cannot merge property 'pet' in allOf where it references both \"Pet\" and \"Cat\""
+
+prop_allOfPropertyInheritedTaggedUnionMemberFails :: HH.Property
+prop_allOfPropertyInheritedTaggedUnionMemberFails =
+  assertCodeGenFails
+    "allof-property-inherited-tagged-union-member.yaml"
+    "CatOwner: Cannot merge property 'pet' in allOf where it references both \"AnyPet\" and \"Cat\""
 
 prop_refToOtherDocumentFails :: HH.Property
 prop_refToOtherDocumentFails =

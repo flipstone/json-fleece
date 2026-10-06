@@ -179,12 +179,18 @@ library
       TestCases.Types.AllOfObject.FieldI.Type
       TestCases.Types.AllOfObject.FieldK
       TestCases.Types.AllOfObject.FieldL
+      TestCases.Types.AllOfPropertyRefNarrowedToUnionMember
+      TestCases.Types.AllOfPropertyRefsToSameAliasTarget
+      TestCases.Types.AllOfPropertyRefsToSameAliasTargetAliasFirst
+      TestCases.Types.AllOfPropertyUnionNarrowedToAliasedMember
+      TestCases.Types.AllOfPropertyUnionNarrowedToMemberRef
       TestCases.Types.AllOfWithSchemaRefAliasMember
       TestCases.Types.AllOfWithSchemaRefAliasMember.ExtraField
       TestCases.Types.AnyOf
       TestCases.Types.ArrayWithNullableSingletonOneOf
       TestCases.Types.ArrayWithNullableStrings
       TestCases.Types.ArrayWithSingletonOneOf
+      TestCases.Types.AStringOrNullableBoolean
       TestCases.Types.AStringType
       TestCases.Types.BadRequestError
       TestCases.Types.BadRequestError.Error
@@ -332,6 +338,7 @@ library
       TestCases.Types.ObjectWithFieldStartingWithNumber
       TestCases.Types.ObjectWithSchemaRefAliasField
       TestCases.Types.ObjectWithSingletonOneOfFields
+      TestCases.Types.ObjectWithStringOrNullableBooleanField
       TestCases.Types.OneOfWithDiscriminator
       TestCases.Types.OneOfWithDiscriminatorDeriveShowOnly
       TestCases.Types.OneOfWithDiscriminatorTypeObject
@@ -368,6 +375,7 @@ library
       TestCases.Types.SchemaRefAliasOfAlias
       TestCases.Types.SchemaRefAliasOfNullable
       TestCases.Types.SchemaRefAliasOfObject
+      TestCases.Types.SchemaRefAliasOrNullableBoolean
       TestCases.Types.SchemaRefAliasWithSiblings
       TestCases.Types.SingletonNonNullableOneOfRef
       TestCases.Types.SingletonNullableOneOfPrimitive

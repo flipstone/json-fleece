@@ -2029,12 +2029,18 @@ extra-source-files:
     examples/test-cases/TestCases/Types/AllOfObject/FieldI/Type.hs
     examples/test-cases/TestCases/Types/AllOfObject/FieldK.hs
     examples/test-cases/TestCases/Types/AllOfObject/FieldL.hs
+    examples/test-cases/TestCases/Types/AllOfPropertyRefNarrowedToUnionMember.hs
+    examples/test-cases/TestCases/Types/AllOfPropertyRefsToSameAliasTarget.hs
+    examples/test-cases/TestCases/Types/AllOfPropertyRefsToSameAliasTargetAliasFirst.hs
+    examples/test-cases/TestCases/Types/AllOfPropertyUnionNarrowedToAliasedMember.hs
+    examples/test-cases/TestCases/Types/AllOfPropertyUnionNarrowedToMemberRef.hs
     examples/test-cases/TestCases/Types/AllOfWithSchemaRefAliasMember.hs
     examples/test-cases/TestCases/Types/AllOfWithSchemaRefAliasMember/ExtraField.hs
     examples/test-cases/TestCases/Types/AnyOf.hs
     examples/test-cases/TestCases/Types/ArrayWithNullableSingletonOneOf.hs
     examples/test-cases/TestCases/Types/ArrayWithNullableStrings.hs
     examples/test-cases/TestCases/Types/ArrayWithSingletonOneOf.hs
+    examples/test-cases/TestCases/Types/AStringOrNullableBoolean.hs
     examples/test-cases/TestCases/Types/AStringType.hs
     examples/test-cases/TestCases/Types/BadRequestError.hs
     examples/test-cases/TestCases/Types/BadRequestError/Error.hs
@@ -2182,6 +2188,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/ObjectWithFieldStartingWithNumber.hs
     examples/test-cases/TestCases/Types/ObjectWithSchemaRefAliasField.hs
     examples/test-cases/TestCases/Types/ObjectWithSingletonOneOfFields.hs
+    examples/test-cases/TestCases/Types/ObjectWithStringOrNullableBooleanField.hs
     examples/test-cases/TestCases/Types/OneOfWithDiscriminator.hs
     examples/test-cases/TestCases/Types/OneOfWithDiscriminatorDeriveShowOnly.hs
     examples/test-cases/TestCases/Types/OneOfWithDiscriminatorTypeObject.hs
@@ -2218,6 +2225,7 @@ extra-source-files:
     examples/test-cases/TestCases/Types/SchemaRefAliasOfAlias.hs
     examples/test-cases/TestCases/Types/SchemaRefAliasOfNullable.hs
     examples/test-cases/TestCases/Types/SchemaRefAliasOfObject.hs
+    examples/test-cases/TestCases/Types/SchemaRefAliasOrNullableBoolean.hs
     examples/test-cases/TestCases/Types/SchemaRefAliasWithSiblings.hs
     examples/test-cases/TestCases/Types/SingletonNonNullableOneOfRef.hs
     examples/test-cases/TestCases/Types/SingletonNullableOneOfPrimitive.hs
@@ -2267,6 +2275,11 @@ extra-source-files:
     examples/selected-items-example/SelectedItemsExample/Types/PetTag.hs
     test/fixtures/alias-cycle.yaml
     test/fixtures/alias-type-options.yaml
+    test/fixtures/allof-property-incompatible-refs.yaml
+    test/fixtures/allof-property-inherited-tagged-union-member.yaml
+    test/fixtures/allof-property-recursive-override.yaml
+    test/fixtures/allof-property-ref-and-inline.yaml
+    test/fixtures/allof-property-tagged-union-member.yaml
     test/fixtures/inherited-discriminator-conflicting-tag.yaml
     test/fixtures/inherited-discriminator-different.yaml
     test/fixtures/inherited-discriminator-mapping-mismatch.yaml

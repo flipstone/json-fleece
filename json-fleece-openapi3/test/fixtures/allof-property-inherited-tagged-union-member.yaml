@@ -1,0 +1,51 @@
+openapi: "3.0.1"
+info:
+  title: Guard
+  version: "1.0"
+paths: {}
+components:
+  schemas:
+    Pet:
+      type: object
+      required:
+        - petType
+      properties:
+        petType:
+          type: string
+      discriminator:
+        propertyName: petType
+        mapping:
+          cat: '#/components/schemas/Cat'
+          dog: '#/components/schemas/Dog'
+    Cat:
+      allOf:
+        - $ref: '#/components/schemas/Pet'
+        - type: object
+          properties:
+            meows:
+              type: boolean
+    Dog:
+      allOf:
+        - $ref: '#/components/schemas/Pet'
+        - type: object
+          properties:
+            barks:
+              type: boolean
+    # The members inherit Pet's discriminator, so this is generated as a
+    # tagged union even though it declares no discriminator of its own.
+    AnyPet:
+      oneOf:
+        - $ref: '#/components/schemas/Cat'
+        - $ref: '#/components/schemas/Dog'
+    Owner:
+      type: object
+      properties:
+        pet:
+          $ref: '#/components/schemas/AnyPet'
+    CatOwner:
+      allOf:
+        - $ref: '#/components/schemas/Owner'
+        - type: object
+          properties:
+            pet:
+              $ref: '#/components/schemas/Cat'

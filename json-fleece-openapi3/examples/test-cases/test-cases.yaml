@@ -1504,6 +1504,71 @@ components:
         aliasedWithSiblings:
           $ref: '#/components/schemas/SchemaRefAliasWithSiblings'
 
+    AStringOrNullableBoolean:
+      oneOf:
+        - $ref: '#/components/schemas/AStringType'
+        - $ref: '#/components/schemas/NullableBoolean'
+
+    ObjectWithStringOrNullableBooleanField:
+      type: object
+      properties:
+        value:
+          $ref: '#/components/schemas/AStringOrNullableBoolean'
+
+    AllOfPropertyRefNarrowedToUnionMember:
+      allOf:
+        - type: object
+          properties:
+            value:
+              $ref: '#/components/schemas/AStringType'
+        - $ref: '#/components/schemas/ObjectWithStringOrNullableBooleanField'
+
+    AllOfPropertyUnionNarrowedToMemberRef:
+      allOf:
+        - $ref: '#/components/schemas/ObjectWithStringOrNullableBooleanField'
+        - type: object
+          properties:
+            value:
+              $ref: '#/components/schemas/AStringType'
+
+    AllOfPropertyRefsToSameAliasTarget:
+      allOf:
+        - type: object
+          properties:
+            value:
+              $ref: '#/components/schemas/AStringType'
+        - type: object
+          properties:
+            value:
+              $ref: '#/components/schemas/SchemaRefAliasOfAlias'
+
+    AllOfPropertyRefsToSameAliasTargetAliasFirst:
+      allOf:
+        - type: object
+          properties:
+            value:
+              $ref: '#/components/schemas/SchemaRefAliasOfAlias'
+        - type: object
+          properties:
+            value:
+              $ref: '#/components/schemas/AStringType'
+
+    SchemaRefAliasOrNullableBoolean:
+      oneOf:
+        - $ref: '#/components/schemas/SchemaRefAlias'
+        - $ref: '#/components/schemas/NullableBoolean'
+
+    AllOfPropertyUnionNarrowedToAliasedMember:
+      allOf:
+        - type: object
+          properties:
+            value:
+              $ref: '#/components/schemas/SchemaRefAliasOrNullableBoolean'
+        - type: object
+          properties:
+            value:
+              $ref: '#/components/schemas/AStringType'
+
     InlineNo_AdditionalPropertiesWithOneOf_NullabilityOutside:
       type: object
       properties: {}

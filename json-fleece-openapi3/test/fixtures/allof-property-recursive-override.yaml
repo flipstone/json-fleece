@@ -1,0 +1,19 @@
+openapi: "3.0.1"
+info:
+  title: Guard
+  version: "1.0"
+paths: {}
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        parent:
+          $ref: '#/components/schemas/Category'
+    SpecialCategory:
+      allOf:
+        - $ref: '#/components/schemas/Category'
+        - type: object
+          properties:
+            parent:
+              $ref: '#/components/schemas/SpecialCategory'
