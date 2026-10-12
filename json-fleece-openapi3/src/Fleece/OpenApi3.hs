@@ -76,7 +76,7 @@ generateFleeceCodeForDialect dialect rawDocument openApi = do
 
   inlinedOpenApi <-
     runReaderT
-      (OAT.traverseOpenApiSchemas inlineAllOfReferenced resolvedOpenApi)
+      (OAT.traverseOpenApiSchemas (inlineAllOfReferenced aliases) resolvedOpenApi)
       resolvedOpenApi
 
   typeMap <- runReaderT (mkCodeGenTypes aliases) inlinedOpenApi
@@ -1359,11 +1359,15 @@ mkOneOfOrAnyOfDataFormat schemaType schemaKey typeName schema schemas = do
             Just neSchemas ->
               Just <$> mkOneOfAnyOfUnion schemaKey typeOptions neSchemas
 
-inlineAllOfReferenced :: T.Text -> OA.Referenced OA.Schema -> CGM (OA.Referenced OA.Schema)
-inlineAllOfReferenced key schema =
+inlineAllOfReferenced ::
+  OAR.SchemaAliases ->
+  T.Text ->
+  OA.Referenced OA.Schema ->
+  CGM (OA.Referenced OA.Schema)
+inlineAllOfReferenced aliases key schema =
   case schema of
     OA.Ref _ref -> pure schema
-    OA.Inline a -> OA.Inline <$> inlineAllOf key a
+    OA.Inline a -> OA.Inline <$> inlineAllOf aliases key a
 
 {-
 Inlines the schemas found in the 'OA._schemaAllOf' array by combining them with the parent schema
@@ -1403,8 +1407,8 @@ This function will produce:
 @@
 
 -}
-inlineAllOf :: T.Text -> OA.Schema -> CGM OA.Schema
-inlineAllOf typeNameText schema =
+inlineAllOf :: OAR.SchemaAliases -> T.Text -> OA.Schema -> CGM OA.Schema
+inlineAllOf aliases typeNameText schema =
   case OA._schemaAllOf schema of
     Nothing ->
       let
@@ -1415,16 +1419,16 @@ inlineAllOf typeNameText schema =
               pure ap
             OA.AdditionalPropertiesSchema apSchema ->
               OA.AdditionalPropertiesSchema
-                <$> inlineAllOfReferenced (typeNameText <> "AdditionalProperties") apSchema
+                <$> inlineAllOfReferenced aliases (typeNameText <> "AdditionalProperties") apSchema
 
         handleOpenApiItems items =
           case items of
             OA.OpenApiItemsObject objSchema ->
               OA.OpenApiItemsObject
-                <$> inlineAllOfReferenced typeNameItem objSchema
+                <$> inlineAllOfReferenced aliases typeNameItem objSchema
             OA.OpenApiItemsArray schemas ->
               OA.OpenApiItemsArray
-                <$> traverse (inlineAllOfReferenced typeNameItem) schemas
+                <$> traverse (inlineAllOfReferenced aliases typeNameItem) schemas
 
         mkSchema allOf oneOf anyOf props additionalProps items =
           schema
@@ -1437,20 +1441,25 @@ inlineAllOf typeNameText schema =
             }
       in
         mkSchema
-          <$> (traverse . traverse) (inlineAllOfReferenced typeNameText) (OA._schemaAllOf schema)
-          <*> (traverse . traverse) (inlineAllOfReferenced typeNameText) (OA._schemaOneOf schema)
-          <*> (traverse . traverse) (inlineAllOfReferenced typeNameText) (OA._schemaAnyOf schema)
-          <*> IOHM.unorderedTraverseWithKey inlineAllOfReferenced (OA._schemaProperties schema)
+          <$> (traverse . traverse) (inlineAllOfReferenced aliases typeNameText) (OA._schemaAllOf schema)
+          <*> (traverse . traverse) (inlineAllOfReferenced aliases typeNameText) (OA._schemaOneOf schema)
+          <*> (traverse . traverse) (inlineAllOfReferenced aliases typeNameText) (OA._schemaAnyOf schema)
+          <*> IOHM.unorderedTraverseWithKey (inlineAllOfReferenced aliases) (OA._schemaProperties schema)
           <*> traverse handleAdditionalProperties (OA._schemaAdditionalProperties schema)
           <*> traverse handleOpenApiItems (OA._schemaItems schema)
     Just schemas ->
       Foldable.foldlM
-        (foldGetAllOfSchema typeNameText)
+        (foldGetAllOfSchema aliases typeNameText)
         (schema {OA._schemaAllOf = Nothing})
         schemas
 
-foldGetAllOfSchema :: T.Text -> OA.Schema -> OA.Referenced OA.Schema -> CGM OA.Schema
-foldGetAllOfSchema typeName acc referenced = do
+foldGetAllOfSchema ::
+  OAR.SchemaAliases ->
+  T.Text ->
+  OA.Schema ->
+  OA.Referenced OA.Schema ->
+  CGM OA.Schema
+foldGetAllOfSchema aliases typeName acc referenced = do
   components <- asks (OA._componentsSchemas . OA._openApiComponents)
   schema <- case referenced of
     OA.Inline inlineSchema ->
@@ -1463,8 +1472,8 @@ foldGetAllOfSchema typeName acc referenced = do
               <> T.unpack (OA.getReference ref)
         Just foundSchema ->
           pure foundSchema
-  inlined <- inlineAllOf typeName schema
-  appendSchemasForAllOf typeName acc inlined
+  inlined <- inlineAllOf aliases typeName schema
+  appendSchemasForAllOf aliases typeName acc inlined
 
 mkOneOfAnyOfUnion ::
   T.Text ->
@@ -2033,8 +2042,13 @@ mkAdditionalPropertiesSchema raiseError schemaKey mkInlineItemSchema mbAdditiona
 -- The 'Monoid' instance for 'OA.Schema' always picks the last 'Just' value for each 'Maybe' field,
 -- rather than combining the values inside when appropriate. This function implements the schema-combining
 -- behavior we want for 'allOf'.
-appendSchemasForAllOf :: T.Text -> OA.Schema -> OA.Schema -> CGM OA.Schema
-appendSchemasForAllOf typeNameText schemaA schemaB = do
+appendSchemasForAllOf ::
+  OAR.SchemaAliases ->
+  T.Text ->
+  OA.Schema ->
+  OA.Schema ->
+  CGM OA.Schema
+appendSchemasForAllOf aliases typeNameText schemaA schemaB = do
   discriminator <-
     let
       mbDiscA = OA._schemaDiscriminator schemaA
@@ -2111,7 +2125,7 @@ appendSchemasForAllOf typeNameText schemaA schemaB = do
             . CGU.codeGenError
             $ T.unpack typeNameText <> ": Multiple arrays in allOf schemas are not currently supported."
         else
-          traverse (inlineAllOfItems (typeNameText <> ".Items")) (OA._schemaItems schemaA <|> OA._schemaItems schemaB)
+          traverse (inlineAllOfItems aliases (typeNameText <> ".Items")) (OA._schemaItems schemaA <|> OA._schemaItems schemaB)
 
   schemaType <-
     let
@@ -2132,10 +2146,10 @@ appendSchemasForAllOf typeNameText schemaA schemaB = do
               ]
 
   let
-    traverseInline = (traverse . traverse) (inlineAllOfReferenced typeNameText)
+    traverseInline = (traverse . traverse) (inlineAllOfReferenced aliases typeNameText)
     traverseProps =
       IOHM.unorderedTraverseWithKey
-        (\k v -> inlineAllOfReferenced (typeNameText <> "." <> k) v)
+        (\k v -> inlineAllOfReferenced aliases (typeNameText <> "." <> k) v)
 
     insertProperty ::
       IOHM.InsOrdHashMap T.Text (OA.Referenced OA.Schema) ->
@@ -2144,22 +2158,30 @@ appendSchemasForAllOf typeNameText schemaA schemaB = do
     insertProperty existingProps (schemaName, propSchema) =
       case (IOHM.lookup schemaName existingProps, propSchema) of
         (Just (OA.Inline match), OA.Inline prop) -> do
-          mergedPropSchemas <- appendSchemasForAllOf (typeNameText <> "." <> schemaName) match prop
+          mergedPropSchemas <- appendSchemasForAllOf aliases (typeNameText <> "." <> schemaName) match prop
           pure $
             IOHM.update
               (\_existingProp -> Just $ OA.Inline mergedPropSchemas)
               schemaName
               existingProps
-        (Just (OA.Ref match), OA.Ref prop) ->
-          if match == prop
-            then pure existingProps
-            else
+        (Just (OA.Ref match), OA.Ref prop) -> do
+          resolution <- resolveRefConflict aliases match prop
+          case resolution of
+            KeepExistingRef ->
+              pure existingProps
+            KeepNewRef ->
+              pure $ IOHM.adjust (const propSchema) schemaName existingProps
+            IncompatibleRefs ->
               lift
                 . CGU.codeGenError
                 . unwords
                 $ [ T.unpack typeNameText <> ": Cannot merge property"
                   , "'" <> T.unpack schemaName <> "'"
-                  , "in allOf where both schemas are referenced, but not the same reference."
+                  , "in allOf where it references both"
+                  , show (OA.getReference match)
+                  , "and"
+                  , show (OA.getReference prop) <> ","
+                  , "which are not the same schema and neither is an untagged oneOf/anyOf member of the other."
                   ]
         (Nothing, _propSchema) ->
           pure $ IOHM.insert schemaName propSchema existingProps
@@ -2294,10 +2316,103 @@ appendSchemasForAllOf typeNameText schemaA schemaB = do
       , OA._schemaMultipleOf = multipleOf
       }
 
-inlineAllOfItems :: T.Text -> OA.OpenApiItems -> CGM OA.OpenApiItems
-inlineAllOfItems typeName items =
+data RefConflictResolution
+  = KeepExistingRef
+  | KeepNewRef
+  | IncompatibleRefs
+
+{- |
+  Decides how to combine two references given for the same property by
+  members of an @allOf@. References that resolve to the same schema keep the
+  existing reference. When one reference is a member of the other's untagged
+  @oneOf@/@anyOf@, the member is kept because it is the narrower of the two.
+  Members of tagged unions are generated without the discriminator field, so
+  those are never narrowed to. A union is treated as tagged when it or any of
+  its members carries a discriminator, including one inherited through @allOf@.
+-}
+resolveRefConflict ::
+  OAR.SchemaAliases ->
+  OA.Reference ->
+  OA.Reference ->
+  CGM RefConflictResolution
+resolveRefConflict aliases existingRef newRef = do
+  components <- asks (OA._componentsSchemas . OA._openApiComponents)
+  let
+    existingTarget = referenceAliasTarget aliases existingRef
+    newTarget = referenceAliasTarget aliases newRef
+    membersOf target =
+      maybe [] (untaggedUnionMemberTargets aliases components) (IOHM.lookup target components)
+    resolution
+      | existingTarget == newTarget = KeepExistingRef
+      | existingTarget `elem` membersOf newTarget = KeepExistingRef
+      | newTarget `elem` membersOf existingTarget = KeepNewRef
+      | otherwise = IncompatibleRefs
+  pure resolution
+
+referenceAliasTarget :: OAR.SchemaAliases -> OA.Reference -> T.Text
+referenceAliasTarget aliases ref =
+  let
+    name = OA.getReference ref
+  in
+    fromMaybe name (OAR.finalAliasTarget name aliases)
+
+untaggedUnionMemberTargets ::
+  OAR.SchemaAliases ->
+  OA.Definitions OA.Schema ->
+  OA.Schema ->
+  [T.Text]
+untaggedUnionMemberTargets aliases components schema =
+  let
+    members =
+      Foldable.fold (OA._schemaOneOf schema) <> Foldable.fold (OA._schemaAnyOf schema)
+
+    memberTarget member =
+      case member of
+        OA.Ref ref -> Just (referenceAliasTarget aliases ref)
+        OA.Inline _schema -> Nothing
+  in
+    if hasDiscriminator schema || any (referencedHasDiscriminator components Set.empty) members
+      then []
+      else mapMaybe memberTarget members
+
+referencedHasDiscriminator ::
+  OA.Definitions OA.Schema ->
+  Set.Set T.Text ->
+  OA.Referenced OA.Schema ->
+  Bool
+referencedHasDiscriminator components visited referenced =
+  case referenced of
+    OA.Inline schema ->
+      schemaHasDiscriminator components visited schema
+    OA.Ref ref ->
+      let
+        name = OA.getReference ref
+      in
+        not (Set.member name visited)
+          && maybe
+            False
+            (schemaHasDiscriminator components (Set.insert name visited))
+            (IOHM.lookup name components)
+
+schemaHasDiscriminator ::
+  OA.Definitions OA.Schema ->
+  Set.Set T.Text ->
+  OA.Schema ->
+  Bool
+schemaHasDiscriminator components visited schema =
+  hasDiscriminator schema
+    || any
+      (referencedHasDiscriminator components visited)
+      (Foldable.fold (OA._schemaAllOf schema))
+
+hasDiscriminator :: OA.Schema -> Bool
+hasDiscriminator =
+  isJust . OA._schemaDiscriminator
+
+inlineAllOfItems :: OAR.SchemaAliases -> T.Text -> OA.OpenApiItems -> CGM OA.OpenApiItems
+inlineAllOfItems aliases typeName items =
   case items of
     OA.OpenApiItemsObject refSchema ->
-      fmap OA.OpenApiItemsObject $ inlineAllOfReferenced typeName refSchema
+      fmap OA.OpenApiItemsObject $ inlineAllOfReferenced aliases typeName refSchema
     OA.OpenApiItemsArray refSchemas ->
-      fmap OA.OpenApiItemsArray $ traverse (inlineAllOfReferenced typeName) refSchemas
+      fmap OA.OpenApiItemsArray $ traverse (inlineAllOfReferenced aliases typeName) refSchemas
