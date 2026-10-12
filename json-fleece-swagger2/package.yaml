@@ -71,7 +71,7 @@ library:
     - Fleece.Swagger2
   dependencies:
     - json-fleece-core >= 0.13 && < 0.14
-    - json-fleece-openapi3 >= 0.5 && < 0.7
+    - json-fleece-openapi3 >= 0.6 && < 0.7
     - insert-ordered-containers >= 0.2 && < 0.3
     - swagger2 >= 2.8 && < 2.9
     - openapi3 >= 3.2 &&  < 3.3
