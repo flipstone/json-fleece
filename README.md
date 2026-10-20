@@ -8,8 +8,8 @@ For example:
 import qualified Fleece.Core as FC
 
 data Dog = Dog
-  { name :: Text
-  , age :: Maybe Int
+  { dogName :: Text
+  , dogAge :: Maybe Int
   }
 
 dogSchema :: FC.Fleece t => FC.Schema t Dog
