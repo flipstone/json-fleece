@@ -1,5 +1,6 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PackageImports #-}
 
 module Fleece.OpenApi3.Traversal
   ( traverseOpenApiSchemas
@@ -10,9 +11,13 @@ module Fleece.OpenApi3.Traversal
 import Control.Applicative (liftA2)
 #endif
 import qualified Data.ByteString.Char8 as BS8
-import qualified Data.HashMap.Strict.InsOrd as IOHM
+#if MIN_VERSION_openapi3(3,2,5)
+import qualified "openapi3" Data.HashMap.Strict.InsOrd.Compat as IOHM
+import qualified Data.Maybe as Maybe
+#else
+import qualified "insert-ordered-containers" Data.HashMap.Strict.InsOrd as IOHM
+#endif
 import qualified Data.OpenApi as OA
-import qualified Data.Swagger as Swagger
 import qualified Data.Text as T
 import qualified Network.HTTP.Media as Media
 
@@ -52,7 +57,7 @@ traverseComponentsSchemas fn components =
         OA.Inline a -> Just a
     mkComponents schemas responses params requestBodies headers callbacks =
       components
-        { OA._componentsSchemas = IOHM.mapMaybe getInline schemas
+        { OA._componentsSchemas = mapMaybe getInline schemas
         , OA._componentsResponses = responses
         , OA._componentsParameters = params
         , OA._componentsRequestBodies = requestBodies
@@ -61,7 +66,7 @@ traverseComponentsSchemas fn components =
         }
   in
     mkComponents
-      <$> IOHM.unorderedTraverseWithKey (\k -> fn k . OA.Inline) (OA._componentsSchemas components)
+      <$> unorderedTraverseWithKey (\k -> fn k . OA.Inline) (OA._componentsSchemas components)
       <*> IOHM.unorderedTraverseWithKey (traverseResponseSchemas fn) (OA._componentsResponses components)
       <*> IOHM.unorderedTraverseWithKey (traverseParamSchemas . fn) (OA._componentsParameters components)
       <*> IOHM.unorderedTraverseWithKey (traverseRequestBodySchemas fn) (OA._componentsRequestBodies components)
@@ -245,7 +250,7 @@ traverseResponsesSchemas ::
   f OA.Responses
 traverseResponsesSchemas fn operationKey responses =
   let
-    mkResponseKey :: Swagger.HttpStatusCode -> T.Text
+    mkResponseKey :: OA.HttpStatusCode -> T.Text
     mkResponseKey statusCode = operationKey <> "." <> T.pack (show statusCode)
 
     mkResponses def res =
@@ -262,3 +267,25 @@ traverseResponsesSchemas fn operationKey responses =
 renderMediaType :: Media.MediaType -> T.Text
 renderMediaType =
   T.pack . BS8.unpack . Media.renderHeader
+
+mapMaybe ::
+  (v1 -> Maybe v2) ->
+  IOHM.InsOrdHashMap T.Text v1 ->
+  IOHM.InsOrdHashMap T.Text v2
+#if MIN_VERSION_openapi3(3,2,5)
+mapMaybe f =
+  IOHM.fromList . Maybe.mapMaybe (\(k, v) -> (,) k <$> f v) . IOHM.toList
+#else
+mapMaybe = IOHM.mapMaybe
+#endif
+
+unorderedTraverseWithKey ::
+  Applicative f =>
+  (T.Text -> v1 -> f v2) ->
+  IOHM.InsOrdHashMap T.Text v1 ->
+  f (IOHM.InsOrdHashMap T.Text v2)
+#if MIN_VERSION_openapi3(3,2,5)
+unorderedTraverseWithKey = IOHM.traverseWithKey
+#else
+unorderedTraverseWithKey = IOHM.unorderedTraverseWithKey
+#endif
